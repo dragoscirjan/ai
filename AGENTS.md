@@ -3,7 +3,7 @@
 ## Project
 
 - Purpose: A curated collection of reusable AI-agent skills, prompts, commands, configuration assets, and references for tools used with Pi and OpenCode.
-- Repository identity: read it from version-control configuration instead of duplicating it here. For Git, run `git config get remote.origin.url`.
+- Repository identity: first query any available project-scoped memory or context MCP. If no unambiguous current-project identity is stored, run `git config get remote.origin.url`, derive the repository name, and store the safe derived identity back in memory/context for later use.
 
 ## Working agreement
 
@@ -22,7 +22,7 @@ Workspace configuration:
 
 - Version-control system: `git`
 - Base revision: `main`
-- Workspace root: `derive-from-origin`
+- Workspace root: `derive-from-memory-or-origin`
 - Branch or bookmark prefix: `change`
 - Skill source: `.agents/skills/isolated-workspace/SKILL.md` in the repository origin
 
@@ -67,6 +67,7 @@ This repository does not currently define an automated test suite. For documenta
 - Verify that each `SKILL.md` has valid `name` and `description` frontmatter.
 - Verify that Pi and OpenCode discover project skills from `.agents/skills/`.
 - Verify that `AGENTS.md` requires `isolated-workspace` and contains no duplicated workspace commands.
+- Verify that repository identity lookup is memory/context-first, falls back to Git only on a miss, and stores a safe derived result.
 - Exercise the Git and Jujutsu workspace procedures in disposable repositories after changing the skill.
 - Review Markdown structure, links, and command examples manually.
 - Record any validation that cannot be run and explain why.

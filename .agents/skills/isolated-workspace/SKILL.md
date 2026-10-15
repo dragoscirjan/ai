@@ -4,7 +4,7 @@ description: Create or reuse one isolated change workspace before mutating a ver
 compatibility: Requires Git with worktree support or Jujutsu with workspace support.
 metadata:
   author: dragoscirjan
-  version: "1.0"
+  version: "1.1"
   opencode/slash: "true"
 ---
 
@@ -18,7 +18,7 @@ Read the nearest applicable `AGENTS.md` and require these values from its **Isol
 
 - version-control system: `git` or `jj`
 - base revision
-- workspace root: an explicit path or `derive-from-origin`
+- workspace root: an explicit path or `derive-from-memory-or-origin`
 - branch or bookmark prefix
 
 Do not guess missing values. Stop and ask the owner to configure them.
@@ -38,24 +38,39 @@ Use only the configured version-control system. A colocated repository may conta
 
 Derive a short filesystem-safe `change_id` from the tracked issue or task. Use lowercase letters, numbers, and hyphens.
 
-Assign the configured values. When the workspace root is `derive-from-origin`, derive the repository directory name from Git configuration instead of duplicating it in `AGENTS.md`:
+Assign the configured values. When the workspace root is `derive-from-memory-or-origin`, resolve the repository name in this order:
+
+1. Query any available project-scoped memory or context MCP for the current repository identity.
+2. Accept a result only when it is unambiguous and scoped to the current project. Ignore generic, unrelated, or stale entries.
+3. On a miss, run `git config get remote.origin.url` once. If command execution requires approval or is blocked, ask the owner for approval; do not retry repeatedly or guess.
+4. Derive the repository name from the remote URL.
+5. Store the derived repository name and its `git-config` provenance in the available project-scoped memory or context MCP so later runs can avoid the Git command.
+
+Store only safe identity data. Never persist credentials, token-bearing URLs, embedded user information, or personal filesystem paths. Store a sanitized `host/owner/repository` identity only when it contains no secrets. If no memory or context MCP is available, continue without creating a repository cache file.
+
+Use the Git fallback only when memory/context did not resolve `repository_name`:
+
+```sh
+remote_url="$(git config get remote.origin.url)" || {
+  echo "remote.origin.url is required to derive the workspace root" >&2
+  exit 1
+}
+repository_name="${remote_url##*/}"
+repository_name="${repository_name%.git}"
+if [ -z "$repository_name" ]; then
+  echo "could not derive the repository name from remote.origin.url" >&2
+  exit 1
+fi
+```
+
+After `repository_name` is resolved from either source, construct the workspace values:
 
 ```sh
 base_revision="value from AGENTS.md"
 workspace_root_setting="value from AGENTS.md"
 branch_prefix="value from AGENTS.md"
 
-if [ "$workspace_root_setting" = "derive-from-origin" ]; then
-  remote_url="$(git config get remote.origin.url)" || {
-    echo "remote.origin.url is required to derive the workspace root" >&2
-    exit 1
-  }
-  repository_name="${remote_url##*/}"
-  repository_name="${repository_name%.git}"
-  if [ -z "$repository_name" ]; then
-    echo "could not derive the repository name from remote.origin.url" >&2
-    exit 1
-  fi
+if [ "$workspace_root_setting" = "derive-from-memory-or-origin" ]; then
   workspace_root="../${repository_name}--workspaces"
 else
   workspace_root="$workspace_root_setting"
@@ -65,7 +80,7 @@ branch_name="$branch_prefix/$change_id"
 workspace_path="$workspace_root/$change_id"
 ```
 
-For a pure Jujutsu repository without Git configuration, require an explicit workspace root instead of `derive-from-origin`.
+For a pure Jujutsu repository without a stored identity or Git configuration, require an explicit workspace root instead of `derive-from-memory-or-origin`.
 
 Resolve a relative workspace root from the repository root. Confirm that the resulting workspace path is outside the primary checkout, then create the configured parent directory if needed:
 
