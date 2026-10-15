@@ -18,7 +18,7 @@ Read the nearest applicable `AGENTS.md` and require these values from its **Isol
 
 - version-control system: `git` or `jj`
 - base revision
-- workspace root
+- workspace root: an explicit path or `derive-from-origin`
 - branch or bookmark prefix
 
 Do not guess missing values. Stop and ask the owner to configure them.
@@ -38,15 +38,34 @@ Use only the configured version-control system. A colocated repository may conta
 
 Derive a short filesystem-safe `change_id` from the tracked issue or task. Use lowercase letters, numbers, and hyphens.
 
-Assign the configured values before constructing names:
+Assign the configured values. When the workspace root is `derive-from-origin`, derive the repository directory name from Git configuration instead of duplicating it in `AGENTS.md`:
 
 ```sh
 base_revision="value from AGENTS.md"
-workspace_root="value from AGENTS.md"
+workspace_root_setting="value from AGENTS.md"
 branch_prefix="value from AGENTS.md"
+
+if [ "$workspace_root_setting" = "derive-from-origin" ]; then
+  remote_url="$(git config get remote.origin.url)" || {
+    echo "remote.origin.url is required to derive the workspace root" >&2
+    exit 1
+  }
+  repository_name="${remote_url##*/}"
+  repository_name="${repository_name%.git}"
+  if [ -z "$repository_name" ]; then
+    echo "could not derive the repository name from remote.origin.url" >&2
+    exit 1
+  fi
+  workspace_root="../${repository_name}--workspaces"
+else
+  workspace_root="$workspace_root_setting"
+fi
+
 branch_name="$branch_prefix/$change_id"
 workspace_path="$workspace_root/$change_id"
 ```
+
+For a pure Jujutsu repository without Git configuration, require an explicit workspace root instead of `derive-from-origin`.
 
 Resolve a relative workspace root from the repository root. Confirm that the resulting workspace path is outside the primary checkout, then create the configured parent directory if needed:
 
