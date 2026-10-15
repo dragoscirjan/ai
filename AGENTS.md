@@ -17,41 +17,21 @@
 
 ## Isolated workspace
 
-Never implement a change in the primary checkout. Create one dedicated workspace from the configured base, and keep one active writer in it.
+Before any repository mutation, explicitly load and follow the `isolated-workspace` skill.
 
-Choose only the procedure matching the repository's version-control system. Do not mix Git worktree and Jujutsu workspace commands for the same change.
+Workspace configuration:
 
-### Git
+- Version-control system: `git`
+- Base revision: `main`
+- Workspace root: `../ai--workspaces`
+- Branch or bookmark prefix: `change`
+- Skill source: `https://github.com/dragoscirjan/ai/tree/main/.agents/skills/isolated-workspace`
 
-```sh
-change_id="short-description"
-branch_name="change/$change_id"
-workspace_path="../ai--workspaces/$change_id"
-
-git worktree add "$workspace_path" -b "$branch_name" "main"
-cd "$workspace_path"
-```
-
-### Jujutsu
-
-```sh
-change_id="short-description"
-workspace_name="$change_id"
-workspace_path="../ai--workspaces/$change_id"
-
-jj workspace add --name "$workspace_name" -r "main@origin" "$workspace_path"
-cd "$workspace_path"
-jj describe -m "$change_id"
-```
-
-When a named bookmark is required for publication, create it only when the change is ready to share:
-
-```sh
-jj bookmark create "change/$change_id" -r @
-```
+The skill is mandatory. If it is unavailable, stop before mutation. Require the owner to install it as `isolated-workspace/SKILL.md` under a project or user Agent Skills directory, then reload the harness. Do not install it without approval, use an inline fallback, or recreate its workflow from memory.
 
 ## Repository map
 
+- `.agents/skills/` — portable Agent Skills discovered by Pi and OpenCode.
 - `templates/` — canonical installable assets with documented double-brace placeholders.
 - `examples/` — fully rendered examples that demonstrate template use.
 - `AGENTS.md` — this repository's rendered agent instructions.
@@ -59,6 +39,7 @@ jj bookmark create "change/$change_id" -r @
 
 ## Architecture
 
+- Follow the Agent Skills specification for every skill under `.agents/skills/`.
 - Treat each file under `templates/` as a canonical source artifact.
 - Keep templates independent of any one project, absolute path, harness, or version-control system unless the coupling is explicit.
 - Use uppercase snake-case names inside double braces for install-time values, and document every placeholder in the template.
@@ -91,6 +72,8 @@ This repository does not currently define an automated test suite. For documenta
 - Verify that every install-time placeholder in a template is documented.
 - Verify that rendered examples and project-installed files contain no unresolved placeholders.
 - Verify that templates contain no accidental project-specific names or absolute paths.
-- Confirm that equivalent Git and Jujutsu instructions enforce the same workspace-isolation policy.
+- Verify that each `SKILL.md` has valid `name` and `description` frontmatter.
+- Verify that every `AGENTS.md` requires `isolated-workspace` and contains no duplicate workspace commands.
+- Confirm that the skill enforces the same isolation policy for Git and Jujutsu.
 - Review Markdown structure, links, and command examples manually.
 - Record any validation that cannot be run and explain why.

@@ -17,38 +17,17 @@
 
 ## Isolated workspace
 
-Never implement a change in the primary checkout. Create one dedicated workspace from the configured base, and keep one active writer in it.
+Before any repository mutation, explicitly load and follow the `isolated-workspace` skill.
 
-Choose only the procedure matching the repository's version-control system. Do not mix Git worktree and Jujutsu workspace commands for the same change.
+Workspace configuration:
 
-### Git
+- Version-control system: `git`
+- Base revision: `main`
+- Workspace root: `../sample-service--workspaces`
+- Branch or bookmark prefix: `feat`
+- Skill source: `https://github.com/example-org/agent-assets/tree/main/.agents/skills/isolated-workspace`
 
-```sh
-change_id="short-description"
-branch_name="feat/$change_id"
-workspace_path="../sample-service--workspaces/$change_id"
-
-git worktree add "$workspace_path" -b "$branch_name" "main"
-cd "$workspace_path"
-```
-
-### Jujutsu
-
-```sh
-change_id="short-description"
-workspace_name="$change_id"
-workspace_path="../sample-service--workspaces/$change_id"
-
-jj workspace add --name "$workspace_name" -r "main@origin" "$workspace_path"
-cd "$workspace_path"
-jj describe -m "$change_id"
-```
-
-When a named bookmark is required for publication, create it only when the change is ready to share:
-
-```sh
-jj bookmark create "feat/$change_id" -r @
-```
+The skill is mandatory. If it is unavailable, stop before mutation. Require the owner to install it from the configured source as `isolated-workspace/SKILL.md` under a project or user Agent Skills directory, then reload the harness. Do not install it without approval, use an inline fallback, or recreate its workflow from memory.
 
 ## Repository map
 

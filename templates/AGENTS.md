@@ -17,10 +17,11 @@ Template installation:
 | `{{PROJECT_SUMMARY}}` | One-paragraph description of the project. |
 | `{{CONTRIBUTING_FILE}}` | Path to the repository's contribution guide. |
 | `{{ISSUE_POLICY}}` | When an issue is required before work begins. |
-| `{{DEFAULT_BRANCH}}` | Git branch or Jujutsu bookmark used as the base. |
-| `{{JJ_BASE_REVISION}}` | Jujutsu revset used as the workspace parent, such as `main@origin`. |
+| `{{VERSION_CONTROL_SYSTEM}}` | Workspace implementation: `git` or `jj`. |
+| `{{BASE_REVISION}}` | Git revision or Jujutsu revset used as the workspace parent. |
 | `{{WORKSPACE_ROOT}}` | Parent directory for isolated workspaces. |
 | `{{BRANCH_PREFIX}}` | Prefix for change branches or bookmarks, such as `docs` or `feat`. |
+| `{{ISOLATED_WORKSPACE_SKILL_SOURCE}}` | Installation source or project path for the required skill. |
 | `{{COMMIT_CONVENTION}}` | Required commit or change-description convention. |
 | `{{VALIDATION_COMMAND}}` | Command that runs the required validation suite. |
 | `{{REPOSITORY_MAP}}` | Concise list of important paths and responsibilities. |
@@ -46,38 +47,17 @@ Template installation:
 
 ## Isolated workspace
 
-Never implement a change in the primary checkout. Create one dedicated workspace from the configured base, and keep one active writer in it.
+Before any repository mutation, explicitly load and follow the `isolated-workspace` skill.
 
-Choose only the procedure matching the repository's version-control system. Do not mix Git worktree and Jujutsu workspace commands for the same change.
+Workspace configuration:
 
-### Git
+- Version-control system: `{{VERSION_CONTROL_SYSTEM}}`
+- Base revision: `{{BASE_REVISION}}`
+- Workspace root: `{{WORKSPACE_ROOT}}`
+- Branch or bookmark prefix: `{{BRANCH_PREFIX}}`
+- Skill source: `{{ISOLATED_WORKSPACE_SKILL_SOURCE}}`
 
-```sh
-change_id="short-description"
-branch_name="{{BRANCH_PREFIX}}/$change_id"
-workspace_path="{{WORKSPACE_ROOT}}/$change_id"
-
-git worktree add "$workspace_path" -b "$branch_name" "{{DEFAULT_BRANCH}}"
-cd "$workspace_path"
-```
-
-### Jujutsu
-
-```sh
-change_id="short-description"
-workspace_name="$change_id"
-workspace_path="{{WORKSPACE_ROOT}}/$change_id"
-
-jj workspace add --name "$workspace_name" -r "{{JJ_BASE_REVISION}}" "$workspace_path"
-cd "$workspace_path"
-jj describe -m "$change_id"
-```
-
-When a named bookmark is required for publication, create it only when the change is ready to share:
-
-```sh
-jj bookmark create "{{BRANCH_PREFIX}}/$change_id" -r @
-```
+The skill is mandatory. If it is unavailable, stop before mutation. Require the owner to install it from the configured source as `isolated-workspace/SKILL.md` under a project or user Agent Skills directory, then reload the harness. Do not install it without approval, use an inline fallback, or recreate its workflow from memory.
 
 ## Repository map
 
