@@ -1,34 +1,40 @@
-# ai
-AI Tools that I have Encountered and Find Useful
+# AI agent assets
 
-# Standards
-* https://agentskills.io (https://www.npmjs.com/package/skills)
-
-## Agents
-
-* https://github.com/msitarzewski/agency-agents
+This repository contains reusable skills, instructions, configuration assets, and references for AI coding agents. The assets target Pi and OpenCode, while portable skills follow the Agent Skills format.
 
 ## Skills
-* https://github.com/mattpocock/skills (especially the `grill-me` skill)
-* https://github.com/vercel-labs/skills (especially the `unslop` skill)
 
-## MCPs
+| Skill | Purpose |
+|---|---|
+| [`cleanup-workspaces`](.agents/skills/cleanup-workspaces/SKILL.md) | Audit and safely remove integrated Git worktrees and Jujutsu workspaces. |
+| [`clear-technical-writing`](.agents/skills/clear-technical-writing/SKILL.md) | Write developer-facing prose in clear language without losing technical precision. |
+| [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
+| [`grilling`](.agents/skills/grilling/SKILL.md) | Interview a user until a plan or decision has no unresolved branches. |
+| [`isolated-workspace`](.agents/skills/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
+| [`unslop`](.agents/skills/unslop/SKILL.md) | Remove common AI writing patterns from an existing draft. |
 
-* https://github.com/mksglu/context-mode
-* https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking
-* https://github.com/modelcontextprotocol/servers/tree/main/src/memory
-* https://playwright.dev/docs/getting-started-mcp
-* https://github.com/dragoscirjan/mcp-tuikit (I'm developing this one, he he...)
+## Use the skills
 
-### Code Indexers
+Pi and OpenCode discover project skills from `.agents/skills/` when they run inside this repository.
 
-* **https://gitnexus.vercel.app/**
-* **https://cgc.codes/**
-* https://cocoindex.io/
-* https://github.com/HKUDS/FastCode
+Install one skill into another project with the Skills CLI:
 
-## Harnesses
+```sh
+npx skills add dragoscirjan/ai --skill isolated-workspace
+```
 
-* **https://pi.dev**
-* **https://opencode.ai**
-* Honestly, I do not want/need others.
+Replace `isolated-workspace` with the required skill name. Review a skill and its supporting files before installing or trusting it.
+
+## Repository map
+
+- [`.agents/skills/`](.agents/skills/) contains portable Agent Skills.
+- [`AGENTS.md`](AGENTS.md) contains the small startup routing and safety contract for coding agents.
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) contains contribution policy loaded before actionable change planning.
+- [`VALIDATION.md`](VALIDATION.md) contains checks loaded before validation or publication.
+- [`RESOURCES.md`](RESOURCES.md) contains the curated list of external tools and references.
+
+## Contribute
+
+Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before planning a repository change. Run the applicable checks in [`VALIDATION.md`](VALIDATION.md) before publishing it.
+
+Do not merge or release without explicit owner instruction.
