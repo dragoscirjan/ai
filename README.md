@@ -2,7 +2,7 @@
 AI Tools that I have Encountered and Find Useful
 
 # Standards
-* https://agentskills.io
+* https://agentskills.io (https://www.npmjs.com/package/skills)
 
 ## Agents
 
