@@ -1,6 +1,9 @@
 # ai
 AI Tools that I have Encountered and Find Useful
 
+# Standards
+* https://agentskills.io
+
 ## Agents
 
 * https://github.com/msitarzewski/agency-agents
