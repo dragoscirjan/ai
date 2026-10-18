@@ -19,9 +19,9 @@ Do not merge or release without explicit owner instruction. Approval, completed 
 
 ## Repository identity for automated contributors
 
-When a workflow needs repository identity, query project-scoped memory or context first. The reusable `isolated-workspace` skill owns the Git fallback, sanitization, and caching procedure. Do not duplicate or bypass that procedure.
+Local workspace creation does not require hosted-repository identity. The `isolated-workspace` automation detects the primary local repository and derives its sibling workspace directory directly.
 
-Store only safe identity data. Never store credentials, token-bearing URLs, embedded user information, or personal filesystem paths.
+When another workflow needs hosted-repository identity, query project-scoped memory or context first. On a miss, read the Git origin once, sanitize the result, and store only an unambiguous `host/owner/repository` identity with its provenance. Never store credentials, token-bearing URLs, embedded user information, or personal filesystem paths.
 
 ## Architecture rules
 
