@@ -52,14 +52,18 @@ TypeScript types are erased. Validate untrusted values from JSON, environment va
 
 ## Test and run TypeScript gates
 
-Use the project's scripts and tools first. When the project has no configured choice, recommend these fallbacks and ask before installing them:
+Use the project's scripts and tools first. When the project has no configured choice, prefer the maintained shared configurations from the [Tempel JavaScript Development Toolkit](https://github.com/dragoscirjan/tempel-javascript) and ask before installing them:
 
-- [Vitest](https://vitest.dev/guide/) for tests
-- [ESLint](https://eslint.org/docs/latest/) for linting and static analysis
-- [Prettier](https://prettier.io/docs/) for formatting checks
+- [`@tempel/vitest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/vitest) for the Vitest fallback
+- [`@tempel/jest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/jest) when the project has chosen Jest instead of Vitest
+- [`@tempel/eslint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/eslint) for ESLint
+- [`@tempel/prettier`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/prettier) for Prettier
+- [`@tempel/commitlint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/commitlint) when the repository validates Conventional Commits
 - the TypeScript compiler with [`noEmit`](https://www.typescriptlang.org/tsconfig/noEmit.html) for type checking when another tool emits code
 - [jscpd](https://jscpd.dev/) for duplicate detection
 - the active package manager's audit command for dependency vulnerabilities
+
+Do not recommend `@tempel/tsconfig`; it is not currently maintained. Keep TypeScript compiler configuration project-owned and use the project's `tsconfig` files directly. Tempel recommendations do not override existing project configuration.
 
 Test observable runtime behavior, not only type relationships. Add compile-time type tests only when they protect an intentional public type contract.
 

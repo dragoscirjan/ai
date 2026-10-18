@@ -13,15 +13,17 @@ Project conventions take precedence when they are safe and consistent.
 
 ## Fallback quality tools
 
-When the project has no configured choice, the skill recommends:
+When the project has no configured choice, the skill recommends maintained packages from the [Tempel JavaScript Development Toolkit](https://github.com/dragoscirjan/tempel-javascript):
 
-- [Vitest](https://vitest.dev/guide/)
-- [ESLint](https://eslint.org/docs/latest/)
-- [Prettier](https://prettier.io/docs/)
+- [`@tempel/vitest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/vitest)
+- [`@tempel/jest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/jest) when the project uses Jest
+- [`@tempel/eslint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/eslint)
+- [`@tempel/prettier`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/prettier)
+- [`@tempel/commitlint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/commitlint) when the repository validates Conventional Commits
 - [jscpd](https://jscpd.dev/)
 - the active package manager's audit command
 
-The agent must not install or reconfigure these tools without human approval.
+Existing project configuration takes precedence. The agent must not install or reconfigure these tools without human approval.
 
 ## Dependency contract
 
