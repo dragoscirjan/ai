@@ -1,7 +1,7 @@
 ---
 name: coding-bash
-description: Write, refactor, review, or test Bash-specific shell with version-compatible arrays, tests, options, process handling, pipeline status, and introspection. Use whenever the shebang, invocation, sourced context, project configuration, or Bash-only syntax establishes Bash, including files with a .sh extension.
-compatibility: Requires the coding and coding-sh skills plus the Bash versions, operating systems, utilities, and test tools selected by the project.
+description: Write, refactor, review, or test Bash 4 or newer with version-compatible arrays, tests, options, process handling, pipeline status, and introspection. Use whenever the shebang, invocation, sourced context, project configuration, or Bash-only syntax establishes Bash, including files with a .sh extension.
+compatibility: Requires the coding and coding-sh skills plus Bash 4 or newer and the operating systems, utilities, and test tools selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -31,6 +31,8 @@ Select this wrapper when at least one authoritative project signal establishes B
 
 Treat Bash-only syntax as supporting evidence, not permission to change a script whose declared interpreter is POSIX `sh`. If these signals conflict or remain ambiguous, stop and ask which interpreter contract to preserve.
 
+This skill requires Bash 4.0 or newer. Verify the interpreter version used on every supported target, including interpreters resolved through `/usr/bin/env`. If any required target uses an older Bash, stop and ask the human to raise the baseline or revise the task. Do not silently target the older interpreter.
+
 ## Confirm the Bash contract
 
 Inspect the shebang, invocation, minimum Bash version, operating systems, shell options, sourced-versus-executed behavior, formatter and lint settings, tests, and CI. Use the [GNU Bash Manual](https://www.gnu.org/software/bash/manual/bash.html) for version-specific semantics and the [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) where it is compatible with project conventions.
@@ -49,7 +51,7 @@ Do not add Bash features to a script that must remain portable. If Bash is requi
 
 ## Validate Bash behavior
 
-Run inherited `coding-sh` gates in Bash mode. Use the project's test framework first; when none is configured, ask before installing [Bats-core](https://bats-core.readthedocs.io/) for behavior tests. Use `bash -n` with the project's minimum Bash version for syntax checking.
+Run inherited formatting and lint gates in Bash mode. Use [ShellCheck](https://www.shellcheck.net/) with the Bash dialect selected explicitly through project configuration or its equivalent command option; do not let a `.sh` suffix make the linter assume POSIX `sh`. Use the project's test framework first; when none is configured, ask before installing [Bats-core](https://bats-core.readthedocs.io/) for behavior tests. Use `bash -n` with the project's minimum supported Bash 4+ version for syntax checking.
 
 Test sourced and executed modes, option changes, arrays with empty elements, pipeline failures, process substitution, traps, signals, jobs or coprocesses when used, and minimum-version compatibility.
 

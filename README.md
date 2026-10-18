@@ -26,7 +26,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`coding-lua`](.agents/skills/coding-lua/SKILL.md) | Apply Lua runtime, module, table, dynamic-execution, native-boundary, and project-first quality-gate guidance. |
 | [`coding-php`](.agents/skills/coding-php/SKILL.md) | Apply PHP runtime, Composer, web-security, compatibility, and project-first quality-gate guidance. |
 | [`coding-sh`](.agents/skills/coding-sh/SKILL.md) | Apply POSIX shell portability, quoting, cleanup, injection-safety, and project-first quality-gate guidance. |
-| [`coding-bash`](.agents/skills/coding-bash/SKILL.md) | Add interpreter-aware Bash routing, arrays, tests, options, process handling, and pipeline-status guidance regardless of filename extension. |
+| [`coding-bash`](.agents/skills/coding-bash/SKILL.md) | Add interpreter-aware Bash 4+ routing, arrays, tests, options, process handling, and pipeline-status guidance regardless of filename extension. |
 | [`coding-go`](.agents/skills/coding-go/SKILL.md) | Apply Go error, context, concurrency, module, supply-chain, and project-first quality-gate guidance. |
 | [`coding-gdscript`](.agents/skills/coding-gdscript/SKILL.md) | Apply Godot GDScript lifecycle, ownership, game-security, compatibility, and project-first quality-gate guidance. |
 | [`coding-swift`](.agents/skills/coding-swift/SKILL.md) | Apply Swift API, ownership, concurrency, interop, platform, security, and project-first quality-gate guidance. |
