@@ -17,6 +17,8 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`coding-mts`](.agents/skills/coding-mts/SKILL.md) | Add TypeScript ECMAScript-module semantics for `.mts` files. |
 | [`coding-cts`](.agents/skills/coding-cts/SKILL.md) | Add TypeScript CommonJS semantics for `.cts` files. |
 | [`coding-tsx`](.agents/skills/coding-tsx/SKILL.md) | Add framework-neutral TSX typing, rendering, security, and accessibility guidance. |
+| [`coding-c`](.agents/skills/coding-c/SKILL.md) | Apply C ownership, memory-safety, portability, and project-first quality-gate guidance. |
+| [`coding-cpp`](.agents/skills/coding-cpp/SKILL.md) | Apply modern C++ lifetime, ownership, type-safety, portability, and project-first quality-gate guidance. |
 | [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
 | [`grilling`](.agents/skills/grilling/SKILL.md) | Interview a user until a plan or decision has no unresolved branches. |
 | [`isolated-workspace`](.agents/skills/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
