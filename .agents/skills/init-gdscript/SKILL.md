@@ -1,7 +1,7 @@
 ---
 name: init-gdscript
 description: Initialize or adopt a Godot GDScript toolchain on the init-project foundation with pinned engine tooling, gdtoolkit validation, optional compatible tests, and mise task integration. Use when adding GDScript to a new or existing Godot project.
-compatibility: Requires the init-project, coding, and coding-gdscript skills. Requires a Godot version selected for the project's target platforms.
+compatibility: Requires the init-project, coding, and coding-gdscript skills. Requires a selected Godot version; the bundled helper requires Node 20 or newer.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -45,7 +45,26 @@ Before mutation, add the GDScript-specific changes to the approved project plan:
 - downloaded addons or archives with version and integrity source
 - commands that install tools, import assets, run the editor, or update lockfiles
 
-Treat Godot addons, editor plugins, and native extensions as executable code. Wait for approval before downloading or enabling them.
+Treat Godot addons, editor plugins, and native extensions as executable code. Approval granted to `init-project` covers only the shared foundation. Present the complete GDScript plan and wait for separate explicit approval before writing configuration, changing manifests, installing tools, downloading addons, or enabling executable content.
+
+## Run the bundled initializer
+
+Use the tested helper in [`scripts/init.mjs`](scripts/init.mjs) for the baseline Godot, Python, uv, gdtoolkit, and task setup. Run commands from this skill directory and pass the absolute Godot project root.
+
+Inspect its interface and generate a non-mutating JSON plan:
+
+```text
+node scripts/init.mjs --help
+node scripts/init.mjs --root /absolute/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --source game
+```
+
+After the human approves the complete GDScript plan, apply it. Add `--install` only when mise and uv changes are also approved:
+
+```text
+node scripts/init.mjs --root /absolute/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --source game --apply --confirm --install
+```
+
+With `--install`, the helper re-trusts the approved `mise.toml` after adding GDScript tools and tasks; include that user-level trust-store change in the approval. The helper intentionally does not choose or download a test addon. Configure GdUnit4, GUT, or another executable addon only through the separately approved framework plan below.
 
 ## Put each dependency in the right place
 
@@ -66,6 +85,7 @@ Use project scripts and mise tasks together without recursion. A project that al
 
 Add namespaced implementations as applicable:
 
+- `deps:sync:gdscript`: run `uv sync --locked` and append it to the public `deps:sync` dependencies
 - `lint:gdscript`: run `gdlint` on first-party GDScript
 - `lint:fix:gdscript`: add only when an approved tool offers a safe, inspectable fix
 - `format:gdscript`: run `gdformat --check`
@@ -89,9 +109,9 @@ Godot and GDScript addons do not have one mature universal dependency-vulnerabil
 
 ## Use helpers without hiding changes
 
-A Node or Python helper may merge manifests, add scripts, install pinned tooling, or place an approved addon. It must follow the `init-project` helper-script contract.
+Prefer the bundled helper for its supported baseline. Any replacement or additional Node or Python helper must follow the `init-project` helper-script contract.
 
-For downloaded addons, the helper must pin the source, verify the expected archive or content digest when available, extract only into the approved destination, reject path traversal, and avoid executing downloaded code during installation. Keep credentials out of download URLs, environment output, and generated files.
+For downloaded addons, a helper must pin the source, verify the expected archive or content digest when available, extract only into the approved destination, reject path traversal, and avoid executing downloaded code during installation. Keep credentials out of download URLs, environment output, and generated files.
 
 Do not hand-edit `uv.lock`, `pnpm-lock.yaml`, or mise lock data.
 

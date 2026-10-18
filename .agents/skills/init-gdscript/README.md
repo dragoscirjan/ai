@@ -14,12 +14,13 @@ It pins the selected Godot executable through mise when supported, keeps Python-
 - [mise registry](https://mise.jdx.dev/registry.html)
 - [uv projects](https://docs.astral.sh/uv/concepts/projects/)
 - [jscpd](https://jscpd.dev/)
+- [Agent Skills: using scripts in skills](https://agentskills.io/skill-creation/using-scripts)
 
 ## Dependency contract
 
 Load `init-project`, then `coding`, then `coding-gdscript`. Stop when one is unavailable; do not install a missing skill automatically.
 
-The initializer uses the Node and pnpm control plane from `init-project`. Godot, Python, and uv are mise tools when selected. Python tooling dependencies belong in `pyproject.toml` and `uv.lock`.
+The initializer uses the Node and pnpm control plane from `init-project`. Its bundled helper requires Node 20 or newer. Godot, Python, and uv are mise tools when selected. Python tooling dependencies belong in `pyproject.toml` and `uv.lock`.
 
 ## Invocation
 
@@ -40,4 +41,6 @@ Direct invocation requests a GDScript initialization plan. Selecting the Godot r
 ## Files
 
 - `SKILL.md` contains the GDScript initialization workflow.
+- `scripts/init.mjs` plans and applies the baseline GDScript tooling contract without choosing an executable test addon. It imports the shared standard-library-only helpers from the required `init-project` skill and generates a project-local per-file Godot parser helper.
+- `scripts/init.test.mjs` tests dry-run, approval, idempotence, uv synchronization, Godot-root validation, and conflict behavior.
 - `README.md` contains supporting references and invocation notes.

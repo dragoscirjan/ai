@@ -13,6 +13,7 @@ It keeps compiler configuration in project-owned `tsconfig` files, installs Node
 - [`@tempel/eslint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/eslint)
 - [`@tempel/prettier`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/prettier)
 - [`@tempel/vitest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/vitest)
+- [Agent Skills: using scripts in skills](https://agentskills.io/skill-creation/using-scripts)
 
 `@tempel/tsconfig` is intentionally excluded because it is not maintained. The initializer creates project-owned compiler configuration instead.
 
@@ -20,7 +21,7 @@ It keeps compiler configuration in project-owned `tsconfig` files, installs Node
 
 Load `init-project`, then `coding`, then `coding-ts`. Stop when one is unavailable; do not install a missing skill automatically.
 
-The initializer uses the approved Node and pnpm toolchain from `init-project`. It does not add another package manager.
+The initializer uses the approved Node and pnpm toolchain from `init-project`. Its bundled helper requires Node 20 or newer. It does not add another package manager.
 
 ## Invocation
 
@@ -41,4 +42,6 @@ Direct invocation requests a TypeScript initialization plan. The project shape a
 ## Files
 
 - `SKILL.md` contains the TypeScript initialization workflow.
+- `scripts/init.mjs` plans and applies the supported TypeScript contract. It imports the shared standard-library-only helpers from the required `init-project` skill.
+- `scripts/init.test.mjs` tests dry-run, approval, idempotence, task registration, and conflict behavior.
 - `README.md` contains supporting references and invocation notes.

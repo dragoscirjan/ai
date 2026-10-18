@@ -13,10 +13,11 @@ It uses mise for executable toolchains, `package.json` and pnpm for Node depende
 - [Tempel JavaScript Development Toolkit](https://github.com/dragoscirjan/tempel-javascript)
 - [Commitlint](https://commitlint.js.org/)
 - [jscpd](https://jscpd.dev/)
+- [Agent Skills: using scripts in skills](https://agentskills.io/skill-creation/using-scripts)
 
 ## Dependency contract
 
-The skill has no skill dependency. It requires mise, and it requires Git when Husky hooks are requested. It installs tools and manifest dependencies only after an exact plan receives human approval.
+The skill has no skill dependency. It requires mise and Git. Its bundled helper requires Node 20 or newer. It installs tools and manifest dependencies only after an exact plan receives human approval.
 
 Language initializers depend on `init-project`; `init-project` does not depend on them.
 
@@ -39,4 +40,7 @@ Direct invocation requests an initialization plan. It does not authorize unrevie
 ## Files
 
 - `SKILL.md` contains the initialization workflow and safety contract.
+- `scripts/init.mjs` plans and applies the supported initialization contract.
+- `scripts/lib.mjs` provides shared safe manifest, TOML, process, and output helpers to the initializer family.
+- `scripts/init.test.mjs` tests dry-run, approval, idempotence, permissions, and conflict behavior.
 - `README.md` contains supporting references and invocation notes.

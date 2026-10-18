@@ -1,7 +1,7 @@
 ---
 name: init-project
 description: Initialize or adopt shared project tooling with mise, Node, pnpm, Tempel validation, Husky hooks, manifest-owned dependencies, and stable quality commands. Use before a language initializer or when creating the repository-wide development foundation.
-compatibility: Requires mise. Requires Git for Husky hooks. Installs Node, pnpm, and approved project dependencies only after human approval.
+compatibility: Requires mise and Git. The bundled helper requires Node 20 or newer. Installs Node, pnpm, and approved project dependencies only after human approval.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -33,6 +33,30 @@ Before changing files or installing anything, present:
 - commands that will write files, install tools, or update lockfiles
 
 Wait for approval of that plan. Approval to initialize does not authorize unrelated upgrades or automatic fixes.
+
+## Run the bundled initializer
+
+Use the tested helper in [`scripts/init.mjs`](scripts/init.mjs) when the requested project fits its contract. Run commands from this skill directory and pass the absolute target repository root.
+
+Inspect its interface first:
+
+```text
+node scripts/init.mjs --help
+```
+
+Generate a non-mutating JSON plan:
+
+```text
+node scripts/init.mjs --root /absolute/project --node 24 --pnpm 10.33.0
+```
+
+After the human approves that exact plan, apply it. Add `--install` only when the approval includes tool installation and lockfile updates:
+
+```text
+node scripts/init.mjs --root /absolute/project --node 24 --pnpm 10.33.0 --apply --confirm --install
+```
+
+With `--install`, the helper also trusts the generated `mise.toml`; include that user-level mise trust-store change in the approval. The bundled package versions are exact and tested together. If the project needs different versions or the script reports a conflict, revise the plan and resolve the conflict explicitly; do not bypass its stop or overwrite the existing state. Treat JSON on stdout as result data and stderr as diagnostics.
 
 ## Keep dependency ownership clear
 
@@ -99,9 +123,9 @@ Preserve existing hooks and hook managers. Do not install a second manager or di
 
 ## Use helper scripts safely
 
-A checked-in or temporary Node or Python helper may inspect configuration, merge structured manifests, add scripts, or invoke package managers when it is safer than shell text replacement.
+Prefer the bundled helper for its supported contract. Add or generate another Node or Python helper only when the approved project needs behavior that the bundled script does not support and a structured script is safer than manual text replacement.
 
-Such a helper must:
+Every helper must:
 
 - default to inspection or print the exact planned changes before apply
 - require an explicit apply action after approval

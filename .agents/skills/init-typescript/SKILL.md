@@ -1,7 +1,7 @@
 ---
 name: init-typescript
 description: Initialize or adopt a TypeScript toolchain on the init-project foundation with project-owned compiler settings, pnpm-managed Tempel validation, tests, builds, and mise task integration. Use when adding TypeScript to a new or existing project.
-compatibility: Requires the init-project, coding, and coding-ts skills. Requires the approved Node and pnpm toolchain from init-project.
+compatibility: Requires the init-project, coding, and coding-ts skills. Requires the approved Node and pnpm toolchain from init-project; the bundled helper requires Node 20 or newer.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -44,7 +44,26 @@ Before mutation, add the TypeScript-specific changes to the approved project pla
 - files or directories that initialization will create
 - commands that will install dependencies, generate files, build, or test
 
-Stop on conflicts and show the exact proposed reconciliation.
+Approval granted to `init-project` covers only the shared foundation. Present the complete TypeScript plan and wait for separate explicit approval before writing configuration, changing manifests, or installing dependencies. Stop on conflicts and show the exact proposed reconciliation.
+
+## Run the bundled initializer
+
+Use the tested helper in [`scripts/init.mjs`](scripts/init.mjs) when its closed project-shape options match the requested TypeScript project. Run commands from this skill directory and pass the absolute target root.
+
+Inspect its interface and generate a non-mutating JSON plan:
+
+```text
+node scripts/init.mjs --help
+node scripts/init.mjs --root /absolute/project --runtime node --module esm --kind app --node-types 24.19.2
+```
+
+After the human approves the complete TypeScript plan, apply it. Add `--install` only when dependency installation and lockfile updates are also approved:
+
+```text
+node scripts/init.mjs --root /absolute/project --runtime node --module esm --kind app --node-types 24.19.2 --apply --confirm --install
+```
+
+With `--install`, the helper re-trusts the approved `mise.toml` after adding TypeScript tasks; include that user-level trust-store change in the approval. The helper rejects unknown project shapes, incompatible existing scripts, and different configuration files. Resolve those cases through a revised plan instead of forcing the template.
 
 ## Add manifest-owned dependencies
 
@@ -91,7 +110,7 @@ Do not add universal coverage, duplication, or severity thresholds. Use project-
 
 ## Use helpers without hiding changes
 
-A Node helper may merge `package.json`, add scripts, create configuration, or invoke pnpm. It must follow the `init-project` helper-script contract, print or return the exact plan before apply, preserve unrelated manifest fields, and stop on conflicting scripts or versions.
+Prefer the bundled helper for supported projects. Any replacement or additional Node helper must follow the `init-project` helper-script contract, print or return the exact plan before apply, preserve unrelated manifest fields, and stop on conflicting scripts or versions.
 
 Do not hand-edit `pnpm-lock.yaml` or write a helper that constructs it.
 
