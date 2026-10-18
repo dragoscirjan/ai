@@ -2,6 +2,10 @@
 
 `coding-bash` adds Bash-specific semantics. Apply [`coding`](../coding/SKILL.md), then [`coding-sh`](../coding-sh/SKILL.md), then this wrapper.
 
+## Routing
+
+Select this skill from the interpreter contract, not from the filename suffix. Apply it to `.sh` and extensionless files when the shebang, invoking command, sourced Bash context, project configuration, or lint directives establish Bash. Treat Bash-only syntax as supporting evidence. Stop and ask when these signals conflict or remain ambiguous.
+
 ## Scope
 
 The wrapper covers only Bash-specific concerns:

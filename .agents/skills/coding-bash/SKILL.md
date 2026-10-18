@@ -1,6 +1,6 @@
 ---
 name: coding-bash
-description: Write, refactor, review, or test Bash-specific shell with version-compatible arrays, tests, options, process handling, pipeline status, and introspection. Use whenever a script or shell fragment intentionally requires Bash rather than portable POSIX sh.
+description: Write, refactor, review, or test Bash-specific shell with version-compatible arrays, tests, options, process handling, pipeline status, and introspection. Use whenever the shebang, invocation, sourced context, project configuration, or Bash-only syntax establishes Bash, including files with a .sh extension.
 compatibility: Requires the coding and coding-sh skills plus the Bash versions, operating systems, utilities, and test tools selected by the project.
 metadata:
   author: dragoscirjan
@@ -17,6 +17,19 @@ Apply `coding`, then `coding-sh`, then this Bash-specific guidance.
 Locate the advertised `coding` and `coding-sh` skills by exact name and path. Read their `SKILL.md` files in that order unless they are already loaded.
 
 If either dependency is unavailable, stop and ask the human to install or expose it. Do not install it automatically, duplicate its instructions, or rely on a harness-specific Skill tool.
+
+## Select Bash by interpreter contract
+
+Do not select shell guidance from the filename suffix alone. Many Bash programs use `.sh`, while some extensionless files are portable shell or Bash.
+
+Select this wrapper when at least one authoritative project signal establishes Bash:
+
+1. The shebang resolves to Bash.
+2. A command, build tool, service, or host invokes the file with Bash.
+3. A Bash process sources the fragment under a documented Bash contract.
+4. Project configuration or lint directives declare the Bash dialect.
+
+Treat Bash-only syntax as supporting evidence, not permission to change a script whose declared interpreter is POSIX `sh`. If these signals conflict or remain ambiguous, stop and ask which interpreter contract to preserve.
 
 ## Confirm the Bash contract
 
