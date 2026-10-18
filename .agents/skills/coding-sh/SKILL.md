@@ -18,8 +18,6 @@ Locate the advertised `coding` skill by exact name and path. If it is not alread
 
 If `coding` is unavailable, stop and ask the human to install or expose it. Do not install it automatically, copy its instructions into this skill, or assume its contents from memory.
 
-For scripts that intentionally require Bash, also load `coding-bash` after this skill.
-
 ## Confirm the portability contract
 
 Inspect the shebang, invoking process, container or host images, supported operating systems, available utilities, shell options, formatter and lint configuration, tests, and CI before editing. A `.sh` extension does not prove which shell runs the file. Treat `/bin/sh` as the project's documented POSIX-compatible implementation, not as Bash.

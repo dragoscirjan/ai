@@ -2,8 +2,6 @@
 
 `coding-sh` adds portable POSIX shell guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to `.sh` files and shell fragments that must run under a project-selected POSIX-compatible `sh`.
 
-Load `coding-bash` after this skill when a script intentionally requires Bash.
-
 ## Sources
 
 - [POSIX Shell Command Language](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html)

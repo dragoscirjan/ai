@@ -1,6 +1,12 @@
 # Bash coding
 
-`coding-bash` adds Bash-specific semantics. Apply [`coding`](../coding/SKILL.md), then [`coding-sh`](../coding-sh/SKILL.md), then this wrapper.
+`coding-bash` adds Bash 4-or-newer semantics. Apply [`coding`](../coding/SKILL.md), then [`coding-sh`](../coding-sh/SKILL.md), then this wrapper.
+
+The skill has a hard minimum of Bash 4.0. The agent verifies the interpreter on every supported target and stops for a decision when any target resolves an older Bash.
+
+## Routing
+
+Select this skill from the interpreter contract, not from the filename suffix. Apply it to `.sh` and extensionless files when the shebang, invoking command, sourced Bash context, project configuration, or lint directives establish Bash. Treat Bash-only syntax as supporting evidence. Stop and ask when these signals conflict or remain ambiguous.
 
 ## Scope
 
@@ -11,9 +17,10 @@ The wrapper covers only Bash-specific concerns:
 - process substitution, `mapfile`, namerefs, and version-gated features
 - `BASH_SOURCE`, `FUNCNAME`, `PIPESTATUS`, options, traps, and sourced-script state
 - pipeline, subshell, process-substitution, job, and coprocess behavior
-- Bats-core and Bash-version syntax checks
+- [ShellCheck](https://www.shellcheck.net/) with the Bash dialect selected explicitly, regardless of a `.sh` suffix
+- Bats-core and Bash 4+-version syntax checks
 
-It inherits quoting, injection, cleanup, POSIX-baseline, shfmt, ShellCheck, and jscpd guidance from `coding-sh` instead of duplicating it.
+It inherits quoting, injection, cleanup, POSIX-baseline, shfmt, and jscpd guidance from `coding-sh` instead of duplicating it.
 
 ## Sources
 
