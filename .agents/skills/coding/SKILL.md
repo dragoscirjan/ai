@@ -66,7 +66,7 @@ Identify what is trusted, what is untrusted, and what the code protects. Apply c
 - Check memory, integer, concurrency, path, serialization, and dependency risks when they apply to the language and environment.
 - Return useful errors without exposing sensitive internals.
 
-Use [OWASP Secure Coding Practices](https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/) and the [CWE Top 25](https://cwe.mitre.org/top25/) as risk references, not as substitutes for project-specific threat analysis.
+Use the [OWASP Developer Guide](https://devguide.owasp.org/), its [secure coding checklist](https://devguide.owasp.org/en/04-design/02-web-app-checklist/), and the [CWE Top 25](https://cwe.mitre.org/top25/) as risk references, not as substitutes for project-specific threat analysis.
 
 Do not claim that code is secure because it follows a checklist or passes one scanner.
 
