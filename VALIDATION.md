@@ -22,6 +22,22 @@ When a change adds or modifies a skill:
 - Check relative references, supporting files, and command examples.
 - Confirm that harness-specific behavior is explicit and does not masquerade as portable Agent Skills behavior.
 
+## Coding-family changes
+
+When a change adds or modifies `coding` or a `coding-*` skill:
+
+- Confirm that all coding skills are sibling directories directly under `.agents/skills/`.
+- Confirm that language skills require `coding` and extension skills require both `coding` and their language skill.
+- Confirm that dependencies resolve through advertised skill names and paths without a harness-specific Skill tool.
+- Test generic-to-language-to-extension load order, missing-dependency stops, and dependency-cycle rejection when those relationships exist.
+- Confirm that wrappers contain only extension-specific differences and do not duplicate generic or language instructions.
+- Confirm that project configuration takes precedence over fallback tools.
+- Confirm that no skill installs, replaces, or reconfigures tools without human approval.
+- Confirm that every language uses jscpd as the fallback duplicate detector while honoring project-configured alternatives.
+- Confirm that numeric thresholds come only from project configuration.
+- Check source links and maintenance-status notes for external guidance.
+- Verify flat discovery in Pi and OpenCode.
+
 ## Workspace-skill changes
 
 When a change modifies `isolated-workspace` or `cleanup-workspaces`:
