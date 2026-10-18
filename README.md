@@ -25,6 +25,10 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`coding-pyi`](.agents/skills/coding-pyi/SKILL.md) | Add Python stub declaration, interface-parity, overload, export, and compatibility guidance. |
 | [`coding-lua`](.agents/skills/coding-lua/SKILL.md) | Apply Lua runtime, module, table, dynamic-execution, native-boundary, and project-first quality-gate guidance. |
 | [`coding-php`](.agents/skills/coding-php/SKILL.md) | Apply PHP runtime, Composer, web-security, compatibility, and project-first quality-gate guidance. |
+| [`coding-sh`](.agents/skills/coding-sh/SKILL.md) | Apply POSIX shell portability, quoting, cleanup, injection-safety, and project-first quality-gate guidance. |
+| [`coding-bash`](.agents/skills/coding-bash/SKILL.md) | Add Bash arrays, tests, options, process handling, pipeline-status, and version-specific guidance. |
+| [`coding-go`](.agents/skills/coding-go/SKILL.md) | Apply Go error, context, concurrency, module, supply-chain, and project-first quality-gate guidance. |
+| [`coding-gdscript`](.agents/skills/coding-gdscript/SKILL.md) | Apply Godot GDScript lifecycle, ownership, game-security, compatibility, and project-first quality-gate guidance. |
 | [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
 | [`grilling`](.agents/skills/grilling/SKILL.md) | Interview a user until a plan or decision has no unresolved branches. |
 | [`isolated-workspace`](.agents/skills/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
