@@ -30,6 +30,9 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`coding-go`](.agents/skills/coding-go/SKILL.md) | Apply Go error, context, concurrency, module, supply-chain, and project-first quality-gate guidance. |
 | [`coding-gdscript`](.agents/skills/coding-gdscript/SKILL.md) | Apply Godot GDScript lifecycle, ownership, game-security, compatibility, and project-first quality-gate guidance. |
 | [`coding-swift`](.agents/skills/coding-swift/SKILL.md) | Apply Swift API, ownership, concurrency, interop, platform, security, and project-first quality-gate guidance. |
+| [`init-gdscript`](.agents/skills/init-gdscript/SKILL.md) | Initialize Godot and GDScript tooling, validation, tests, and mise tasks. |
+| [`init-project`](.agents/skills/init-project/SKILL.md) | Initialize mise, Node, pnpm, Tempel validation, Husky hooks, and stable project tasks. |
+| [`init-typescript`](.agents/skills/init-typescript/SKILL.md) | Initialize project-owned TypeScript configuration, validation, tests, builds, and mise tasks. |
 | [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
 | [`grilling`](.agents/skills/grilling/SKILL.md) | Interview a user until a plan or decision has no unresolved branches. |
 | [`isolated-workspace`](.agents/skills/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
