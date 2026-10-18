@@ -19,6 +19,8 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`coding-tsx`](.agents/skills/coding-tsx/SKILL.md) | Add framework-neutral TSX typing, rendering, security, and accessibility guidance. |
 | [`coding-c`](.agents/skills/coding-c/SKILL.md) | Apply C ownership, memory-safety, portability, and project-first quality-gate guidance. |
 | [`coding-cpp`](.agents/skills/coding-cpp/SKILL.md) | Apply modern C++ lifetime, ownership, type-safety, portability, and project-first quality-gate guidance. |
+| [`coding-rs`](.agents/skills/coding-rs/SKILL.md) | Apply Rust ownership, unsafe-boundary, API-compatibility, supply-chain, and project-first quality-gate guidance. |
+| [`coding-zig`](.agents/skills/coding-zig/SKILL.md) | Apply Zig allocation, cleanup, low-level safety, compiler-compatibility, and project-first quality-gate guidance. |
 | [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
 | [`grilling`](.agents/skills/grilling/SKILL.md) | Interview a user until a plan or decision has no unresolved branches. |
 | [`isolated-workspace`](.agents/skills/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
