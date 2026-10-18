@@ -2,8 +2,6 @@
 
 `coding-py` adds Python-specific guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to `.py` files, packages, Python environments, and build or test work.
 
-Load `coding-pyi` after this skill when changing `.pyi` stub files.
-
 ## Sources
 
 - [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
