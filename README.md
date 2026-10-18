@@ -9,6 +9,14 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`cleanup-workspaces`](.agents/skills/cleanup-workspaces/SKILL.md) | Audit and safely remove integrated Git worktrees and Jujutsu workspaces. |
 | [`asd-ste100-technical`](.agents/skills/asd-ste100-technical/SKILL.md) | Apply ASD-STE100-inspired plain language to developer-facing prose without losing technical precision. |
 | [`coding`](.agents/skills/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
+| [`coding-js`](.agents/skills/coding-js/SKILL.md) | Apply JavaScript guidance and project-first quality gates to `.js` files. |
+| [`coding-mjs`](.agents/skills/coding-mjs/SKILL.md) | Add ECMAScript-module semantics for `.mjs` files. |
+| [`coding-cjs`](.agents/skills/coding-cjs/SKILL.md) | Add CommonJS semantics for `.cjs` files. |
+| [`coding-jsx`](.agents/skills/coding-jsx/SKILL.md) | Add framework-neutral JSX rendering, security, and accessibility guidance. |
+| [`coding-ts`](.agents/skills/coding-ts/SKILL.md) | Apply TypeScript typing, runtime-boundary, and quality-gate guidance to `.ts` files. |
+| [`coding-mts`](.agents/skills/coding-mts/SKILL.md) | Add TypeScript ECMAScript-module semantics for `.mts` files. |
+| [`coding-cts`](.agents/skills/coding-cts/SKILL.md) | Add TypeScript CommonJS semantics for `.cts` files. |
+| [`coding-tsx`](.agents/skills/coding-tsx/SKILL.md) | Add framework-neutral TSX typing, rendering, security, and accessibility guidance. |
 | [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
 | [`grilling`](.agents/skills/grilling/SKILL.md) | Interview a user until a plan or decision has no unresolved branches. |
 | [`isolated-workspace`](.agents/skills/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
