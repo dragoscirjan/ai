@@ -48,7 +48,7 @@ When a change modifies `AGENTS.md`, `CONTRIBUTING.md`, `VALIDATION.md`, or anoth
 
 - Confirm that `AGENTS.md` contains only startup routing, project configuration, always-on security, and owner authority.
 - Confirm that every deferred document or mandatory skill has a clear trigger in `AGENTS.md`.
-- Confirm that read-only analysis does not require deferred contributor instructions.
+- Confirm that read-only analysis does not require deferred contributor instructions unless it needs repository identity.
 - Confirm that planning or performing a repository change requires `CONTRIBUTING.md`.
 - Confirm that mutation requires `isolated-workspace`.
 - Confirm that validating, committing, pushing, or publishing requires `VALIDATION.md`.

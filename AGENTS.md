@@ -10,7 +10,7 @@ Load only the instructions required for the current phase. When several rows mat
 
 | Trigger | Required instructions |
 |---|---|
-| Read-only questions, inspection, comparison, or research | No deferred project document is required. |
+| Read-only questions, inspection, comparison, or research | No deferred project document is required unless the workflow needs repository identity; then read and follow `CONTRIBUTING.md`. |
 | Before planning or performing a repository architecture, design, implementation, documentation, configuration, policy, or publication change | Read and follow `CONTRIBUTING.md`. |
 | Before any repository mutation | Read and follow `.agents/skills/isolated-workspace/SKILL.md`. |
 | Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
