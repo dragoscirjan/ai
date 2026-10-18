@@ -70,7 +70,7 @@ After the human approves the complete GDScript plan, apply it. Add `--install` o
 bun scripts/init.mjs --root /absolute/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --source game --apply --confirm --install
 ```
 
-With `--install`, the helper re-trusts the approved `mise.toml` after adding GDScript tools and tasks; include that user-level trust-store change in the approval. The helper intentionally does not choose or download a test addon. Configure GdUnit4, GUT, or another executable addon only through the separately approved framework plan below.
+With `--install`, the helper re-trusts the approved `mise.toml` after adding GDScript tools and tasks; include that user-level trust-store change in the approval. When `--source .` is retained, the generated parser helper skips `.git`, `.godot`, `.venv`, `node_modules`, `addons`, coverage, distribution, and build directories before checking symlinks; select a narrower first-party source path when practical. The helper intentionally does not choose or download a test addon. Configure GdUnit4, GUT, or another executable addon only through the separately approved framework plan below.
 
 ## Put each dependency in the right place
 

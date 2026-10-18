@@ -69,6 +69,22 @@ test("invalid TOML stops before mutation", () => {
   }
 });
 
+test("generated TOML conflicts are named before mutation", () => {
+  const root = fixture();
+  try {
+    const misePath = join(root, "mise.toml");
+    writeFileSync(misePath, '[tasks]\nvalidate = "custom"\n');
+    const before = readFileSync(misePath, "utf8");
+    const result = run(root, ["--apply", "--confirm"]);
+    assert.equal(result.status, 3);
+    assert.match(result.stderr, /Conflict while updating tasks\.validate/);
+    assert.equal(readFileSync(misePath, "utf8"), before);
+    assert.equal(existsSync(join(root, "package.json")), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test("Node versions below 24 are rejected", () => {
   const root = fixture();
   try {
@@ -93,7 +109,12 @@ test("plan is non-mutating and apply is idempotent", () => {
     assert.equal(planData.mode, "plan");
     assert.equal(planData.selected.node, "24");
     assert.equal(planData.devDependencies.husky, "9.1.7");
+    assert.equal(planData.pnpmOverrides["argparse@1.0.10"], "2.0.1");
     assert.match(planData.hooks["pre-commit"], /mise run format/);
+    const plannedFiles = Object.fromEntries(planData.files.map((file) => [file.path, file.content]));
+    assert.match(plannedFiles["package.json"], /"argparse@1\.0\.10": "2\.0\.1"/);
+    assert.match(plannedFiles["mise.toml"], /tasks\."validate"/);
+    assert.match(plannedFiles["eslint.config.mjs"], /tempelEslintConfig/);
     assert.equal(existsSync(join(root, "mise.toml")), false);
 
     const unconfirmed = run(root, ["--apply"]);
@@ -112,6 +133,23 @@ test("plan is non-mutating and apply is idempotent", () => {
     assert.equal(second.status, 0, second.stderr);
     assert.equal(readFileSync(join(root, "mise.toml"), "utf8"), before);
     assert.ok(JSON.parse(second.stdout).operations.every((operation) => operation.action === "unchanged"));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("planned file contents redact pre-existing sensitive values", () => {
+  const root = fixture();
+  try {
+    writeFileSync(join(root, "package.json"), '{"private":true,"authToken":"do-not-print"}\n');
+    const result = run(root);
+    assert.equal(result.status, 0, result.stderr);
+    assert.doesNotMatch(result.stdout, /do-not-print/);
+    const packagePlan = JSON.parse(result.stdout).files.find(
+      (file) => file.path === "package.json",
+    );
+    assert.equal(packagePlan.redacted, true);
+    assert.match(packagePlan.content, /<redacted>/);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

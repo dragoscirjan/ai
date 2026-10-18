@@ -52,6 +52,10 @@ test("plan is non-mutating and apply requires confirmation", () => {
     assert.equal(planData.selected.runtime, "node");
     assert.equal(planData.devDependencies.vitest, "4.1.11");
     assert.equal(planData.scripts.typecheck, "tsc --noEmit");
+    const plannedFiles = Object.fromEntries(planData.files.map((file) => [file.path, file.content]));
+    assert.match(plannedFiles["tsconfig.json"], /vitest\/globals/);
+    assert.match(plannedFiles["vitest.config.ts"], /src\/\*\*\/\*\.test\.ts/);
+    assert.match(plannedFiles["vitest.config.ts"], /test\/\*\*\/\*\.spec\.ts/);
     assert.equal(existsSync(join(root, "tsconfig.json")), false);
 
     const unconfirmed = run(root, ["--apply"]);
@@ -77,6 +81,24 @@ test("apply is idempotent and registers TypeScript tasks", () => {
     const second = run(root, ["--apply", "--confirm"]);
     assert.equal(second.status, 0, second.stderr);
     assert.ok(JSON.parse(second.stdout).operations.every((operation) => operation.action === "unchanged"));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("custom test paths control discovery and cannot exclude all source", () => {
+  const root = fixture();
+  try {
+    const custom = run(root, ["--tests", "checks"]);
+    assert.equal(custom.status, 0, custom.stderr);
+    const customFiles = Object.fromEntries(
+      JSON.parse(custom.stdout).files.map((file) => [file.path, file.content]),
+    );
+    assert.match(customFiles["vitest.config.ts"], /checks\/\*\*\/\*\.test\.ts/);
+
+    const overlap = run(root, ["--source", "src", "--tests", "src"]);
+    assert.equal(overlap.status, 2);
+    assert.match(overlap.stderr, /must not equal or contain --source/);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

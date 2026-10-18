@@ -62,6 +62,10 @@ test("plan is non-mutating and rejects a non-Godot root", () => {
     assert.equal(planData.selected.godot, "4.7.2-stable");
     assert.deepEqual(planData.pythonDependencies.dev, ["gdtoolkit==4.5.0"]);
     assert.match(planData.scripts["typecheck:gdscript"], /check-gdscript/);
+    const plannedFiles = Object.fromEntries(planData.files.map((file) => [file.path, file.content]));
+    assert.match(plannedFiles["scripts/check-gdscript.mjs"], /skippedDirectories/);
+    assert.match(plannedFiles["scripts/check-gdscript.mjs"], /'node_modules'/);
+    assert.match(plannedFiles["scripts/check-gdscript.mjs"], /collect\(sourceReal\)/);
     assert.equal(existsSync(join(root, "pyproject.toml")), false);
     const unconfirmed = run(root, ["--apply"]);
     assert.equal(unconfirmed.status, 2);

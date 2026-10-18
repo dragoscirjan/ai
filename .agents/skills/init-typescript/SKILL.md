@@ -28,8 +28,8 @@ Determine from project evidence or ask only when it changes the generated contra
 - Node, browser, another runtime, or multiple targets
 - ESM, CommonJS, or a deliberate dual-package design
 - emitted JavaScript, declarations only, or `noEmit`
-- source, test, generated, and output paths
-- test runner and coverage policy
+- source, test, generated, and output paths; reject a test path that equals or contains the source path because it would exclude every build input
+- test runner, discovery globs, globals contract, and coverage policy
 
 Do not infer those choices from a filename alone. Do not convert a working JavaScript project, module system, bundler, or test runner without approval.
 
@@ -93,7 +93,7 @@ Create or extend the minimum `tsconfig` structure required by the selected targe
 
 Set strictness, module behavior, resolution, libraries, declaration output, source maps, incremental state, includes, excludes, and output paths from the actual runtime and publishing contract. Prefer `noEmit` when another approved tool owns emission. Do not publish generated files or source maps unintentionally.
 
-Configure Tempel packages through their current documented APIs. Keep local overrides explicit and minimal. Preserve existing ignore rules and generated-file boundaries.
+Configure Tempel packages through their current documented APIs. Derive explicit Vitest discovery globs from the approved source and test paths, and include `vitest/globals` in the TypeScript type contract when the configured Tempel preset enables global test APIs. Keep local overrides explicit and minimal. Preserve existing ignore rules and generated-file boundaries.
 
 ## Add scripts and mise tasks
 

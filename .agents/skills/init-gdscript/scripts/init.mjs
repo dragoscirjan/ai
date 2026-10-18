@@ -24,7 +24,7 @@ import {
 const CHECK_GDSCRIPT = `#!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process';
-import { lstatSync, readdirSync, realpathSync } from 'node:fs';
+import { existsSync, lstatSync, readdirSync, realpathSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 
 const root = realpathSync(process.cwd());
@@ -39,10 +39,23 @@ if (sourceRelative === '..' || sourceRelative.startsWith(\`..\${sep}\`)) {
   console.error('Source path escapes the project root');
   process.exit(2);
 }
+if (!existsSync(sourceRoot) || lstatSync(sourceRoot).isSymbolicLink()) {
+  console.error('Source path must be an existing directory, not a symlink');
+  process.exit(3);
+}
+const sourceReal = realpathSync(sourceRoot);
+const realRelative = relative(root, sourceReal);
+if (realRelative === '..' || realRelative.startsWith(\`..\${sep}\`)) {
+  console.error('Source path resolves outside the project root');
+  process.exit(3);
+}
+
+const skippedDirectories = new Set(['.git', '.godot', '.venv', 'addons', 'build', 'coverage', 'dist', 'node_modules']);
 
 function collect(directory) {
   const files = [];
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    if (skippedDirectories.has(entry.name)) continue;
     const target = join(directory, entry.name);
     if (entry.isSymbolicLink() || lstatSync(target).isSymbolicLink()) {
       console.error(\`Refusing to follow symlink: \${relative(root, target)}\`);
@@ -54,7 +67,7 @@ function collect(directory) {
   return files;
 }
 
-const files = collect(sourceRoot).sort();
+const files = collect(sourceReal).sort();
 if (files.length === 0) {
   console.error(\`No GDScript files found under \${source}\`);
   process.exit(4);
@@ -89,7 +102,8 @@ Options:
   --python VERSION     Exact Python version used by gdtoolkit (required)
   --uv VERSION         Exact uv version (required)
   --gdtoolkit VERSION  Exact gdtoolkit version (default: 4.5.0)
-  --source PATH        First-party GDScript root (default: .)
+  --source PATH        First-party GDScript root (default: .); skips Git, Godot,
+                       dependency, addon, coverage, and build directories
   --dry-run            Explicitly select plan-only mode
   --apply              Write the planned files
   --confirm            Confirm that the complete GDScript plan was approved
@@ -216,6 +230,7 @@ async function main() {
     { command: "mise", args: ["exec", "--", "uv", "sync", "--locked"] },
   ];
   const mode = options.apply ? "apply" : "plan";
+  const files = workspace.plannedFiles();
   if (options.apply) workspace.apply();
   if (options.install) {
     runCommand(root, "mise", ["trust", miseConfig]);
@@ -239,6 +254,7 @@ async function main() {
       pythonDependencies: { dev: [`gdtoolkit==${options.gdtoolkit}`] },
       scripts: gdscriptScripts(options.source),
       operations: workspace.operations,
+      files,
       pending: options.install ? [] : commands,
       installed: Boolean(options.install),
     },

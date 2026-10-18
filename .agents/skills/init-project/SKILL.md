@@ -26,8 +26,9 @@ Before changing files or installing anything, present:
 
 - files to create or modify
 - selected Node and pnpm versions and their source
-- manifest dependencies to add
+- manifest dependencies and package-manager overrides to add
 - package and mise scripts to add or change
+- proposed contents for every file that the initializer will create or update; redact pre-existing sensitive values without hiding the proposed changes
 - Husky hooks to create or change
 - existing conflicts or migrations
 - commands that will write files, install tools, or update lockfiles
@@ -62,7 +63,7 @@ After the human approves that exact plan, apply it. Add `--install` only when th
 bun scripts/init.mjs --root /absolute/project --node 24 --pnpm 10.33.0 --apply --confirm --install
 ```
 
-With `--install`, the helper also trusts the generated `mise.toml`; include that user-level mise trust-store change in the approval. The bundled package versions are exact and tested together. If the project needs different versions or the script reports a conflict, revise the plan and resolve the conflict explicitly; do not bypass its stop or overwrite the existing state. Treat JSON on stdout as result data and stderr as diagnostics.
+With `--install`, the helper also trusts the generated `mise.toml`; include that user-level mise trust-store change in the approval. The bundled package versions are exact and tested together. If the project needs different versions or the script reports a conflict, revise the plan and resolve the conflict explicitly; do not bypass its stop or overwrite the existing state. Treat JSON on stdout as result data and stderr as diagnostics. The JSON plan includes final proposed contents for every changed file and marks any sensitive pre-existing values that were redacted; inspect those contents before approval.
 
 ## Keep dependency ownership clear
 

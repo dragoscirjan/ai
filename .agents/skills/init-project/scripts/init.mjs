@@ -63,6 +63,11 @@ const DEV_DEPENDENCIES = Object.freeze({
   typescript: "5.9.3",
 });
 
+const PNPM_OVERRIDES = Object.freeze({
+  "argparse@1.0.10": "2.0.1",
+  "katex@0.16.47": "0.18.2",
+});
+
 const SCRIPTS = Object.freeze({
   prepare: "husky",
   lint: "eslint .",
@@ -147,15 +152,7 @@ function configurePackage(workspace, pnpmVersion) {
   if (!manifest.pnpm || Array.isArray(manifest.pnpm) || typeof manifest.pnpm !== "object") {
     throw new InitError("package.json.pnpm must be an object", EXIT.CONFLICT);
   }
-  mergeExactMap(
-    manifest.pnpm,
-    "overrides",
-    {
-      "argparse@1.0.10": "2.0.1",
-      "katex@0.16.47": "0.18.2",
-    },
-    "package.json.pnpm",
-  );
+  mergeExactMap(manifest.pnpm, "overrides", PNPM_OVERRIDES, "package.json.pnpm");
   writeJsonObject(workspace, "package.json", manifest);
 }
 
@@ -197,6 +194,7 @@ async function main() {
     { command: "mise", args: ["exec", "--", "pnpm", "install"] },
   ];
   const mode = options.apply ? "apply" : "plan";
+  const files = workspace.plannedFiles();
   if (options.apply) workspace.apply();
   if (options.install) {
     runCommand(root, "mise", ["trust", miseConfig]);
@@ -211,6 +209,7 @@ async function main() {
       root,
       selected: { node: nodeVersion, pnpm: pnpmVersion },
       devDependencies: DEV_DEPENDENCIES,
+      pnpmOverrides: PNPM_OVERRIDES,
       scripts: SCRIPTS,
       hooks: {
         "pre-commit": "mise run format && mise run lint",
@@ -218,6 +217,7 @@ async function main() {
         "pre-push": "mise run validate",
       },
       operations: workspace.operations,
+      files,
       pending: options.install ? [] : commands,
       installed: Boolean(options.install),
     },

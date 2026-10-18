@@ -58,6 +58,19 @@ function validateToml(text) {
   }
 }
 
+function finalizeToml(text, location) {
+  requireBun();
+  try {
+    Bun.TOML.parse(text);
+  } catch (error) {
+    throw new InitError(
+      `Conflict while updating ${location}: generated TOML is invalid: ${error.message}`,
+      EXIT.CONFLICT,
+    );
+  }
+  return text;
+}
+
 export function parseArgs(argv, definitions) {
   const values = {};
   for (const [name, definition] of Object.entries(definitions)) {
@@ -157,6 +170,62 @@ function nearestExistingParent(target) {
   return current;
 }
 
+function redactPlannedValue(value, key = "") {
+  if (/(?:token|secret|password|credential|private.?key|auth)/i.test(key)) {
+    return { value: "<redacted>", redacted: true };
+  }
+  if (Array.isArray(value)) {
+    let redacted = false;
+    const result = value.map((item) => {
+      const nested = redactPlannedValue(item);
+      redacted ||= nested.redacted;
+      return nested.value;
+    });
+    return { value: result, redacted };
+  }
+  if (value && typeof value === "object") {
+    let redacted = false;
+    const result = {};
+    for (const [entry, item] of Object.entries(value)) {
+      const nested = redactPlannedValue(item, entry);
+      redacted ||= nested.redacted;
+      result[entry] = nested.value;
+    }
+    return { value: result, redacted };
+  }
+  return { value, redacted: false };
+}
+
+function redactPlannedContent(relativePath, content) {
+  let normalized = content;
+  let structuredRedaction = false;
+  if (relativePath.endsWith(".json")) {
+    try {
+      const parsed = redactPlannedValue(JSON.parse(content));
+      normalized = formatJson(parsed.value);
+      structuredRedaction = parsed.redacted;
+    } catch {
+      // The owning JSON parser reports malformed input before this plan is emitted.
+    }
+  }
+  const redacted =
+    structuredRedaction ||
+    /(https?:\/\/)[^/@\s]+@/i.test(normalized) ||
+    /^(\s*[A-Za-z0-9_.-]*(?:token|secret|password|credential|private.?key|auth)[A-Za-z0-9_.-]*\s*=\s*).+$/im.test(normalized) ||
+    /([A-Z0-9_]*(?:TOKEN|SECRET|PASSWORD|CREDENTIAL|AUTH)[A-Z0-9_]*=)[^\s]+/.test(normalized);
+  const sanitized = normalized
+    .replace(/(https?:\/\/)[^/@\s]+@/gi, "$1<redacted>@")
+    .replace(
+      /^(\s*[A-Za-z0-9_.-]*(?:token|secret|password|credential|private.?key|auth)[A-Za-z0-9_.-]*\s*=\s*).+$/gim,
+      "$1<redacted>",
+    )
+    .replace(
+      /([A-Z0-9_]*(?:TOKEN|SECRET|PASSWORD|CREDENTIAL|AUTH)[A-Z0-9_]*=)[^\s]+/g,
+      "$1<redacted>",
+    );
+  return { content: sanitized, redacted };
+}
+
 export class Workspace {
   constructor(root) {
     this.root = resolveRoot(root);
@@ -215,6 +284,21 @@ export class Workspace {
     }
     const separator = current.length > 0 && !current.endsWith("\n") ? "\n" : "";
     this.stage(relativePath, `${current}${separator}${line}\n`);
+  }
+
+  plannedFiles() {
+    return [...this.staged.entries()].map(([relativePath, staged]) => {
+      const planned = redactPlannedContent(relativePath, staged.content);
+      return {
+        action: existsSync(this.path(relativePath)) ? "update" : "create",
+        path: relativePath,
+        content: planned.content,
+        redacted: planned.redacted,
+        ...(staged.mode === undefined
+          ? {}
+          : { mode: `0${staged.mode.toString(8)}` }),
+      };
+    });
   }
 
   apply() {
@@ -348,7 +432,7 @@ export function ensureTomlTableKey(text, table, key, rawValue) {
   } else {
     ensureSimpleKey(lines, bounds, key, rawValue, table);
   }
-  return `${lines.join("\n").replace(/^\n+/, "")}\n`;
+  return finalizeToml(`${lines.join("\n").replace(/^\n+/, "")}\n`, `${table}.${key}`);
 }
 
 function formatTomlStringArray(values) {
@@ -365,7 +449,10 @@ export function ensureTomlTask(text, name, definition) {
     if (definition.description) lines.push(`description = ${JSON.stringify(definition.description)}`);
     if (definition.depends) lines.push(`depends = ${formatTomlStringArray(definition.depends)}`);
     if (definition.run) lines.push(`run = ${JSON.stringify(definition.run)}`);
-    return `${lines.join("\n").replace(/^\n+/, "")}\n`;
+    return finalizeToml(
+      `${lines.join("\n").replace(/^\n+/, "")}\n`,
+      `tasks.${name}`,
+    );
   }
 
   if (definition.run) {
@@ -397,7 +484,10 @@ export function ensureTomlTask(text, name, definition) {
       lines[dependsIndex] = `depends = ${formatTomlStringArray(existing)}`;
     }
   }
-  return `${lines.join("\n").replace(/^\n+/, "")}\n`;
+  return finalizeToml(
+    `${lines.join("\n").replace(/^\n+/, "")}\n`,
+    `tasks.${name}`,
+  );
 }
 
 export function ensureTomlArrayItem(text, table, key, item) {
@@ -407,14 +497,20 @@ export function ensureTomlArrayItem(text, table, key, item) {
   if (!bounds) {
     if (lines.length && lines[0] !== "") lines.push("");
     lines.push(`[${table}]`, `${key} = ${formatTomlStringArray([item])}`);
-    return `${lines.join("\n").replace(/^\n+/, "")}\n`;
+    return finalizeToml(
+      `${lines.join("\n").replace(/^\n+/, "")}\n`,
+      `${table}.${key}`,
+    );
   }
   const keyIndex = lines.findIndex(
     (line, index) => index > bounds.start && index < bounds.end && new RegExp(`^${escapeRegex(key)}\\s*=`).test(line.trim()),
   );
   if (keyIndex < 0) {
     lines.splice(bounds.end, 0, `${key} = ${formatTomlStringArray([item])}`);
-    return `${lines.join("\n").replace(/^\n+/, "")}\n`;
+    return finalizeToml(
+      `${lines.join("\n").replace(/^\n+/, "")}\n`,
+      `${table}.${key}`,
+    );
   }
   const match = lines[keyIndex].trim().match(new RegExp(`^${escapeRegex(key)}\\s*=\\s*(\\[[^\\n]*\\])\\s*$`));
   if (!match) {
@@ -429,7 +525,10 @@ export function ensureTomlArrayItem(text, table, key, item) {
   }
   if (!values.includes(item)) values.push(item);
   lines[keyIndex] = `${key} = ${formatTomlStringArray(values)}`;
-  return `${lines.join("\n").replace(/^\n+/, "")}\n`;
+  return finalizeToml(
+    `${lines.join("\n").replace(/^\n+/, "")}\n`,
+    `${table}.${key}`,
+  );
 }
 
 function redactDiagnostics(value) {
@@ -487,6 +586,13 @@ export function emit(result, format = "json") {
   process.stdout.write(`${result.mode.toUpperCase()} ${result.skill} at ${result.root}\n`);
   for (const operation of result.operations) {
     process.stdout.write(`- ${operation.action}: ${operation.path ?? operation.command}${operation.detail ? ` (${operation.detail})` : ""}\n`);
+  }
+  if (result.files?.length) {
+    process.stdout.write("Planned file contents:\n");
+    for (const file of result.files) {
+      process.stdout.write(`--- ${file.path}${file.redacted ? " (sensitive values redacted)" : ""}\n`);
+      process.stdout.write(file.content.endsWith("\n") ? file.content : `${file.content}\n`);
+    }
   }
   if (result.pending?.length) {
     process.stdout.write("Pending commands:\n");

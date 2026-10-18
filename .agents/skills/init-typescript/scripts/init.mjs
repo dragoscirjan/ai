@@ -68,8 +68,8 @@ function compilerOptions(options) {
     forceConsistentCasingInFileNames: true,
     skipLibCheck: true,
   };
-  if (nodeTarget) result.types = ["node"];
-  else result.lib = ["ES2022", "DOM", "DOM.Iterable"];
+  result.types = nodeTarget ? ["node", "vitest/globals"] : ["vitest/globals"];
+  if (!nodeTarget) result.lib = ["ES2022", "DOM", "DOM.Iterable"];
   return result;
 }
 
@@ -82,6 +82,24 @@ function buildCompilerOptions(options) {
     declarationMap: options.kind === "library",
     sourceMap: true,
   };
+}
+
+function vitestIncludes(options) {
+  const patterns = [];
+  for (const root of new Set([options.source, options.tests])) {
+    const prefix = root === "." ? "" : `${root}/`;
+    for (const kind of ["test", "spec", "e2e"]) {
+      patterns.push(`${prefix}**/*.${kind}.ts`);
+    }
+  }
+  return patterns;
+}
+
+function vitestConfig(options) {
+  const includes = vitestIncludes(options)
+    .map((pattern) => `    '${pattern}',`)
+    .join("\n");
+  return `import tempelVitestConfig from '@tempel/vitest';\n\nexport default tempelVitestConfig({\n  include: [\n${includes}\n  ],\n});\n`;
 }
 
 function configureMise(workspace) {
@@ -166,6 +184,16 @@ async function main() {
 
   options.source = validateRelativePath(options.source, "--source");
   options.tests = validateRelativePath(options.tests, "--tests");
+  if (
+    options.tests === "." ||
+    options.source === options.tests ||
+    options.source.startsWith(`${options.tests}/`)
+  ) {
+    throw new InitError(
+      "--tests must not equal or contain --source because the build excludes the test path",
+      EXIT.USAGE,
+    );
+  }
   for (const name of ["typescript", "vitest", "tempel-vitest"]) {
     validateVersion(options[name], `--${name}`);
   }
@@ -188,11 +216,7 @@ async function main() {
   };
   workspace.stage("tsconfig.json", formatJson(tsconfig), { createOnly: true });
   workspace.stage("tsconfig.build.json", formatJson(buildConfig), { createOnly: true });
-  workspace.stage(
-    "vitest.config.ts",
-    `import tempelVitestConfig from '@tempel/vitest';\n\nexport default tempelVitestConfig();\n`,
-    { createOnly: true },
-  );
+  workspace.stage("vitest.config.ts", vitestConfig(options), { createOnly: true });
 
   const miseConfig = workspace.path("mise.toml");
   const commands = [
@@ -200,6 +224,7 @@ async function main() {
     { command: "mise", args: ["exec", "--", "pnpm", "install"] },
   ];
   const mode = options.apply ? "apply" : "plan";
+  const files = workspace.plannedFiles();
   if (options.apply) workspace.apply();
   if (options.install) {
     runCommand(root, "mise", ["trust", miseConfig]);
@@ -226,6 +251,7 @@ async function main() {
         build: "tsc -p tsconfig.build.json",
       },
       operations: workspace.operations,
+      files,
       pending: options.install ? [] : commands,
       installed: Boolean(options.install),
     },
