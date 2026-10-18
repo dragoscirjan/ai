@@ -21,6 +21,10 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`coding-cpp`](.agents/skills/coding-cpp/SKILL.md) | Apply modern C++ lifetime, ownership, type-safety, portability, and project-first quality-gate guidance. |
 | [`coding-rs`](.agents/skills/coding-rs/SKILL.md) | Apply Rust ownership, unsafe-boundary, API-compatibility, supply-chain, and project-first quality-gate guidance. |
 | [`coding-zig`](.agents/skills/coding-zig/SKILL.md) | Apply Zig allocation, cleanup, low-level safety, compiler-compatibility, and project-first quality-gate guidance. |
+| [`coding-py`](.agents/skills/coding-py/SKILL.md) | Apply Python runtime, typing, packaging, security, and project-first quality-gate guidance. |
+| [`coding-pyi`](.agents/skills/coding-pyi/SKILL.md) | Add Python stub declaration, interface-parity, overload, export, and compatibility guidance. |
+| [`coding-lua`](.agents/skills/coding-lua/SKILL.md) | Apply Lua runtime, module, table, dynamic-execution, native-boundary, and project-first quality-gate guidance. |
+| [`coding-php`](.agents/skills/coding-php/SKILL.md) | Apply PHP runtime, Composer, web-security, compatibility, and project-first quality-gate guidance. |
 | [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
 | [`grilling`](.agents/skills/grilling/SKILL.md) | Interview a user until a plan or decision has no unresolved branches. |
 | [`isolated-workspace`](.agents/skills/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
