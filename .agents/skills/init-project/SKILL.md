@@ -1,7 +1,7 @@
 ---
 name: init-project
 description: Initialize or adopt shared project tooling with mise, Node, pnpm, Tempel validation, Husky hooks, manifest-owned dependencies, and stable quality commands. Use before a language initializer or when creating the repository-wide development foundation.
-compatibility: Requires mise and Git. The bundled helper requires Node 20 or newer. Installs Node, pnpm, and approved project dependencies only after human approval.
+compatibility: Requires mise, Git, and Bun with Bun.TOML.parse. Hard-stops before initialization when Bun is unavailable. Requires Node 24 or newer for the target project and installs it, pnpm, and approved dependencies only after human approval.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -36,24 +36,30 @@ Wait for approval of that plan. Approval to initialize does not authorize unrela
 
 ## Run the bundled initializer
 
-Use the tested helper in [`scripts/init.mjs`](scripts/init.mjs) when the requested project fits its contract. Run commands from this skill directory and pass the absolute target repository root.
+Use the tested helper in [`scripts/init.mjs`](scripts/init.mjs) when the requested project fits its contract. Run commands from this skill directory and pass the absolute target repository root. The helper uses Bun's built-in TOML parser; Bun is only the initializer runtime and is not added to the target project's toolchain.
+
+Before any invocation, require Bun and hard-stop if it is unavailable:
+
+```sh
+command -v bun >/dev/null 2>&1 || { echo "Bun is required to run init-project." >&2; exit 1; }
+```
 
 Inspect its interface first:
 
 ```text
-node scripts/init.mjs --help
+bun scripts/init.mjs --help
 ```
 
 Generate a non-mutating JSON plan:
 
 ```text
-node scripts/init.mjs --root /absolute/project --node 24 --pnpm 10.33.0
+bun scripts/init.mjs --root /absolute/project --node 24 --pnpm 10.33.0
 ```
 
 After the human approves that exact plan, apply it. Add `--install` only when the approval includes tool installation and lockfile updates:
 
 ```text
-node scripts/init.mjs --root /absolute/project --node 24 --pnpm 10.33.0 --apply --confirm --install
+bun scripts/init.mjs --root /absolute/project --node 24 --pnpm 10.33.0 --apply --confirm --install
 ```
 
 With `--install`, the helper also trusts the generated `mise.toml`; include that user-level mise trust-store change in the approval. The bundled package versions are exact and tested together. If the project needs different versions or the script reports a conflict, revise the plan and resolve the conflict explicitly; do not bypass its stop or overwrite the existing state. Treat JSON on stdout as result data and stderr as diagnostics.
@@ -76,7 +82,7 @@ For a tooling-only Node manifest, set `private` to `true`. Preserve an existing 
 
 ## Establish the baseline
 
-Use project-selected supported versions. For a new project with no version policy, propose a maintained Node LTS line and a compatible maintained pnpm release; do not silently select floating `latest` versions.
+Require Node 24 or newer for every initialized target. If the project selects an older Node version, stop and request a supported-version decision; do not lower the baseline. For a new project with no version policy, propose Node 24 or a newer maintained line and a compatible maintained pnpm release; do not silently select floating `latest` versions.
 
 Configure `mise.toml` with lockfile support, Node, pnpm, and stable project entry points. Keep task bodies in the language manifest when that ecosystem has a script facility. Let mise orchestrate those scripts.
 
@@ -123,7 +129,7 @@ Preserve existing hooks and hook managers. Do not install a second manager or di
 
 ## Use helper scripts safely
 
-Prefer the bundled helper for its supported contract. Add or generate another Node or Python helper only when the approved project needs behavior that the bundled script does not support and a structured script is safer than manual text replacement.
+Prefer the bundled Bun helper for its supported contract. Add or generate another Bun or Python helper only when the approved project needs behavior that the bundled script does not support and a structured script is safer than manual text replacement.
 
 Every helper must:
 

@@ -20,7 +20,7 @@ It pins the selected Godot executable through mise when supported, keeps Python-
 
 Load `init-project`, then `coding`, then `coding-gdscript`. Stop when one is unavailable; do not install a missing skill automatically.
 
-The initializer uses the Node and pnpm control plane from `init-project`. Its bundled helper requires Node 20 or newer. Godot, Python, and uv are mise tools when selected. Python tooling dependencies belong in `pyproject.toml` and `uv.lock`.
+The target project uses the Node 24-or-newer and pnpm control plane from `init-project`. The bundled initializer requires Bun with `Bun.TOML.parse`, hard-stops when Bun is unavailable, and does not add Bun to the target project. The generated project-local parser helper remains Node-based. Godot, Python, and uv are mise tools when selected. Python tooling dependencies belong in `pyproject.toml` and `uv.lock`.
 
 ## Invocation
 
@@ -41,6 +41,6 @@ Direct invocation requests a GDScript initialization plan. Selecting the Godot r
 ## Files
 
 - `SKILL.md` contains the GDScript initialization workflow.
-- `scripts/init.mjs` plans and applies the baseline GDScript tooling contract without choosing an executable test addon. It imports the shared standard-library-only helpers from the required `init-project` skill and generates a project-local per-file Godot parser helper.
-- `scripts/init.test.mjs` tests dry-run, approval, idempotence, uv synchronization, Godot-root validation, and conflict behavior.
+- `scripts/init.mjs` plans and applies the baseline GDScript tooling contract with Bun without choosing an executable test addon. It imports the shared Bun and Node-compatible standard-library helpers from the required `init-project` skill and generates a project-local per-file Node parser helper.
+- `scripts/init.test.js` runs with `bun test` and tests dry-run, approval, idempotence, uv synchronization, Godot-root validation, and conflict behavior.
 - `README.md` contains supporting references and invocation notes.

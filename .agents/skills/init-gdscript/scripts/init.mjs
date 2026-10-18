@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 import {
   EXIT,
@@ -13,6 +13,7 @@ import {
   parseArgs,
   projectName,
   readJsonObject,
+  requireBun,
   resolveRoot,
   runCommand,
   validateRelativePath,
@@ -76,8 +77,8 @@ console.log(\`Checked \${files.length} GDScript file(s)\`);
 `;
 
 const HELP = `Usage:
-  node scripts/init.mjs --root PATH --godot VERSION --python VERSION --uv VERSION [options]
-  node scripts/init.mjs --root PATH --godot VERSION --python VERSION --uv VERSION --apply --confirm [--install]
+  bun scripts/init.mjs --root PATH --godot VERSION --python VERSION --uv VERSION [options]
+  bun scripts/init.mjs --root PATH --godot VERSION --python VERSION --uv VERSION --apply --confirm [--install]
 
 Adds pinned Godot, Python, uv, gdtoolkit, package scripts, and mise tasks to an
 existing init-project foundation. The default mode is a dry-run plan.
@@ -102,8 +103,8 @@ Exit codes:
   5 external command failed  6 filesystem or unexpected failure
 
 Example:
-  node scripts/init.mjs --root /work/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25
-  node scripts/init.mjs --root /work/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --apply --confirm --install`;
+  bun scripts/init.mjs --root /work/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25
+  bun scripts/init.mjs --root /work/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --apply --confirm --install`;
 
 function pythonRequirement(version) {
   const match = version.match(/^(\d+)\.(\d+)/);
@@ -169,6 +170,7 @@ function configureMise(workspace, options) {
 }
 
 async function main() {
+  requireBun();
   const options = parseArgs(process.argv.slice(2), {
     root: { type: "string", required: true },
     godot: { type: "string", required: true },

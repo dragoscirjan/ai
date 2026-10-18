@@ -1,7 +1,7 @@
 ---
 name: init-gdscript
 description: Initialize or adopt a Godot GDScript toolchain on the init-project foundation with pinned engine tooling, gdtoolkit validation, optional compatible tests, and mise task integration. Use when adding GDScript to a new or existing Godot project.
-compatibility: Requires the init-project, coding, and coding-gdscript skills. Requires a selected Godot version; the bundled helper requires Node 20 or newer.
+compatibility: Requires the init-project, coding, and coding-gdscript skills, the Node 24-or-newer target control plane, a selected Godot version, and Bun with Bun.TOML.parse to run the bundled helper. Hard-stops when Bun is unavailable.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -49,19 +49,25 @@ Treat Godot addons, editor plugins, and native extensions as executable code. Ap
 
 ## Run the bundled initializer
 
-Use the tested helper in [`scripts/init.mjs`](scripts/init.mjs) for the baseline Godot, Python, uv, gdtoolkit, and task setup. Run commands from this skill directory and pass the absolute Godot project root.
+Use the tested helper in [`scripts/init.mjs`](scripts/init.mjs) for the baseline Godot, Python, uv, gdtoolkit, and task setup. Run commands from this skill directory and pass the absolute Godot project root. Bun runs the initializer only; it is not added to the target project's toolchain or generated GDScript parser helper.
+
+Before any invocation, require Bun and hard-stop if it is unavailable:
+
+```sh
+command -v bun >/dev/null 2>&1 || { echo "Bun is required to run init-gdscript." >&2; exit 1; }
+```
 
 Inspect its interface and generate a non-mutating JSON plan:
 
 ```text
-node scripts/init.mjs --help
-node scripts/init.mjs --root /absolute/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --source game
+bun scripts/init.mjs --help
+bun scripts/init.mjs --root /absolute/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --source game
 ```
 
 After the human approves the complete GDScript plan, apply it. Add `--install` only when mise and uv changes are also approved:
 
 ```text
-node scripts/init.mjs --root /absolute/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --source game --apply --confirm --install
+bun scripts/init.mjs --root /absolute/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --source game --apply --confirm --install
 ```
 
 With `--install`, the helper re-trusts the approved `mise.toml` after adding GDScript tools and tasks; include that user-level trust-store change in the approval. The helper intentionally does not choose or download a test addon. Configure GdUnit4, GUT, or another executable addon only through the separately approved framework plan below.
@@ -109,7 +115,7 @@ Godot and GDScript addons do not have one mature universal dependency-vulnerabil
 
 ## Use helpers without hiding changes
 
-Prefer the bundled helper for its supported baseline. Any replacement or additional Node or Python helper must follow the `init-project` helper-script contract.
+Prefer the bundled helper for its supported baseline. Any replacement or additional Bun or Python initializer helper must follow the `init-project` helper-script contract. The generated project-local Godot parser helper remains Node-based because Node belongs to the target control plane.
 
 For downloaded addons, a helper must pin the source, verify the expected archive or content digest when available, extract only into the approved destination, reject path traversal, and avoid executing downloaded code during installation. Keep credentials out of download URLs, environment output, and generated files.
 

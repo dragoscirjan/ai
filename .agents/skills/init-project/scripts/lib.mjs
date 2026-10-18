@@ -31,6 +31,33 @@ export class InitError extends Error {
   }
 }
 
+export function requireBun() {
+  if (typeof Bun === "undefined" || typeof Bun.TOML?.parse !== "function") {
+    throw new InitError(
+      "Bun with Bun.TOML.parse is required to run this initializer; install Bun and invoke the script with bun",
+      EXIT.ENVIRONMENT,
+    );
+  }
+}
+
+function parseTomlValue(rawValue, location) {
+  requireBun();
+  try {
+    return Bun.TOML.parse(`value = ${rawValue}`).value;
+  } catch (error) {
+    throw new InitError(`Invalid TOML value at ${location}: ${error.message}`, EXIT.CONFLICT);
+  }
+}
+
+function validateToml(text) {
+  requireBun();
+  try {
+    Bun.TOML.parse(text);
+  } catch (error) {
+    throw new InitError(`Invalid TOML document: ${error.message}`, EXIT.CONFLICT);
+  }
+}
+
 export function parseArgs(argv, definitions) {
   const values = {};
   for (const [name, definition] of Object.entries(definitions)) {
@@ -300,11 +327,10 @@ function ensureSimpleKey(lines, bounds, key, rawValue, location) {
   for (let index = bounds.start + 1; index < bounds.end; index += 1) {
     const match = lines[index].trim().match(pattern);
     if (!match) continue;
-    if (match[1] !== rawValue) {
-      throw new InitError(
-        `Conflict at ${location}.${key}: ${match[1]} differs from ${rawValue}`,
-        EXIT.CONFLICT,
-      );
+    const existing = parseTomlValue(match[1], `${location}.${key}`);
+    const expected = parseTomlValue(rawValue, `${location}.${key}`);
+    if (JSON.stringify(existing) !== JSON.stringify(expected)) {
+      throw new InitError(`Conflict at ${location}.${key}`, EXIT.CONFLICT);
     }
     return lines;
   }
@@ -313,6 +339,7 @@ function ensureSimpleKey(lines, bounds, key, rawValue, location) {
 }
 
 export function ensureTomlTableKey(text, table, key, rawValue) {
+  validateToml(text);
   const lines = text.replace(/\s+$/, "").split("\n");
   let bounds = sectionBounds(lines, new RegExp(`^\\[${escapeRegex(table)}\\]\\s*$`));
   if (!bounds) {
@@ -329,6 +356,7 @@ function formatTomlStringArray(values) {
 }
 
 export function ensureTomlTask(text, name, definition) {
+  validateToml(text);
   const lines = text.replace(/\s+$/, "").split("\n");
   let bounds = sectionBounds(lines, taskHeaderPattern(name));
   if (!bounds) {
@@ -359,12 +387,7 @@ export function ensureTomlTask(text, name, definition) {
           EXIT.CONFLICT,
         );
       }
-      let existing;
-      try {
-        existing = JSON.parse(match[1]);
-      } catch {
-        throw new InitError(`Cannot parse dependencies in task ${name}`, EXIT.CONFLICT);
-      }
+      const existing = parseTomlValue(match[1], `tasks.${name}.depends`);
       if (!Array.isArray(existing) || existing.some((item) => typeof item !== "string")) {
         throw new InitError(`Task ${name} has unsupported dependency syntax`, EXIT.CONFLICT);
       }
@@ -378,6 +401,7 @@ export function ensureTomlTask(text, name, definition) {
 }
 
 export function ensureTomlArrayItem(text, table, key, item) {
+  validateToml(text);
   const lines = text.replace(/\s+$/, "").split("\n");
   let bounds = sectionBounds(lines, new RegExp(`^\\[${escapeRegex(table)}\\]\\s*$`));
   if (!bounds) {
@@ -399,11 +423,9 @@ export function ensureTomlArrayItem(text, table, key, item) {
       EXIT.CONFLICT,
     );
   }
-  let values;
-  try {
-    values = JSON.parse(match[1]);
-  } catch {
-    throw new InitError(`Cannot parse ${table}.${key}`, EXIT.CONFLICT);
+  const values = parseTomlValue(match[1], `${table}.${key}`);
+  if (!Array.isArray(values) || values.some((value) => typeof value !== "string")) {
+    throw new InitError(`${table}.${key} must be an array of strings`, EXIT.CONFLICT);
   }
   if (!values.includes(item)) values.push(item);
   lines[keyIndex] = `${key} = ${formatTomlStringArray(values)}`;

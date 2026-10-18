@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 import {
   EXIT,
@@ -11,6 +11,7 @@ import {
   mergeExactMap,
   parseArgs,
   readJsonObject,
+  requireBun,
   resolveRoot,
   runCommand,
   setExact,
@@ -20,8 +21,8 @@ import {
 } from "../../init-project/scripts/lib.mjs";
 
 const HELP = `Usage:
-  node scripts/init.mjs --root PATH --runtime node|browser --module esm|commonjs --kind app|library [options]
-  node scripts/init.mjs --root PATH --runtime node|browser --module esm|commonjs --kind app|library --apply --confirm [--install]
+  bun scripts/init.mjs --root PATH --runtime node|browser --module esm|commonjs --kind app|library [options]
+  bun scripts/init.mjs --root PATH --runtime node|browser --module esm|commonjs --kind app|library --apply --confirm [--install]
 
 Adds TypeScript configuration, pinned manifest dependencies, package scripts, and
 mise tasks to an existing init-project foundation. The default mode is a dry-run.
@@ -50,8 +51,8 @@ Exit codes:
   5 external command failed  6 filesystem or unexpected failure
 
 Example:
-  node scripts/init.mjs --root /work/project --runtime node --module esm --kind app --node-types 24.19.2
-  node scripts/init.mjs --root /work/project --runtime node --module esm --kind app --node-types 24.19.2 --apply --confirm --install`;
+  bun scripts/init.mjs --root /work/project --runtime node --module esm --kind app --node-types 24.19.2
+  bun scripts/init.mjs --root /work/project --runtime node --module esm --kind app --node-types 24.19.2 --apply --confirm --install`;
 
 function compilerOptions(options) {
   const nodeTarget = options.runtime === "node";
@@ -136,6 +137,7 @@ function configurePackage(workspace, options) {
 }
 
 async function main() {
+  requireBun();
   const options = parseArgs(process.argv.slice(2), {
     root: { type: "string", required: true },
     runtime: { type: "string", required: true, choices: ["node", "browser"] },

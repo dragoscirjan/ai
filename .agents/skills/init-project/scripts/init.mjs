@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 import {
   EXIT,
@@ -11,6 +11,7 @@ import {
   mergeExactMap,
   parseArgs,
   readJsonObject,
+  requireBun,
   requireGitRoot,
   resolveRoot,
   runCommand,
@@ -20,8 +21,8 @@ import {
 } from "./lib.mjs";
 
 const HELP = `Usage:
-  node scripts/init.mjs --root PATH --node VERSION --pnpm VERSION [--dry-run]
-  node scripts/init.mjs --root PATH --node VERSION --pnpm VERSION --apply --confirm [--install]
+  bun scripts/init.mjs --root PATH --node VERSION --pnpm VERSION [--dry-run]
+  bun scripts/init.mjs --root PATH --node VERSION --pnpm VERSION --apply --confirm [--install]
 
 Initializes the shared mise, pnpm, Tempel, and Husky project foundation.
 The default mode is a dry-run plan. --apply requires --confirm. --install also
@@ -29,7 +30,7 @@ runs the approved tool and dependency synchronization commands.
 
 Options:
   --root PATH       Existing Git repository root (required)
-  --node VERSION    Pinned Node version or major supported by the dependencies
+  --node VERSION    Pinned Node 24 or newer version or major
   --pnpm VERSION    Pinned pnpm version or major
   --dry-run         Explicitly select plan-only mode
   --apply           Write the planned files
@@ -44,8 +45,8 @@ Exit codes:
   5 external command failed  6 filesystem or unexpected failure
 
 Examples:
-  node scripts/init.mjs --root /work/project --node 24 --pnpm 10.33.0
-  node scripts/init.mjs --root /work/project --node 24 --pnpm 10.33.0 --apply --confirm --install`;
+  bun scripts/init.mjs --root /work/project --node 24 --pnpm 10.33.0
+  bun scripts/init.mjs --root /work/project --node 24 --pnpm 10.33.0 --apply --confirm --install`;
 
 const DEV_DEPENDENCIES = Object.freeze({
   "@commitlint/cli": "21.2.4",
@@ -99,15 +100,9 @@ const CONFIG_FILES = Object.freeze({
 
 function validateNodeVersion(value) {
   validateVersion(value, "--node");
-  const match = value.match(/^(\d+)(?:\.(\d+))?/);
-  const major = Number(match?.[1]);
-  const minor = match?.[2] === undefined ? null : Number(match[2]);
-  const supported = major >= 24 || (major === 22 && minor !== null && minor >= 13);
-  if (!supported) {
-    throw new InitError(
-      "--node must satisfy the pinned validation dependencies: use 22.13 or newer in Node 22, or Node 24+",
-      EXIT.USAGE,
-    );
+  const major = Number(value.match(/^(\d+)/)?.[1]);
+  if (major < 24) {
+    throw new InitError("--node must be Node 24 or newer", EXIT.USAGE);
   }
   return value;
 }
@@ -165,6 +160,7 @@ function configurePackage(workspace, pnpmVersion) {
 }
 
 async function main() {
+  requireBun();
   const options = parseArgs(process.argv.slice(2), {
     root: { type: "string", required: true },
     node: { type: "string", required: true },

@@ -21,7 +21,7 @@ It keeps compiler configuration in project-owned `tsconfig` files, installs Node
 
 Load `init-project`, then `coding`, then `coding-ts`. Stop when one is unavailable; do not install a missing skill automatically.
 
-The initializer uses the approved Node and pnpm toolchain from `init-project`. Its bundled helper requires Node 20 or newer. It does not add another package manager.
+The target project uses the approved Node 24-or-newer and pnpm toolchain from `init-project`. The bundled initializer requires Bun with `Bun.TOML.parse`, hard-stops when Bun is unavailable, and does not add Bun or another package manager to the target project.
 
 ## Invocation
 
@@ -42,6 +42,6 @@ Direct invocation requests a TypeScript initialization plan. The project shape a
 ## Files
 
 - `SKILL.md` contains the TypeScript initialization workflow.
-- `scripts/init.mjs` plans and applies the supported TypeScript contract. It imports the shared standard-library-only helpers from the required `init-project` skill.
-- `scripts/init.test.mjs` tests dry-run, approval, idempotence, task registration, and conflict behavior.
+- `scripts/init.mjs` plans and applies the supported TypeScript contract with Bun. It imports the shared Bun and Node-compatible standard-library helpers from the required `init-project` skill.
+- `scripts/init.test.js` runs with `bun test` and tests dry-run, approval, idempotence, task registration, and conflict behavior.
 - `README.md` contains supporting references and invocation notes.

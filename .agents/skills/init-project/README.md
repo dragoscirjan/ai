@@ -14,10 +14,11 @@ It uses mise for executable toolchains, `package.json` and pnpm for Node depende
 - [Commitlint](https://commitlint.js.org/)
 - [jscpd](https://jscpd.dev/)
 - [Agent Skills: using scripts in skills](https://agentskills.io/skill-creation/using-scripts)
+- [Bun TOML parser](https://bun.com/docs/runtime/toml)
 
 ## Dependency contract
 
-The skill has no skill dependency. It requires mise and Git. Its bundled helper requires Node 20 or newer. It installs tools and manifest dependencies only after an exact plan receives human approval.
+The skill has no skill dependency. It requires mise, Git, and Bun with `Bun.TOML.parse`. Bun is required only to run the initializer; the helper hard-stops when Bun is unavailable and does not add Bun to the target project. The initialized target requires Node 24 or newer. The helper installs tools and manifest dependencies only after an exact plan receives human approval.
 
 Language initializers depend on `init-project`; `init-project` does not depend on them.
 
@@ -41,6 +42,6 @@ Direct invocation requests an initialization plan. It does not authorize unrevie
 
 - `SKILL.md` contains the initialization workflow and safety contract.
 - `scripts/init.mjs` plans and applies the supported initialization contract.
-- `scripts/lib.mjs` provides shared safe manifest, TOML, process, and output helpers to the initializer family.
-- `scripts/init.test.mjs` tests dry-run, approval, idempotence, permissions, and conflict behavior.
+- `scripts/lib.mjs` provides shared safe manifest, Bun TOML, process, and output helpers to the initializer family.
+- `scripts/init.test.js` runs with `bun test` and tests the Bun prerequisite, TOML handling, dry-run, approval, idempotence, permissions, and conflict behavior.
 - `README.md` contains supporting references and invocation notes.
