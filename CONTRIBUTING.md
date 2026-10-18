@@ -33,6 +33,14 @@ Store only safe identity data. Never store credentials, token-bearing URLs, embe
 - Prefer direct, testable instructions over commentary about intent.
 - Do not duplicate workspace commands outside the workspace skills.
 
+## Human-approved instruction adaptation
+
+When repository instructions no longer fit an observed workflow, follow the `instruction-maintenance` skill. An agent may inspect the instruction graph and present an exact proposal without prior approval. It must not mutate instructions until a human explicitly approves that proposal.
+
+Approval is limited to the stated files and rule changes. Changed evidence, scope, dependencies, handoffs, or protected rules require a revised proposal and new approval. After approval, follow the normal issue, isolated-workspace, validation, commit, and pull-request gates.
+
+This adaptation workflow covers instruction routes, deferred policy documents, dependency or handoff statements, and skill routing metadata. It does not authorize changes to detailed skill behavior.
+
 ## Environment contract
 
 This repository has no runtime environment variables or executable application configuration.

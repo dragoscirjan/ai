@@ -15,6 +15,7 @@ Load only the instructions required for the current phase. When several rows mat
 | Before any repository mutation | Read and follow `.agents/skills/isolated-workspace/SKILL.md`. |
 | Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
 | Before auditing or removing old workspaces | Read and follow `.agents/skills/cleanup-workspaces/SKILL.md`. |
+| When instructions, their relationships, or skill routing metadata appear missing, stale, conflicting, duplicated, or unsuitable for the observed workflow | Read and follow `.agents/skills/instruction-maintenance/SKILL.md`. It permits a read-only audit and exact proposal; do not mutate instructions before explicit human approval of that proposal. |
 
 Stop before the gated phase if a required document or skill is unavailable. Do not recreate missing instructions from memory.
 
