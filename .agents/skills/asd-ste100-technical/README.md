@@ -1,6 +1,6 @@
-# Clear technical writing
+# ASD-STE100 technical writing
 
-`clear-technical-writing` is a portable Agent Skill for developer-facing prose. It teaches an agent to use direct, natural language without removing technical detail.
+`asd-ste100-technical` is a portable Agent Skill for developer-facing prose. It teaches an agent to use direct, natural language without removing technical detail.
 
 The skill applies to chat responses, coding explanations, plans, reviews, documentation, instructions, error reports, and change summaries.
 
@@ -24,11 +24,11 @@ The issue also noted that strict Simplified Technical English can sound robotic.
 
 The repository's [`unslop`](../unslop/SKILL.md) skill inspired the direct rule-based format and the focus on natural language. `unslop` removes common AI writing patterns from an existing draft.
 
-`clear-technical-writing` has a different job. It guides the agent while the agent writes a technical response. The new skill is original work. It does not copy or modify the vendored `unslop` source.
+`asd-ste100-technical` has a different job. It guides the agent while the agent writes a technical response. The new skill is original work. It does not copy or modify the vendored `unslop` source.
 
 The two skills can work together:
 
-1. Use `clear-technical-writing` to draft an accurate response.
+1. Use `asd-ste100-technical` to draft an accurate response.
 2. Use `unslop` to remove any remaining AI writing patterns.
 
 Technical accuracy and safety take priority if the rules conflict.
@@ -84,7 +84,7 @@ The frontmatter description allows a compatible harness to select the skill for 
 Pi users can load it explicitly with:
 
 ```text
-/skill:clear-technical-writing
+/skill:asd-ste100-technical
 ```
 
 A project can also require the skill through its agent instructions when every response must follow these rules.
@@ -94,4 +94,4 @@ A project can also require the skill through its agent instructions when every r
 - [`SKILL.md`](SKILL.md) contains the instructions loaded by an agent.
 - `README.md` documents the design, sources, and technical adaptations.
 
-Keep the directory name and the `name` field in `SKILL.md` set to `clear-technical-writing`. This match is required for portable Agent Skills discovery.
+Keep the directory name and the `name` field in `SKILL.md` set to `asd-ste100-technical`. This match is required for portable Agent Skills discovery.

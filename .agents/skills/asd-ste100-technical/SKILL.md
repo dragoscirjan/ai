@@ -1,9 +1,9 @@
 ---
-name: clear-technical-writing
-description: Write or revise technical responses, coding explanations, plans, reviews, documentation, error reports, and instructions in clear, natural language. Use for developer-facing prose that must be easy to read without losing technical precision.
+name: asd-ste100-technical
+description: Write or revise technical responses, coding explanations, plans, reviews, documentation, error reports, and instructions with ASD-STE100-inspired plain language adapted for software work. Use for developer-facing prose that must be easy to read without losing technical precision.
 ---
 
-# Clear technical writing
+# ASD-STE100 technical writing
 
 Write like a capable teammate. Use plain, direct language. Keep the technical details exact.
 

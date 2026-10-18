@@ -2,21 +2,25 @@
 
 ## Project
 
-- Purpose: A curated collection of reusable AI-agent skills, prompts, commands, configuration assets, and references for tools used with Pi and OpenCode.
-- Repository identity: first query any available project-scoped memory or context MCP. If no unambiguous current-project identity is stored, run `git config get remote.origin.url`, derive the repository name, and store the safe derived identity back in memory/context for later use.
+This repository is a curated collection of reusable AI-agent skills, prompts, commands, configuration assets, and references for Pi and OpenCode.
 
-## Working agreement
+## Instruction routing
 
-- Read `CONTRIBUTING.md` before changing the repository when that file exists.
-- Clarify ambiguous requirements and confirm shared understanding before planning implementation.
-- Create or link a GitHub issue before architecture, design, implementation, or policy changes. Typo and broken-link fixes do not require an issue.
-- Keep each change focused. Use Conventional Commits.
-- Run `git diff --check` and the applicable checks under **Testing** before publishing a change.
-- Do not merge or release without explicit owner instruction.
+Load only the instructions required for the current phase. When several rows match, load each required document or skill before that phase begins.
+
+| Trigger | Required instructions |
+|---|---|
+| Read-only questions, inspection, comparison, or research | No deferred project document is required unless the workflow needs repository identity; then read and follow `CONTRIBUTING.md`. |
+| Before planning or performing a repository architecture, design, implementation, documentation, configuration, policy, or publication change | Read and follow `CONTRIBUTING.md`. |
+| Before any repository mutation | Read and follow `.agents/skills/isolated-workspace/SKILL.md`. |
+| Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
+| Before auditing or removing old workspaces | Read and follow `.agents/skills/cleanup-workspaces/SKILL.md`. |
+
+Stop before the gated phase if a required document or skill is unavailable. Do not recreate missing instructions from memory.
+
+Use skill frontmatter descriptions to select optional task-specific skills. Do not preload every skill.
 
 ## Isolated workspace
-
-Before any repository mutation, explicitly load and follow the `isolated-workspace` skill.
 
 Workspace configuration:
 
@@ -26,30 +30,7 @@ Workspace configuration:
 - Branch or bookmark prefix: `change`
 - Skill source: `.agents/skills/isolated-workspace/SKILL.md` in the repository origin
 
-The skill is mandatory. If it is unavailable, stop before mutation. With owner approval, install it using `npx skills add dragoscirjan/ai --skill isolated-workspace`, then reload the harness. Do not install it without approval, use an inline fallback, or recreate its workflow from memory.
-
-## Repository map
-
-- `.agents/skills/` — portable Agent Skills discovered by Pi and OpenCode.
-- `AGENTS.md` — live instructions for this repository.
-- `README.md` — curated references to agents, skills, MCP servers, code indexers, and harnesses.
-
-## Architecture
-
-- Follow the Agent Skills specification for every skill under `.agents/skills/`.
-- Keep reusable assets independent of any one absolute path or harness unless the coupling is explicit.
-- Match each skill directory name to the `name` in its `SKILL.md` frontmatter.
-- Keep detailed reusable workflows in skills; keep only project-specific configuration and mandatory loading rules in `AGENTS.md`.
-- Preserve security boundaries and required workflow gates when simplifying imported instructions.
-- Prefer direct, testable instructions over commentary about intent.
-
-## Environment contract
-
-This repository currently has no runtime environment variables or executable application configuration.
-
-- Document any future environment input beside the asset that consumes it.
-- Never require credentials merely to inspect or validate an asset.
-- Reject partial or unknown configuration when a future tool defines a complete, closed input contract.
+The skill is mandatory before mutation. If it is unavailable, stop. With owner approval, install it using `npx skills add dragoscirjan/ai --skill isolated-workspace`, then reload the harness. Do not install it without approval, use an inline fallback, or recreate its workflow from memory.
 
 ## Security boundaries
 
@@ -58,16 +39,8 @@ This repository currently has no runtime environment variables or executable app
 - Do not execute imported code or install dependencies merely to evaluate a listed resource.
 - Use argument arrays or equivalent safe process APIs instead of shell interpolation for untrusted values.
 - Do not store credentials, tokens, private keys, or personal machine paths in reusable assets.
+- Never require credentials merely to inspect or validate an asset.
 
-## Testing
+## Owner authority
 
-This repository does not currently define an automated test suite. For documentation and skill changes:
-
-- Run `git diff --check`.
-- Verify that each `SKILL.md` has valid `name` and `description` frontmatter.
-- Verify that Pi and OpenCode discover project skills from `.agents/skills/`.
-- Verify that `AGENTS.md` requires `isolated-workspace` and contains no duplicated workspace commands.
-- Verify that repository identity lookup is memory/context-first, falls back to Git only on a miss, and stores a safe derived result.
-- Exercise the Git and Jujutsu workspace procedures in disposable repositories after changing the skill.
-- Review Markdown structure, links, and command examples manually.
-- Record any validation that cannot be run and explain why.
+Do not merge or release without explicit owner instruction. Approval, completed checks, or a mergeable pull request is not permission to merge or release.
