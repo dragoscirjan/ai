@@ -1,7 +1,7 @@
 ---
 name: isolated-workspace
 description: Plan, create, or reuse one isolated Git worktree or Jujutsu workspace before repository mutation. Use before architecture, code, documentation, configuration, or policy changes. Requires an explicit VCS and branch or bookmark name while detecting repository and workspace paths automatically.
-compatibility: Requires Bun and either Git with worktree support or Jujutsu with workspace support.
+compatibility: Requires Bun and either Git with worktree support or Jujutsu 0.38 or newer with workspace support.
 metadata:
   author: dragoscirjan
   version: "2.0"
@@ -64,6 +64,7 @@ Review the plan. Confirm that it reports the intended:
 - workspace name and absolute path
 - create, attach, repair, or reuse action
 - exact VCS commands
+- the `planId` that binds apply mode to this exact plan
 
 ## Protect existing work
 
@@ -85,10 +86,11 @@ bun <skill-directory>/scripts/create.ts \
   --branch change/issue-42 \
   --base main \
   --apply \
-  --confirm
+  --confirm \
+  --plan-id PLAN_ID
 ```
 
-`--apply` without `--confirm` fails. The script rebuilds the plan immediately before mutation and stops if the action, path, or resolved base changed.
+Replace `PLAN_ID` with the value emitted by the approved plan-mode run. Apply mode requires `--apply`, `--confirm`, and the matching `--plan-id`. It rebuilds the plan before mutation and stops if the approved plan ID, action, path, or resolved base changed.
 
 For Git, it either:
 

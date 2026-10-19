@@ -48,7 +48,7 @@ When a change modifies `isolated-workspace` or `cleanup-workspaces`:
 - Confirm that `AGENTS.md` still provides the required project workspace configuration.
 - Confirm that callers must select `git` or `jj` explicitly and that colocated repositories do not trigger VCS inference.
 - Confirm that automation detects the primary local repository and derives the sibling `<repository>--workspaces` directory without hosted-repository identity.
-- Confirm that planning is non-destructive, mutation requires `--apply --confirm`, and cleanup rechecks state immediately before removal.
+- Confirm that planning is non-destructive, mutation requires `--apply --confirm --plan-id <approved-id>`, and cleanup rechecks state immediately before removal.
 - Confirm that active, primary, dirty, locked, conflicted, and unmerged workspaces remain protected.
 - Confirm that workspace commands remain in the skills and are not duplicated in project policy files.
 

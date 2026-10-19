@@ -23,6 +23,7 @@ import {
   listJjWorkspaces,
   operationStateGit,
   parseArgs,
+  planId as hashPlan,
   requireBun,
   resolveJjRevision,
 } from "../../isolated-workspace/scripts/lib.ts";
@@ -33,6 +34,7 @@ interface CleanupOptions {
   "dry-run": boolean;
   apply: boolean;
   confirm: boolean;
+  "plan-id"?: string;
   format: OutputFormat;
   help: boolean;
 }
@@ -84,11 +86,12 @@ interface JjCommitInfo {
 
 const HELP = `Usage:
   bun scripts/cleanup.ts --vcs git|jj [--base REVISION] [--dry-run]
-  bun scripts/cleanup.ts --vcs git|jj [--base REVISION] --apply --confirm
+  bun scripts/cleanup.ts --vcs git|jj [--base REVISION] --apply --confirm --plan-id ID
 
 Detects the repository and sibling <repository>--workspaces directory. It plans
 removal of clean integrated workspaces and stale registrations. Removal requires
---apply --confirm and a complete immediate re-audit. Force options are never used.
+--apply --confirm, the approved --plan-id, and a complete immediate re-audit.
+Force options are never used.
 
 Options:
   --vcs VCS         Required version-control tool: git or jj
@@ -96,6 +99,7 @@ Options:
   --dry-run         Explicitly select plan-only mode
   --apply           Remove every eligible workspace and safe stale registration
   --confirm         Confirm that the exact cleanup plan was approved
+  --plan-id ID      Plan ID emitted by the approved plan-mode run
   --format FORMAT   Output format: json or text (default: json)
   --help            Show this help
 
@@ -106,8 +110,8 @@ Exit codes:
 
 Examples:
   bun scripts/cleanup.ts --vcs git
-  bun scripts/cleanup.ts --vcs git --base main --apply --confirm
-  bun scripts/cleanup.ts --vcs jj --base main --apply --confirm`;
+  bun scripts/cleanup.ts --vcs git --base main --apply --confirm --plan-id PLAN_ID
+  bun scripts/cleanup.ts --vcs jj --base main --apply --confirm --plan-id PLAN_ID`;
 
 function insideOrEqual(parent: string, target: string): boolean {
   return parent === target || isContained(parent, target);
@@ -332,14 +336,22 @@ function auditJj(options: CleanupOptions): CleanupPlan {
       workspace.name,
       "--ignore-working-copy",
     ], { allowFailure: true });
-    const reportedPath = rootResult.status === 0 ? resolve(rootResult.stdout.trim()) : expectedPath;
+    if (rootResult.status !== 0) {
+      skipped.push({
+        name: workspace.name,
+        path: expectedPath,
+        reason: "workspace-root-unresolved",
+      });
+      continue;
+    }
+    const reportedPath = resolve(rootResult.stdout.trim());
     const path = canonicalIfExists(reportedPath);
     if (!isContained(workspaceRoot, path) && !isContained(workspaceRoot, reportedPath)) continue;
     if (path === repository.primaryRoot || insideOrEqual(path, currentDirectory)) {
       skipped.push({ name: workspace.name, path, reason: "primary-or-active-workspace" });
       continue;
     }
-    if (rootResult.status !== 0 || !existsSync(reportedPath)) {
+    if (!existsSync(reportedPath)) {
       stale.push({
         name: workspace.name,
         path: reportedPath,
@@ -438,24 +450,17 @@ function audit(options: CleanupOptions): CleanupPlan {
   return options.vcs === "git" ? auditGit(options) : auditJj(options);
 }
 
-function fingerprint(plan: CleanupPlan): string {
-  return JSON.stringify({
+function cleanupPlanId(plan: CleanupPlan): string {
+  return hashPlan({
     vcs: plan.vcs,
+    primaryRoot: plan.repository.primaryRoot,
+    workspaceRoot: plan.workspaceRoot,
     base: plan.base,
-    eligible: plan.eligible.map((item) => ({
-      name: item.name,
-      path: item.path,
-      branch: item.branch,
-      bookmark: item.bookmark,
-      tip: item.tip,
-      integratedTip: item.integratedTip,
-    })),
-    stale: plan.stale.map((item) => ({
-      name: item.name,
-      path: item.path,
-      branch: item.branch,
-      tip: item.tip,
-    })),
+    eligible: plan.eligible,
+    stale: plan.stale,
+    skipped: plan.skipped,
+    limits: plan.limits,
+    operations: plan.operations,
   });
 }
 
@@ -637,6 +642,7 @@ async function main() {
     "dry-run": { type: "boolean" },
     apply: { type: "boolean" },
     confirm: { type: "boolean" },
+    "plan-id": { type: "string" },
     format: { type: "string", choices: ["json", "text"], default: "json" },
     help: { type: "boolean" },
   }) as unknown as CleanupOptions;
@@ -645,11 +651,18 @@ async function main() {
     return;
   }
 
+  if (options.apply && !options["plan-id"]) {
+    throw new WorkspaceError("--apply requires --plan-id from the approved plan", EXIT.USAGE);
+  }
   const plan = audit(options);
+  const approvedPlanId = cleanupPlanId(plan);
+  if (options.apply && options["plan-id"] !== approvedPlanId) {
+    throw new WorkspaceError("The approved plan ID does not match current state", EXIT.CONFLICT);
+  }
   let result = null;
   if (options.apply) {
     const fresh = audit(options);
-    if (fingerprint(fresh) !== fingerprint(plan)) {
+    if (cleanupPlanId(fresh) !== approvedPlanId) {
       throw new WorkspaceError("Cleanup state changed after planning; run the plan again", EXIT.CONFLICT);
     }
     result = options.vcs === "git" ? applyGit(plan, options) : applyJj(plan, options);
@@ -665,6 +678,7 @@ async function main() {
         primaryRoot: plan.repository.primaryRoot,
       },
       workspaceRoot: plan.workspaceRoot,
+      planId: approvedPlanId,
       base: plan.base,
       eligible: plan.eligible,
       stale: plan.stale,

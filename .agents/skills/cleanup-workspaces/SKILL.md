@@ -2,7 +2,7 @@
 name: cleanup-workspaces
 description: Plan and safely remove clean integrated Git worktrees or Jujutsu workspaces and prune stale registrations. Use only when the owner explicitly asks to clean finished isolated workspaces. Requires explicit VCS selection and confirmed apply mode.
 disable-model-invocation: true
-compatibility: Requires Bun and either Git with worktree support or Jujutsu with workspace support.
+compatibility: Requires Bun and either Git with worktree support or Jujutsu 0.38 or newer with workspace support.
 metadata:
   author: dragoscirjan
   version: "2.0"
@@ -46,6 +46,7 @@ The plan reports:
 - every skipped workspace and its reason
 - ignored Git files that worktree removal can delete
 - limits that block otherwise possible cleanup
+- the `planId` that binds apply mode to this exact candidate and skipped set
 
 Do not add force flags or manually widen the eligible set.
 
@@ -96,7 +97,7 @@ The ancestry query must select exactly the candidate commit through `<tip> & ::<
 
 `jj status` refreshes Jujutsu's working-copy snapshot during audit. This can update repository metadata but does not edit workspace files or refs. If the snapshot changes the audited commit, the current run skips that workspace and requires another audit.
 
-A missing Jujutsu workspace directory is a stale registration. Forgetting it preserves any bookmark and commit unless the normal eligible-workspace checks independently authorize bookmark cleanup.
+Treat a Jujutsu registration as stale only when `jj workspace root --name` resolves its registered root and that path is missing. If Jujutsu cannot resolve the root, classify the workspace as inaccessible and skip it. Never infer staleness from the derived path alone. Forgetting a proven stale registration preserves its bookmark and commit unless the normal eligible-workspace checks independently authorize bookmark cleanup.
 
 ## Confirm and apply
 
@@ -109,10 +110,11 @@ bun <skill-directory>/scripts/cleanup.ts \
   --vcs git \
   --base main \
   --apply \
-  --confirm
+  --confirm \
+  --plan-id PLAN_ID
 ```
 
-`--apply` without `--confirm` fails. Apply mode audits twice before mutation and compares the VCS, base, candidate names, canonical paths, refs, and tips. It also re-audits each eligible workspace immediately before removal. Any changed state stops that candidate or the operation.
+Replace `PLAN_ID` with the value emitted by the approved plan-mode run. Apply mode requires `--apply`, `--confirm`, and the matching `--plan-id`. It audits twice before mutation and compares the VCS, base, candidate and skipped sets, canonical paths, refs, tips, ignored-file previews, limits, and operations. It also re-audits each eligible workspace immediately before removal. Any changed state stops the operation or candidate.
 
 Git removal uses only:
 

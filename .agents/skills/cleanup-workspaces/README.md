@@ -21,10 +21,11 @@ bun scripts/cleanup.ts --vcs jj --base 'trunk()'
 
 The script never infers Git versus Jujutsu. It detects the primary local repository and derives the sibling `<repository>--workspaces` directory.
 
-The default mode emits a plan. Removal requires a later run with both mutation gates:
+The default mode emits a plan with a `planId`. Removal requires a later run with both mutation gates and that exact plan ID:
 
 ```sh
-bun scripts/cleanup.ts --vcs git --base main --apply --confirm
+bun scripts/cleanup.ts --vcs git --base main \
+  --apply --confirm --plan-id PLAN_ID
 ```
 
 ## Safety model
@@ -33,7 +34,7 @@ Git candidates require a clean status, matching registration and branch tip, no 
 
 Git stale pruning runs only when every prunable registration is in scope. This prevents repository-wide `git worktree prune --expire now` from silently affecting another workspace root.
 
-Jujutsu candidates require an exact integrated working-copy commit or an empty child whose parents are integrated. Cleanup uses `jj workspace forget` and `jj bookmark forget`, then removes only the revalidated workspace directory. It never abandons commits or propagates bookmark deletion.
+Jujutsu 0.38 or newer is required. Candidates require an exact integrated working-copy commit or an empty child whose parents are integrated. Cleanup uses `jj workspace forget` and `jj bookmark forget`, then removes only the revalidated workspace directory. An unresolved workspace root is skipped rather than inferred stale. Cleanup never abandons commits or propagates bookmark deletion.
 
 Primary, active, dirty, locked, conflicted, unmerged, out-of-scope, and ambiguous workspaces remain protected. Apply mode repeats the audit and rechecks each candidate immediately before removal.
 

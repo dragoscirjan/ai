@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { spawnSync, type SpawnSyncReturns } from "node:child_process";
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -19,6 +19,7 @@ interface CleanupItem {
 interface CleanupOutput {
   skill: string;
   mode: "apply" | "plan";
+  planId: string;
   eligible: CleanupItem[];
   stale: CleanupItem[];
   skipped: CleanupItem[];
@@ -42,7 +43,7 @@ function mustRun(executable: string, args: string[], cwd: string): SpawnSyncRetu
 }
 
 function temporaryRepository(prefix: string): string {
-  const repository = mkdtempSync(join(tmpdir(), prefix));
+  const repository = realpathSync(mkdtempSync(join(tmpdir(), prefix)));
   temporaryPaths.push(repository, `${repository}--workspaces`);
   return repository;
 }
@@ -65,14 +66,16 @@ function jjRepository(): string {
 }
 
 function create(repository: string, vcs: "git" | "jj", branch: string): string {
+  const args = [CREATE, "--vcs", vcs, "--branch", branch];
+  const planned = run("bun", args, repository);
+  if (planned.status !== 0) throw new Error(`create plan failed:\n${planned.stdout}${planned.stderr}`);
+  const { planId } = JSON.parse(planned.stdout) as { planId: string };
   const result = run("bun", [
-    CREATE,
-    "--vcs",
-    vcs,
-    "--branch",
-    branch,
+    ...args,
     "--apply",
     "--confirm",
+    "--plan-id",
+    planId,
   ], repository);
   if (result.status !== 0) throw new Error(`create failed:\n${result.stdout}${result.stderr}`);
   return `${repository}--workspaces/${branch.split("/").at(-1)}`;
@@ -87,6 +90,10 @@ function output(result: SpawnSyncReturns<string>): CleanupOutput {
   return JSON.parse(result.stdout) as CleanupOutput;
 }
 
+function approvedApply(args: string[], plan: CleanupOutput): string[] {
+  return [...args, "--apply", "--confirm", "--plan-id", plan.planId];
+}
+
 afterEach(() => {
   for (const path of temporaryPaths.splice(0).reverse()) {
     rmSync(path, { recursive: true, force: true });
@@ -94,10 +101,25 @@ afterEach(() => {
 });
 
 describe("cleanup-workspaces script", () => {
-  test("requires explicit VCS and confirmed apply", () => {
+  test("requires explicit VCS, confirmation, and the approved plan ID", () => {
     const repository = gitRepository();
     expect(invoke(repository, []).status).toBe(2);
     expect(invoke(repository, ["--vcs", "git", "--apply"]).status).toBe(2);
+
+    const missingPlan = invoke(repository, ["--vcs", "git", "--apply", "--confirm"]);
+    expect(missingPlan.status).toBe(2);
+    expect(missingPlan.stderr).toContain("--plan-id");
+
+    const wrongPlan = invoke(repository, [
+      "--vcs",
+      "git",
+      "--apply",
+      "--confirm",
+      "--plan-id",
+      "0".repeat(64),
+    ]);
+    expect(wrongPlan.status).toBe(3);
+    expect(wrongPlan.stderr).toContain("does not match");
   });
 
   test("removes a clean merged Git worktree and safely deletes its branch", () => {
@@ -108,22 +130,42 @@ describe("cleanup-workspaces script", () => {
     mustRun("git", ["commit", "-qm", "feature"], workspace);
     mustRun("git", ["merge", "--no-ff", "-m", "merge feature", "change/merged"], repository);
 
-    const plan = output(invoke(repository, ["--vcs", "git", "--base", "main"]));
+    const args = ["--vcs", "git", "--base", "main"];
+    const plan = output(invoke(repository, args));
     expect(plan.eligible.map((item) => item.name)).toEqual(["merged"]);
     expect(existsSync(workspace)).toBe(true);
 
-    const applied = output(invoke(repository, [
-      "--vcs",
-      "git",
-      "--base",
-      "main",
-      "--apply",
-      "--confirm",
-    ]));
+    const applied = output(invoke(repository, approvedApply(args, plan)));
     expect(applied.result?.failed).toEqual([]);
     expect(existsSync(workspace)).toBe(false);
     expect(run("git", ["show-ref", "--verify", "--quiet", "refs/heads/change/merged"], repository).status)
       .not.toBe(0);
+  });
+
+  test("rejects apply when cleanup state differs from the approved plan", () => {
+    const repository = gitRepository();
+    const workspace = create(repository, "git", "change/state-change");
+    const args = ["--vcs", "git", "--base", "main"];
+    const plan = output(invoke(repository, args));
+    expect(plan.eligible.map((item) => item.name)).toEqual(["state-change"]);
+    writeFileSync(join(workspace, "after-plan.txt"), "keep\n");
+
+    const result = invoke(repository, approvedApply(args, plan));
+    expect(result.status).toBe(3);
+    expect(result.stderr).toContain("does not match");
+    expect(existsSync(workspace)).toBe(true);
+  });
+
+  test("renders cleanup apply results in text format", () => {
+    const repository = gitRepository();
+    create(repository, "git", "change/text-cleanup");
+    const args = ["--vcs", "git", "--base", "main"];
+    const plan = output(invoke(repository, args));
+
+    const result = invoke(repository, [...approvedApply(args, plan), "--format", "text"]);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("Plan ID:");
+    expect(result.stdout).toContain("- removed: text-cleanup");
   });
 
   test("preserves dirty and unmerged Git worktrees", () => {
@@ -160,17 +202,11 @@ describe("cleanup-workspaces script", () => {
     const workspace = create(repository, "git", "change/stale");
     rmSync(workspace, { recursive: true, force: true });
 
-    const plan = output(invoke(repository, ["--vcs", "git", "--base", "main"]));
+    const args = ["--vcs", "git", "--base", "main"];
+    const plan = output(invoke(repository, args));
     expect(plan.stale.map((item) => item.name)).toEqual(["stale"]);
 
-    output(invoke(repository, [
-      "--vcs",
-      "git",
-      "--base",
-      "main",
-      "--apply",
-      "--confirm",
-    ]));
+    output(invoke(repository, approvedApply(args, plan)));
     expect(mustRun("git", ["worktree", "list", "--porcelain"], repository).stdout)
       .not.toContain(workspace);
     expect(run("git", ["show-ref", "--verify", "--quiet", "refs/heads/change/stale"], repository).status)
@@ -200,12 +236,13 @@ describe("cleanup-workspaces script", () => {
     const repository = jjRepository();
     const workspace = create(repository, "jj", "change/merged");
 
-    const plan = output(invoke(repository, ["--vcs", "jj"]));
+    const args = ["--vcs", "jj"];
+    const plan = output(invoke(repository, args));
     expect(plan.eligible).toEqual([
       expect.objectContaining({ name: "merged", bookmark: "change/merged" }),
     ]);
 
-    const applied = output(invoke(repository, ["--vcs", "jj", "--apply", "--confirm"]));
+    const applied = output(invoke(repository, approvedApply(args, plan)));
     expect(applied.result?.failed).toEqual([]);
     expect(existsSync(workspace)).toBe(false);
     expect(mustRun("jj", ["workspace", "list"], repository).stdout).not.toContain("merged:");
@@ -226,15 +263,17 @@ describe("cleanup-workspaces script", () => {
     expect(existsSync(workspace)).toBe(true);
   });
 
-  test("forgets a stale Jujutsu workspace registration", () => {
+  test("preserves a Jujutsu registration whose root cannot be resolved", () => {
     const repository = jjRepository();
     const workspace = create(repository, "jj", "change/stale");
     rmSync(workspace, { recursive: true, force: true });
 
     const plan = output(invoke(repository, ["--vcs", "jj"]));
-    expect(plan.stale.map((item) => item.name)).toEqual(["stale"]);
-    output(invoke(repository, ["--vcs", "jj", "--apply", "--confirm"]));
-    expect(mustRun("jj", ["workspace", "list"], repository).stdout).not.toContain("stale:");
+    expect(plan.stale).toEqual([]);
+    expect(plan.skipped).toEqual([
+      expect.objectContaining({ name: "stale", reason: "workspace-root-unresolved" }),
+    ]);
+    expect(mustRun("jj", ["workspace", "list"], repository).stdout).toContain("stale:");
   });
 
   test("never removes the workspace containing the cleanup process", () => {

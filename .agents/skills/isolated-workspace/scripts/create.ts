@@ -23,6 +23,7 @@ import {
   listJjBookmarks,
   listJjWorkspaces,
   parseArgs,
+  planId as hashPlan,
   requireBun,
   resolveJjRevision,
 } from "./lib.ts";
@@ -34,6 +35,7 @@ interface CreateOptions {
   "dry-run": boolean;
   apply: boolean;
   confirm: boolean;
+  "plan-id"?: string;
   format: OutputFormat;
   help: boolean;
 }
@@ -57,7 +59,7 @@ interface CreatePlan {
 
 const HELP = `Usage:
   bun scripts/create.ts --vcs git|jj --branch NAME [--base REVISION] [--dry-run]
-  bun scripts/create.ts --vcs git|jj --branch NAME [--base REVISION] --apply --confirm
+  bun scripts/create.ts --vcs git|jj --branch NAME [--base REVISION] --apply --confirm --plan-id ID
 
 Detects the repository containing the current directory, derives its sibling
 <repository>--workspaces directory, and creates or reuses the workspace whose
@@ -70,6 +72,7 @@ Options:
   --dry-run         Explicitly select plan-only mode
   --apply           Create or repair the planned workspace
   --confirm         Confirm that the exact plan was approved
+  --plan-id ID      Plan ID emitted by the approved plan-mode run
   --format FORMAT   Output format: json or text (default: json)
   --help            Show this help
 
@@ -80,8 +83,8 @@ Exit codes:
 
 Examples:
   bun scripts/create.ts --vcs git --branch change/issue-42
-  bun scripts/create.ts --vcs git --branch change/issue-42 --apply --confirm
-  bun scripts/create.ts --vcs jj --branch change/issue-42 --base main --apply --confirm`;
+  bun scripts/create.ts --vcs git --branch change/issue-42 --apply --confirm --plan-id PLAN_ID
+  bun scripts/create.ts --vcs jj --branch change/issue-42 --base main --apply --confirm --plan-id PLAN_ID`;
 
 function gitPlan(options: CreateOptions): CreatePlan {
   const repository = detectRepository("git");
@@ -279,6 +282,23 @@ function buildPlan(options: CreateOptions): CreatePlan {
   return options.vcs === "git" ? gitPlan(options) : jjPlan(options);
 }
 
+function createPlanId(
+  plan: CreatePlan,
+  workspaceRootAction: "create-directory" | "reuse-directory",
+): string {
+  return hashPlan({
+    vcs: plan.vcs,
+    primaryRoot: plan.repository.primaryRoot,
+    layout: plan.layout,
+    base: plan.base,
+    action: plan.action,
+    branchExists: plan.branchExists,
+    status: plan.status,
+    commands: plan.commands,
+    workspaceRootAction,
+  });
+}
+
 function applyPlan(plan: CreatePlan, options: CreateOptions): void {
   if (plan.action === "reuse") return;
   const current = buildPlan(options);
@@ -321,6 +341,7 @@ async function main() {
     "dry-run": { type: "boolean" },
     apply: { type: "boolean" },
     confirm: { type: "boolean" },
+    "plan-id": { type: "string" },
     format: { type: "string", choices: ["json", "text"], default: "json" },
     help: { type: "boolean" },
   }) as unknown as CreateOptions;
@@ -328,14 +349,26 @@ async function main() {
     process.stdout.write(`${HELP}\n`);
     return;
   }
+  if (options.apply && !options["plan-id"]) {
+    throw new WorkspaceError("--apply requires --plan-id from the approved plan", EXIT.USAGE);
+  }
   assertSafeBranch(options.branch);
   const plan = buildPlan(options);
   const workspaceRootAction = existsSync(plan.layout.workspaceRoot)
     ? "reuse-directory"
     : "create-directory";
+  const approvedPlanId = createPlanId(plan, workspaceRootAction);
+  if (options.apply && options["plan-id"] !== approvedPlanId) {
+    throw new WorkspaceError("The approved plan ID does not match current state", EXIT.CONFLICT);
+  }
   if (options.apply) applyPlan(plan, options);
   const result = options.apply
-    ? { ...verify(options), workspaceRootAction }
+    ? {
+        ...verify(options),
+        action: plan.action,
+        commands: plan.commands,
+        workspaceRootAction,
+      }
     : {
         vcs: plan.vcs,
         branch: options.branch,
@@ -357,6 +390,7 @@ async function main() {
         primaryRoot: plan.repository.primaryRoot,
       },
       workspaceRoot: plan.layout.workspaceRoot,
+      planId: approvedPlanId,
       result,
     },
     options.format,

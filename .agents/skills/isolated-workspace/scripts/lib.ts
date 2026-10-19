@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import {
   existsSync,
   lstatSync,
@@ -204,6 +205,19 @@ export function requireTool(tool: Vcs): void {
   }
 }
 
+function requireJjVersion(directory: string): void {
+  const result = command(directory, "jj", ["--version"], { allowFailure: true });
+  const match = result.stdout.match(/\b(\d+)\.(\d+)(?:\.(\d+))?/);
+  if (result.status !== 0 || !match) {
+    throw new WorkspaceError("Could not determine the Jujutsu version", EXIT.ENVIRONMENT);
+  }
+  const major = Number(match[1]);
+  const minor = Number(match[2]);
+  if (major === 0 && minor < 38) {
+    throw new WorkspaceError("Jujutsu 0.38 or newer is required", EXIT.ENVIRONMENT);
+  }
+}
+
 export function resolveDirectory(input: string): string {
   const directory = resolve(input);
   if (!existsSync(directory) || !statSync(directory).isDirectory()) {
@@ -344,7 +358,13 @@ function jjPrimaryRoot(start: string): RepositoryContext {
     "default",
     "--ignore-working-copy",
   ], { allowFailure: true });
-  const primaryRoot = primary.status === 0 ? primary.stdout.trim() : currentRoot;
+  if (primary.status !== 0) {
+    throw new WorkspaceError(
+      "Could not resolve the Jujutsu default workspace root",
+      EXIT.ENVIRONMENT,
+    );
+  }
+  const primaryRoot = primary.stdout.trim();
   return {
     currentRoot: realpathSync(currentRoot),
     primaryRoot: realpathSync(primaryRoot),
@@ -355,6 +375,7 @@ function jjPrimaryRoot(start: string): RepositoryContext {
 export function detectRepository(vcs: Vcs, start = process.cwd()): RepositoryContext {
   requireTool(vcs);
   const directory = resolveDirectory(start);
+  if (vcs === "jj") requireJjVersion(directory);
   return vcs === "git" ? gitPrimaryRoot(directory) : jjPrimaryRoot(directory);
 }
 
@@ -438,23 +459,93 @@ export function operationStateGit(workspacePath: string): string[] {
   return active;
 }
 
-export function emit(result: Record<string, any>, format: OutputFormat = "json"): void {
+export function planId(value: unknown): string {
+  const serialized = JSON.stringify(value);
+  if (serialized === undefined) {
+    throw new WorkspaceError("Could not serialize the workspace plan", EXIT.IO);
+  }
+  return createHash("sha256").update(serialized).digest("hex");
+}
+
+type DataRecord = Record<string, unknown>;
+
+function asRecord(value: unknown): DataRecord | undefined {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+    ? value as DataRecord
+    : undefined;
+}
+
+function asRecords(value: unknown): DataRecord[] {
+  return Array.isArray(value)
+    ? value.map(asRecord).filter((item): item is DataRecord => item !== undefined)
+    : [];
+}
+
+function text(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
+function printCommands(value: unknown): void {
+  for (const item of asRecords(value)) {
+    const executable = text(item.command);
+    const args = Array.isArray(item.args)
+      ? item.args.filter((arg): arg is string => typeof arg === "string")
+      : [];
+    if (executable) process.stdout.write(`- command: ${executable} ${args.join(" ")}\n`);
+  }
+}
+
+function printItems(label: string, value: unknown): void {
+  for (const item of asRecords(value)) {
+    const identity = text(item.name) ?? text(item.branch) ?? text(item.bookmark) ?? "unknown";
+    const details = [text(item.path), text(item.reason)].filter(
+      (detail): detail is string => detail !== undefined,
+    );
+    process.stdout.write(`- ${label}: ${identity}${details.length ? ` (${details.join("; ")})` : ""}\n`);
+  }
+}
+
+export function emit(result: DataRecord, format: OutputFormat = "json"): void {
   if (format === "json") {
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
     return;
   }
-  process.stdout.write(`${result.mode.toUpperCase()} ${result.skill}\n`);
-  process.stdout.write(`Repository: ${result.repository.primaryRoot}\n`);
-  process.stdout.write(`Workspace root: ${result.workspaceRoot}\n`);
-  for (const item of result.eligible ?? []) {
-    process.stdout.write(`- eligible: ${item.name} (${item.path})\n`);
+
+  const repository = asRecord(result.repository);
+  const nested = asRecord(result.result);
+  process.stdout.write(`${String(result.mode).toUpperCase()} ${String(result.skill)}\n`);
+  process.stdout.write(`Repository: ${text(repository?.primaryRoot) ?? "unknown"}\n`);
+  process.stdout.write(`Workspace root: ${text(result.workspaceRoot) ?? "unknown"}\n`);
+  if (text(result.planId)) process.stdout.write(`Plan ID: ${text(result.planId)}\n`);
+  const topBase = asRecord(result.base);
+  if (topBase) {
+    process.stdout.write(
+      `Base: ${text(topBase.expression) ?? "unknown"} (${text(topBase.commit) ?? "unknown"})\n`,
+    );
   }
-  for (const item of result.skipped ?? []) {
-    process.stdout.write(`- skipped: ${item.name} (${item.reason})\n`);
+
+  if (nested && text(nested.workspacePath)) {
+    const base = asRecord(nested.base);
+    process.stdout.write(`VCS: ${text(nested.vcs) ?? "unknown"}\n`);
+    process.stdout.write(`Action: ${text(nested.action) ?? "unknown"}\n`);
+    process.stdout.write(`Branch/bookmark: ${text(nested.branch) ?? "unknown"}\n`);
+    process.stdout.write(
+      `Base: ${text(base?.expression) ?? "unknown"} (${text(base?.commit) ?? "unknown"})\n`,
+    );
+    process.stdout.write(`Workspace: ${text(nested.workspacePath)}\n`);
+    process.stdout.write(`Status: ${text(nested.status) ?? "unknown"}\n`);
+    printCommands(nested.commands);
   }
-  for (const item of result.operations ?? []) {
-    if (item.command) process.stdout.write(`- ${item.command} ${item.args?.join(" ") ?? ""}\n`);
-    else process.stdout.write(`- ${item.action}: ${item.path ?? item.name}\n`);
+
+  printItems("eligible", result.eligible);
+  printItems("stale", result.stale);
+  printItems("skipped", result.skipped);
+  printCommands(result.operations);
+
+  if (nested) {
+    printItems("removed", nested.removed);
+    printItems("retained", nested.retained);
+    printItems("failed", nested.failed);
   }
 }
 
