@@ -491,7 +491,12 @@ function printCommands(value: unknown): void {
     const args = Array.isArray(item.args)
       ? item.args.filter((arg): arg is string => typeof arg === "string")
       : [];
-    if (executable) process.stdout.write(`- command: ${executable} ${args.join(" ")}\n`);
+    const cwd = text(item.cwd);
+    if (executable) {
+      process.stdout.write(
+        `- command: ${executable} ${args.join(" ")}${cwd ? ` (cwd: ${cwd})` : ""}\n`,
+      );
+    }
   }
 }
 

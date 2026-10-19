@@ -208,6 +208,21 @@ describe("isolated-workspace create script", () => {
     expect(result.stdout).toContain("Branch/bookmark: change/text-plan");
     expect(result.stdout).toContain("Workspace:");
     expect(result.stdout).toContain("- command: git worktree add");
+    expect(result.stdout).toContain(`(cwd: ${repository})`);
+
+    const jjRepositoryPath = jjRepository();
+    const jjWorkspace = `${jjRepositoryPath}--workspaces/text-plan`;
+    const jjResult = invoke(jjRepositoryPath, [
+      "--vcs",
+      "jj",
+      "--branch",
+      "change/text-plan",
+      "--format",
+      "text",
+    ]);
+    expect(jjResult.status).toBe(0);
+    expect(jjResult.stdout).toContain("- command: jj describe -m change/text-plan");
+    expect(jjResult.stdout).toContain(`(cwd: ${jjWorkspace})`);
   });
 
   test("plans, creates, and reuses a Jujutsu workspace and bookmark", () => {

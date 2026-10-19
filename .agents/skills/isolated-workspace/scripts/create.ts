@@ -159,7 +159,7 @@ function gitPlan(options: CreateOptions): CreatePlan {
     action: branchExists ? "attach" : "create",
     branchExists,
     status: "not-created",
-    commands: [{ command: "git", args }],
+    commands: [{ command: "git", args, cwd: repository.primaryRoot }],
   };
 }
 
