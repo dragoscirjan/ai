@@ -7,10 +7,10 @@ import { fileURLToPath } from "node:url";
 import { test } from "bun:test";
 
 const scripts = dirname(fileURLToPath(import.meta.url));
-const script = join(scripts, "init.mjs");
-const projectScript = resolve(scripts, "../../init-project/scripts/init.mjs");
+const script = join(scripts, "init.ts");
+const projectScript = resolve(scripts, "../../init-project/scripts/init.ts");
 
-function fixture() {
+function fixture(): string {
   const root = mkdtempSync(join(tmpdir(), "init-typescript-test-"));
   execFileSync("git", ["init", "-q"], { cwd: root });
   const result = spawnSync(
@@ -22,7 +22,7 @@ function fixture() {
   return root;
 }
 
-function run(root, extra = []) {
+function run(root: string, extra: readonly string[] = []) {
   return spawnSync(
     process.execPath,
     [
@@ -52,7 +52,7 @@ test("plan is non-mutating and apply requires confirmation", () => {
     assert.equal(planData.selected.runtime, "node");
     assert.equal(planData.devDependencies.vitest, "4.1.11");
     assert.equal(planData.scripts.typecheck, "tsc --noEmit");
-    const plannedFiles = Object.fromEntries(planData.files.map((file) => [file.path, file.content]));
+    const plannedFiles = Object.fromEntries(planData.files.map((file: { path: string; content: string }) => [file.path, file.content]));
     assert.match(plannedFiles["tsconfig.json"], /vitest\/globals/);
     assert.match(plannedFiles["vitest.config.ts"], /src\/\*\*\/\*\.test\.ts/);
     assert.match(plannedFiles["vitest.config.ts"], /test\/\*\*\/\*\.spec\.ts/);
@@ -80,7 +80,9 @@ test("apply is idempotent and registers TypeScript tasks", () => {
 
     const second = run(root, ["--apply", "--confirm"]);
     assert.equal(second.status, 0, second.stderr);
-    assert.ok(JSON.parse(second.stdout).operations.every((operation) => operation.action === "unchanged"));
+    assert.ok(JSON.parse(second.stdout).operations.every(
+      (operation: { action: string }) => operation.action === "unchanged",
+    ));
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -92,7 +94,9 @@ test("custom test paths control discovery and cannot exclude all source", () => 
     const custom = run(root, ["--tests", "checks"]);
     assert.equal(custom.status, 0, custom.stderr);
     const customFiles = Object.fromEntries(
-      JSON.parse(custom.stdout).files.map((file) => [file.path, file.content]),
+      JSON.parse(custom.stdout).files.map(
+        (file: { path: string; content: string }) => [file.path, file.content],
+      ),
     );
     assert.match(customFiles["vitest.config.ts"], /checks\/\*\*\/\*\.test\.ts/);
 

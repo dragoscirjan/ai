@@ -7,10 +7,10 @@ import { fileURLToPath } from "node:url";
 import { test } from "bun:test";
 
 const scripts = dirname(fileURLToPath(import.meta.url));
-const script = join(scripts, "init.mjs");
-const projectScript = resolve(scripts, "../../init-project/scripts/init.mjs");
+const script = join(scripts, "init.ts");
+const projectScript = resolve(scripts, "../../init-project/scripts/init.ts");
 
-function fixture({ godot = true } = {}) {
+function fixture({ godot = true }: { godot?: boolean } = {}): string {
   const root = mkdtempSync(join(tmpdir(), "init-gdscript-test-"));
   execFileSync("git", ["init", "-q"], { cwd: root });
   const result = spawnSync(
@@ -23,7 +23,7 @@ function fixture({ godot = true } = {}) {
   return root;
 }
 
-function run(root, extra = []) {
+function run(root: string, extra: readonly string[] = []) {
   return spawnSync(
     process.execPath,
     [
@@ -62,7 +62,7 @@ test("plan is non-mutating and rejects a non-Godot root", () => {
     assert.equal(planData.selected.godot, "4.7.2-stable");
     assert.deepEqual(planData.pythonDependencies.dev, ["gdtoolkit==4.5.0"]);
     assert.match(planData.scripts["typecheck:gdscript"], /check-gdscript/);
-    const plannedFiles = Object.fromEntries(planData.files.map((file) => [file.path, file.content]));
+    const plannedFiles = Object.fromEntries(planData.files.map((file: { path: string; content: string }) => [file.path, file.content]));
     assert.match(plannedFiles["scripts/check-gdscript.mjs"], /skippedDirectories/);
     assert.match(plannedFiles["scripts/check-gdscript.mjs"], /'node_modules'/);
     assert.match(plannedFiles["scripts/check-gdscript.mjs"], /collect\(sourceReal\)/);
@@ -91,7 +91,9 @@ test("apply is idempotent and synchronizes locked uv dependencies", () => {
 
     const second = run(root, ["--apply", "--confirm"]);
     assert.equal(second.status, 0, second.stderr);
-    assert.ok(JSON.parse(second.stdout).operations.every((operation) => operation.action === "unchanged"));
+    assert.ok(JSON.parse(second.stdout).operations.every(
+      (operation: { action: string }) => operation.action === "unchanged",
+    ));
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

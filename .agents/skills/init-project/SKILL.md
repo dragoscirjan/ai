@@ -37,7 +37,7 @@ Wait for approval of that plan. Approval to initialize does not authorize unrela
 
 ## Run the bundled initializer
 
-Use the tested helper in [`scripts/init.mjs`](scripts/init.mjs) when the requested project fits its contract. Run commands from this skill directory and pass the absolute target repository root. The helper uses Bun's built-in TOML parser; Bun is only the initializer runtime and is not added to the target project's toolchain.
+Use the tested helper in [`scripts/init.ts`](scripts/init.ts) when the requested project fits its contract. Run commands from this skill directory and pass the absolute target repository root. The helper uses Bun's built-in TOML parser; Bun is only the initializer runtime and is not added to the target project's toolchain.
 
 Before any invocation, require Bun and hard-stop if it is unavailable:
 
@@ -48,19 +48,19 @@ command -v bun >/dev/null 2>&1 || { echo "Bun is required to run init-project." 
 Inspect its interface first:
 
 ```text
-bun scripts/init.mjs --help
+bun scripts/init.ts --help
 ```
 
 Generate a non-mutating JSON plan:
 
 ```text
-bun scripts/init.mjs --root /absolute/project --node 24 --pnpm 10.33.0
+bun scripts/init.ts --root /absolute/project --node 24 --pnpm 10.33.0
 ```
 
 After the human approves that exact plan, apply it. Add `--install` only when the approval includes tool installation and lockfile updates:
 
 ```text
-bun scripts/init.mjs --root /absolute/project --node 24 --pnpm 10.33.0 --apply --confirm --install
+bun scripts/init.ts --root /absolute/project --node 24 --pnpm 10.33.0 --apply --confirm --install
 ```
 
 With `--install`, the helper also trusts the generated `mise.toml`; include that user-level mise trust-store change in the approval. The bundled package versions are exact and tested together. If the project needs different versions or the script reports a conflict, revise the plan and resolve the conflict explicitly; do not bypass its stop or overwrite the existing state. Treat JSON on stdout as result data and stderr as diagnostics. The JSON plan includes final proposed contents for every changed file and marks any sensitive pre-existing values that were redacted; inspect those contents before approval.

@@ -49,7 +49,7 @@ Treat Godot addons, editor plugins, and native extensions as executable code. Ap
 
 ## Run the bundled initializer
 
-Use the tested helper in [`scripts/init.mjs`](scripts/init.mjs) for the baseline Godot, Python, uv, gdtoolkit, and task setup. Run commands from this skill directory and pass the absolute Godot project root. Bun runs the initializer only; it is not added to the target project's toolchain or generated GDScript parser helper.
+Use the tested helper in [`scripts/init.ts`](scripts/init.ts) for the baseline Godot, Python, uv, gdtoolkit, and task setup. Run commands from this skill directory and pass the absolute Godot project root. Bun runs the initializer only; it is not added to the target project's toolchain or generated GDScript parser helper.
 
 Before any invocation, require Bun and hard-stop if it is unavailable:
 
@@ -60,14 +60,14 @@ command -v bun >/dev/null 2>&1 || { echo "Bun is required to run init-gdscript."
 Inspect its interface and generate a non-mutating JSON plan:
 
 ```text
-bun scripts/init.mjs --help
-bun scripts/init.mjs --root /absolute/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --source game
+bun scripts/init.ts --help
+bun scripts/init.ts --root /absolute/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --source game
 ```
 
 After the human approves the complete GDScript plan, apply it. Add `--install` only when mise and uv changes are also approved:
 
 ```text
-bun scripts/init.mjs --root /absolute/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --source game --apply --confirm --install
+bun scripts/init.ts --root /absolute/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --source game --apply --confirm --install
 ```
 
 With `--install`, the helper re-trusts the approved `mise.toml` after adding GDScript tools and tasks; include that user-level trust-store change in the approval. When `--source .` is retained, the generated parser helper skips `.git`, `.godot`, `.venv`, `node_modules`, `addons`, coverage, distribution, and build directories before checking symlinks; select a narrower first-party source path when practical. The helper intentionally does not choose or download a test addon. Configure GdUnit4, GUT, or another executable addon only through the separately approved framework plan below.

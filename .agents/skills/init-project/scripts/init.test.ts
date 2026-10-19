@@ -6,15 +6,15 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "bun:test";
 
-const script = join(dirname(fileURLToPath(import.meta.url)), "init.mjs");
+const script = join(dirname(fileURLToPath(import.meta.url)), "init.ts");
 
-function fixture() {
+function fixture(): string {
   const root = mkdtempSync(join(tmpdir(), "init-project-test-"));
   execFileSync("git", ["init", "-q"], { cwd: root });
   return root;
 }
 
-function run(root, extra = []) {
+function run(root: string, extra: readonly string[] = []) {
   return spawnSync(
     process.execPath,
     [script, "--root", root, "--node", "24", "--pnpm", "10.33.0", ...extra],
@@ -111,7 +111,7 @@ test("plan is non-mutating and apply is idempotent", () => {
     assert.equal(planData.devDependencies.husky, "9.1.7");
     assert.equal(planData.pnpmOverrides["argparse@1.0.10"], "2.0.1");
     assert.match(planData.hooks["pre-commit"], /mise run format/);
-    const plannedFiles = Object.fromEntries(planData.files.map((file) => [file.path, file.content]));
+    const plannedFiles = Object.fromEntries(planData.files.map((file: { path: string; content: string }) => [file.path, file.content]));
     assert.match(plannedFiles["package.json"], /"argparse@1\.0\.10": "2\.0\.1"/);
     assert.match(plannedFiles["mise.toml"], /tasks\."validate"/);
     assert.match(plannedFiles["eslint.config.mjs"], /tempelEslintConfig/);
@@ -132,7 +132,9 @@ test("plan is non-mutating and apply is idempotent", () => {
     const second = run(root, ["--apply", "--confirm"]);
     assert.equal(second.status, 0, second.stderr);
     assert.equal(readFileSync(join(root, "mise.toml"), "utf8"), before);
-    assert.ok(JSON.parse(second.stdout).operations.every((operation) => operation.action === "unchanged"));
+    assert.ok(JSON.parse(second.stdout).operations.every(
+      (operation: { action: string }) => operation.action === "unchanged",
+    ));
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -146,7 +148,7 @@ test("planned file contents redact pre-existing sensitive values", () => {
     assert.equal(result.status, 0, result.stderr);
     assert.doesNotMatch(result.stdout, /do-not-print/);
     const packagePlan = JSON.parse(result.stdout).files.find(
-      (file) => file.path === "package.json",
+      (file: { path: string }) => file.path === "package.json",
     );
     assert.equal(packagePlan.redacted, true);
     assert.match(packagePlan.content, /<redacted>/);

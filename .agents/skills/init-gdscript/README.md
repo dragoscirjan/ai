@@ -41,6 +41,6 @@ Direct invocation requests a GDScript initialization plan. Selecting the Godot r
 ## Files
 
 - `SKILL.md` contains the GDScript initialization workflow.
-- `scripts/init.mjs` plans and applies the baseline GDScript tooling contract with Bun without choosing an executable test addon. It imports the shared Bun and Node-compatible standard-library helpers from the required `init-project` skill and generates a project-local per-file Node parser helper.
-- `scripts/init.test.js` runs with `bun test` and tests dry-run, approval, idempotence, uv synchronization, Godot-root validation, and conflict behavior.
+- `scripts/init.ts` plans and applies the baseline GDScript tooling contract with Bun without choosing an executable test addon. It imports the shared Bun and Node-compatible standard-library helpers from the required `init-project` skill and generates a project-local per-file Node parser helper.
+- `scripts/init.test.ts` runs with `bun test` and tests dry-run, approval, idempotence, uv synchronization, Godot-root validation, and conflict behavior.
 - `README.md` contains supporting references and invocation notes.

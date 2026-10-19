@@ -42,6 +42,6 @@ Direct invocation requests a TypeScript initialization plan. The project shape a
 ## Files
 
 - `SKILL.md` contains the TypeScript initialization workflow.
-- `scripts/init.mjs` plans and applies the supported TypeScript contract with Bun. It imports the shared Bun and Node-compatible standard-library helpers from the required `init-project` skill.
-- `scripts/init.test.js` runs with `bun test` and tests dry-run, approval, idempotence, task registration, and conflict behavior.
+- `scripts/init.ts` plans and applies the supported TypeScript contract with Bun. It imports the shared Bun and Node-compatible standard-library helpers from the required `init-project` skill.
+- `scripts/init.test.ts` runs with `bun test` and tests dry-run, approval, idempotence, task registration, and conflict behavior.
 - `README.md` contains supporting references and invocation notes.
