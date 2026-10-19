@@ -46,8 +46,11 @@ When a change modifies `isolated-workspace` or `cleanup-workspaces`:
 - Exercise the Jujutsu procedure in a disposable repository.
 - Test the relevant safety stops, not only the successful path.
 - Confirm that `AGENTS.md` still provides the required project workspace configuration.
+- Confirm that callers must select `git` or `jj` explicitly and that colocated repositories do not trigger VCS inference.
+- Confirm that automation detects the primary local repository and derives the sibling `<repository>--workspaces` directory without hosted-repository identity.
+- Confirm that planning is non-destructive, mutation requires `--apply --confirm --plan-id <approved-id>`, and cleanup rechecks state immediately before removal.
+- Confirm that active, primary, dirty, locked, conflicted, and unmerged workspaces remain protected.
 - Confirm that workspace commands remain in the skills and are not duplicated in project policy files.
-- Confirm that repository identity lookup remains memory or context first, falls back to Git only on a miss, and stores only safe derived identity data.
 
 ## Instruction-adaptation changes
 

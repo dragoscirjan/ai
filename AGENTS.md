@@ -25,10 +25,10 @@ Use skill frontmatter descriptions to select optional task-specific skills. Do n
 
 Workspace configuration:
 
-- Version-control system: `git`
+- Version-control system: `git`; pass it explicitly as `--vcs git`
 - Base revision: `main`
-- Workspace root: `derive-from-memory-or-origin`
-- Branch or bookmark prefix: `change`
+- Workspace root: detect the primary repository and derive the sibling `<repository>--workspaces` directory
+- Branch or bookmark name: pass the full name explicitly and use the `change/` prefix
 - Skill source: `.agents/skills/isolated-workspace/SKILL.md` in the repository origin
 
 The skill is mandatory before mutation. If it is unavailable, stop. With owner approval, install it using `npx skills add dragoscirjan/ai --skill isolated-workspace`, then reload the harness. Do not install it without approval, use an inline fallback, or recreate its workflow from memory.

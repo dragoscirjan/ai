@@ -6,7 +6,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 
 | Skill | Purpose |
 |---|---|
-| [`cleanup-workspaces`](.agents/skills/cleanup-workspaces/SKILL.md) | Audit and safely remove integrated Git worktrees and Jujutsu workspaces. |
+| [`cleanup-workspaces`](.agents/skills/cleanup-workspaces/SKILL.md) | Plan and safely remove integrated Git/Jujutsu workspaces and stale registrations. |
 | [`asd-ste100-technical`](.agents/skills/asd-ste100-technical/SKILL.md) | Apply ASD-STE100-inspired plain language to developer-facing prose without losing technical precision. |
 | [`coding`](.agents/skills/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
 | [`coding-js`](.agents/skills/coding-js/SKILL.md) | Apply JavaScript guidance and project-first quality gates to `.js` files. |
