@@ -19,7 +19,16 @@ import {
   validateRelativePath,
   validateVersion,
   writeJsonObject,
-} from "../../init-project/scripts/lib.mjs";
+  type TomlTaskDefinition,
+} from "../../init-project/scripts/lib.ts";
+
+interface GdscriptOptions {
+  godot: string;
+  python: string;
+  uv: string;
+  gdtoolkit: string;
+  source: string;
+}
 
 const CHECK_GDSCRIPT = `#!/usr/bin/env node
 
@@ -90,8 +99,8 @@ console.log(\`Checked \${files.length} GDScript file(s)\`);
 `;
 
 const HELP = `Usage:
-  bun scripts/init.mjs --root PATH --godot VERSION --python VERSION --uv VERSION [options]
-  bun scripts/init.mjs --root PATH --godot VERSION --python VERSION --uv VERSION --apply --confirm [--install]
+  bun scripts/init.ts --root PATH --godot VERSION --python VERSION --uv VERSION [options]
+  bun scripts/init.ts --root PATH --godot VERSION --python VERSION --uv VERSION --apply --confirm [--install]
 
 Adds pinned Godot, Python, uv, gdtoolkit, package scripts, and mise tasks to an
 existing init-project foundation. The default mode is a dry-run plan.
@@ -117,16 +126,20 @@ Exit codes:
   5 external command failed  6 filesystem or unexpected failure
 
 Example:
-  bun scripts/init.mjs --root /work/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25
-  bun scripts/init.mjs --root /work/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --apply --confirm --install`;
+  bun scripts/init.ts --root /work/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25
+  bun scripts/init.ts --root /work/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --apply --confirm --install`;
 
-function pythonRequirement(version) {
+function pythonRequirement(version: string): string {
   const match = version.match(/^(\d+)\.(\d+)/);
   if (!match) throw new InitError("--python must include at least major.minor", EXIT.USAGE);
   return `>=${match[1]}.${match[2]}`;
 }
 
-function configurePyproject(workspace, options, root) {
+function configurePyproject(
+  workspace: Workspace,
+  options: GdscriptOptions,
+  root: string,
+): void {
   let pyproject = workspace.read("pyproject.toml");
   const dependency = `gdtoolkit==${options.gdtoolkit}`;
   if (pyproject === null) {
@@ -136,7 +149,7 @@ function configurePyproject(workspace, options, root) {
   workspace.stage("pyproject.toml", pyproject);
 }
 
-function gdscriptScripts(source) {
+function gdscriptScripts(source: string): Record<string, string> {
   return {
     "lint:gdscript": `uv run gdlint ${source}`,
     "format:gdscript": `uv run gdformat --check ${source}`,
@@ -145,7 +158,7 @@ function gdscriptScripts(source) {
   };
 }
 
-function configurePackage(workspace, source) {
+function configurePackage(workspace: Workspace, source: string): void {
   if (workspace.read("package.json") === null) {
     throw new InitError("package.json is missing; run init-project first", EXIT.ENVIRONMENT);
   }
@@ -157,7 +170,7 @@ function configurePackage(workspace, source) {
   writeJsonObject(workspace, "package.json", manifest);
 }
 
-function configureMise(workspace, options) {
+function configureMise(workspace: Workspace, options: GdscriptOptions): void {
   let mise = workspace.read("mise.toml");
   if (mise === null) {
     throw new InitError("mise.toml is missing; run init-project first", EXIT.ENVIRONMENT);
@@ -166,7 +179,7 @@ function configureMise(workspace, options) {
   mise = ensureTomlTableKey(mise, "tools", "python", JSON.stringify(options.python));
   mise = ensureTomlTableKey(mise, "tools", "uv", JSON.stringify(options.uv));
 
-  const tasks = [
+  const tasks: readonly (readonly [string, TomlTaskDefinition])[] = [
     ["deps:sync:gdscript", { description: "Install locked GDScript tooling dependencies", run: "uv sync --locked" }],
     ["deps:sync", { depends: ["deps:sync:gdscript"] }],
     ["lint:check:gdscript", { description: "Lint first-party GDScript", run: "pnpm run lint:gdscript" }],
@@ -183,7 +196,7 @@ function configureMise(workspace, options) {
   workspace.stage("mise.toml", mise);
 }
 
-async function main() {
+async function main(): Promise<void> {
   requireBun();
   const options = parseArgs(process.argv.slice(2), {
     root: { type: "string", required: true },
@@ -204,7 +217,7 @@ async function main() {
     return;
   }
 
-  for (const name of ["godot", "python", "uv", "gdtoolkit"]) {
+  for (const name of ["godot", "python", "uv", "gdtoolkit"] as const) {
     validateVersion(options[name], `--${name}`);
   }
   options.source = validateRelativePath(options.source, "--source");

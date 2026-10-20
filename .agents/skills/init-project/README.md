@@ -41,7 +41,7 @@ Direct invocation requests an initialization plan. It does not authorize unrevie
 ## Files
 
 - `SKILL.md` contains the initialization workflow and safety contract.
-- `scripts/init.mjs` plans and applies the supported initialization contract.
-- `scripts/lib.mjs` provides shared safe manifest, Bun TOML, process, and output helpers to the initializer family.
-- `scripts/init.test.js` runs with `bun test` and tests the Bun prerequisite, TOML handling, dry-run, approval, idempotence, permissions, and conflict behavior.
+- `scripts/init.ts` plans and applies the supported initialization contract.
+- `scripts/lib.ts` provides shared safe manifest, Bun TOML, process, and output helpers to the initializer family.
+- `scripts/init.test.ts` runs with `bun test` and tests the Bun prerequisite, TOML handling, dry-run, approval, idempotence, permissions, and conflict behavior.
 - `README.md` contains supporting references and invocation notes.

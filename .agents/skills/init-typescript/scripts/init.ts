@@ -18,11 +18,29 @@ import {
   validateRelativePath,
   validateVersion,
   writeJsonObject,
-} from "../../init-project/scripts/lib.mjs";
+  type JsonObject,
+  type TomlTaskDefinition,
+} from "../../init-project/scripts/lib.ts";
+
+type Runtime = "browser" | "node";
+type ModuleKind = "commonjs" | "esm";
+type ProjectKind = "app" | "library";
+
+interface TypeScriptOptions {
+  runtime: Runtime;
+  module: ModuleKind;
+  kind: ProjectKind;
+  source: string;
+  tests: string;
+  typescript: string;
+  vitest: string;
+  "tempel-vitest": string;
+  "node-types": string | undefined;
+}
 
 const HELP = `Usage:
-  bun scripts/init.mjs --root PATH --runtime node|browser --module esm|commonjs --kind app|library [options]
-  bun scripts/init.mjs --root PATH --runtime node|browser --module esm|commonjs --kind app|library --apply --confirm [--install]
+  bun scripts/init.ts --root PATH --runtime node|browser --module esm|commonjs --kind app|library [options]
+  bun scripts/init.ts --root PATH --runtime node|browser --module esm|commonjs --kind app|library --apply --confirm [--install]
 
 Adds TypeScript configuration, pinned manifest dependencies, package scripts, and
 mise tasks to an existing init-project foundation. The default mode is a dry-run.
@@ -51,13 +69,13 @@ Exit codes:
   5 external command failed  6 filesystem or unexpected failure
 
 Example:
-  bun scripts/init.mjs --root /work/project --runtime node --module esm --kind app --node-types 24.19.2
-  bun scripts/init.mjs --root /work/project --runtime node --module esm --kind app --node-types 24.19.2 --apply --confirm --install`;
+  bun scripts/init.ts --root /work/project --runtime node --module esm --kind app --node-types 24.19.2
+  bun scripts/init.ts --root /work/project --runtime node --module esm --kind app --node-types 24.19.2 --apply --confirm --install`;
 
-function compilerOptions(options) {
+function compilerOptions(options: TypeScriptOptions): JsonObject {
   const nodeTarget = options.runtime === "node";
   const esm = options.module === "esm";
-  const result = {
+  const result: JsonObject = {
     target: "ES2022",
     module: nodeTarget ? (esm ? "NodeNext" : "Node16") : esm ? "ESNext" : "CommonJS",
     moduleResolution: nodeTarget ? (esm ? "NodeNext" : "Node16") : esm ? "Bundler" : "Node",
@@ -73,7 +91,7 @@ function compilerOptions(options) {
   return result;
 }
 
-function buildCompilerOptions(options) {
+function buildCompilerOptions(options: TypeScriptOptions): JsonObject {
   return {
     noEmit: false,
     outDir: "dist",
@@ -84,8 +102,8 @@ function buildCompilerOptions(options) {
   };
 }
 
-function vitestIncludes(options) {
-  const patterns = [];
+function vitestIncludes(options: TypeScriptOptions): string[] {
+  const patterns: string[] = [];
   for (const root of new Set([options.source, options.tests])) {
     const prefix = root === "." ? "" : `${root}/`;
     for (const kind of ["test", "spec", "e2e"]) {
@@ -95,19 +113,19 @@ function vitestIncludes(options) {
   return patterns;
 }
 
-function vitestConfig(options) {
+function vitestConfig(options: TypeScriptOptions): string {
   const includes = vitestIncludes(options)
     .map((pattern) => `    '${pattern}',`)
     .join("\n");
   return `import tempelVitestConfig from '@tempel/vitest';\n\nexport default tempelVitestConfig({\n  include: [\n${includes}\n  ],\n});\n`;
 }
 
-function configureMise(workspace) {
+function configureMise(workspace: Workspace): void {
   let mise = workspace.read("mise.toml");
   if (mise === null) {
     throw new InitError("mise.toml is missing; run init-project first", EXIT.ENVIRONMENT);
   }
-  const tasks = [
+  const tasks: readonly (readonly [string, TomlTaskDefinition])[] = [
     ["typecheck:typescript", { description: "Type-check TypeScript without emitting output", run: "pnpm run typecheck" }],
     ["typecheck", { description: "Run configured static type checks", depends: ["typecheck:typescript"] }],
     ["test:typescript", { description: "Run TypeScript tests", run: "pnpm run test" }],
@@ -120,17 +138,23 @@ function configureMise(workspace) {
   workspace.stage("mise.toml", mise);
 }
 
-function typescriptDependencies(options) {
-  const dependencies = {
+function typescriptDependencies(options: TypeScriptOptions): JsonObject {
+  const dependencies: JsonObject = {
     typescript: options.typescript,
     vitest: options.vitest,
     "@tempel/vitest": options["tempel-vitest"],
   };
-  if (options.runtime === "node") dependencies["@types/node"] = options["node-types"];
+  if (options.runtime === "node") {
+    const nodeTypes = options["node-types"];
+    if (nodeTypes === undefined) {
+      throw new InitError("--node-types is required for a Node target", EXIT.USAGE);
+    }
+    dependencies["@types/node"] = nodeTypes;
+  }
   return dependencies;
 }
 
-function configurePackage(workspace, options) {
+function configurePackage(workspace: Workspace, options: TypeScriptOptions): void {
   if (workspace.read("package.json") === null) {
     throw new InitError("package.json is missing; run init-project first", EXIT.ENVIRONMENT);
   }
@@ -154,7 +178,7 @@ function configurePackage(workspace, options) {
   writeJsonObject(workspace, "package.json", manifest);
 }
 
-async function main() {
+async function main(): Promise<void> {
   requireBun();
   const options = parseArgs(process.argv.slice(2), {
     root: { type: "string", required: true },
@@ -194,7 +218,7 @@ async function main() {
       EXIT.USAGE,
     );
   }
-  for (const name of ["typescript", "vitest", "tempel-vitest"]) {
+  for (const name of ["typescript", "vitest", "tempel-vitest"] as const) {
     validateVersion(options[name], `--${name}`);
   }
   if (options["node-types"]) validateVersion(options["node-types"], "--node-types");

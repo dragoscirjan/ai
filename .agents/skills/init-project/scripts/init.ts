@@ -18,11 +18,13 @@ import {
   setExact,
   validateVersion,
   writeJsonObject,
-} from "./lib.mjs";
+  type JsonObject,
+  type TomlTaskDefinition,
+} from "./lib.ts";
 
 const HELP = `Usage:
-  bun scripts/init.mjs --root PATH --node VERSION --pnpm VERSION [--dry-run]
-  bun scripts/init.mjs --root PATH --node VERSION --pnpm VERSION --apply --confirm [--install]
+  bun scripts/init.ts --root PATH --node VERSION --pnpm VERSION [--dry-run]
+  bun scripts/init.ts --root PATH --node VERSION --pnpm VERSION --apply --confirm [--install]
 
 Initializes the shared mise, pnpm, Tempel, and Husky project foundation.
 The default mode is a dry-run plan. --apply requires --confirm. --install also
@@ -45,8 +47,8 @@ Exit codes:
   5 external command failed  6 filesystem or unexpected failure
 
 Examples:
-  bun scripts/init.mjs --root /work/project --node 24 --pnpm 10.33.0
-  bun scripts/init.mjs --root /work/project --node 24 --pnpm 10.33.0 --apply --confirm --install`;
+  bun scripts/init.ts --root /work/project --node 24 --pnpm 10.33.0
+  bun scripts/init.ts --root /work/project --node 24 --pnpm 10.33.0 --apply --confirm --install`;
 
 const DEV_DEPENDENCIES = Object.freeze({
   "@commitlint/cli": "21.2.4",
@@ -79,7 +81,7 @@ const SCRIPTS = Object.freeze({
   commitlint: "commitlint --config commitlint.config.mjs --edit",
 });
 
-const CONFIG_FILES = Object.freeze({
+const CONFIG_FILES: Readonly<Record<string, string>> = Object.freeze({
   "commitlint.config.mjs": `import commitlintConfig from '@tempel/commitlint';\n\nexport default commitlintConfig();\n`,
   "eslint.config.mjs": `import tempelEslintConfig from '@tempel/eslint';\n\nexport default [\n  {\n    ignores: ['.godot/**', '**/*.gd', 'project.godot'],\n  },\n  ...tempelEslintConfig,\n];\n`,
   "prettier.config.mjs": `import prettierConfig from '@tempel/prettier';\n\nexport default prettierConfig;\n`,
@@ -103,7 +105,7 @@ const CONFIG_FILES = Object.freeze({
   ".husky/pre-push": `mise run validate\n`,
 });
 
-function validateNodeVersion(value) {
+function validateNodeVersion(value: string): string {
   validateVersion(value, "--node");
   const major = Number(value.match(/^(\d+)/)?.[1]);
   if (major < 24) {
@@ -112,13 +114,17 @@ function validateNodeVersion(value) {
   return value;
 }
 
-function configureMise(workspace, nodeVersion, pnpmVersion) {
+function configureMise(
+  workspace: Workspace,
+  nodeVersion: string,
+  pnpmVersion: string,
+): void {
   let mise = workspace.read("mise.toml") ?? "";
   mise = ensureTomlTableKey(mise, "settings", "lockfile", "true");
   mise = ensureTomlTableKey(mise, "tools", "node", JSON.stringify(nodeVersion));
   mise = ensureTomlTableKey(mise, "tools", "pnpm", JSON.stringify(pnpmVersion));
 
-  const tasks = [
+  const tasks: readonly (readonly [string, TomlTaskDefinition])[] = [
     ["deps:sync:mise", { description: "Install tools pinned by mise", run: "mise install" }],
     ["deps:sync:pnpm", { description: "Install locked Node dependencies", run: "pnpm install --frozen-lockfile" }],
     ["deps:sync", { description: "Synchronize all locked project dependencies", depends: ["deps:sync:mise", "deps:sync:pnpm"] }],
@@ -141,7 +147,7 @@ function configureMise(workspace, nodeVersion, pnpmVersion) {
   workspace.stage("mise.toml", mise);
 }
 
-function configurePackage(workspace, pnpmVersion) {
+function configurePackage(workspace: Workspace, pnpmVersion: string): void {
   const existed = workspace.read("package.json") !== null;
   const manifest = readJsonObject(workspace, "package.json", { private: true });
   if (!existed && !Object.hasOwn(manifest, "private")) manifest.private = true;
@@ -149,14 +155,15 @@ function configurePackage(workspace, pnpmVersion) {
   mergeExactMap(manifest, "scripts", SCRIPTS, "package.json");
   mergeExactMap(manifest, "devDependencies", DEV_DEPENDENCIES, "package.json");
   if (!Object.hasOwn(manifest, "pnpm")) manifest.pnpm = {};
-  if (!manifest.pnpm || Array.isArray(manifest.pnpm) || typeof manifest.pnpm !== "object") {
+  const pnpm = manifest.pnpm;
+  if (!pnpm || Array.isArray(pnpm) || typeof pnpm !== "object") {
     throw new InitError("package.json.pnpm must be an object", EXIT.CONFLICT);
   }
-  mergeExactMap(manifest.pnpm, "overrides", PNPM_OVERRIDES, "package.json.pnpm");
+  mergeExactMap(pnpm as JsonObject, "overrides", PNPM_OVERRIDES, "package.json.pnpm");
   writeJsonObject(workspace, "package.json", manifest);
 }
 
-async function main() {
+async function main(): Promise<void> {
   requireBun();
   const options = parseArgs(process.argv.slice(2), {
     root: { type: "string", required: true },
@@ -183,7 +190,10 @@ async function main() {
   configurePackage(workspace, pnpmVersion);
   configureMise(workspace, nodeVersion, pnpmVersion);
   for (const [file, content] of Object.entries(CONFIG_FILES)) {
-    workspace.stage(file, content, { createOnly: true, mode: file.startsWith(".husky/") ? 0o755 : undefined });
+    workspace.stage(file, content, {
+      createOnly: true,
+      ...(file.startsWith(".husky/") ? { mode: 0o755 } : {}),
+    });
   }
   workspace.appendLine(".gitignore", "node_modules/");
 

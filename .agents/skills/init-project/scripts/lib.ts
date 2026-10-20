@@ -13,6 +13,96 @@ import {
 } from "node:fs";
 import { basename, dirname, isAbsolute, relative, resolve, sep } from "node:path";
 
+declare const Bun: {
+  TOML: {
+    parse(text: string): unknown;
+  };
+};
+
+export type JsonPrimitive = boolean | null | number | string;
+export type JsonValue = JsonPrimitive | JsonObject | JsonValue[];
+export interface JsonObject {
+  [key: string]: JsonValue;
+}
+
+export type ArgumentDefinition =
+  | {
+      type: "boolean";
+      required?: boolean;
+      default?: boolean;
+    }
+  | {
+      type: "string";
+      required?: boolean;
+      default?: string;
+      choices?: readonly string[];
+    };
+
+export type ArgumentDefinitions = Record<string, ArgumentDefinition>;
+
+type ParsedArgument<Definition extends ArgumentDefinition> = Definition extends {
+  type: "boolean";
+}
+  ? boolean
+  : Definition extends { choices: readonly (infer Choice extends string)[] }
+    ? Choice
+    : Definition extends { required: true } | { default: string }
+      ? string
+      : string | undefined;
+
+export type ParsedArguments<Definitions extends ArgumentDefinitions> = {
+  -readonly [Name in keyof Definitions]: ParsedArgument<Definitions[Name]>;
+};
+
+export interface TomlTaskDefinition {
+  description?: string;
+  depends?: readonly string[];
+  run?: string;
+}
+
+export interface WorkspaceOperation {
+  action: "create" | "unchanged" | "update";
+  path: string;
+  detail?: string;
+}
+
+export interface PlannedFile {
+  action: "create" | "update";
+  path: string;
+  content: string;
+  redacted: boolean;
+  mode?: string;
+}
+
+export interface CommandPlan {
+  command: string;
+  args?: readonly string[];
+}
+
+export interface InitializerResult {
+  skill: string;
+  mode: string;
+  root: string;
+  operations: readonly WorkspaceOperation[];
+  files?: readonly PlannedFile[];
+  pending?: readonly (CommandPlan | string)[];
+  [key: string]: unknown;
+}
+
+interface StagedFile {
+  content: string;
+  mode?: number;
+}
+
+interface StageOptions {
+  createOnly?: boolean;
+  mode?: number;
+}
+
+interface SetExactOptions {
+  preserveExisting?: boolean;
+}
+
 export const EXIT = Object.freeze({
   OK: 0,
   USAGE: 2,
@@ -23,7 +113,10 @@ export const EXIT = Object.freeze({
 });
 
 export class InitError extends Error {
-  constructor(message, code = EXIT.IO, details = undefined) {
+  readonly code: number;
+  readonly details: JsonObject | undefined;
+
+  constructor(message: string, code: number = EXIT.IO, details?: JsonObject) {
     super(message);
     this.name = "InitError";
     this.code = code;
@@ -31,7 +124,11 @@ export class InitError extends Error {
   }
 }
 
-export function requireBun() {
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+export function requireBun(): void {
   if (typeof Bun === "undefined" || typeof Bun.TOML?.parse !== "function") {
     throw new InitError(
       "Bun with Bun.TOML.parse is required to run this initializer; install Bun and invoke the script with bun",
@@ -40,39 +137,43 @@ export function requireBun() {
   }
 }
 
-function parseTomlValue(rawValue, location) {
+function parseTomlValue(rawValue: string, location: string): unknown {
   requireBun();
   try {
-    return Bun.TOML.parse(`value = ${rawValue}`).value;
+    const parsed = Bun.TOML.parse(`value = ${rawValue}`) as Record<string, unknown>;
+    return parsed.value;
   } catch (error) {
-    throw new InitError(`Invalid TOML value at ${location}: ${error.message}`, EXIT.CONFLICT);
+    throw new InitError(`Invalid TOML value at ${location}: ${errorMessage(error)}`, EXIT.CONFLICT);
   }
 }
 
-function validateToml(text) {
+function validateToml(text: string): void {
   requireBun();
   try {
     Bun.TOML.parse(text);
   } catch (error) {
-    throw new InitError(`Invalid TOML document: ${error.message}`, EXIT.CONFLICT);
+    throw new InitError(`Invalid TOML document: ${errorMessage(error)}`, EXIT.CONFLICT);
   }
 }
 
-function finalizeToml(text, location) {
+function finalizeToml(text: string, location: string): string {
   requireBun();
   try {
     Bun.TOML.parse(text);
   } catch (error) {
     throw new InitError(
-      `Conflict while updating ${location}: generated TOML is invalid: ${error.message}`,
+      `Conflict while updating ${location}: generated TOML is invalid: ${errorMessage(error)}`,
       EXIT.CONFLICT,
     );
   }
   return text;
 }
 
-export function parseArgs(argv, definitions) {
-  const values = {};
+export function parseArgs<const Definitions extends ArgumentDefinitions>(
+  argv: readonly string[],
+  definitions: Definitions,
+): ParsedArguments<Definitions> {
+  const values: Record<string, boolean | string | undefined> = {};
   for (const [name, definition] of Object.entries(definitions)) {
     if (Object.hasOwn(definition, "default")) values[name] = definition.default;
     else if (definition.type === "boolean") values[name] = false;
@@ -80,6 +181,7 @@ export function parseArgs(argv, definitions) {
 
   for (let index = 0; index < argv.length; index += 1) {
     const token = argv[index];
+    if (token === undefined) break;
     if (!token.startsWith("--")) {
       throw new InitError(`Unexpected positional argument: ${token}`, EXIT.USAGE);
     }
@@ -124,17 +226,17 @@ export function parseArgs(argv, definitions) {
     }
   }
 
-  return values;
+  return values as ParsedArguments<Definitions>;
 }
 
-export function validateVersion(value, option) {
+export function validateVersion(value: string, option: string): string {
   if (!/^[0-9][0-9A-Za-z.+-]*$/.test(value)) {
     throw new InitError(`${option} must be a pinned version or major without spaces`, EXIT.USAGE);
   }
   return value;
 }
 
-export function validateRelativePath(value, option) {
+export function validateRelativePath(value: string, option: string): string {
   if (
     !value ||
     isAbsolute(value) ||
@@ -146,7 +248,7 @@ export function validateRelativePath(value, option) {
   return value.replaceAll("\\", "/").replace(/^\.\//, "").replace(/\/$/, "") || ".";
 }
 
-export function resolveRoot(input) {
+export function resolveRoot(input: string): string {
   const root = resolve(input);
   if (!existsSync(root) || !statSync(root).isDirectory()) {
     throw new InitError(`Project root is not a directory: ${root}`, EXIT.ENVIRONMENT);
@@ -154,13 +256,13 @@ export function resolveRoot(input) {
   return realpathSync(root);
 }
 
-function assertContained(root, target) {
+function assertContained(root: string, target: string): void {
   const rel = relative(root, target);
   if (rel === "" || (!rel.startsWith(`..${sep}`) && rel !== ".." && !isAbsolute(rel))) return;
   throw new InitError(`Path escapes the project root: ${target}`, EXIT.USAGE);
 }
 
-function nearestExistingParent(target) {
+function nearestExistingParent(target: string): string {
   let current = target;
   while (!existsSync(current)) {
     const parent = dirname(current);
@@ -170,7 +272,10 @@ function nearestExistingParent(target) {
   return current;
 }
 
-function redactPlannedValue(value, key = "") {
+function redactPlannedValue(
+  value: unknown,
+  key = "",
+): { value: unknown; redacted: boolean } {
   if (/(?:token|secret|password|credential|private.?key|auth)/i.test(key)) {
     return { value: "<redacted>", redacted: true };
   }
@@ -185,7 +290,7 @@ function redactPlannedValue(value, key = "") {
   }
   if (value && typeof value === "object") {
     let redacted = false;
-    const result = {};
+    const result: Record<string, unknown> = {};
     for (const [entry, item] of Object.entries(value)) {
       const nested = redactPlannedValue(item, entry);
       redacted ||= nested.redacted;
@@ -196,7 +301,10 @@ function redactPlannedValue(value, key = "") {
   return { value, redacted: false };
 }
 
-function redactPlannedContent(relativePath, content) {
+function redactPlannedContent(
+  relativePath: string,
+  content: string,
+): { content: string; redacted: boolean } {
   let normalized = content;
   let structuredRedaction = false;
   if (relativePath.endsWith(".json")) {
@@ -227,13 +335,15 @@ function redactPlannedContent(relativePath, content) {
 }
 
 export class Workspace {
-  constructor(root) {
+  readonly root: string;
+  readonly staged = new Map<string, StagedFile>();
+  readonly operations: WorkspaceOperation[] = [];
+
+  constructor(root: string) {
     this.root = resolveRoot(root);
-    this.staged = new Map();
-    this.operations = [];
   }
 
-  path(relativePath) {
+  path(relativePath: string): string {
     if (!relativePath || isAbsolute(relativePath)) {
       throw new InitError(`Expected a project-relative path: ${relativePath}`, EXIT.USAGE);
     }
@@ -248,13 +358,14 @@ export class Workspace {
     return target;
   }
 
-  read(relativePath) {
-    if (this.staged.has(relativePath)) return this.staged.get(relativePath).content;
+  read(relativePath: string): string | null {
+    const staged = this.staged.get(relativePath);
+    if (staged) return staged.content;
     const target = this.path(relativePath);
     return existsSync(target) ? readFileSync(target, "utf8") : null;
   }
 
-  stage(relativePath, content, options = {}) {
+  stage(relativePath: string, content: string, options: StageOptions = {}): void {
     const previous = this.read(relativePath);
     if (options.createOnly && previous !== null && previous !== content) {
       throw new InitError(
@@ -272,11 +383,14 @@ export class Workspace {
         return;
       }
     }
-    this.staged.set(relativePath, { content, mode: options.mode });
+    this.staged.set(relativePath, {
+      content,
+      ...(options.mode === undefined ? {} : { mode: options.mode }),
+    });
     this.operations.push({ action: previous === null ? "create" : "update", path: relativePath });
   }
 
-  appendLine(relativePath, line) {
+  appendLine(relativePath: string, line: string): void {
     const current = this.read(relativePath) ?? "";
     if (current.split(/\r?\n/).includes(line)) {
       this.operations.push({ action: "unchanged", path: relativePath, detail: line });
@@ -286,7 +400,7 @@ export class Workspace {
     this.stage(relativePath, `${current}${separator}${line}\n`);
   }
 
-  plannedFiles() {
+  plannedFiles(): PlannedFile[] {
     return [...this.staged.entries()].map(([relativePath, staged]) => {
       const planned = redactPlannedContent(relativePath, staged.content);
       return {
@@ -301,7 +415,7 @@ export class Workspace {
     });
   }
 
-  apply() {
+  apply(): void {
     for (const [relativePath, staged] of this.staged) {
       const target = this.path(relativePath);
       mkdirSync(dirname(target), { recursive: true });
@@ -317,22 +431,29 @@ export class Workspace {
   }
 }
 
-export function readJsonObject(workspace, relativePath, fallback = {}) {
+export function readJsonObject(
+  workspace: Workspace,
+  relativePath: string,
+  fallback: JsonObject = {},
+): JsonObject {
   const text = workspace.read(relativePath);
   if (text === null) return structuredClone(fallback);
-  let value;
+  let value: unknown;
   try {
     value = JSON.parse(text);
   } catch (error) {
-    throw new InitError(`Invalid JSON in ${relativePath}: ${error.message}`, EXIT.CONFLICT);
+    throw new InitError(
+      `Invalid JSON in ${relativePath}: ${errorMessage(error)}`,
+      EXIT.CONFLICT,
+    );
   }
   if (!value || Array.isArray(value) || typeof value !== "object") {
     throw new InitError(`${relativePath} must contain a JSON object`, EXIT.CONFLICT);
   }
-  return value;
+  return value as JsonObject;
 }
 
-function formatJsonValue(value, level = 0) {
+function formatJsonValue(value: unknown, level = 0): string {
   const indent = "  ".repeat(level);
   if (value === null || typeof value !== "object") return JSON.stringify(value);
   if (Array.isArray(value)) {
@@ -352,15 +473,25 @@ function formatJsonValue(value, level = 0) {
     .join(",\n")}\n${indent}}`;
 }
 
-export function formatJson(value) {
+export function formatJson(value: unknown): string {
   return `${formatJsonValue(value)}\n`;
 }
 
-export function writeJsonObject(workspace, relativePath, value) {
+export function writeJsonObject(
+  workspace: Workspace,
+  relativePath: string,
+  value: JsonObject,
+): void {
   workspace.stage(relativePath, formatJson(value));
 }
 
-export function setExact(object, key, value, location, options = {}) {
+export function setExact(
+  object: Record<string, JsonValue>,
+  key: string,
+  value: JsonValue,
+  location: string,
+  options: SetExactOptions = {},
+): void {
   if (!Object.hasOwn(object, key)) {
     object[key] = value;
     return;
@@ -374,31 +505,41 @@ export function setExact(object, key, value, location, options = {}) {
   }
 }
 
-export function mergeExactMap(object, key, expected, location) {
+export function mergeExactMap(
+  object: Record<string, JsonValue>,
+  key: string,
+  expected: Readonly<Record<string, JsonValue>>,
+  location: string,
+): void {
   if (!Object.hasOwn(object, key)) object[key] = {};
   if (!object[key] || Array.isArray(object[key]) || typeof object[key] !== "object") {
     throw new InitError(`${location}.${key} must be an object`, EXIT.CONFLICT);
   }
+  const target = object[key] as JsonObject;
   for (const [entry, value] of Object.entries(expected)) {
-    setExact(object[key], entry, value, `${location}.${key}`);
+    setExact(target, entry, value, `${location}.${key}`);
   }
 }
 
-function escapeRegex(value) {
+function escapeRegex(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function taskHeaderPattern(name) {
+function taskHeaderPattern(name: string): RegExp {
   const escaped = escapeRegex(name);
   return new RegExp(`^\\[tasks\\.(?:"${escaped}"|${escaped})\\]\\s*$`);
 }
 
-function sectionBounds(lines, matcher) {
+function sectionBounds(
+  lines: readonly string[],
+  matcher: RegExp,
+): { start: number; end: number } | null {
   const start = lines.findIndex((line) => matcher.test(line.trim()));
   if (start < 0) return null;
   let end = lines.length;
   for (let index = start + 1; index < lines.length; index += 1) {
-    if (/^\[[^\]]+\]\s*$/.test(lines[index].trim())) {
+    const line = lines[index];
+    if (line !== undefined && /^\[[^\]]+\]\s*$/.test(line.trim())) {
       end = index;
       break;
     }
@@ -406,12 +547,21 @@ function sectionBounds(lines, matcher) {
   return { start, end };
 }
 
-function ensureSimpleKey(lines, bounds, key, rawValue, location) {
+function ensureSimpleKey(
+  lines: string[],
+  bounds: { start: number; end: number },
+  key: string,
+  rawValue: string,
+  location: string,
+): string[] {
   const pattern = new RegExp(`^${escapeRegex(key)}\\s*=\\s*(.+?)\\s*$`);
   for (let index = bounds.start + 1; index < bounds.end; index += 1) {
-    const match = lines[index].trim().match(pattern);
-    if (!match) continue;
-    const existing = parseTomlValue(match[1], `${location}.${key}`);
+    const line = lines[index];
+    if (line === undefined) continue;
+    const match = line.trim().match(pattern);
+    const matchedValue = match?.[1];
+    if (matchedValue === undefined) continue;
+    const existing = parseTomlValue(matchedValue, `${location}.${key}`);
     const expected = parseTomlValue(rawValue, `${location}.${key}`);
     if (JSON.stringify(existing) !== JSON.stringify(expected)) {
       throw new InitError(`Conflict at ${location}.${key}`, EXIT.CONFLICT);
@@ -422,7 +572,12 @@ function ensureSimpleKey(lines, bounds, key, rawValue, location) {
   return lines;
 }
 
-export function ensureTomlTableKey(text, table, key, rawValue) {
+export function ensureTomlTableKey(
+  text: string,
+  table: string,
+  key: string,
+  rawValue: string,
+): string {
   validateToml(text);
   const lines = text.replace(/\s+$/, "").split("\n");
   let bounds = sectionBounds(lines, new RegExp(`^\\[${escapeRegex(table)}\\]\\s*$`));
@@ -435,11 +590,15 @@ export function ensureTomlTableKey(text, table, key, rawValue) {
   return finalizeToml(`${lines.join("\n").replace(/^\n+/, "")}\n`, `${table}.${key}`);
 }
 
-function formatTomlStringArray(values) {
+function formatTomlStringArray(values: readonly string[]): string {
   return `[${values.map((value) => JSON.stringify(value)).join(", ")}]`;
 }
 
-export function ensureTomlTask(text, name, definition) {
+export function ensureTomlTask(
+  text: string,
+  name: string,
+  definition: TomlTaskDefinition,
+): string {
   validateToml(text);
   const lines = text.replace(/\s+$/, "").split("\n");
   let bounds = sectionBounds(lines, taskHeaderPattern(name));
@@ -457,7 +616,7 @@ export function ensureTomlTask(text, name, definition) {
 
   if (definition.run) {
     ensureSimpleKey(lines, bounds, "run", JSON.stringify(definition.run), `tasks.${name}`);
-    bounds = sectionBounds(lines, taskHeaderPattern(name));
+    bounds = sectionBounds(lines, taskHeaderPattern(name)) ?? bounds;
   }
   if (definition.depends) {
     const dependsIndex = lines.findIndex(
@@ -467,21 +626,23 @@ export function ensureTomlTask(text, name, definition) {
     if (dependsIndex < 0) {
       lines.splice(bounds.end, 0, `depends = ${formatTomlStringArray(definition.depends)}`);
     } else {
-      const match = lines[dependsIndex].trim().match(/^depends\s*=\s*(\[[^\n]*\])\s*$/);
-      if (!match) {
+      const match = lines[dependsIndex]?.trim().match(/^depends\s*=\s*(\[[^\n]*\])\s*$/);
+      const matchedValue = match?.[1];
+      if (matchedValue === undefined) {
         throw new InitError(
           `Cannot safely merge multiline dependencies in task ${name}; reconcile it manually`,
           EXIT.CONFLICT,
         );
       }
-      const existing = parseTomlValue(match[1], `tasks.${name}.depends`);
+      const existing = parseTomlValue(matchedValue, `tasks.${name}.depends`);
       if (!Array.isArray(existing) || existing.some((item) => typeof item !== "string")) {
         throw new InitError(`Task ${name} has unsupported dependency syntax`, EXIT.CONFLICT);
       }
+      const dependencies = existing as string[];
       for (const dependency of definition.depends) {
-        if (!existing.includes(dependency)) existing.push(dependency);
+        if (!dependencies.includes(dependency)) dependencies.push(dependency);
       }
-      lines[dependsIndex] = `depends = ${formatTomlStringArray(existing)}`;
+      lines[dependsIndex] = `depends = ${formatTomlStringArray(dependencies)}`;
     }
   }
   return finalizeToml(
@@ -490,7 +651,12 @@ export function ensureTomlTask(text, name, definition) {
   );
 }
 
-export function ensureTomlArrayItem(text, table, key, item) {
+export function ensureTomlArrayItem(
+  text: string,
+  table: string,
+  key: string,
+  item: string,
+): string {
   validateToml(text);
   const lines = text.replace(/\s+$/, "").split("\n");
   let bounds = sectionBounds(lines, new RegExp(`^\\[${escapeRegex(table)}\\]\\s*$`));
@@ -512,32 +678,34 @@ export function ensureTomlArrayItem(text, table, key, item) {
       `${table}.${key}`,
     );
   }
-  const match = lines[keyIndex].trim().match(new RegExp(`^${escapeRegex(key)}\\s*=\\s*(\\[[^\\n]*\\])\\s*$`));
-  if (!match) {
+  const match = lines[keyIndex]?.trim().match(new RegExp(`^${escapeRegex(key)}\\s*=\\s*(\\[[^\\n]*\\])\\s*$`));
+  const matchedValue = match?.[1];
+  if (matchedValue === undefined) {
     throw new InitError(
       `Cannot safely merge multiline ${table}.${key}; reconcile it manually`,
       EXIT.CONFLICT,
     );
   }
-  const values = parseTomlValue(match[1], `${table}.${key}`);
+  const values = parseTomlValue(matchedValue, `${table}.${key}`);
   if (!Array.isArray(values) || values.some((value) => typeof value !== "string")) {
     throw new InitError(`${table}.${key} must be an array of strings`, EXIT.CONFLICT);
   }
-  if (!values.includes(item)) values.push(item);
-  lines[keyIndex] = `${key} = ${formatTomlStringArray(values)}`;
+  const stringValues = values as string[];
+  if (!stringValues.includes(item)) stringValues.push(item);
+  lines[keyIndex] = `${key} = ${formatTomlStringArray(stringValues)}`;
   return finalizeToml(
     `${lines.join("\n").replace(/^\n+/, "")}\n`,
     `${table}.${key}`,
   );
 }
 
-function redactDiagnostics(value) {
+function redactDiagnostics(value: string): string {
   return value
     .replace(/(https?:\/\/)[^/@\s]+@/gi, "$1<redacted>@")
     .replace(/([A-Z0-9_]*(?:TOKEN|SECRET|PASSWORD|AUTH)[A-Z0-9_]*=)[^\s]+/gi, "$1<redacted>");
 }
 
-export function runCommand(root, command, args) {
+export function runCommand(root: string, command: string, args: readonly string[]): void {
   const result = spawnSync(command, args, {
     cwd: root,
     encoding: "utf8",
@@ -551,12 +719,15 @@ export function runCommand(root, command, args) {
     throw new InitError(
       `Command failed: ${command} ${args.join(" ")}`,
       EXIT.COMMAND,
-      { status: result.status, error: result.error?.message },
+      {
+        status: result.status,
+        ...(result.error ? { error: result.error.message } : {}),
+      },
     );
   }
 }
 
-export function requireGitRoot(root) {
+export function requireGitRoot(root: string): void {
   const result = spawnSync("git", ["rev-parse", "--show-toplevel"], {
     cwd: root,
     encoding: "utf8",
@@ -571,21 +742,21 @@ export function requireGitRoot(root) {
   }
 }
 
-export function projectName(root) {
+export function projectName(root: string): string {
   return basename(root)
     .toLowerCase()
     .replace(/[^a-z0-9._-]+/g, "-")
     .replace(/^-+|-+$/g, "") || "project";
 }
 
-export function emit(result, format = "json") {
+export function emit(result: InitializerResult, format = "json"): void {
   if (format === "json") {
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
     return;
   }
   process.stdout.write(`${result.mode.toUpperCase()} ${result.skill} at ${result.root}\n`);
   for (const operation of result.operations) {
-    process.stdout.write(`- ${operation.action}: ${operation.path ?? operation.command}${operation.detail ? ` (${operation.detail})` : ""}\n`);
+    process.stdout.write(`- ${operation.action}: ${operation.path}${operation.detail ? ` (${operation.detail})` : ""}\n`);
   }
   if (result.files?.length) {
     process.stdout.write("Planned file contents:\n");
@@ -605,10 +776,10 @@ export function emit(result, format = "json") {
   }
 }
 
-export function handleError(error, help) {
+export function handleError(error: unknown, help?: string): void {
   const normalized = error instanceof InitError
     ? error
-    : new InitError(error?.message ?? String(error), EXIT.IO);
+    : new InitError(errorMessage(error), EXIT.IO);
   process.stderr.write(`${normalized.name}: ${normalized.message}\n`);
   if (normalized.details) process.stderr.write(`${JSON.stringify(normalized.details)}\n`);
   if (normalized.code === EXIT.USAGE && help) process.stderr.write(`\n${help}\n`);

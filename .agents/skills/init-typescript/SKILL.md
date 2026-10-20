@@ -48,7 +48,7 @@ Approval granted to `init-project` covers only the shared foundation. Present th
 
 ## Run the bundled initializer
 
-Use the tested helper in [`scripts/init.mjs`](scripts/init.mjs) when its closed project-shape options match the requested TypeScript project. Run commands from this skill directory and pass the absolute target root. Bun runs the initializer only; it is not added to the target project's toolchain.
+Use the tested helper in [`scripts/init.ts`](scripts/init.ts) when its closed project-shape options match the requested TypeScript project. Run commands from this skill directory and pass the absolute target root. Bun runs the initializer only; it is not added to the target project's toolchain.
 
 Before any invocation, require Bun and hard-stop if it is unavailable:
 
@@ -59,14 +59,14 @@ command -v bun >/dev/null 2>&1 || { echo "Bun is required to run init-typescript
 Inspect its interface and generate a non-mutating JSON plan:
 
 ```text
-bun scripts/init.mjs --help
-bun scripts/init.mjs --root /absolute/project --runtime node --module esm --kind app --node-types 24.19.2
+bun scripts/init.ts --help
+bun scripts/init.ts --root /absolute/project --runtime node --module esm --kind app --node-types 24.19.2
 ```
 
 After the human approves the complete TypeScript plan, apply it. Add `--install` only when dependency installation and lockfile updates are also approved:
 
 ```text
-bun scripts/init.mjs --root /absolute/project --runtime node --module esm --kind app --node-types 24.19.2 --apply --confirm --install
+bun scripts/init.ts --root /absolute/project --runtime node --module esm --kind app --node-types 24.19.2 --apply --confirm --install
 ```
 
 With `--install`, the helper re-trusts the approved `mise.toml` after adding TypeScript tasks; include that user-level trust-store change in the approval. The helper rejects unknown project shapes, incompatible existing scripts, and different configuration files. Resolve those cases through a revised plan instead of forcing the template.
