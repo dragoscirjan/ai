@@ -22,6 +22,8 @@ AI tools that I have encountered and find useful.
 - https://github.com/modelcontextprotocol/servers/tree/main/src/memory
 - https://playwright.dev/docs/getting-started-mcp
 - https://github.com/dragoscirjan/mcp-tuikit (I'm developing this one, he he...)
+- https://tt-a1i.github.io/archify/
+- https://github.com/excalidraw/excalidraw-mcp
 
 ### Code indexers
 
