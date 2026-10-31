@@ -8,6 +8,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 |---|---|
 | [`cleanup-workspaces`](.agents/skills/cleanup-workspaces/SKILL.md) | Plan and safely remove integrated Git/Jujutsu workspaces and stale registrations. |
 | [`asd-ste100-technical`](.agents/skills/asd-ste100-technical/SKILL.md) | Apply ASD-STE100-inspired plain language to developer-facing prose without losing technical precision. |
+| [`code-review`](.agents/skills/code-review/SKILL.md) | Review a diff against repository standards and its originating issue or specification with separate read-only subagents. |
 | [`coding`](.agents/skills/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
 | [`coding-js`](.agents/skills/coding-js/SKILL.md) | Apply JavaScript guidance and project-first quality gates to `.js` files. |
 | [`coding-mjs`](.agents/skills/coding-mjs/SKILL.md) | Add ECMAScript-module semantics for `.mjs` files. |
