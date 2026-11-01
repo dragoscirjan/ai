@@ -19,7 +19,7 @@ Each skill entry contains:
 - `selection`: `manager`, `bootstrap`, `core`, `detected`, `wrapper`, `optional`, or `initializer`
 - `dependencies`: required skill names
 - `safety`: invocation risk summary
-- `harnesses`: validated harnesses
+- `harnesses`: validated harnesses; this manager supports `pi`, `opencode`, and `claude-code`
 - `requires`: optional harness capabilities
 - `provenance`: `local` by default or an explicit external provenance class
 - `signals.files`: project files or manifests that suggest applicability
@@ -50,6 +50,7 @@ Create the selection file outside the target repository. Its schema is [`../asse
   ],
   "rootFiles": [
     "AGENTS.md",
+    "CLAUDE.md",
     "CONTRIBUTING.md",
     "VALIDATION.md"
   ],
@@ -92,6 +93,7 @@ The lock contains:
 - `selection`: normalized selected skills, declined skills, root files, and adaptation notes
 - `catalogSkills`: all catalogued skills at the applied source commit
 - `files`: managed-file records keyed by target-relative path, including approved retained records
+- `projections`: Claude Code project-skill symlinks keyed by `.claude/skills/<name>`
 
 Each managed-file record contains:
 
@@ -101,6 +103,14 @@ Each managed-file record contains:
 - `sourceSha256`: content digest at the pinned source commit
 - `installedSha256`: content digest after approved installation or adaptation
 - `retained`, `retentionReason`, and `retainedFromCommit`: retention metadata when an old managed file remains intentionally installed
+
+Each Claude Code projection records:
+
+- `harness`: `claude-code`
+- `skill`: the canonical skill under `.agents/skills/`
+- `target`: the exact relative symlink target `../../.agents/skills/<name>`
+
+Old schema-version-1 locks without `projections` remain readable. The helper derives the expected projections from `selection.selectedSkills` and reports them as missing until the approved Claude Code installation creates them and a new record plan is applied.
 
 The lock does not contain an absolute target path, source cache path, username, credential, token, or secret.
 
@@ -118,5 +128,7 @@ The lock does not contain an absolute target path, source cache path, username, 
 | `missing` | A managed target file is absent. | Ask whether to restore it or stop managing it. |
 | `upstream-removed-retain` | Upstream removed the managed source file. | Retain it until deletion or migration is approved. |
 | `retained-no-update` | The file remains by an earlier retention decision even though a source path exists. | Leave it unchanged until re-selection, deletion, or migration is approved. |
+
+Projection status uses `clean`, `missing`, or `conflict`. A projection is clean only when it is the exact relative symlink from `.claude/skills/<name>` to `../../.agents/skills/<name>`. Existing files, directories, absolute links, or links to another target are conflicts and remain unchanged until replacement is explicitly approved.
 
 A new source catalog name appears in `newCatalogSkills`. A removed catalog name appears in `removedCatalogSkills`. Neither list authorizes automatic installation or deletion.

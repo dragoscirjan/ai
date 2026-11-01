@@ -9,6 +9,7 @@ import {
   mkdtempSync,
   readFileSync,
   readdirSync,
+  readlinkSync,
   realpathSync,
   renameSync,
   rmSync,
@@ -29,13 +30,15 @@ const EXIT = Object.freeze({
 });
 
 const SCHEMA_VERSION = 1;
-const MANAGER_VERSION = "1.0.0";
+const MANAGER_VERSION = "1.1.0";
 const DEFAULT_REPOSITORY = "https://github.com/dragoscirjan/ai.git";
 const DEFAULT_REF = "main";
 const LOCK_PATH = ".agents/ai-assets.lock.json";
 const SKILL_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DEFAULT_CATALOG = join(SKILL_ROOT, "assets", "skill-catalog.json");
 const SOURCE_CATALOG = ".agents/skills/sync-agent-assets/assets/skill-catalog.json";
+const CLAUDE_SKILLS_ROOT = ".claude/skills";
+const SUPPORTED_HARNESSES = new Set(["pi", "opencode", "claude-code"]);
 const TEMP_MARKER = ".sync-agent-assets-temp.json";
 const IGNORED_DIRECTORIES = new Set([
   ".git",
@@ -309,6 +312,11 @@ function validateCatalog(catalog, sourceRoot) {
     if (!Array.isArray(entry.dependencies) || !Array.isArray(entry.harnesses)) {
       throw new SyncError(`Catalog dependencies and harnesses must be arrays: ${entry.name}`);
     }
+    for (const harness of entry.harnesses) {
+      if (!SUPPORTED_HARNESSES.has(harness)) {
+        throw new SyncError(`Unsupported catalog harness for ${entry.name}: ${harness}`);
+      }
+    }
   }
   const byName = skillMap(catalog);
   for (const entry of catalog.skills) {
@@ -400,6 +408,53 @@ function installedSkills(root) {
     .sort();
 }
 
+function claudeProjectionPath(name) {
+  return `${CLAUDE_SKILLS_ROOT}/${name}`;
+}
+
+function claudeProjectionTarget(name) {
+  return `../../.agents/skills/${name}`;
+}
+
+function expectedClaudeProjections(names) {
+  return Object.fromEntries([...names].sort().map((name) => [claudeProjectionPath(name), {
+    harness: "claude-code",
+    skill: name,
+    target: claudeProjectionTarget(name),
+  }]));
+}
+
+function readLinkState(root, path, record) {
+  const absolute = safePath(root, path);
+  assertNoSymlinkComponents(root, dirname(absolute));
+  let stat;
+  try {
+    stat = lstatSync(absolute);
+  } catch (error) {
+    if (error?.code === "ENOENT") return { path, ...record, state: "missing", actualTarget: null };
+    throw error;
+  }
+  if (!stat.isSymbolicLink()) {
+    return { path, ...record, state: "conflict", actualTarget: stat.isDirectory() ? "directory" : "file" };
+  }
+  const actualTarget = readlinkSync(absolute).split(sep).join("/");
+  const expectedAbsolute = safePath(root, `.agents/skills/${record.skill}`);
+  const actualAbsolute = resolve(dirname(absolute), actualTarget);
+  const state = actualTarget === record.target && actualAbsolute === expectedAbsolute ? "clean" : "conflict";
+  return { path, ...record, state, actualTarget };
+}
+
+function projectionRecords(lock) {
+  if (lock.projections && typeof lock.projections === "object" && !Array.isArray(lock.projections)) {
+    return lock.projections;
+  }
+  return expectedClaudeProjections(lock.selection?.selectedSkills ?? []);
+}
+
+function projectionStatus(root, lock) {
+  return Object.entries(projectionRecords(lock)).map(([path, record]) => readLinkState(root, path, record));
+}
+
 function readLock(root, { required = false } = {}) {
   const path = safePath(root, LOCK_PATH);
   assertNoSymlinkComponents(root, path);
@@ -408,10 +463,18 @@ function readLock(root, { required = false } = {}) {
     return null;
   }
   const lock = readJson(path, LOCK_PATH);
-  if (lock.schemaVersion !== SCHEMA_VERSION || typeof lock.files !== "object") {
+  if (
+    lock.schemaVersion !== SCHEMA_VERSION
+    || typeof lock.files !== "object"
+    || (lock.projections !== undefined && (typeof lock.projections !== "object" || Array.isArray(lock.projections)))
+  ) {
     throw new SyncError(`Unsupported ${LOCK_PATH} schema`, EXIT.CONFLICT);
   }
   return lock;
+}
+
+function stateCounts(entries, states) {
+  return Object.fromEntries(states.map((state) => [state, entries.filter((entry) => entry.state === state).length]));
 }
 
 function managedStatus(root, lock) {
@@ -421,8 +484,15 @@ function managedStatus(root, lock) {
     const state = current === null ? "missing" : current === record.installedSha256 ? "clean" : "modified";
     files.push({ path, state, currentSha256: current, installedSha256: record.installedSha256 });
   }
-  const counts = Object.fromEntries(["clean", "modified", "missing"].map((state) => [state, files.filter((file) => file.state === state).length]));
-  return { counts, files };
+  const projections = projectionStatus(root, lock);
+  const states = ["clean", "modified", "missing", "conflict"];
+  return {
+    counts: stateCounts([...files, ...projections], states),
+    fileCounts: stateCounts(files, states),
+    projectionCounts: stateCounts(projections, states),
+    files,
+    projections,
+  };
 }
 
 function preflightCommand(options) {
@@ -474,6 +544,8 @@ function inspectCommand(options) {
     },
     instructions: INSTRUCTION_FILES.filter((path) => existsSync(safePath(root, path))),
     installedSkills: installedSkills(root),
+    claudeProjections: Object.entries(expectedClaudeProjections(installedSkills(root)))
+      .map(([path, record]) => readLinkState(root, path, record)),
     projectFacts: {
       inspectedFiles: inventory.files.length,
       manifests: inventory.files.filter((path) => /(^|\/)(package\.json|pyproject\.toml|Cargo\.toml|go\.mod|go\.work|composer\.json|Package\.swift|project\.godot|build\.zig|tsconfig\.json)$/.test(path)),
@@ -601,6 +673,7 @@ function compareCommand(options) {
   }
   const known = new Set(lock.catalogSkills ?? []);
   const currentNames = catalog.skills.map((entry) => entry.name);
+  const projections = projectionStatus(root, lock);
   emit({
     skill: "sync-agent-assets",
     command: "compare",
@@ -609,6 +682,8 @@ function compareCommand(options) {
     candidateSource: { repository: lock.source.repository, ref: lock.source.ref, commit: candidateCommit },
     counts: Object.fromEntries([...new Set(files.map((file) => file.state))].sort().map((state) => [state, files.filter((file) => file.state === state).length])),
     files,
+    projectionCounts: stateCounts(projections, ["clean", "missing", "conflict"]),
+    projections,
     newCatalogSkills: currentNames.filter((name) => !known.has(name)).sort(),
     removedCatalogSkills: [...known].filter((name) => !currentNames.includes(name)).sort(),
   }, options.format);
@@ -653,7 +728,7 @@ function normalizeSelection(selection, catalog) {
     if (retainedPaths.has(retained.path)) throw new SyncError(`Duplicate retained file: ${retained.path}`);
     retainedPaths.add(retained.path);
   }
-  for (const requiredRoot of ["AGENTS.md", "CONTRIBUTING.md", "VALIDATION.md"]) {
+  for (const requiredRoot of ["AGENTS.md", "CLAUDE.md", "CONTRIBUTING.md", "VALIDATION.md"]) {
     if (!rootFiles.includes(requiredRoot) && !retainedPaths.has(requiredRoot)) {
       throw new SyncError(`Selection must manage or retain ${requiredRoot}`, EXIT.CONFLICT);
     }
@@ -741,6 +816,17 @@ function collectRecordFiles(root, sourceRoot, selection, previousLock) {
   return Object.fromEntries(Object.entries(records).sort(([left], [right]) => left.localeCompare(right)));
 }
 
+function collectRecordProjections(root, selection) {
+  const records = expectedClaudeProjections(selection.selectedSkills);
+  const states = Object.entries(records).map(([path, record]) => readLinkState(root, path, record));
+  const invalid = states.filter((entry) => entry.state !== "clean");
+  if (invalid.length > 0) {
+    const details = invalid.map((entry) => `${entry.path}:${entry.state}`).join(", ");
+    throw new SyncError(`Claude Code skill projections are not approved relative symlinks: ${details}`);
+  }
+  return records;
+}
+
 function recordPlan(options) {
   const root = resolveGitRoot(options.root);
   const sourceRoot = resolveDirectory(options["source-root"], "--source-root");
@@ -773,6 +859,7 @@ function recordPlan(options) {
     selection,
     catalogSkills: catalog.skills.map((entry) => entry.name).sort(),
     files: collectRecordFiles(root, sourceRoot, selection, readLock(root)),
+    projections: collectRecordProjections(root, selection),
   };
   return { root, sourceRoot, lock, planId: sha256(canonicalJson(lock)) };
 }
@@ -812,6 +899,7 @@ function recordCommand(options) {
     rootFiles: plan.lock.selection.rootFiles,
     retainedFiles: plan.lock.selection.retainedFiles,
     managedFileCount: Object.keys(plan.lock.files).length,
+    managedProjectionCount: Object.keys(plan.lock.projections).length,
     lock: plan.lock,
   }, options.format);
 }

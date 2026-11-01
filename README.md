@@ -1,6 +1,6 @@
 # AI agent assets
 
-This repository contains reusable skills, instructions, configuration assets, and references for AI coding agents. The assets target Pi and OpenCode, while portable skills follow the Agent Skills format.
+This repository contains reusable skills, instructions, configuration assets, and references for AI coding agents. The assets target Pi, OpenCode, and Claude Code, while portable skills follow the Agent Skills format.
 
 ## Skills
 
@@ -44,7 +44,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 
 ## Use the skills
 
-Pi and OpenCode discover project skills from `.agents/skills/` when they run inside this repository.
+Pi and OpenCode discover project skills from `.agents/skills/`. Claude Code discovers the same canonical skills through relative links under `.claude/skills/` and loads the shared instruction graph through [`CLAUDE.md`](CLAUDE.md). Claude Code support requires a Git checkout that preserves symbolic links.
 
 Install one skill into another project with the Skills CLI:
 
@@ -80,12 +80,19 @@ opencode --prompt "$SYNC_AGENT_PROMPT
 User request: Initialize or update agent assets in this repository."
 ```
 
-The generated prompt names a temporary supporting-files directory. Keep it until the session exits, then remove it. The workflow creates an approved isolated workspace, installs selected assets project-locally, and records reproducible synchronization state.
+Skills CLI 1.7.4 supports Claude Code directly:
+
+```sh
+npx --yes skills@1.7.4 use dragoscirjan/ai@sync-agent-assets --agent claude-code
+```
+
+The generated prompt names a temporary supporting-files directory. Keep it until the session exits, then remove it. The workflow creates an approved isolated workspace, installs complete selected assets under `.agents/skills/`, exposes them to Claude Code with relative `.claude/skills/` symlinks, and records reproducible synchronization state.
 
 ## Repository map
 
 - [`.agents/skills/`](.agents/skills/) contains portable Agent Skills.
 - [`AGENTS.md`](AGENTS.md) contains the small startup routing and safety contract for coding agents.
+- [`CLAUDE.md`](CLAUDE.md) imports `AGENTS.md` for Claude Code.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) contains contribution policy loaded before actionable change planning.
 - [`VALIDATION.md`](VALIDATION.md) contains checks loaded before validation or publication.
 - [`RESOURCES.md`](RESOURCES.md) contains the curated list of external tools and references.
