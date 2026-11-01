@@ -17,13 +17,33 @@ Use one workflow for both modes:
 - **init**: `.agents/ai-assets.lock.json` is absent.
 - **update**: `.agents/ai-assets.lock.json` exists.
 
-The first run should be temporary, not a project-local bootstrap mutation:
+The first run should be temporary, not a project-local bootstrap mutation. Skills CLI 1.7.4 cannot launch Pi or OpenCode through `skills use --agent`. Generate the temporary skill prompt without `--agent`:
 
 ```sh
-npx skills@1.7.4 use dragoscirjan/ai@sync-agent-assets --agent pi
+SYNC_AGENT_PROMPT="$(
+  npx --yes skills@1.7.4 use dragoscirjan/ai@sync-agent-assets
+)"
 ```
 
-Use `--agent opencode` for OpenCode. After initialization is merged, the project-local skill can handle later updates normally.
+Then start the required harness interactively from the target repository.
+
+For Pi:
+
+```sh
+pi "$SYNC_AGENT_PROMPT
+
+User request: Initialize or update agent assets in this repository."
+```
+
+For OpenCode:
+
+```sh
+opencode --prompt "$SYNC_AGENT_PROMPT
+
+User request: Initialize or update agent assets in this repository."
+```
+
+Do not pipe the generated prompt into Pi because redirected input selects a non-interactive mode. The generated prompt names a temporary supporting-files directory. Keep that directory until the agent session exits, then remove it. After initialization is merged, the project-local skill can handle later updates normally.
 
 ## Preserve authority and safety
 

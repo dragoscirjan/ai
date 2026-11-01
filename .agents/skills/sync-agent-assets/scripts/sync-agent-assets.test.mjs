@@ -13,7 +13,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
@@ -166,13 +166,46 @@ test("documentation pins the Skills CLI and resolves helper commands from the sk
     join(repositoryRoot, ".agents", "skills", "sync-agent-assets", "SKILL.md"),
   ];
   const contents = files.map((path) => readFileSync(path, "utf8")).join("\n");
-  assert.doesNotMatch(contents, /npx skills(?:\s|$)/);
-  assert.equal(contents.match(/npx skills@1\.7\.4/g)?.length, 6);
+  assert.doesNotMatch(contents, /npx(?: --yes)? skills(?:\s|$)/);
+  assert.doesNotMatch(contents, /skills@1\.7\.4 use[^\n]*--agent/);
+  assert.equal(contents.match(/skills@1\.7\.4/g)?.length, 6);
+  assert.match(contents, /Skills CLI 1\.7\.4 cannot launch Pi or OpenCode/);
+  assert.match(contents, /pi "\$SYNC_AGENT_PROMPT/);
+  assert.match(contents, /opencode --prompt "\$SYNC_AGENT_PROMPT/);
   const skill = readFileSync(files[2], "utf8");
   assert.doesNotMatch(skill, /node scripts\/sync-agent-assets\.mjs/);
   assert.match(skill, /node "\$SYNC_AGENT_ASSETS_HELPER"/);
   assert.match(skill, /\/skill:grill-me/);
   assert.match(skill, /follow `grilling` directly/);
+});
+
+test("Skills CLI generates a temporary prompt with supporting files without launching an agent", { timeout: 120_000 }, () => {
+  let tempRoot;
+  try {
+    const result = spawnSync("npx", [
+      "--yes",
+      "skills@1.7.4",
+      "use",
+      repositoryRoot,
+      "--skill",
+      "sync-agent-assets",
+    ], {
+      encoding: "utf8",
+      maxBuffer: 20 * 1024 * 1024,
+      timeout: 120_000,
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.doesNotMatch(result.stdout, /Running (?:Pi|OpenCode) is not supported/);
+    const supportMatch = result.stdout.match(/Supporting files for this skill were downloaded to:\n([^\n]+)/);
+    assert.ok(supportMatch, "generated prompt must identify its supporting-files directory");
+    const skillRoot = supportMatch[1].trim();
+    tempRoot = dirname(skillRoot);
+    assert.match(basename(tempRoot), /^skills-use-/);
+    assert.equal(existsSync(join(skillRoot, "scripts", "sync-agent-assets.mjs")), true);
+    assert.equal(existsSync(join(skillRoot, "references", "data-model.md")), true);
+  } finally {
+    if (tempRoot) rmSync(tempRoot, { recursive: true, force: true });
+  }
 });
 
 test("preflight verifies required local runtimes", () => {

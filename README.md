@@ -54,13 +54,33 @@ npx skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace
 
 Replace `isolated-workspace` with the required skill name. Review a skill and its supporting files before installing or trusting it.
 
-Bootstrap or update a project without dirtying its primary checkout by using `sync-agent-assets` temporarily:
+Bootstrap or update a project without dirtying its primary checkout by generating a temporary `sync-agent-assets` prompt:
 
 ```sh
-npx skills@1.7.4 use dragoscirjan/ai@sync-agent-assets --agent pi
+SYNC_AGENT_PROMPT="$(
+  npx --yes skills@1.7.4 use dragoscirjan/ai@sync-agent-assets
+)"
 ```
 
-Use `--agent opencode` for OpenCode. The workflow creates an approved isolated workspace, installs selected assets project-locally, and records reproducible synchronization state.
+Skills CLI 1.7.4 cannot launch Pi or OpenCode with `skills use --agent`. Start the required harness from the target repository.
+
+For Pi:
+
+```sh
+pi "$SYNC_AGENT_PROMPT
+
+User request: Initialize or update agent assets in this repository."
+```
+
+For OpenCode:
+
+```sh
+opencode --prompt "$SYNC_AGENT_PROMPT
+
+User request: Initialize or update agent assets in this repository."
+```
+
+The generated prompt names a temporary supporting-files directory. Keep it until the session exits, then remove it. The workflow creates an approved isolated workspace, installs selected assets project-locally, and records reproducible synchronization state.
 
 ## Repository map
 
