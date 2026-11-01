@@ -31,7 +31,7 @@ Workspace configuration:
 - Branch or bookmark name: pass the full name explicitly and use the `change/` prefix
 - Skill source: `.agents/skills/isolated-workspace/SKILL.md` in the repository origin
 
-The skill is mandatory before mutation. If it is unavailable, stop. With owner approval, install it using `npx skills add dragoscirjan/ai --skill isolated-workspace`, then reload the harness. Do not install it without approval, use an inline fallback, or recreate its workflow from memory.
+The skill is mandatory before mutation. If it is unavailable, stop. With owner approval, install it using `npx skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace`, then reload the harness. Do not install it without approval, use an inline fallback, or recreate its workflow from memory.
 
 ## Security boundaries
 

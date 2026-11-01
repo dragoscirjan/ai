@@ -39,6 +39,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`wait-what`](.agents/skills/wait-what/SKILL.md) | Ask the agent to re-pitch its last response with missing context and simpler language. |
 | [`isolated-workspace`](.agents/skills/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
 | [`instruction-maintenance`](.agents/skills/instruction-maintenance/SKILL.md) | Diagnose instruction drift, propose an exact adaptation, and wait for human approval before mutation. |
+| [`sync-agent-assets`](.agents/skills/sync-agent-assets/SKILL.md) | Initialize or update project instructions and skills with project detection, grilling, dependency closure, and conflict-safe managed state. |
 | [`unslop`](.agents/skills/unslop/SKILL.md) | Remove common AI writing patterns from an existing draft. |
 
 ## Use the skills
@@ -48,10 +49,18 @@ Pi and OpenCode discover project skills from `.agents/skills/` when they run ins
 Install one skill into another project with the Skills CLI:
 
 ```sh
-npx skills add dragoscirjan/ai --skill isolated-workspace
+npx skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace
 ```
 
 Replace `isolated-workspace` with the required skill name. Review a skill and its supporting files before installing or trusting it.
+
+Bootstrap or update a project without dirtying its primary checkout by using `sync-agent-assets` temporarily:
+
+```sh
+npx skills@1.7.4 use dragoscirjan/ai@sync-agent-assets --agent pi
+```
+
+Use `--agent opencode` for OpenCode. The workflow creates an approved isolated workspace, installs selected assets project-locally, and records reproducible synchronization state.
 
 ## Repository map
 
