@@ -175,6 +175,10 @@ function run(cwd, commandName, args, { allowFailure = false } = {}) {
   return { status: result.status ?? 1, stdout: result.stdout, stderr: result.stderr };
 }
 
+function runGit(cwd, args, options) {
+  return run(cwd, "git", ["-c", "core.fsmonitor=false", ...args], options);
+}
+
 function resolveDirectory(path, label) {
   if (!path) throw new SyncError(`${label} is required`, EXIT.USAGE);
   const resolved = realpathSync(resolve(path));
@@ -186,7 +190,7 @@ function resolveDirectory(path, label) {
 
 function resolveGitRoot(path) {
   const root = resolveDirectory(path, "--root");
-  const detected = realpathSync(run(root, "git", ["rev-parse", "--show-toplevel"]).stdout.trim());
+  const detected = realpathSync(runGit(root, ["rev-parse", "--show-toplevel"]).stdout.trim());
   if (detected !== root) {
     throw new SyncError(`--root must be the exact Git repository root: ${detected}`, EXIT.USAGE);
   }
@@ -202,6 +206,20 @@ function safePath(root, path) {
     throw new SyncError(`Path escapes root: ${path}`, EXIT.CONFLICT);
   }
   return target;
+}
+
+function assertNoSymlinkComponents(root, target) {
+  const relativePath = relative(root, target);
+  if (!relativePath || relativePath.startsWith("..") || isAbsolute(relativePath)) {
+    throw new SyncError(`Path escapes root: ${target}`, EXIT.CONFLICT);
+  }
+  let current = root;
+  for (const segment of relativePath.split(sep)) {
+    current = join(current, segment);
+    if (existsSync(current) && lstatSync(current).isSymbolicLink()) {
+      throw new SyncError(`Managed path component must not be a symbolic link: ${current}`, EXIT.CONFLICT);
+    }
+  }
 }
 
 function readJson(path, label = path) {
@@ -384,6 +402,7 @@ function installedSkills(root) {
 
 function readLock(root, { required = false } = {}) {
   const path = safePath(root, LOCK_PATH);
+  assertNoSymlinkComponents(root, path);
   if (!existsSync(path)) {
     if (required) throw new SyncError(`Missing ${LOCK_PATH}; run initialization first`, EXIT.CONFLICT);
     return null;
@@ -449,9 +468,9 @@ function inspectCommand(options) {
     mode: lock ? "update" : "init",
     root,
     git: {
-      branch: run(root, "git", ["branch", "--show-current"]).stdout.trim() || null,
-      head: run(root, "git", ["rev-parse", "HEAD"]).stdout.trim(),
-      status: run(root, "git", ["status", "--porcelain=v1", "--untracked-files=all"]).stdout.split("\n").filter(Boolean),
+      branch: runGit(root, ["branch", "--show-current"]).stdout.trim() || null,
+      head: runGit(root, ["rev-parse", "HEAD"]).stdout.trim(),
+      status: runGit(root, ["status", "--porcelain=v1", "--untracked-files=all"]).stdout.split("\n").filter(Boolean),
     },
     instructions: INSTRUCTION_FILES.filter((path) => existsSync(safePath(root, path))),
     installedSkills: installedSkills(root),
@@ -496,11 +515,11 @@ function fetchCommand(options) {
   try {
     writeFileSync(join(tempRoot, TEMP_MARKER), `${JSON.stringify({ schemaVersion: 1, owner: "sync-agent-assets", source: "source" })}\n`, { mode: 0o600 });
     mkdirSync(sourceRoot);
-    run(sourceRoot, "git", ["init", "-q"]);
-    run(sourceRoot, "git", ["remote", "add", "origin", repository]);
-    run(sourceRoot, "git", ["fetch", "--depth=1", "origin", ref]);
-    run(sourceRoot, "git", ["checkout", "--detach", "--quiet", "FETCH_HEAD"]);
-    const commit = run(sourceRoot, "git", ["rev-parse", "HEAD"]).stdout.trim();
+    runGit(sourceRoot, ["init", "-q"]);
+    runGit(sourceRoot, ["remote", "add", "origin", repository]);
+    runGit(sourceRoot, ["fetch", "--depth=1", "origin", ref]);
+    runGit(sourceRoot, ["checkout", "--detach", "--quiet", "FETCH_HEAD"]);
+    const commit = runGit(sourceRoot, ["rev-parse", "HEAD"]).stdout.trim();
     loadCatalog(safePath(sourceRoot, SOURCE_CATALOG), sourceRoot);
     emit({ skill: "sync-agent-assets", command: "fetch", repository, ref, commit, sourceRoot, tempRoot }, options.format);
   } catch (error) {
@@ -557,12 +576,21 @@ function compareState(record, current, source) {
 }
 
 function sourceCommit(sourceRoot) {
-  return run(sourceRoot, "git", ["rev-parse", "HEAD"]).stdout.trim();
+  return runGit(sourceRoot, ["rev-parse", "HEAD"]).stdout.trim();
+}
+
+function assertCleanSourceCheckout(sourceRoot) {
+  const status = runGit(sourceRoot, ["status", "--porcelain=v1", "--untracked-files=all"]).stdout.trim();
+  if (status) {
+    throw new SyncError("Pinned source checkout must be clean before comparison or recording", EXIT.CONFLICT);
+  }
 }
 
 function compareCommand(options) {
   const root = resolveGitRoot(options.root);
   const sourceRoot = resolveDirectory(options["source-root"], "--source-root");
+  const candidateCommit = sourceCommit(sourceRoot);
+  assertCleanSourceCheckout(sourceRoot);
   const lock = readLock(root, { required: true });
   const catalog = loadCatalog(safePath(sourceRoot, SOURCE_CATALOG), sourceRoot);
   const files = [];
@@ -578,7 +606,7 @@ function compareCommand(options) {
     command: "compare",
     root,
     currentSource: lock.source,
-    candidateSource: { repository: lock.source.repository, ref: lock.source.ref, commit: sourceCommit(sourceRoot) },
+    candidateSource: { repository: lock.source.repository, ref: lock.source.ref, commit: candidateCommit },
     counts: Object.fromEntries([...new Set(files.map((file) => file.state))].sort().map((state) => [state, files.filter((file) => file.state === state).length])),
     files,
     newCatalogSkills: currentNames.filter((name) => !known.has(name)).sort(),
@@ -722,13 +750,14 @@ function recordPlan(options) {
   if (actualCommit !== expectedCommit) {
     throw new SyncError(`Source commit changed: expected ${expectedCommit}, found ${actualCommit}`, EXIT.CONFLICT);
   }
+  assertCleanSourceCheckout(sourceRoot);
   if (!options.selection) throw new SyncError("--selection is required", EXIT.USAGE);
   const catalog = loadCatalog(safePath(sourceRoot, SOURCE_CATALOG), sourceRoot);
   const selection = normalizeSelection(readJson(resolve(options.selection), "selection file"), catalog);
   assertPortableSelection(selection, root, sourceRoot);
   const repository = assertRepository(options.repository ?? DEFAULT_REPOSITORY);
   const ref = assertSourceRef(options.ref ?? DEFAULT_REF);
-  const remoteResult = run(sourceRoot, "git", ["remote", "get-url", "origin"], { allowFailure: true });
+  const remoteResult = runGit(sourceRoot, ["remote", "get-url", "origin"], { allowFailure: true });
   if (remoteResult.status === 0 && assertRepository(remoteResult.stdout.trim()) !== repository) {
     throw new SyncError("--repository does not match the pinned source checkout origin", EXIT.CONFLICT);
   }
@@ -758,10 +787,17 @@ function recordCommand(options) {
       throw new SyncError("Record plan changed; generate and approve a new plan", EXIT.CONFLICT);
     }
     const lockPath = safePath(plan.root, LOCK_PATH);
-    mkdirSync(dirname(lockPath), { recursive: true });
+    const lockDirectory = dirname(lockPath);
+    assertNoSymlinkComponents(plan.root, lockDirectory);
+    mkdirSync(lockDirectory, { recursive: true });
+    assertNoSymlinkComponents(plan.root, lockDirectory);
     const temporary = `${lockPath}.tmp-${process.pid}`;
-    writeFileSync(temporary, `${JSON.stringify(plan.lock, null, 2)}\n`, { mode: 0o644 });
-    renameSync(temporary, lockPath);
+    try {
+      writeFileSync(temporary, `${JSON.stringify(plan.lock, null, 2)}\n`, { mode: 0o644, flag: "wx" });
+      renameSync(temporary, lockPath);
+    } finally {
+      rmSync(temporary, { force: true });
+    }
   }
   emit({
     skill: "sync-agent-assets",

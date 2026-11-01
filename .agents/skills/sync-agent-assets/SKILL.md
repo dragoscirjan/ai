@@ -20,7 +20,7 @@ Use one workflow for both modes:
 The first run should be temporary, not a project-local bootstrap mutation:
 
 ```sh
-npx skills use dragoscirjan/ai@sync-agent-assets --agent pi
+npx skills@1.7.4 use dragoscirjan/ai@sync-agent-assets --agent pi
 ```
 
 Use `--agent opencode` for OpenCode. After initialization is merged, the project-local skill can handle later updates normally.
@@ -39,7 +39,7 @@ Use `--agent opencode` for OpenCode. After initialization is merged, the project
 
 ## Use the bundled helper
 
-Resolve this skill's directory and use [`scripts/sync-agent-assets.mjs`](scripts/sync-agent-assets.mjs). Read [`references/data-model.md`](references/data-model.md) before creating a selection file or interpreting lock state.
+Resolve this skill's directory once and store the absolute [`scripts/sync-agent-assets.mjs`](scripts/sync-agent-assets.mjs) path as `SYNC_AGENT_ASSETS_HELPER`. Use that absolute path for every helper command, including after entering the isolated workspace. Read [`references/data-model.md`](references/data-model.md) before creating a selection file or interpreting lock state.
 
 The helper:
 
@@ -53,8 +53,8 @@ The helper:
 Inspect its interface and verify local prerequisites first:
 
 ```sh
-node scripts/sync-agent-assets.mjs --help
-node scripts/sync-agent-assets.mjs preflight
+node "$SYNC_AGENT_ASSETS_HELPER" --help
+node "$SYNC_AGENT_ASSETS_HELPER" preflight
 ```
 
 The source fetch verifies network access. Stop if Git, Bun, network access, or Node.js 22.20 or newer is unavailable. Do not install or reconfigure prerequisites without explicit approval.
@@ -67,7 +67,7 @@ The source fetch verifies network access. Stop if Git, Bun, network access, or N
 4. Run static inspection:
 
 ```sh
-node scripts/sync-agent-assets.mjs inspect --root /absolute/target
+node "$SYNC_AGENT_ASSETS_HELPER" inspect --root /absolute/target
 ```
 
 5. Record the detected mode, current instructions, installed skills, manifests, extensions, recommended skill closure, ambiguous skills, and existing managed-file status.
@@ -78,7 +78,7 @@ node scripts/sync-agent-assets.mjs inspect --root /absolute/target
 Fetch the default update candidate from upstream `main`, or use a developer-supplied ref:
 
 ```sh
-node scripts/sync-agent-assets.mjs fetch --ref main
+node "$SYNC_AGENT_ASSETS_HELPER" fetch --ref main
 ```
 
 Keep the returned `sourceRoot`, `tempRoot`, and exact `commit`. Do not store temporary absolute paths in reusable files or lock data.
@@ -86,7 +86,7 @@ Keep the returned `sourceRoot`, `tempRoot`, and exact `commit`. Do not store tem
 Validate the fetched catalog and complete source skill inventory:
 
 ```sh
-node scripts/sync-agent-assets.mjs catalog --source-root SOURCE_ROOT
+node "$SYNC_AGENT_ASSETS_HELPER" catalog --source-root SOURCE_ROOT
 ```
 
 Stop on a missing catalog entry, stale catalog entry, dependency cycle, invalid name, or absent dependency. An uncatalogued new skill is not safe to install automatically.
@@ -110,7 +110,7 @@ The fetched workspace helper requires Bun. Do not recreate its commands inside t
 Before deep project classification, present a small bootstrap installation plan. The first project-scoped skill installation must contain only the grilling pair:
 
 ```sh
-npx skills add SOURCE_ROOT \
+npx skills@1.7.4 add SOURCE_ROOT \
   --skill grilling \
   --skill grill-me \
   --agent pi \
@@ -122,7 +122,7 @@ npx skills add SOURCE_ROOT \
 Then install `isolated-workspace` from the same pinned source:
 
 ```sh
-npx skills add SOURCE_ROOT \
+npx skills@1.7.4 add SOURCE_ROOT \
   --skill isolated-workspace \
   --agent pi \
   --agent opencode \
@@ -132,7 +132,7 @@ npx skills add SOURCE_ROOT \
 
 These commands may create or update `skills-lock.json`. Include that file in the plan and final review.
 
-Reload project skill discovery when the harness supports it. Then invoke `grill-me`. If the active harness cannot reload skills in place, read the installed `grill-me/SKILL.md` and `grilling/SKILL.md` and follow them exactly for this bootstrap run.
+Reload project skill discovery when the harness supports it. In Pi, stop and ask the developer to invoke `/skill:grill-me`, because `grill-me` disables model invocation. In OpenCode, explicitly load `grill-me` by skill ID. If the harness cannot invoke or load `grill-me`, load and follow `grilling` directly before continuing. Do not treat reading the `grill-me` wrapper alone as completing the interview.
 
 ## Phase 5: inspect deeply and grill decisions
 
@@ -184,7 +184,7 @@ For each managed root file, show the complete proposed content or a precise diff
 For update mode, compare the pinned candidate with the current lock:
 
 ```sh
-node scripts/sync-agent-assets.mjs compare \
+node "$SYNC_AGENT_ASSETS_HELPER" compare \
   --root /absolute/worktree \
   --source-root SOURCE_ROOT
 ```
@@ -238,7 +238,7 @@ Create a temporary selection JSON file outside the target repository. It must li
 Generate a non-mutating record plan:
 
 ```sh
-node scripts/sync-agent-assets.mjs record \
+node "$SYNC_AGENT_ASSETS_HELPER" record \
   --root /absolute/worktree \
   --source-root SOURCE_ROOT \
   --source-commit SOURCE_COMMIT \
@@ -250,7 +250,7 @@ node scripts/sync-agent-assets.mjs record \
 Review the selected skills, declined skills, root files, managed-file count, complete lock content, and plan ID. After approval, rebuild and apply the exact plan:
 
 ```sh
-node scripts/sync-agent-assets.mjs record \
+node "$SYNC_AGENT_ASSETS_HELPER" record \
   --root /absolute/worktree \
   --source-root SOURCE_ROOT \
   --source-commit SOURCE_COMMIT \
@@ -262,7 +262,7 @@ node scripts/sync-agent-assets.mjs record \
   --plan-id PLAN_ID
 ```
 
-The helper rejects structural differences between pinned source skills and installed target skills, source-commit changes, unsafe paths, symlinks, stale plan IDs, missing files, invalid dependencies, and catalog drift.
+The helper rejects structural differences between pinned source skills and installed target skills, source-commit changes, dirty source checkouts, unsafe paths, symlinked managed paths, stale plan IDs, missing files, invalid dependencies, and catalog drift.
 
 ## Phase 10: validate and report
 
@@ -280,7 +280,7 @@ Run all target validation required by its instructions. Also verify:
 - managed files report clean immediately after recording:
 
 ```sh
-node scripts/sync-agent-assets.mjs status --root /absolute/worktree
+node "$SYNC_AGENT_ASSETS_HELPER" status --root /absolute/worktree
 ```
 
 Report changed files, installed and retained skills, source commit, validation results, conflicts, unrun checks, rerun requirements, and remaining owner actions. Leave the isolated workspace and changes for the developer. Do not publish them automatically.
@@ -288,5 +288,5 @@ Report changed files, installed and retained skills, source commit, validation r
 Clean the fetched temporary checkout only after validation and state recording:
 
 ```sh
-node scripts/sync-agent-assets.mjs cleanup --source-root SOURCE_ROOT
+node "$SYNC_AGENT_ASSETS_HELPER" cleanup --source-root SOURCE_ROOT
 ```

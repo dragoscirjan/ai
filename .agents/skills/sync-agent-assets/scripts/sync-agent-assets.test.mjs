@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import {
+  chmodSync,
   cpSync,
   existsSync,
   mkdtempSync,
   mkdirSync,
   readFileSync,
+  renameSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -157,6 +159,22 @@ test("help documents prerequisites and approval-bound recording", () => {
   assert.match(result.stdout, /never edits project assets/i);
 });
 
+test("documentation pins the Skills CLI and resolves helper commands from the skill directory", () => {
+  const files = [
+    join(repositoryRoot, "AGENTS.md"),
+    join(repositoryRoot, "README.md"),
+    join(repositoryRoot, ".agents", "skills", "sync-agent-assets", "SKILL.md"),
+  ];
+  const contents = files.map((path) => readFileSync(path, "utf8")).join("\n");
+  assert.doesNotMatch(contents, /npx skills(?:\s|$)/);
+  assert.equal(contents.match(/npx skills@1\.7\.4/g)?.length, 6);
+  const skill = readFileSync(files[2], "utf8");
+  assert.doesNotMatch(skill, /node scripts\/sync-agent-assets\.mjs/);
+  assert.match(skill, /node "\$SYNC_AGENT_ASSETS_HELPER"/);
+  assert.match(skill, /\/skill:grill-me/);
+  assert.match(skill, /follow `grilling` directly/);
+});
+
 test("preflight verifies required local runtimes", () => {
   const result = run(["preflight"]);
   assert.equal(result.status, 0, result.stderr);
@@ -202,6 +220,27 @@ test("inspect detects mode, language skills, wrappers, and ambiguous initializer
     assert.equal(ambiguous.has("init-typescript"), true);
     assert.equal(ambiguous.has("init-project"), true);
   } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("inspect disables repository-configured Git fsmonitor commands", () => {
+  const root = fixture("sync-agent-assets-fsmonitor-");
+  const marker = join(tmpdir(), `sync-agent-assets-fsmonitor-${process.pid}-${Date.now()}`);
+  try {
+    const hook = join(root, ".git", "fsmonitor-test.sh");
+    writeFileSync(hook, `#!/bin/sh\ntouch ${JSON.stringify(marker)}\nprintf '\\n'\n`);
+    chmodSync(hook, 0o755);
+    git(root, ["config", "core.fsmonitor", hook]);
+    git(root, ["status", "--porcelain=v1"]);
+    assert.equal(existsSync(marker), true, "test fixture must execute the configured fsmonitor command");
+    rmSync(marker, { force: true });
+
+    const result = run(["inspect", "--root", root]);
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(existsSync(marker), false);
+  } finally {
+    rmSync(marker, { force: true });
     rmSync(root, { recursive: true, force: true });
   }
 });
@@ -315,6 +354,38 @@ test("compare distinguishes clean upstream changes, conflicts, and retained remo
   }
 });
 
+test("compare and record reject dirty pinned source checkouts", () => {
+  const source = syntheticSource();
+  const target = fixture("sync-agent-assets-dirty-source-");
+  try {
+    installSyntheticAssets(source.root, target);
+    const selection = selectionFile(target);
+    const plan = JSON.parse(run([
+      "record", "--root", target, "--source-root", source.root,
+      "--source-commit", source.commit, "--selection", selection,
+    ]).stdout);
+    assert.equal(run([
+      "record", "--root", target, "--source-root", source.root,
+      "--source-commit", source.commit, "--selection", selection,
+      "--apply", "--confirm", "--plan-id", plan.planId,
+    ]).status, 0);
+
+    writeFileSync(join(source.root, "dirty.txt"), "not committed\n");
+    const compared = run(["compare", "--root", target, "--source-root", source.root]);
+    assert.equal(compared.status, 3);
+    assert.match(compared.stderr, /source checkout must be clean/);
+    const recorded = run([
+      "record", "--root", target, "--source-root", source.root,
+      "--source-commit", source.commit, "--selection", selection,
+    ]);
+    assert.equal(recorded.status, 3);
+    assert.match(recorded.stderr, /source checkout must be clean/);
+  } finally {
+    rmSync(source.root, { recursive: true, force: true });
+    rmSync(target, { recursive: true, force: true });
+  }
+});
+
 test("record preserves approved files removed from a selected upstream skill", () => {
   const source = syntheticSource();
   const target = fixture("sync-agent-assets-retain-");
@@ -375,6 +446,33 @@ test("record refuses target skill directories with unmanaged extra files", () =>
     ]);
     assert.equal(result.status, 3);
     assert.match(result.stderr, /differs structurally/);
+  } finally {
+    rmSync(source.root, { recursive: true, force: true });
+    rmSync(target, { recursive: true, force: true });
+  }
+});
+
+test("record apply rejects a symbolic-link lock directory", () => {
+  const source = syntheticSource();
+  const target = fixture("sync-agent-assets-lock-symlink-");
+  try {
+    installSyntheticAssets(source.root, target);
+    const selection = selectionFile(target);
+    const plan = JSON.parse(run([
+      "record", "--root", target, "--source-root", source.root,
+      "--source-commit", source.commit, "--selection", selection,
+    ]).stdout);
+    renameSync(join(target, ".agents"), join(target, ".agents-real"));
+    symlinkSync(".agents-real", join(target, ".agents"), "dir");
+
+    const result = run([
+      "record", "--root", target, "--source-root", source.root,
+      "--source-commit", source.commit, "--selection", selection,
+      "--apply", "--confirm", "--plan-id", plan.planId,
+    ]);
+    assert.equal(result.status, 3);
+    assert.match(result.stderr, /path component must not be a symbolic link/);
+    assert.equal(existsSync(join(target, ".agents-real", "ai-assets.lock.json")), false);
   } finally {
     rmSync(source.root, { recursive: true, force: true });
     rmSync(target, { recursive: true, force: true });
