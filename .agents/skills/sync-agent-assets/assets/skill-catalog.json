@@ -14,7 +14,7 @@
       "selection": "optional",
       "dependencies": [],
       "safety": "read-only-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "askWithoutSignals": true }
     },
     {
@@ -23,7 +23,7 @@
       "selection": "optional",
       "dependencies": [],
       "safety": "read-only-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "askWithoutSignals": true }
     },
     {
@@ -32,7 +32,7 @@
       "selection": "core",
       "dependencies": ["isolated-workspace"],
       "safety": "destructive-with-confirmation",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": {}
     },
     {
@@ -41,7 +41,7 @@
       "selection": "optional",
       "dependencies": [],
       "safety": "read-only-subagents",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "requires": ["parallel-subagents"],
       "signals": { "askWithoutSignals": true }
     },
@@ -51,7 +51,7 @@
       "selection": "detected",
       "dependencies": [],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": {
         "extensions": [".c", ".cc", ".cpp", ".cxx", ".gd", ".go", ".js", ".jsx", ".lua", ".mjs", ".php", ".py", ".rs", ".sh", ".swift", ".ts", ".tsx", ".zig"]
       }
@@ -62,7 +62,7 @@
       "selection": "optional",
       "dependencies": ["coding", "coding-sh"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".bash", ".sh"] }
     },
     {
@@ -71,7 +71,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".c"] }
     },
     {
@@ -80,7 +80,7 @@
       "selection": "wrapper",
       "dependencies": ["coding", "coding-js"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".cjs"] }
     },
     {
@@ -89,7 +89,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".cc", ".cpp", ".cxx", ".hh", ".hpp", ".hxx"] }
     },
     {
@@ -98,7 +98,7 @@
       "selection": "wrapper",
       "dependencies": ["coding", "coding-ts"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".cts"] }
     },
     {
@@ -107,7 +107,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["project.godot"], "extensions": [".gd"] }
     },
     {
@@ -116,7 +116,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["go.mod", "go.work"], "extensions": [".go"] }
     },
     {
@@ -125,7 +125,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".js"] }
     },
     {
@@ -134,7 +134,7 @@
       "selection": "wrapper",
       "dependencies": ["coding", "coding-js"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".jsx"] }
     },
     {
@@ -143,7 +143,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": [".luacheckrc"], "extensions": [".lua"] }
     },
     {
@@ -152,7 +152,7 @@
       "selection": "wrapper",
       "dependencies": ["coding", "coding-js"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".mjs"] }
     },
     {
@@ -161,7 +161,7 @@
       "selection": "wrapper",
       "dependencies": ["coding", "coding-ts"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".mts"] }
     },
     {
@@ -170,7 +170,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["composer.json"], "extensions": [".php"] }
     },
     {
@@ -179,7 +179,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["pyproject.toml", "setup.py", "requirements.txt", "uv.lock"], "extensions": [".py"] }
     },
     {
@@ -188,7 +188,7 @@
       "selection": "wrapper",
       "dependencies": ["coding", "coding-py"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".pyi"] }
     },
     {
@@ -197,7 +197,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["Cargo.toml"], "extensions": [".rs"] }
     },
     {
@@ -206,7 +206,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".sh"] }
     },
     {
@@ -215,7 +215,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["Package.swift"], "extensions": [".swift"] }
     },
     {
@@ -224,7 +224,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["tsconfig.json"], "extensions": [".ts"] }
     },
     {
@@ -233,7 +233,7 @@
       "selection": "wrapper",
       "dependencies": ["coding", "coding-ts"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".tsx"] }
     },
     {
@@ -242,7 +242,7 @@
       "selection": "detected",
       "dependencies": ["coding"],
       "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["build.zig", "build.zig.zon"], "extensions": [".zig"] }
     },
     {
@@ -251,7 +251,7 @@
       "selection": "bootstrap",
       "dependencies": [],
       "safety": "read-only-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "provenance": "vendored",
       "signals": {}
     },
@@ -261,7 +261,7 @@
       "selection": "bootstrap",
       "dependencies": ["grilling"],
       "safety": "read-only-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": {}
     },
     {
@@ -270,7 +270,7 @@
       "selection": "initializer",
       "dependencies": ["init-project", "coding", "coding-gdscript"],
       "safety": "project-and-user-write",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["project.godot"], "extensions": [".gd"] }
     },
     {
@@ -279,7 +279,7 @@
       "selection": "initializer",
       "dependencies": [],
       "safety": "project-and-user-write",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "askWithoutSignals": true }
     },
     {
@@ -288,7 +288,7 @@
       "selection": "initializer",
       "dependencies": ["init-project", "coding", "coding-ts"],
       "safety": "project-write",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["tsconfig.json"], "extensions": [".ts", ".tsx", ".mts", ".cts"] }
     },
     {
@@ -297,7 +297,7 @@
       "selection": "core",
       "dependencies": [],
       "safety": "read-only-until-approved",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": {}
     },
     {
@@ -306,7 +306,7 @@
       "selection": "bootstrap",
       "dependencies": [],
       "safety": "project-vcs-write-with-confirmation",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": {}
     },
     {
@@ -315,7 +315,7 @@
       "selection": "manager",
       "dependencies": ["grill-me", "grilling", "isolated-workspace", "instruction-maintenance"],
       "safety": "project-write-with-confirmation",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": {}
     },
     {
@@ -324,7 +324,7 @@
       "selection": "optional",
       "dependencies": [],
       "safety": "read-only-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "provenance": "vendored",
       "signals": { "askWithoutSignals": true }
     },
@@ -334,7 +334,7 @@
       "selection": "optional",
       "dependencies": [],
       "safety": "read-only-guidance",
-      "harnesses": ["pi", "opencode"],
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "askWithoutSignals": true }
     }
   ]

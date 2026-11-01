@@ -53,6 +53,20 @@
           }
         ]
       }
+    },
+    "projections": {
+      "type": "object",
+      "propertyNames": { "pattern": "^\\.claude/skills/[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["harness", "skill", "target"],
+        "properties": {
+          "harness": { "const": "claude-code" },
+          "skill": { "$ref": "selection.schema.json#/$defs/skillName" },
+          "target": { "type": "string", "pattern": "^\\.\\./\\.\\./\\.agents/skills/[a-z0-9]+(?:-[a-z0-9]+)*$" }
+        }
+      }
     }
   },
   "$defs": {

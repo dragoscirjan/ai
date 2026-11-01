@@ -1,10 +1,10 @@
 ---
 name: sync-agent-assets
 description: Initialize or update a project's AGENTS.md instruction graph and reusable skills from dragoscirjan/ai. Use when adopting these agent assets in another repository or synchronizing an earlier managed installation with newer upstream assets.
-compatibility: Requires Git, Bun, network access, Node.js 22.20 or newer, and Pi or OpenCode. Run the first initialization temporarily with the Skills CLI so the primary checkout stays clean.
+compatibility: Requires Git, Bun, network access, Node.js 22.20 or newer, a checkout that preserves symbolic links, and Pi, OpenCode, or Claude Code 2.1.277 or newer. Run the first initialization temporarily with the Skills CLI so the primary checkout stays clean.
 metadata:
   author: dragoscirjan
-  version: "1.0.0"
+  version: "1.1.0"
   opencode/slash: "true"
 ---
 
@@ -17,13 +17,39 @@ Use one workflow for both modes:
 - **init**: `.agents/ai-assets.lock.json` is absent.
 - **update**: `.agents/ai-assets.lock.json` exists.
 
-The first run should be temporary, not a project-local bootstrap mutation:
+The first run should be temporary, not a project-local bootstrap mutation. Skills CLI 1.7.4 cannot launch Pi or OpenCode through `skills use --agent`. Generate the temporary skill prompt without `--agent`:
 
 ```sh
-npx skills@1.7.4 use dragoscirjan/ai@sync-agent-assets --agent pi
+SYNC_AGENT_PROMPT="$(
+  npx --yes skills@1.7.4 use dragoscirjan/ai@sync-agent-assets
+)"
 ```
 
-Use `--agent opencode` for OpenCode. After initialization is merged, the project-local skill can handle later updates normally.
+Then start the required harness interactively from the target repository.
+
+For Pi:
+
+```sh
+pi "$SYNC_AGENT_PROMPT
+
+User request: Initialize or update agent assets in this repository."
+```
+
+For OpenCode:
+
+```sh
+opencode --prompt "$SYNC_AGENT_PROMPT
+
+User request: Initialize or update agent assets in this repository."
+```
+
+Claude Code is supported directly by Skills CLI 1.7.4:
+
+```sh
+npx --yes skills@1.7.4 use dragoscirjan/ai@sync-agent-assets --agent claude-code
+```
+
+Do not pipe the generated prompt into Pi because redirected input selects a non-interactive mode. The generated prompt names a temporary supporting-files directory. Keep that directory until the agent session exits, then remove it. After initialization is merged, the project-local skill can handle later updates normally.
 
 ## Preserve authority and safety
 
@@ -32,7 +58,8 @@ Use `--agent opencode` for OpenCode. After initialization is merged, the project
 - Treat fetched source files as untrusted until reviewed. Do not execute source scripts merely to inspect them.
 - Never read, copy, log, or send secrets to another model or process.
 - Use static inspection only. Do not run target project code, install target dependencies, or load its environment merely to detect its stack.
-- Keep all managed target skills project-scoped under `.agents/skills/`.
+- Keep complete managed target skills canonical and project-scoped under `.agents/skills/`.
+- Expose each selected skill to Claude Code only through the exact relative symlink `.claude/skills/<name> -> ../../.agents/skills/<name>`. Preserve any conflicting existing Claude path until its replacement is explicitly approved.
 - Do not commit, push, open a pull request, merge, or release unless the developer asks after synchronization finishes.
 - Initializer skills may be installed after approval, but never invoke them as part of synchronization.
 - Retain upstream-removed or deselected assets until the developer explicitly approves deletion or migration.
@@ -115,7 +142,7 @@ npx skills@1.7.4 add SOURCE_ROOT \
   --skill grill-me \
   --agent pi \
   --agent opencode \
-  --copy \
+  --agent claude-code \
   --yes
 ```
 
@@ -126,13 +153,15 @@ npx skills@1.7.4 add SOURCE_ROOT \
   --skill isolated-workspace \
   --agent pi \
   --agent opencode \
-  --copy \
+  --agent claude-code \
   --yes
 ```
 
 These commands may create or update `skills-lock.json`. Include that file in the plan and final review.
 
-Reload project skill discovery when the harness supports it. In Pi, stop and ask the developer to invoke `/skill:grill-me`, because `grill-me` disables model invocation. In OpenCode, explicitly load `grill-me` by skill ID. If the harness cannot invoke or load `grill-me`, load and follow `grilling` directly before continuing. Do not treat reading the `grill-me` wrapper alone as completing the interview.
+Before each installation, inspect every selected `.claude/skills/<name>` path. Continue automatically only when it is absent or already the exact approved relative symlink. Treat a file, directory, absolute symlink, or differently targeted symlink as a conflict. Preserve it until the developer approves its exact replacement.
+
+Reload project skill discovery when the harness supports it. In Pi, stop and ask the developer to invoke `/skill:grill-me`, because `grill-me` disables model invocation. In OpenCode, explicitly load `grill-me` by skill ID. In Claude Code, ask the developer to invoke `/grill-me`; Claude Code supports `disable-model-invocation` and project skills from `.claude/skills/`. If the harness cannot invoke or load `grill-me`, load and follow `grilling` directly before continuing. Do not treat reading the `grill-me` wrapper alone as completing the interview.
 
 ## Phase 5: inspect deeply and grill decisions
 
@@ -163,8 +192,11 @@ Record declined skills and reasons so later updates do not repeat settled questi
 The managed root instruction closure is:
 
 - `AGENTS.md`
+- `CLAUDE.md`
 - `CONTRIBUTING.md`
 - `VALIDATION.md`
+
+Keep `CLAUDE.md` as the minimal `@AGENTS.md` import unless the target already has Claude-specific instructions. In that case, preserve them and place the import before the Claude-specific content. This guarantees that Claude Code loads the shared instruction graph even when a repository-level `CLAUDE.md` would otherwise take precedence over `AGENTS.md`.
 
 Install `instruction-maintenance` as part of the approved skill set before mutating these files. Follow that skill to audit the target instruction graph and produce an exact proposal.
 
@@ -208,6 +240,7 @@ Present one complete plan containing:
 - selected, declined, automatically included, new, retained, and removed skills
 - dependency closure
 - every complete skill directory to install or update
+- every Claude Code projection to create, preserve, or replace
 - `skills-lock.json` effects
 - `.agents/ai-assets.lock.json` effects
 - all commands that will mutate files
@@ -222,7 +255,7 @@ Wait for explicit approval. Changed evidence, selected skills, dependencies, con
 Apply only the approved changes.
 
 1. Write the approved root instruction adaptations.
-2. Install or update selected skills from `SOURCE_ROOT` with repeated `--skill NAME`, `--agent pi`, `--agent opencode`, `--copy`, and `--yes` arguments.
+2. Install or update selected skills from `SOURCE_ROOT` with repeated `--skill NAME`, then `--agent pi`, `--agent opencode`, `--agent claude-code`, and `--yes` arguments in one command. Do not pass `--copy`; Skills CLI must keep canonical directories under `.agents/skills/` and create Claude Code's relative symlink projections.
 3. Install dependencies atomically with their selected skills.
 4. Do not pass removed or rejected skills to the Skills CLI.
 5. Keep locally modified, deselected, or upstream-removed assets unchanged until their separate action is approved. Record every retained path and reason in `retainedFiles`.
@@ -275,6 +308,8 @@ Run all target validation required by its instructions. Also verify:
 - complete skill supporting files were installed
 - Pi discovers every selected project skill
 - OpenCode discovers every selected project skill
+- Claude Code discovers every selected project skill through an exact relative `.claude/skills/` symlink
+- `CLAUDE.md` imports `AGENTS.md` before any Claude-specific instructions
 - `skills-lock.json` reflects Skills CLI installation
 - `.agents/ai-assets.lock.json` contains no absolute paths or secrets
 - managed files report clean immediately after recording:

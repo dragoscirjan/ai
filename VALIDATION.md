@@ -19,6 +19,7 @@ When a change adds or modifies a skill:
 - Verify that every `SKILL.md` has valid `name` and `description` frontmatter.
 - Verify that each skill directory name matches its declared `name`.
 - Verify that Pi and OpenCode discover the changed skill from `.agents/skills/`.
+- Verify that Claude Code discovers it through an exact relative `.claude/skills/` symlink to the canonical `.agents/skills/` directory.
 - Check relative references, supporting files, and command examples.
 - Confirm that harness-specific behavior is explicit and does not masquerade as portable Agent Skills behavior.
 
@@ -37,6 +38,7 @@ When a change modifies `sync-agent-assets` or its catalog:
 - Confirm complete selected skill directories and dependency closures are installed.
 - Confirm `skills-lock.json` remains Skills CLI-owned and `.agents/ai-assets.lock.json` remains synchronization-owned.
 - Confirm Pi and OpenCode discover the synchronized skills.
+- Confirm Claude Code discovers the synchronized skills through recorded relative projections and loads `AGENTS.md` through `CLAUDE.md`.
 - Confirm synchronization never commits, pushes, publishes, merges, or releases without a separate explicit request.
 
 ## Coding-family changes
@@ -53,7 +55,7 @@ When a change adds or modifies `coding` or a `coding-*` skill:
 - Confirm that every language uses jscpd as the fallback duplicate detector while honoring project-configured alternatives.
 - Confirm that numeric thresholds come only from project configuration.
 - Check source links and maintenance-status notes for external guidance.
-- Verify flat discovery in Pi and OpenCode.
+- Verify flat discovery in Pi, OpenCode, and Claude Code.
 
 ## Workspace-skill changes
 

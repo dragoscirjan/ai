@@ -7,13 +7,14 @@ import {
   mkdtempSync,
   mkdirSync,
   readFileSync,
+  readlinkSync,
   renameSync,
   rmSync,
   symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
@@ -66,6 +67,7 @@ function syntheticSource() {
   const root = mkdtempSync(join(tmpdir(), "sync-agent-assets-source-"));
   initializeGit(root);
   writeFileSync(join(root, "AGENTS.md"), "# Source agents\n");
+  writeFileSync(join(root, "CLAUDE.md"), "@AGENTS.md\n");
   writeFileSync(join(root, "CONTRIBUTING.md"), "# Source contributing\n");
   writeFileSync(join(root, "VALIDATION.md"), "# Source validation\n");
   writeSkill(root, "grilling");
@@ -88,7 +90,7 @@ function syntheticSource() {
         selection: "bootstrap",
         dependencies: [],
         safety: "read-only-guidance",
-        harnesses: ["pi", "opencode"],
+        harnesses: ["pi", "opencode", "claude-code"],
         signals: {},
       },
       {
@@ -97,7 +99,7 @@ function syntheticSource() {
         selection: "bootstrap",
         dependencies: ["grilling"],
         safety: "read-only-guidance",
-        harnesses: ["pi", "opencode"],
+        harnesses: ["pi", "opencode", "claude-code"],
         signals: {},
       },
       {
@@ -106,7 +108,7 @@ function syntheticSource() {
         selection: "optional",
         dependencies: [],
         safety: "read-only-guidance",
-        harnesses: ["pi", "opencode"],
+        harnesses: ["pi", "opencode", "claude-code"],
         signals: { askWithoutSignals: true },
       },
       {
@@ -115,7 +117,7 @@ function syntheticSource() {
         selection: "manager",
         dependencies: ["grill-me"],
         safety: "project-write-with-confirmation",
-        harnesses: ["pi", "opencode"],
+        harnesses: ["pi", "opencode", "claude-code"],
         signals: {},
       },
     ],
@@ -127,12 +129,19 @@ function syntheticSource() {
   return { root, commit };
 }
 
-function installSyntheticAssets(source, target) {
+function installSyntheticAssets(source, target, { claudeProjections = true } = {}) {
   mkdirSync(join(target, ".agents", "skills"), { recursive: true });
   for (const name of ["grilling", "grill-me", "sync-agent-assets"]) {
     cpSync(join(source, ".agents", "skills", name), join(target, ".agents", "skills", name), { recursive: true });
   }
+  if (claudeProjections) {
+    mkdirSync(join(target, ".claude", "skills"), { recursive: true });
+    for (const name of ["grilling", "grill-me", "sync-agent-assets"]) {
+      symlinkSync(`../../.agents/skills/${name}`, join(target, ".claude", "skills", name), "dir");
+    }
+  }
   writeFileSync(join(target, "AGENTS.md"), "# Adapted agents\n");
+  writeFileSync(join(target, "CLAUDE.md"), "@AGENTS.md\n");
   writeFileSync(join(target, "CONTRIBUTING.md"), "# Adapted contributing\n");
   writeFileSync(join(target, "VALIDATION.md"), "# Adapted validation\n");
 }
@@ -144,7 +153,7 @@ function selectionFile(root) {
     `${JSON.stringify({
       selectedSkills: [],
       declinedSkills: [{ name: "optional-skill", reason: "Not applicable." }],
-      rootFiles: ["AGENTS.md", "CONTRIBUTING.md", "VALIDATION.md"],
+      rootFiles: ["AGENTS.md", "CLAUDE.md", "CONTRIBUTING.md", "VALIDATION.md"],
       adaptations: { "AGENTS.md": "Preserved fixture rules." },
     }, null, 2)}\n`,
   );
@@ -166,13 +175,82 @@ test("documentation pins the Skills CLI and resolves helper commands from the sk
     join(repositoryRoot, ".agents", "skills", "sync-agent-assets", "SKILL.md"),
   ];
   const contents = files.map((path) => readFileSync(path, "utf8")).join("\n");
-  assert.doesNotMatch(contents, /npx skills(?:\s|$)/);
-  assert.equal(contents.match(/npx skills@1\.7\.4/g)?.length, 6);
+  assert.doesNotMatch(contents, /npx(?: --yes)? skills(?:\s|$)/);
+  assert.doesNotMatch(contents, /skills@1\.7\.4 use[^\n]*--agent (?:pi|opencode)/);
+  assert.equal(contents.match(/skills@1\.7\.4/g)?.length, 8);
+  assert.match(contents, /Skills CLI 1\.7\.4 cannot launch Pi or OpenCode/);
+  assert.match(contents, /pi "\$SYNC_AGENT_PROMPT/);
+  assert.match(contents, /opencode --prompt "\$SYNC_AGENT_PROMPT/);
+  assert.match(contents, /skills@1\.7\.4 use dragoscirjan\/ai@sync-agent-assets --agent claude-code/);
+  assert.match(contents, /--agent pi[\s\S]*--agent opencode[\s\S]*--agent claude-code/);
+  assert.doesNotMatch(contents, /--agent claude-code \\\n\s+--copy/);
   const skill = readFileSync(files[2], "utf8");
   assert.doesNotMatch(skill, /node scripts\/sync-agent-assets\.mjs/);
   assert.match(skill, /node "\$SYNC_AGENT_ASSETS_HELPER"/);
   assert.match(skill, /\/skill:grill-me/);
   assert.match(skill, /follow `grilling` directly/);
+});
+
+test("Skills CLI generates a temporary prompt with supporting files without launching an agent", { timeout: 120_000 }, () => {
+  let tempRoot;
+  try {
+    const result = spawnSync("npx", [
+      "--yes",
+      "skills@1.7.4",
+      "use",
+      repositoryRoot,
+      "--skill",
+      "sync-agent-assets",
+    ], {
+      encoding: "utf8",
+      maxBuffer: 20 * 1024 * 1024,
+      timeout: 120_000,
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.doesNotMatch(result.stdout, /Running (?:Pi|OpenCode) is not supported/);
+    const supportMatch = result.stdout.match(/Supporting files for this skill were downloaded to:\n([^\n]+)/);
+    assert.ok(supportMatch, "generated prompt must identify its supporting-files directory");
+    const skillRoot = supportMatch[1].trim();
+    tempRoot = dirname(skillRoot);
+    assert.match(basename(tempRoot), /^skills-use-/);
+    assert.equal(existsSync(join(skillRoot, "scripts", "sync-agent-assets.mjs")), true);
+    assert.equal(existsSync(join(skillRoot, "references", "data-model.md")), true);
+  } finally {
+    if (tempRoot) rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("Skills CLI launches the Claude Code bootstrap with temporary supporting files", { timeout: 120_000 }, () => {
+  const root = mkdtempSync(join(tmpdir(), "sync-agent-assets-claude-use-"));
+  try {
+    const bin = join(root, "bin");
+    const capture = join(root, "capture.json");
+    mkdirSync(bin);
+    const fakeClaude = join(bin, "claude");
+    writeFileSync(fakeClaude, `#!/usr/bin/env node\nconst fs=require("node:fs");\nconst prompt=process.argv[2]??"";\nconst match=prompt.match(/Supporting files for this skill were downloaded to:\\n([^\\n]+)/);\nconst skillRoot=match?.[1]?.trim();\nconst valid=Boolean(skillRoot&&fs.existsSync(skillRoot+"/scripts/sync-agent-assets.mjs")&&fs.existsSync(skillRoot+"/references/data-model.md"));\nfs.writeFileSync(${JSON.stringify(capture)},JSON.stringify({prompt,skillRoot,valid}));\nprocess.exit(valid?0:1);\n`);
+    chmodSync(fakeClaude, 0o755);
+    const result = spawnSync("npx", [
+      "--yes",
+      "skills@1.7.4",
+      "use",
+      repositoryRoot,
+      "--skill",
+      "sync-agent-assets",
+      "--agent",
+      "claude-code",
+    ], {
+      encoding: "utf8",
+      env: { ...process.env, PATH: `${bin}:${process.env.PATH}` },
+      maxBuffer: 20 * 1024 * 1024,
+      timeout: 120_000,
+    });
+    assert.equal(result.status, 0, result.stderr);
+    const launched = JSON.parse(readFileSync(capture, "utf8"));
+    assert.equal(launched.valid, true);
+    assert.match(launched.prompt, /sync-agent-assets/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test("preflight verifies required local runtimes", () => {
@@ -197,6 +275,14 @@ test("the catalog covers every repository skill directory", () => {
   assert.equal(names.has("sync-agent-assets"), true);
   assert.equal(names.has("coding-tsx"), true);
   assert.equal(names.has("instruction-maintenance"), true);
+  assert.equal(output.skills.every((entry) => entry.harnesses.includes("claude-code")), true);
+  assert.equal(readFileSync(join(repositoryRoot, "CLAUDE.md"), "utf8"), "@AGENTS.md\n");
+  for (const entry of output.skills) {
+    assert.equal(
+      readlinkSync(join(repositoryRoot, ".claude", "skills", entry.name)),
+      `../../.agents/skills/${entry.name}`,
+    );
+  }
 });
 
 test("inspect detects mode, language skills, wrappers, and ambiguous initializers", () => {
@@ -291,6 +377,8 @@ test("record plans, requires confirmation, writes a portable lock, and detects l
     assert.equal(lock.$schema, "./skills/sync-agent-assets/assets/ai-assets-lock.schema.json");
     assert.equal(lock.source.commit, source.commit);
     assert.equal(lock.selection.adaptations["AGENTS.md"], "Preserved fixture rules.");
+    assert.equal(Object.keys(lock.projections).length, 3);
+    assert.equal(lock.projections[".claude/skills/grilling"].target, "../../.agents/skills/grilling");
 
     const detectedUpdate = run(["inspect", "--root", target]);
     assert.equal(detectedUpdate.status, 0, detectedUpdate.stderr);
@@ -430,6 +518,88 @@ test("record preserves approved files removed from a selected upstream skill", (
     assert.equal(retained.state, "upstream-removed-retain");
   } finally {
     rmSync(source.root, { recursive: true, force: true });
+    rmSync(target, { recursive: true, force: true });
+  }
+});
+
+test("old locks remain readable and report missing Claude Code projections", () => {
+  const source = syntheticSource();
+  const target = fixture("sync-agent-assets-old-lock-");
+  try {
+    installSyntheticAssets(source.root, target);
+    const selection = selectionFile(target);
+    const plan = JSON.parse(run([
+      "record", "--root", target, "--source-root", source.root,
+      "--source-commit", source.commit, "--selection", selection,
+    ]).stdout);
+    assert.equal(run([
+      "record", "--root", target, "--source-root", source.root,
+      "--source-commit", source.commit, "--selection", selection,
+      "--apply", "--confirm", "--plan-id", plan.planId,
+    ]).status, 0);
+    const lockPath = join(target, ".agents", "ai-assets.lock.json");
+    const lock = JSON.parse(readFileSync(lockPath, "utf8"));
+    delete lock.projections;
+    writeFileSync(lockPath, `${JSON.stringify(lock, null, 2)}\n`);
+    rmSync(join(target, ".claude"), { recursive: true, force: true });
+
+    const status = run(["status", "--root", target]);
+    assert.equal(status.status, 0, status.stderr);
+    const output = JSON.parse(status.stdout);
+    assert.equal(output.projectionCounts.missing, 3);
+    assert.equal(output.projections.every((entry) => entry.state === "missing"), true);
+  } finally {
+    rmSync(source.root, { recursive: true, force: true });
+    rmSync(target, { recursive: true, force: true });
+  }
+});
+
+test("record rejects missing or conflicting Claude Code projections", () => {
+  const source = syntheticSource();
+  const target = fixture("sync-agent-assets-claude-conflict-");
+  try {
+    installSyntheticAssets(source.root, target, { claudeProjections: false });
+    const missing = run([
+      "record", "--root", target, "--source-root", source.root,
+      "--source-commit", source.commit, "--selection", selectionFile(target),
+    ]);
+    assert.equal(missing.status, 3);
+    assert.match(missing.stderr, /Claude Code skill projections/);
+    assert.match(missing.stderr, /missing/);
+
+    mkdirSync(join(target, ".claude", "skills", "grilling"), { recursive: true });
+    for (const name of ["grill-me", "sync-agent-assets"]) {
+      symlinkSync(`../../.agents/skills/${name}`, join(target, ".claude", "skills", name), "dir");
+    }
+    const conflict = run([
+      "record", "--root", target, "--source-root", source.root,
+      "--source-commit", source.commit, "--selection", selectionFile(target),
+    ]);
+    assert.equal(conflict.status, 3);
+    assert.match(conflict.stderr, /grilling:conflict/);
+  } finally {
+    rmSync(source.root, { recursive: true, force: true });
+    rmSync(target, { recursive: true, force: true });
+  }
+});
+
+test("Skills CLI installs canonical skills with Claude Code symlink projections", { timeout: 120_000 }, () => {
+  const target = fixture("sync-agent-assets-cli-install-");
+  try {
+    const result = spawnSync("npx", [
+      "--yes", "skills@1.7.4", "add", repositoryRoot,
+      "--skill", "sync-agent-assets",
+      "--agent", "pi",
+      "--agent", "opencode",
+      "--agent", "claude-code",
+      "--yes",
+    ], { cwd: target, encoding: "utf8", maxBuffer: 20 * 1024 * 1024, timeout: 120_000 });
+    assert.equal(result.status, 0, result.stderr);
+    const projection = join(target, ".claude", "skills", "sync-agent-assets");
+    assert.equal(readlinkSync(projection), "../../.agents/skills/sync-agent-assets");
+    assert.equal(existsSync(join(target, ".agents", "skills", "sync-agent-assets", "scripts", "sync-agent-assets.mjs")), true);
+    assert.equal(existsSync(join(target, "skills-lock.json")), true);
+  } finally {
     rmSync(target, { recursive: true, force: true });
   }
 });

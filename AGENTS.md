@@ -2,7 +2,7 @@
 
 ## Project
 
-This repository is a curated collection of reusable AI-agent skills, prompts, commands, configuration assets, and references for Pi and OpenCode.
+This repository is a curated collection of reusable AI-agent skills, prompts, commands, configuration assets, and references for Pi, OpenCode, and Claude Code.
 
 ## Instruction routing
 
