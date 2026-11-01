@@ -22,6 +22,23 @@ When a change adds or modifies a skill:
 - Check relative references, supporting files, and command examples.
 - Confirm that harness-specific behavior is explicit and does not masquerade as portable Agent Skills behavior.
 
+## Agent-asset synchronization changes
+
+When a change modifies `sync-agent-assets` or its catalog:
+
+- Run `node --test .agents/skills/sync-agent-assets/scripts/sync-agent-assets.test.mjs`.
+- Run the helper's `catalog --source-root <repository-root>` command and confirm that every skill directory is represented exactly once.
+- Test init detection, update detection, dependency closure, ambiguous skill selection, and unknown catalog entries.
+- Test clean upstream updates, local modifications, conflicts, missing target files, and upstream removals retained for approval.
+- Confirm plan mode is non-mutating and lock recording requires `--apply --confirm --plan-id <approved-id>`.
+- Confirm the managed lock contains no absolute paths, credentials, temporary paths, or secrets.
+- Confirm the workflow uses static inspection and never runs target code or installs target dependencies for detection.
+- Confirm bootstrap uses a temporary Skills CLI invocation and creates an isolated workspace before project-scoped installation.
+- Confirm complete selected skill directories and dependency closures are installed.
+- Confirm `skills-lock.json` remains Skills CLI-owned and `.agents/ai-assets.lock.json` remains synchronization-owned.
+- Confirm Pi and OpenCode discover the synchronized skills.
+- Confirm synchronization never commits, pushes, publishes, merges, or releases without a separate explicit request.
+
 ## Coding-family changes
 
 When a change adds or modifies `coding` or a `coding-*` skill:
