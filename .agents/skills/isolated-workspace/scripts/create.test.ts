@@ -144,25 +144,26 @@ describe("isolated-workspace create script", () => {
 
   test("creates a temporary sibling lane from an explicit canonical Git base", () => {
     const repository = gitRepository();
-    const canonicalArgs = ["--vcs", "git", "--branch", "change/canonical", "--base", "main"];
+    const canonicalArgs = ["--vcs", "git", "--branch", "change/-canonical", "--base", "main"];
     const canonicalPlan = output(invoke(repository, canonicalArgs));
     output(invoke(repository, approvedApply(canonicalArgs, canonicalPlan)));
     writeFileSync(join(canonicalPlan.result.workspacePath, "canonical.txt"), "canonical\n");
     mustRun("git", ["add", "canonical.txt"], canonicalPlan.result.workspacePath);
     mustRun("git", ["commit", "-qm", "canonical change"], canonicalPlan.result.workspacePath);
+    mustRun("git", ["tag", "change/-canonical", "main"], repository);
 
     const laneArgs = [
       "--vcs",
       "git",
       "--branch",
-      "change/canonical--lane-worker-a",
+      "change/-canonical--lane-worker-a",
       "--base",
-      "change/canonical",
+      "change/-canonical",
     ];
     const lanePlan = output(invoke(canonicalPlan.result.workspacePath, laneArgs));
     output(invoke(canonicalPlan.result.workspacePath, approvedApply(laneArgs, lanePlan)));
 
-    expect(lanePlan.result.workspacePath).toBe(`${repository}--workspaces/canonical--lane-worker-a`);
+    expect(lanePlan.result.workspacePath).toBe(`${repository}--workspaces/-canonical--lane-worker-a`);
     expect(mustRun("git", ["rev-parse", "HEAD"], lanePlan.result.workspacePath).stdout.trim())
       .toBe(mustRun("git", ["rev-parse", "HEAD"], canonicalPlan.result.workspacePath).stdout.trim());
   });

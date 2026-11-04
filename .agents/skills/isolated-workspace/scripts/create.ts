@@ -89,6 +89,11 @@ Examples:
   bun scripts/create.ts --vcs git --branch change/issue-42--lane-worker-a --base change/issue-42
   bun scripts/create.ts --vcs jj --branch change/issue-42 --base main --apply --confirm --plan-id PLAN_ID`;
 
+function laneCanonicalRef(branch: string): string | null {
+  const markerIndex = branch.indexOf(LANE_MARKER);
+  return markerIndex === -1 ? null : branch.slice(0, markerIndex);
+}
+
 function validateLaneIdentity(options: CreateOptions): void {
   const markerIndex = options.branch.indexOf(LANE_MARKER);
   if (markerIndex === -1) return;
@@ -129,7 +134,14 @@ function gitPlan(options: CreateOptions): CreatePlan {
   if (checked.status !== 0) {
     throw new WorkspaceError(`Invalid Git branch name: ${options.branch}`, EXIT.USAGE);
   }
-  const base = gitBase(repository.primaryRoot, options.base);
+  const canonicalRef = laneCanonicalRef(options.branch);
+  const resolvedBase = gitBase(
+    repository.primaryRoot,
+    canonicalRef ? `refs/heads/${canonicalRef}` : options.base,
+  );
+  const base = canonicalRef
+    ? { expression: canonicalRef, commit: resolvedBase.commit }
+    : resolvedBase;
   const worktrees = listGitWorktrees(repository.primaryRoot);
   const expectedPath = canonicalIfExists(layout.workspacePath);
   const atPath = worktrees.find(

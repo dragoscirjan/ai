@@ -161,7 +161,7 @@ describe("cleanup-workspaces script", () => {
       "main",
     ]);
     expect(emptyLane.status).toBe(2);
-    expect(emptyLane.stderr).toContain("non-empty");
+    expect(emptyLane.stderr).toContain("safe workspace name");
 
     const laneWithoutBase = invoke(repository, ["--vcs", "git", "--lane", "worker-a"]);
     expect(laneWithoutBase.status).toBe(2);
@@ -176,7 +176,7 @@ describe("cleanup-workspaces script", () => {
       "main",
     ]);
     expect(laneRefPath.status).toBe(2);
-    expect(laneRefPath.stderr).toContain("one workspace name");
+    expect(laneRefPath.stderr).toContain("safe workspace name");
   });
 
   test("removes a clean merged Git worktree and safely deletes its branch", () => {
@@ -201,7 +201,7 @@ describe("cleanup-workspaces script", () => {
 
   test("removes exactly one integrated Git lane from the canonical workspace", () => {
     const repository = gitRepository();
-    const canonicalRef = "change/canonical";
+    const canonicalRef = "change/-canonical";
     const laneRef = `${canonicalRef}--lane-worker-a`;
     const otherLaneRef = `${canonicalRef}--lane-worker-b`;
     const canonical = create(repository, "git", canonicalRef);
@@ -211,24 +211,25 @@ describe("cleanup-workspaces script", () => {
     mustRun("git", ["add", "feature.txt"], lane);
     mustRun("git", ["commit", "-qm", "lane change"], lane);
     mustRun("git", ["merge", "--ff-only", laneRef], canonical);
+    mustRun("git", ["tag", canonicalRef, "main"], repository);
     rmSync(otherLane, { recursive: true, force: true });
 
     const args = [
       "--vcs",
       "git",
       "--lane",
-      "canonical--lane-worker-a",
+      "-canonical--lane-worker-a",
       "--base",
       canonicalRef,
     ];
     const plan = output(invoke(repository, args, canonical));
     expect(plan.cleanupMode).toBe("lane");
-    expect(plan.target).toBe("canonical--lane-worker-a");
+    expect(plan.target).toBe("-canonical--lane-worker-a");
     expect(plan.canonical).toEqual(expect.objectContaining({
       path: canonical,
       ref: canonicalRef,
     }));
-    expect(plan.eligible.map((item) => item.name)).toEqual(["canonical--lane-worker-a"]);
+    expect(plan.eligible.map((item) => item.name)).toEqual(["-canonical--lane-worker-a"]);
     expect(plan.skipped).toEqual([]);
     expect(plan.operations).toEqual(expect.arrayContaining([
       expect.objectContaining({

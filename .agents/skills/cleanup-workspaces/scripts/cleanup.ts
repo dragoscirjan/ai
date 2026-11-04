@@ -138,15 +138,22 @@ Examples:
   bun scripts/cleanup.ts --vcs git --lane issue-44--lane-worker-a --base change/issue-44
   bun scripts/cleanup.ts --vcs jj --lane issue-44--lane-worker-a --base change/issue-44`;
 
+function safeWorkspaceLeaf(name: string): string {
+  if (
+    !name ||
+    name === "." ||
+    name === ".." ||
+    name.includes("..") ||
+    !/^[A-Za-z0-9._-]+$/.test(name)
+  ) {
+    throw new WorkspaceError("--lane must be one safe workspace name", EXIT.USAGE);
+  }
+  return name;
+}
+
 function laneTarget(options: CleanupOptions): string | null {
   if (options.lane === undefined) return null;
-  if (options.lane === "") {
-    throw new WorkspaceError("--lane requires a non-empty workspace name", EXIT.USAGE);
-  }
-  const leaf = assertSafeBranch(options.lane);
-  if (leaf !== options.lane) {
-    throw new WorkspaceError("--lane must be one workspace name, not a ref path", EXIT.USAGE);
-  }
+  const leaf = safeWorkspaceLeaf(options.lane);
   if (!options.base) {
     throw new WorkspaceError("--lane requires --base with the canonical ref", EXIT.USAGE);
   }
@@ -176,6 +183,11 @@ function directLaneIdentity(target: string, canonical: CanonicalWorkspace): Lane
 
 function insideOrEqual(parent: string, target: string): boolean {
   return parent === target || isContained(parent, target);
+}
+
+function explicitGitBranchBase(repository: string, branch: string): BaseRevision {
+  const resolved = gitBase(repository, `refs/heads/${branch}`);
+  return { expression: branch, commit: resolved.commit };
 }
 
 function gitIntegrated(repository: string, tip: string, base: BaseRevision): boolean {
@@ -218,7 +230,11 @@ function gitCanonicalWorkspace(
   }
   const ref = entry.branch.replace(/^refs\/heads\//, "");
   const tip = command(path, "git", ["rev-parse", "HEAD"]).stdout.trim();
-  const branchTip = command(path, "git", ["rev-parse", "--verify", `${ref}^{commit}`], {
+  const branchTip = command(path, "git", [
+    "rev-parse",
+    "--verify",
+    `refs/heads/${ref}^{commit}`,
+  ], {
     allowFailure: true,
   });
   if (
@@ -240,7 +256,15 @@ function auditGit(options: CleanupOptions): CleanupPlan {
   const repository = detectRepository("git");
   const workspaceRoot = deriveLayout(repository.primaryRoot, "placeholder").workspaceRoot;
   const target = laneTarget(options);
-  const base = gitBase(target ? repository.currentRoot : repository.primaryRoot, options.base);
+  let base: BaseRevision;
+  if (target) {
+    if (!options.base) {
+      throw new WorkspaceError("--lane requires --base with the canonical ref", EXIT.USAGE);
+    }
+    base = explicitGitBranchBase(repository.currentRoot, options.base);
+  } else {
+    base = gitBase(repository.primaryRoot, options.base);
+  }
   const canonical = target ? gitCanonicalWorkspace(repository, workspaceRoot, base) : null;
   const lane = target && canonical ? directLaneIdentity(target, canonical) : null;
   const currentDirectory = realpathSync(process.cwd());
@@ -336,7 +360,7 @@ function auditGit(options: CleanupOptions): CleanupPlan {
     const branchTip = command(repository.primaryRoot, "git", [
       "rev-parse",
       "--verify",
-      `${branch}^{commit}`,
+      `refs/heads/${branch}^{commit}`,
     ], { allowFailure: true });
     if (branchTip.status !== 0 || branchTip.stdout.trim() !== head || entry.HEAD !== head) {
       skipped.push({ name, path, branch, reason: "tip-mismatch" });
@@ -719,14 +743,28 @@ function cleanupPlanId(plan: CleanupPlan): string {
   });
 }
 
+function sameCleanupAuthority(approved: CleanupPlan, fresh: CleanupPlan): boolean {
+  return approved.cleanupMode === fresh.cleanupMode &&
+    approved.target === fresh.target &&
+    approved.base.expression === fresh.base.expression &&
+    approved.base.commit === fresh.base.commit &&
+    JSON.stringify(approved.canonical) === JSON.stringify(fresh.canonical);
+}
+
 function applyGit(plan: CleanupPlan, options: CleanupOptions): ApplyResult {
   const removed: CleanupItem[] = [];
   const retained: Array<Record<string, string>> = [];
   const failed: Array<Record<string, string>> = [];
 
   for (const candidate of plan.eligible) {
-    const fresh = auditGit(options).eligible.find((item) => item.path === candidate.path);
-    if (!fresh || fresh.tip !== candidate.tip || fresh.branch !== candidate.branch) {
+    const freshPlan = auditGit(options);
+    const fresh = freshPlan.eligible.find((item) => item.path === candidate.path);
+    if (
+      !sameCleanupAuthority(plan, freshPlan) ||
+      !fresh ||
+      fresh.tip !== candidate.tip ||
+      fresh.branch !== candidate.branch
+    ) {
       failed.push({ name: candidate.name, reason: "state-changed-before-removal" });
       continue;
     }
@@ -792,7 +830,7 @@ function applyGit(plan: CleanupPlan, options: CleanupOptions): ApplyResult {
           const branchTip = command(plan.repository.primaryRoot, "git", [
             "rev-parse",
             "--verify",
-            `${item.branch}^{commit}`,
+            `refs/heads/${item.branch}^{commit}`,
           ], { allowFailure: true });
           if (branchTip.status !== 0 || branchTip.stdout.trim() !== item.tip) {
             retained.push({ branch: item.branch, reason: "tip-changed-after-prune" });
@@ -838,8 +876,10 @@ function applyJj(plan: CleanupPlan, options: CleanupOptions): ApplyResult {
   const failed: Array<Record<string, string>> = [];
 
   for (const candidate of plan.eligible) {
-    const fresh = auditJj(options).eligible.find((item) => item.name === candidate.name);
+    const freshPlan = auditJj(options);
+    const fresh = freshPlan.eligible.find((item) => item.name === candidate.name);
     if (
+      !sameCleanupAuthority(plan, freshPlan) ||
       !fresh ||
       fresh.tip !== candidate.tip ||
       fresh.path !== candidate.path ||
