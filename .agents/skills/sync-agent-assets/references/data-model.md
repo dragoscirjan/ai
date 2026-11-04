@@ -9,7 +9,7 @@ Top-level fields:
 - `schemaVersion`: catalog schema version
 - `profiles.manager`: the synchronization manager
 - `profiles.bootstrap`: skills required before deep inspection
-- `profiles.coreInstructions`: skills required by the imported instruction graph
+- `profiles.coreInstructions`: skills required by the imported instruction graph, including delegation policy when `AGENTS.md` routes child-agent work
 - `skills`: every skill directory in the source repository
 
 Each skill entry contains:
@@ -40,6 +40,7 @@ Create the selection file outside the target repository. Its schema is [`../asse
     "grilling",
     "isolated-workspace",
     "cleanup-workspaces",
+    "subagent-orchestration",
     "instruction-maintenance"
   ],
   "declinedSkills": [

@@ -13,6 +13,7 @@ Load only the instructions required for the current phase. When several rows mat
 | Read-only questions, inspection, comparison, or research | No deferred project document is required unless the workflow needs repository identity; then read and follow `CONTRIBUTING.md`. |
 | Before planning or performing a repository architecture, design, implementation, documentation, configuration, policy, or publication change | Read and follow `CONTRIBUTING.md`. |
 | Before any repository mutation | Read and follow `.agents/skills/isolated-workspace/SKILL.md`. |
+| Before delegating work to child agents | Read and follow `.agents/skills/subagent-orchestration/SKILL.md`. |
 | Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
 | Before auditing or removing old workspaces | Read and follow `.agents/skills/cleanup-workspaces/SKILL.md`. |
 | When instructions, their relationships, or skill routing metadata appear missing, stale, conflicting, duplicated, or unsuitable for the observed workflow | Read and follow `.agents/skills/instruction-maintenance/SKILL.md`. It permits a read-only audit and exact proposal; do not mutate instructions before explicit human approval of that proposal. |
@@ -32,6 +33,8 @@ Workspace configuration:
 - Skill source: `.agents/skills/isolated-workspace/SKILL.md` in the repository origin
 
 The skill is mandatory before mutation. If it is unavailable, stop. With owner approval, install it using `npx skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace`, then reload the harness. Do not install it without approval, use an inline fallback, or recreate its workflow from memory.
+
+Every final repository-work report, including blocked or partial-work handoffs, must state the active branch or bookmark and absolute workspace path. If no isolated workspace was created, state that explicitly.
 
 ## Security boundaries
 
