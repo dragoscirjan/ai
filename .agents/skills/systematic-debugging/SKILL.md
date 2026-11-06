@@ -1,7 +1,6 @@
 ---
 name: systematic-debugging
 description: Diagnose bugs, failing tests, regressions, flaky behavior, and unexpected results through evidence, root-cause tracing, and single-hypothesis experiments before proposing fixes. Use for debugging in any language, including failures across component or environment boundaries.
-license: MIT
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -117,4 +116,4 @@ Follow the project's branch and workspace reporting requirements. Never claim a 
 
 ## Source and adaptation
 
-Maintained by this project as an adaptation of obra/superpowers. See [README.md](README.md) for the overview, adaptation details, pinned upstream source, project authorship, and retained upstream MIT notice.
+Maintained by this project as an adaptation of obra/superpowers. See [README.md](README.md) for the overview, adaptation details, and pinned upstream source.
