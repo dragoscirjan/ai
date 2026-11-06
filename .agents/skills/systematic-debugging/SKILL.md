@@ -8,7 +8,7 @@ metadata:
   opencode/slash: "true"
   source: https://github.com/obra/superpowers/tree/22f0b463e7a5e579904dd6211a520321035526f7/skills/systematic-debugging
   upstream-commit: "22f0b463e7a5e579904dd6211a520321035526f7"
-  adaptation: "Project-first workflow adapted from obra/superpowers by Jesse Vincent."
+  adaptation: "Adapted by dragoscirjan from obra/superpowers (Jesse Vincent)."
 ---
 
 # Systematic debugging
@@ -117,6 +117,4 @@ Follow the project's branch and workspace reporting requirements. Never claim a 
 
 ## Source and adaptation
 
-Adapted from [obra/superpowers systematic-debugging](https://github.com/obra/superpowers/tree/22f0b463e7a5e579904dd6211a520321035526f7/skills/systematic-debugging) at commit `22f0b463e7a5e579904dd6211a520321035526f7`. The upstream copyright and MIT terms are retained in [LICENSE](LICENSE).
-
-This adaptation uses project-owned implementation and validation workflows, phase-specific skill handoffs, risk-based boundary checks, and reassessment rather than an automatic architectural conclusion after repeated failures. It does not include the upstream executable scripts or project-specific TypeScript utilities.
+Maintained by this project as an adaptation of obra/superpowers. See [README.md](README.md) for the overview, adaptation details, pinned upstream source, project authorship, and retained upstream MIT notice.
