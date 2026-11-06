@@ -246,6 +246,15 @@
       "signals": { "files": ["build.zig", "build.zig.zon"], "extensions": [".zig"] }
     },
     {
+      "name": "debloat",
+      "category": "refactoring",
+      "selection": "optional",
+      "dependencies": ["coding"],
+      "safety": "project-write-guidance",
+      "harnesses": ["pi", "opencode", "claude-code"],
+      "signals": { "askWithoutSignals": true }
+    },
+    {
       "name": "grilling",
       "category": "interview",
       "selection": "bootstrap",
@@ -308,6 +317,15 @@
       "safety": "project-vcs-write-with-confirmation",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": {}
+    },
+    {
+      "name": "scaffold",
+      "category": "design",
+      "selection": "optional",
+      "dependencies": ["coding", "isolated-workspace"],
+      "safety": "project-write-with-confirmation",
+      "harnesses": ["pi", "opencode", "claude-code"],
+      "signals": { "askWithoutSignals": true }
     },
     {
       "name": "subagent-orchestration",
