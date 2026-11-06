@@ -328,6 +328,16 @@
       "signals": {}
     },
     {
+      "name": "systematic-debugging",
+      "category": "debugging",
+      "selection": "optional",
+      "dependencies": ["coding"],
+      "safety": "project-write-guidance",
+      "harnesses": ["pi", "opencode", "claude-code"],
+      "provenance": "vendored",
+      "signals": { "askWithoutSignals": true }
+    },
+    {
       "name": "unslop",
       "category": "communication",
       "selection": "optional",
