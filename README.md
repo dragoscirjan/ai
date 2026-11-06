@@ -10,6 +10,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`asd-ste100-technical`](.agents/skills/asd-ste100-technical/SKILL.md) | Apply ASD-STE100-inspired plain language to developer-facing prose without losing technical precision. |
 | [`code-review`](.agents/skills/code-review/SKILL.md) | Review a diff against repository standards and its originating issue or specification with separate read-only subagents. |
 | [`coding`](.agents/skills/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
+| [`debloat`](.agents/skills/debloat/SKILL.md) | Prevent overengineering and simplify existing mechanisms with evidence while preserving required behavior and boundaries. |
 | [`coding-js`](.agents/skills/coding-js/SKILL.md) | Apply JavaScript guidance and project-first quality gates to `.js` files. |
 | [`coding-mjs`](.agents/skills/coding-mjs/SKILL.md) | Add ECMAScript-module semantics for `.mjs` files. |
 | [`coding-cjs`](.agents/skills/coding-cjs/SKILL.md) | Add CommonJS semantics for `.cjs` files. |
@@ -39,6 +40,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`wait-what`](.agents/skills/wait-what/SKILL.md) | Ask the agent to re-pitch its last response with missing context and simpler language. |
 | [`isolated-workspace`](.agents/skills/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
 | [`instruction-maintenance`](.agents/skills/instruction-maintenance/SKILL.md) | Diagnose instruction drift, propose an exact adaptation, and wait for human approval before mutation. |
+| [`scaffold`](.agents/skills/scaffold/SKILL.md) | Create reviewable source skeleton files with fail-fast placeholders and stop before implementing behavior. |
 | [`subagent-orchestration`](.agents/skills/subagent-orchestration/SKILL.md) | Bound child-agent workers and reviewers, coordinate isolated write lanes, and clean integrated temporary lanes. |
 | [`systematic-debugging`](.agents/skills/systematic-debugging/SKILL.md) | Diagnose failures through evidence, root-cause tracing, controlled experiments, and project-owned verification. |
 | [`sync-agent-assets`](.agents/skills/sync-agent-assets/SKILL.md) | Initialize or update project instructions and skills with project detection, grilling, dependency closure, and conflict-safe managed state. |

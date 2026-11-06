@@ -11,7 +11,7 @@ metadata:
 
 Produce source skeleton files, not a chat-only implementation plan. Keep the change structural and explicitly unfinished, regardless of feature size. This skill does not implement behavior or introduce a DSL, parser, code generator, runtime, or agent extension.
 
-## Phase 1: Inspect and agree on scope
+## Phase 1: inspect and agree on scope
 
 Read the project's instructions and contribution policy. Inspect existing behavior, nearby source, tests, public contracts, build configuration, and CI before proposing structure.
 
@@ -28,13 +28,13 @@ Ask for clarification before choosing unresolved data models, authorization rule
 
 Present a concise file-level scope and obtain approval before writing skeletons. Honor existing approval only when it covers that exact scope. A large feature still yields files after approval, not a large Markdown substitute. If scope or authority remains unresolved, stop and report the blocker rather than emitting speculative skeletons.
 
-## Phase 2: Establish the workspace
+## Phase 2: establish the workspace
 
 Before any repository mutation, follow the project's workspace gate through [isolated-workspace](../isolated-workspace/SKILL.md). Verify the approved workspace, branch or bookmark, base, current status, and write ownership before editing. Do not duplicate its commands here or modify the primary checkout.
 
 Loading this skill grants no commit, push, pull-request, merge, or release authority. Follow the current request and project workflow. Stop at a missing permission or conflicting gate; do not bypass it to produce files or publish a PR.
 
-## Phase 3: Write only the structure
+## Phase 3: write only the structure
 
 Hand off to `coding` and the selected language guidance for source conventions, constrained as follows:
 
@@ -47,15 +47,15 @@ Hand off to `coding` and the selected language guidance for source conventions, 
 
 Neither `debloat` nor this skill requires the other. If both are requested, keep their scopes and approvals separate; simplification is not permission to stub working behavior.
 
-## Phase 4: Validate the scaffold
+## Phase 4: validate the scaffold
 
-Read the project's validation instructions. Hand off to `coding` and the selected language guidance for applicable, non-mutating checks using declared existing toolchains. Aim for syntactically and type-valid skeletons where feasible; do not auto-install tooling or change the toolchain to make them pass.
+Read the project's validation instructions. Hand off to `coding` and the selected language guidance for applicable checks using declared existing toolchains. Run checks that generate files or state only within the approved workspace and authorized scope. Aim for syntactically and type-valid skeletons where feasible; do not auto-install tooling or change the toolchain to make them pass.
 
 Review the complete diff for structural scope and preserved behavior. Verify that unimplemented callable bodies fail explicitly and no production route reaches them through new wiring. Follow existing test conventions for any contract checks justified by this scope; do not assert that unfinished functionality works.
 
 Report each check actually run and its result. Separate pre-existing failures, placeholder-related failures, and other new failures. List checks not run and why. Never weaken or skip tests, suppress errors, fabricate passing results, or claim feature completion because the scaffold compiles.
 
-## Phase 5: Publish only as authorized, then stop
+## Phase 5: publish only as authorized, then stop
 
 The default deliverable is real source files and, when authorized under the project workflow, a clearly labeled scaffold-only PR. Include the issue or approved scope, changed files, unfinished behavior, validation results and gaps, and decisions still required. If publishing is not authorized, retain the files in the approved workspace and report that boundary without pushing or opening a PR.
 
