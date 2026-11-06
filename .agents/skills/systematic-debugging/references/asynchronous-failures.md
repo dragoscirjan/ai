@@ -27,5 +27,3 @@ Do not introduce arbitrary sleeps to make a test pass. A deliberate delay is app
 ## Verify intermittency honestly
 
 Run under the conditions that exposed the failure, including relevant concurrency or load. Record trial counts and failure frequency before and after the fix. A successful rerun does not, by itself, identify a cause or prove a race eliminated.
-
-Adapted from the upstream condition-based-waiting guidance listed in [the skill's source section](../SKILL.md#source-and-adaptation).

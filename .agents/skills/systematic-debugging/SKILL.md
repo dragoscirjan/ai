@@ -113,7 +113,3 @@ State:
 - remaining risks and the next action
 
 Follow the project's branch and workspace reporting requirements. Never claim a diagnosis or fix beyond the evidence collected.
-
-## Source and adaptation
-
-Maintained by this project as an adaptation of obra/superpowers. See [README.md](README.md) for the overview, adaptation details, and pinned upstream source.

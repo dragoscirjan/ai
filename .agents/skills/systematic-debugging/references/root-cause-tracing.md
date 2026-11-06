@@ -30,5 +30,3 @@ Distinguish source evidence from runtime evidence. A suspicious caller is not th
 Prefer correcting the producer or enforcing the contract where invalid input enters. Add an independent downstream guard only when another caller, trust boundary, or unsafe effect can bypass that protection.
 
 Test both the original failure and any supported alternate path that motivated an additional guard. Return to the main workflow for implementation and validation; tracing alone does not authorize edits.
-
-Adapted from the upstream tracing and defense-in-depth guidance listed in [the skill's source section](../SKILL.md#source-and-adaptation).

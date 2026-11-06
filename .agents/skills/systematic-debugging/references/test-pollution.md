@@ -23,5 +23,3 @@ Do not confuse state pollution with incomplete teardown, test discovery side eff
 Keep fixtures isolated, restore environment and process state, and release resources through the runner's supported lifecycle. Verify the suspected producer, the victim, and the combined suite, including parallel mode when relevant.
 
 Do not fix pollution by permanently reordering tests, disabling parallelism, or deleting assertions unless a changed execution contract is explicitly approved.
-
-This reference applies the upstream tracing guidance's test-pollution investigation to project-owned test runners. No upstream helper script is included. See [source and adaptation](../SKILL.md#source-and-adaptation).

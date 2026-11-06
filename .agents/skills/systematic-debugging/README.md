@@ -6,6 +6,6 @@ A project-maintained skill for evidence-first debugging: investigate the failure
 
 ## Inspiration and adaptation
 
-Adapted by Dragos Cirjan, inspired by Jesse Vincent's [systematic-debugging skill in obra/superpowers](https://github.com/obra/superpowers/tree/22f0b463e7a5e579904dd6211a520321035526f7/skills/systematic-debugging), pinned at commit `22f0b463e7a5e579904dd6211a520321035526f7`.
+Adapted by Dragos Cirjan, inspired by Jesse Vincent's [systematic-debugging skill in obra/superpowers](https://github.com/obra/superpowers/tree/main/skills/systematic-debugging).
 
 This version adds project-specific handoffs, risk-based boundary checks, and reassessment after repeated failed fixes. It does not import the upstream executable scripts or project-specific TypeScript utilities.
