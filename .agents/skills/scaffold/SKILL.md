@@ -9,7 +9,7 @@ metadata:
 
 # Scaffold
 
-Produce source skeleton files, not a chat-only implementation plan. Keep the change structural and explicitly unfinished, regardless of feature size. This skill does not implement behavior or introduce a DSL, parser, code generator, runtime, or agent extension.
+Produce actual source skeletons, not a chat-only plan. Keep them structural and explicitly unfinished, regardless of feature size. Introduce no business behavior, DSL, parser, generator, runtime, or agent extension.
 
 ## Phase 1: inspect and agree on scope
 
@@ -26,7 +26,7 @@ Establish:
 
 Ask for clarification before choosing unresolved data models, authorization rules, external-system contracts, or other product behavior. Do not turn guesses into types, defaults, or comments. If the project provides no language or framework evidence, request that decision instead of selecting one.
 
-Present a concise file-level scope and obtain approval before writing skeletons. Honor existing approval only when it covers that exact scope. A large feature still yields files after approval, not a large Markdown substitute. If scope or authority remains unresolved, stop and report the blocker rather than emitting speculative skeletons.
+Obtain approval for the exact file-level scope before writing. Existing approval counts only if it covers that scope. Feature size does not justify a Markdown substitute; unresolved scope or authority blocks speculative skeletons.
 
 ## Phase 2: establish the workspace
 
@@ -59,6 +59,6 @@ Report each check actually run and its result. Separate pre-existing failures, p
 
 The default deliverable is real source files and, when authorized under the project workflow, a clearly labeled scaffold-only PR. Include the issue or approved scope, changed files, unfinished behavior, validation results and gaps, and decisions still required. If publishing is not authorized, retain the files in the approved workspace and report that boundary without pushing or opening a PR.
 
-Keep the completion summary short: point to changed files and the PR if created, identify the active branch or bookmark and workspace, and list remaining gaps. Do not repeat all source in chat.
+Summarize files, any PR, active branch/bookmark, workspace, and remaining gaps; do not repeat source in chat.
 
 Stop after the scaffold handoff. Implementing the unfinished behavior requires a separate explicit instruction. Approval of the scaffold or merging its PR is not that instruction and never authorizes a merge or release by itself.

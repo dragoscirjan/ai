@@ -88,22 +88,12 @@ Apply project implementation standards and validation gates. Do not weaken tests
 
 ## Stop and reassess
 
-If a fix fails, return to investigation with the new evidence. Count failed corrective attempts, not ordinary diagnostic observations.
+Return to investigation after a failed fix. After three failed corrective attempts at the same unresolved failure—not ordinary diagnostic observations—stop patching. Summarize the attempts and reassess reproduction, assumptions, environment, shared state, coupling, and architecture. Three failures signal escalation, not proof of bad architecture.
 
-After three failed corrective attempts for the same unresolved failure, stop further patches and reassess reproduction, assumptions, environment, shared state, coupling, and architecture. Summarize what each attempt established. Three failures are an escalation signal, not proof that the architecture is wrong.
+Ask the owner before architectural changes, broader scope, or experiments needing additional authority. If evidence is unavailable, report the blocker and smallest useful next observation.
 
-Ask the owner before an architectural change, broader scope, or an experiment requiring additional authority. If evidence is unavailable, report a blocked diagnosis and the smallest next observation needed.
-
-Urgent containment, such as an authorized rollback, is not a root-cause fix. Label it as containment, preserve evidence where safe, and keep the underlying diagnosis open.
+An authorized emergency rollback is containment, not a root-cause fix. Label it accordingly, preserve evidence where safe, and leave the diagnosis open.
 
 ## Report the result
 
-State:
-
-- the failure and affected revision or environment
-- the cause and supporting evidence, or remaining uncertainty
-- the focused change, distinct from any containment
-- checks that passed, failed, or did not run, with reasons
-- remaining risks and the next action
-
-Follow the project's branch and workspace reporting requirements. Never claim a diagnosis or fix beyond the evidence collected.
+Report the failure and revision/environment, cause with evidence or uncertainty, corrective change distinct from containment, checks and unrun reasons, remaining risks, and next action. Follow project branch/workspace reporting rules. Never claim more than the evidence supports.

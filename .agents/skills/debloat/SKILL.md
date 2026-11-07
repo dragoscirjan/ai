@@ -9,7 +9,7 @@ metadata:
 
 # Debloat
 
-Prefer a familiar, direct solution that fits the project. Minimize the total burden of understanding, changing, testing, securing, and operating it, not just its line count. Complexity is justified when it serves correctness, security, compatibility, a genuine boundary, tests, operational recovery, or measured constraints.
+Prefer a familiar, direct solution that fits the project. Minimize total comprehension, maintenance, testing, security, and operating cost—not lines alone. Keep complexity justified by correctness, compatibility, real boundaries, tests, recovery, or measured constraints.
 
 ## Establish scope and authority
 
@@ -18,7 +18,7 @@ Choose the mode from the request:
 - **Prevent:** compare the proposed design with the simplest project-compatible implementation of the known requirements.
 - **Simplify:** investigate existing mechanisms and propose or implement behavior-preserving reductions within the named area.
 
-Confirm the affected behavior, allowed files or subsystem, public contracts, and whether the request permits edits. A review-only request stays read-only: report candidates and evidence without editing files, generating artifacts, or running checks that write state. Do not turn a local task into repository-wide cleanup. Ask before expanding scope or changing behavior or contracts.
+Confirm behavior, allowed files/subsystem, public contracts, and edit authority. Reviews stay read-only: report evidence without edits, generated artifacts, or state-writing checks. Ask before expanding scope or changing contracts; never turn a local task into repository-wide cleanup.
 
 This guidance grants no mutation or publication authority. Follow project approval, workspace, coding, and validation requirements at their applicable phases. Stop if a required instruction is missing; do not reconstruct it or install missing tools without approval. A read-only inventory does not require implementation guidance.
 
@@ -37,7 +37,7 @@ Treat speculative extensibility, pass-through layers, duplicate facts, and appar
 
 ## Compare alternatives
 
-In prevent mode, start with the project's familiar direct approach. Add a mechanism only for an identified need; record why the direct approach is insufficient. Do not create a framework for imagined future variants.
+In prevent mode, start with the familiar direct approach. Add a mechanism only for a demonstrated need; explain why the direct approach fails it, not how a framework might serve imagined variants.
 
 In simplify mode, compare the current implementation with a concrete smaller design. Consider these candidates only where evidence supports them:
 
@@ -49,7 +49,7 @@ In simplify mode, compare the current implementation with a concrete smaller des
 | Dependency | What runtime, build, test, or transitive role does it serve? Would replacement increase security, compatibility, or maintenance obligations? |
 | Cache or other optimization | What measurements and operational constraints justify it? Would the alternative still meet them? |
 
-Keep established cryptography and authorization controls. A shorter homegrown replacement or fewer security checks is not simplification. Preserve error handling, observability, recovery paths, and tests that protect real requirements.
+Preserve established cryptography, authorization, error handling, observability, recovery, and necessary tests. Homegrown cryptography or fewer security checks is not simplification.
 
 Do not impose universal line, file, or package counts, deletion quotas, interface bans, or dependency API-use thresholds. Do not merge merely similar code or replace a maintained library with custom code merely because few APIs are used. A local reduction that spreads obligations to callers may cost more overall.
 
@@ -69,6 +69,6 @@ Run applicable project gates and report actual results. Do not weaken tests, sup
 
 ## Report the outcome
 
-Report the mode and scope, keep/simplify/defer decisions with evidence, changes made or proposed, justified retained complexity, checks passed or failed, checks not run and why, and remaining uncertainty. State any approval needed for a later step. No change is a valid result when the existing design is the simpler sound choice.
+Report mode/scope, evidence-backed keep/simplify/defer decisions, proposed or actual changes, justified retained complexity, check results and unrun reasons, uncertainty, and required next approval. No change is valid when the existing design is the simpler sound choice.
 
 Use the [decision examples](references/decision-examples.md) to check that a recommendation preserves the relevant constraints, not as rules to apply without investigation.

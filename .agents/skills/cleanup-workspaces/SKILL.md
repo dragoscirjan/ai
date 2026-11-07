@@ -15,7 +15,7 @@ Audit isolated workspaces with deterministic TypeScript automation. Show the com
 
 Ordinary cleanup requires explicit owner authorization. For one current-task temporary lane created under the approved `subagent-orchestration` workflow, the owner's initial lane authorization permits the parent to confirm the exact lane plan without another owner round trip. It does not authorize another task, ordinary cleanup, or a broader target.
 
-Run ordinary cleanup from the primary checkout or another workspace that will survive. Run exact lane cleanup from the surviving canonical sibling workspace. Read the applicable project instructions and workspace configuration first.
+Run ordinary cleanup from a surviving primary/other checkout, and exact-lane cleanup from the surviving canonical sibling. Read the applicable project instructions and workspace configuration first.
 
 The executable imports `../isolated-workspace/scripts/lib.ts`; that helper must be installed, but its skill instructions need not be loaded. Stop if the helper is missing. Do not install it without owner approval or recreate it from memory.
 
@@ -39,18 +39,7 @@ Use `--vcs jj` for Jujutsu. The default is a structured JSON plan. `--dry-run` i
 
 The script detects the primary local repository and derives its sibling `<repository>--workspaces` directory. Hosted-repository identity is not required.
 
-The plan reports:
-
-- primary repository and workspace root
-- base expression and exact resolved commit
-- every eligible workspace, exact tip, integration evidence, and removal command
-- every stale registration that can be pruned safely
-- every skipped workspace and its reason
-- ignored Git files that worktree removal can delete
-- limits that block otherwise possible cleanup
-- the `planId` that binds apply mode to this exact candidate and skipped set
-
-Do not add force flags or manually widen the eligible set.
+Review the plan's primary repository/workspace root, base expression and commit, exact candidate tips, ancestry evidence, removal commands, safe stale registrations, skipped reasons, ignored-file deletion warnings, and blocking limits. Its `planId` binds that complete candidate and skipped set. Never add force flags or widen eligibility manually.
 
 ## Clean one orchestration lane
 
@@ -98,15 +87,7 @@ It does not fetch, pull, rebase, move bookmarks, update the base, infer squash m
 
 ## Git eligibility and stale registrations
 
-A registered Git worktree is eligible only when:
-
-1. its canonical path is inside the derived workspace root
-2. it is not primary, active, locked, detached, or missing
-3. it uses the same Git common directory
-4. `git status --porcelain=v1 --untracked-files=all` is empty
-5. no Git operation is active
-6. the registered `HEAD`, checked-out branch, and branch tip match
-7. `git merge-base --is-ancestor <tip> <base>` succeeds
+In addition to the protected-state rules, Git eligibility requires the same common directory, empty `git status --porcelain=v1 --untracked-files=all`, no active Git operation, matching registered HEAD/checked-out branch/branch tip, and successful `git merge-base --is-ancestor <tip> <base>`.
 
 The plan includes `git clean -ndX` output as a warning only. The script never runs `git clean -f`.
 
@@ -118,13 +99,7 @@ After pruning, a stale branch is deleted only when its recorded tip is unchanged
 
 ## Jujutsu eligibility and stale registrations
 
-A registered Jujutsu workspace is eligible only when:
-
-1. its canonical path is inside the derived workspace root
-2. it is not the default or active workspace
-3. a working-copy snapshot succeeds without conflicts
-4. the exact working-copy commit is integrated, or it is empty and every parent is integrated
-5. any matching local bookmark is unambiguous and targets the audited tip or integrated parent
+In addition to the protected-state rules, require a conflict-free working-copy snapshot and an integrated exact working-copy commit, or an empty commit whose every parent is integrated. Any matching local bookmark must be unambiguous and target the audited tip or integrated parent.
 
 The ancestry query must select exactly the candidate commit through `<tip> & ::<base>`.
 
