@@ -14,6 +14,8 @@ Add TypeScript tooling to an existing mise/Node/pnpm foundation. Keep compiler s
 
 ## Inspect the intended project
 
+Read applicable project instructions and contribution policy before planning. Before any mutation, satisfy project approval and workspace gates, and verify the checkout and write scope are authorized. Stop if a required instruction is unavailable.
+
 Require the existing mise/Node/pnpm foundation and its public quality-task contract. If absent, stop for separately approved foundation setup. Inspect `package.json`, pnpm files, `mise.toml`, all `tsconfig` files, module declarations, runtime targets, source and output directories, package exports, tests, build tools, CI, and existing lint or format configuration.
 
 Determine from project evidence or ask only when it changes the generated contract:

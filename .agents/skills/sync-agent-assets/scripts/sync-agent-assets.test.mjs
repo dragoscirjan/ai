@@ -63,6 +63,13 @@ function writeSkill(root, name, body = `# ${name}\n`, requirements = []) {
   );
 }
 
+function indentSkillFrontmatter(root, name) {
+  const path = join(root, ".agents", "skills", name, "SKILL.md");
+  const text = readFileSync(path, "utf8").replace(/^---\n([\s\S]*?)\n---/, (_match, fields) =>
+    `---\n# root mapping may be indented\n${fields.split("\n").map((line) => `  ${line}`).join("\n")}\n---`);
+  writeFileSync(path, text);
+}
+
 function syntheticSource() {
   const root = mkdtempSync(join(tmpdir(), "sync-agent-assets-source-"));
   initializeGit(root);
@@ -284,6 +291,11 @@ test("the catalog covers every repository skill directory", () => {
     ["init-typescript", ["init-project"]],
   ]);
   assert.equal(output.profiles.coreInstructions.includes("coding"), true);
+  for (const name of ["init-typescript", "init-gdscript"]) {
+    const text = readFileSync(join(repositoryRoot, ".agents", "skills", name, "SKILL.md"), "utf8");
+    assert.match(text, /Read applicable project instructions and contribution policy before planning/);
+    assert.match(text, /satisfy project approval and workspace gates/);
+  }
   for (const entry of output.skills.filter((skill) => skill.require.length === 0)) {
     const text = readFileSync(join(repositoryRoot, ".agents", "skills", entry.name, "SKILL.md"), "utf8");
     assert.doesNotMatch(text, /^## Load (?:the dependency|dependencies)/m, entry.name);
@@ -298,38 +310,82 @@ test("the catalog covers every repository skill directory", () => {
   }
 });
 
-test("frontmatter requirements retain order and combine with code dependencies without mutating the target", () => {
+for (const indent of [0, 2]) {
+  test(`frontmatter requirements preserve order and closure with root indentation ${indent}`, () => {
+    const source = syntheticSource();
+    const target = fixture("sync-require-target-");
+    try {
+      const catalogPath = join(source.root, ".agents", "skills", "sync-agent-assets", "assets", "skill-catalog.json");
+      const catalog = JSON.parse(readFileSync(catalogPath, "utf8"));
+      catalog.profiles = { manager: [], bootstrap: [], coreInstructions: [] };
+      catalog.skills.find((entry) => entry.name === "grill-me").dependencies = ["optional-skill"];
+      writeFileSync(catalogPath, JSON.stringify(catalog));
+      writeSkill(source.root, "grill-me", undefined, ["optional-skill", "grilling"]);
+      writeSkill(source.root, "optional-skill", undefined, ["grilling"]);
+      if (indent) {
+        indentSkillFrontmatter(source.root, "grill-me");
+        indentSkillFrontmatter(source.root, "optional-skill");
+      }
+      source.commit = commitAll(source.root, "separate prompt and code dependencies");
+      const output = JSON.parse(run(["catalog", "--source-root", source.root]).stdout);
+      const entry = output.skills.find((skill) => skill.name === "grill-me");
+      assert.deepEqual(entry.require, ["optional-skill", "grilling"]);
+      assert.deepEqual(entry.dependencies, ["optional-skill"]);
+      assert.deepEqual(entry.requires, []);
+      installSyntheticAssets(source.root, target);
+      cpSync(join(source.root, ".agents", "skills", "optional-skill"), join(target, ".agents", "skills", "optional-skill"), { recursive: true });
+      symlinkSync("../../.agents/skills/optional-skill", join(target, ".claude", "skills", "optional-skill"), "dir");
+      const selection = join(target, "requirements-selection.json");
+      writeFileSync(selection, JSON.stringify({ selectedSkills: ["grill-me"], rootFiles: ["AGENTS.md", "CLAUDE.md", "CONTRIBUTING.md", "VALIDATION.md"] }));
+      const before = git(target, ["status", "--porcelain"]);
+      const result = run(["record", "--root", target, "--source-root", source.root, "--source-commit", source.commit, "--selection", selection]);
+      assert.equal(result.status, 0, result.stderr);
+      const plan = JSON.parse(result.stdout);
+      assert.deepEqual(plan.lock.selection.selectedSkills, ["grill-me", "grilling", "optional-skill"]);
+      assert.equal(existsSync(join(target, ".agents", "ai-assets.lock.json")), false);
+      assert.equal(git(target, ["status", "--porcelain"]), before);
+    } finally {
+      rmSync(source.root, { recursive: true, force: true });
+      rmSync(target, { recursive: true, force: true });
+    }
+  });
+}
+
+test("indented root requirements cannot hide missing targets or cycles", () => {
   const source = syntheticSource();
-  const target = fixture("sync-require-target-");
   try {
-    const catalogPath = join(source.root, ".agents", "skills", "sync-agent-assets", "assets", "skill-catalog.json");
-    const catalog = JSON.parse(readFileSync(catalogPath, "utf8"));
-    catalog.profiles = { manager: [], bootstrap: [], coreInstructions: [] };
-    catalog.skills.find((entry) => entry.name === "grill-me").dependencies = ["optional-skill"];
-    writeFileSync(catalogPath, JSON.stringify(catalog));
-    writeSkill(source.root, "grill-me", undefined, ["optional-skill", "grilling"]);
-    writeSkill(source.root, "optional-skill", undefined, ["grilling"]);
-    source.commit = commitAll(source.root, "separate prompt and code dependencies");
-    const output = JSON.parse(run(["catalog", "--source-root", source.root]).stdout);
-    const entry = output.skills.find((skill) => skill.name === "grill-me");
-    assert.deepEqual(entry.require, ["optional-skill", "grilling"]);
-    assert.deepEqual(entry.dependencies, ["optional-skill"]);
-    assert.deepEqual(entry.requires, []);
-    installSyntheticAssets(source.root, target);
-    cpSync(join(source.root, ".agents", "skills", "optional-skill"), join(target, ".agents", "skills", "optional-skill"), { recursive: true });
-    symlinkSync("../../.agents/skills/optional-skill", join(target, ".claude", "skills", "optional-skill"), "dir");
-    const selection = join(target, "requirements-selection.json");
-    writeFileSync(selection, JSON.stringify({ selectedSkills: ["grill-me"], rootFiles: ["AGENTS.md", "CLAUDE.md", "CONTRIBUTING.md", "VALIDATION.md"] }));
-    const before = git(target, ["status", "--porcelain"]);
-    const result = run(["record", "--root", target, "--source-root", source.root, "--source-commit", source.commit, "--selection", selection]);
-    assert.equal(result.status, 0, result.stderr);
-    const plan = JSON.parse(result.stdout);
-    assert.deepEqual(plan.lock.selection.selectedSkills, ["grill-me", "grilling", "optional-skill"]);
-    assert.equal(existsSync(join(target, ".agents", "ai-assets.lock.json")), false);
-    assert.equal(git(target, ["status", "--porcelain"]), before);
+    for (const [requirements, error] of [
+      [["missing-skill"], /Unknown dependency/],
+      [["grill-me"], /cycle/],
+    ]) {
+      writeSkill(source.root, "grill-me", undefined, requirements);
+      indentSkillFrontmatter(source.root, "grill-me");
+      const result = run(["catalog", "--source-root", source.root]);
+      assert.equal(result.status, 3, result.stderr);
+      assert.match(result.stderr, error);
+    }
+    writeSkill(source.root, "grill-me", undefined, ["grilling"]);
+    writeSkill(source.root, "grilling", undefined, ["grill-me"]);
+    indentSkillFrontmatter(source.root, "grill-me");
+    indentSkillFrontmatter(source.root, "grilling");
+    const result = run(["catalog", "--source-root", source.root]);
+    assert.equal(result.status, 3, result.stderr);
+    assert.match(result.stderr, /cycle/);
   } finally {
     rmSync(source.root, { recursive: true, force: true });
-    rmSync(target, { recursive: true, force: true });
+  }
+});
+
+test("nested metadata is not a root instruction requirement", () => {
+  const source = syntheticSource();
+  try {
+    const path = join(source.root, ".agents", "skills", "grill-me", "SKILL.md");
+    writeFileSync(path, '---\n# unindented comment\n  name: grill-me\n  description: Fixture.\n  metadata:\n    require: "not a project requirement"\n---\nrequire: ["missing-skill"]\n');
+    const result = run(["catalog", "--source-root", source.root]);
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(JSON.parse(result.stdout).skills.find((entry) => entry.name === "grill-me").require, []);
+  } finally {
+    rmSync(source.root, { recursive: true, force: true });
   }
 });
 

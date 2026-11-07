@@ -299,7 +299,12 @@ function readInstructionRequirements(sourceRoot, name) {
   if (!text.startsWith("---\n") && !text.startsWith("---\r\n")) return [];
   const frontmatter = text.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/)?.[1];
   if (frontmatter === undefined) throw new SyncError(`Unterminated skill frontmatter: ${name}`, EXIT.CONFLICT);
-  const declarations = frontmatter.split(/\r?\n/).filter((line) => /^(?:require|["']require["'])\s*:/.test(line));
+  const lines = frontmatter.split(/\r?\n/);
+  const firstField = lines.find((line) => line.trim() && !line.trimStart().startsWith("#"));
+  const rootIndent = firstField?.match(/^ */)[0] ?? "";
+  const declarations = lines.filter((line) => line.startsWith(rootIndent))
+    .map((line) => line.slice(rootIndent.length))
+    .filter((line) => /^(?:require|["']require["'])\s*:/.test(line));
   if (declarations.length === 0) return [];
   const invalid = () => new SyncError(`Invalid require in ${name}: use one nonempty inline JSON array of unique skill names`, EXIT.CONFLICT);
   if (declarations.length !== 1 || !declarations[0].startsWith("require:")) throw invalid();

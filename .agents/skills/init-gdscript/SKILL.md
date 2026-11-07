@@ -14,6 +14,8 @@ Add Godot and GDScript tooling to an existing mise/Node/pnpm foundation. Keep ev
 
 ## Inspect the Godot contract
 
+Read applicable project instructions and contribution policy before planning. Before any mutation, satisfy project approval and workspace gates, and verify the checkout and write scope are authorized. Stop if a required instruction is unavailable.
+
 Require the existing mise/Node/pnpm foundation and its public quality-task contract. If absent, stop for separately approved foundation setup. Inspect `project.godot`, engine metadata, renderer, export presets, target platforms, source and addon paths, native extensions, autoloads, existing Python tooling, tests, CI, and import policy.
 
 Determine from project evidence or ask when unresolved:
