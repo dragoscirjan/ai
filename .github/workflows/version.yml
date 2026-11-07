@@ -1,0 +1,103 @@
+name: Version and release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Version increment (first patch release is v0.0.1)
+        type: choice
+        required: true
+        default: patch
+        options: [patch, minor, major]
+  pull_request:
+    branches: [main]
+    paths: ['.github/workflows/version.yml', '.github/scripts/**']
+  push:
+    branches: [main]
+    paths: ['.github/workflows/version.yml', '.github/scripts/**']
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  checks:
+    name: Check release tooling
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Reject manual releases outside main
+        if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
+        shell: bash
+        run: |
+          echo '::error::Run this workflow from main to release.'
+          exit 1
+
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Test versioning and source archive
+        run: python3 -B -m unittest discover -s .github/scripts -p 'test_*.py' -v
+
+  release:
+    name: Publish GitHub release
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: repository-release
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout release commit and tags
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Reject stale main commits
+        shell: bash
+        run: |
+          if [[ "$(git rev-parse refs/remotes/origin/main)" != "$GITHUB_SHA" ]]; then
+            echo '::error::main advanced while this run waited; start a new release run.'
+            exit 1
+          fi
+
+      - name: Calculate next version
+        id: version
+        shell: bash
+        env:
+          BUMP: ${{ inputs.bump }}
+        run: |
+          tag="$(python3 .github/scripts/release_version.py --bump "$BUMP")"
+          printf 'tag=%s\n' "$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Archive tracked source
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          git archive --format=zip --prefix="ai-${RELEASE_TAG}/" \
+            --output="${RUNNER_TEMP}/ai-${RELEASE_TAG}.zip" "$GITHUB_SHA"
+
+      - name: Create tag and publish release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          # Creating the ref fails if another run or maintainer already created it.
+          gh api --method POST "repos/${GH_REPO}/git/refs" \
+            -f "ref=refs/tags/${RELEASE_TAG}" -f "sha=${GITHUB_SHA}" --silent
+          release_url="$(gh release create "$RELEASE_TAG" \
+            "${RUNNER_TEMP}/ai-${RELEASE_TAG}.zip" \
+            --verify-tag --title "$RELEASE_TAG" --generate-notes --latest)"
+          printf '## Released %s\n\n%s\n' "$RELEASE_TAG" "$release_url" >> "$GITHUB_STEP_SUMMARY"
