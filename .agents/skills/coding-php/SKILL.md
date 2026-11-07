@@ -1,7 +1,7 @@
 ---
 name: coding-php
 description: Write, refactor, review, or test PHP with version-compatible types and APIs, explicit request and resource boundaries, context-specific web security, Composer supply-chain checks, and project-first quality gates. Use for PHP source, templates, Composer packages, and PHP build or test work.
-compatibility: Requires the coding skill and the PHP runtime, extensions, Composer platform, framework, and analysis tools selected by the project.
+compatibility: Requires the PHP runtime, extensions, Composer platform, framework, and analysis tools selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,14 +9,6 @@ metadata:
 ---
 
 # PHP coding
-
-Apply the generic `coding` workflow, then apply the PHP-specific rules in this skill.
-
-## Load the dependency
-
-Locate the advertised `coding` skill by exact name and path. If it is not already loaded, read its `SKILL.md` before continuing.
-
-If `coding` is unavailable, stop and ask the human to install or expose it. Do not install it automatically, copy its instructions into this skill, or assume its contents from memory.
 
 ## Follow project and language guidance
 

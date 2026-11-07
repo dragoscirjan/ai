@@ -1,7 +1,7 @@
 ---
 name: coding-lua
 description: Write, refactor, review, or test Lua with runtime-version compatibility, explicit module and state boundaries, safe table and metatable behavior, validated dynamic execution, and project-first quality gates. Use for Lua source, modules, and Lua or LuaJIT integration work.
-compatibility: Requires the coding skill and the Lua or LuaJIT runtime, package tooling, native integration, and analysis tools selected by the project.
+compatibility: Requires the Lua or LuaJIT runtime, package tooling, native integration, and analysis tools selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,14 +9,6 @@ metadata:
 ---
 
 # Lua coding
-
-Apply the generic `coding` workflow, then apply the Lua-specific rules in this skill.
-
-## Load the dependency
-
-Locate the advertised `coding` skill by exact name and path. If it is not already loaded, read its `SKILL.md` before continuing.
-
-If `coding` is unavailable, stop and ask the human to install or expose it. Do not install it automatically, copy its instructions into this skill, or assume its contents from memory.
 
 ## Follow the selected Lua runtime
 

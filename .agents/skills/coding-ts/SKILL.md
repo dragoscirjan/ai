@@ -1,7 +1,7 @@
 ---
 name: coding-ts
 description: Write, refactor, review, or test TypeScript in .ts files with precise types, runtime-safe boundaries, project compiler settings, and complete quality gates. Use for TypeScript work and combine with coding-mts, coding-cts, or coding-tsx when those extension semantics apply.
-compatibility: Requires the coding skill and the TypeScript compiler and runtime toolchain selected by the project.
+compatibility: Requires the TypeScript compiler and runtime toolchain selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,16 +9,6 @@ metadata:
 ---
 
 # TypeScript coding
-
-Apply the generic `coding` workflow, then apply the TypeScript-specific rules in this skill.
-
-## Load the dependency
-
-Locate the advertised `coding` skill by exact name and path. If it is not already loaded, read its `SKILL.md` before continuing.
-
-If `coding` is unavailable, stop and ask the human to install or expose it. Do not install it automatically, copy its instructions into this skill, or assume its contents from memory.
-
-For `.mts`, `.cts`, or `.tsx` files, also load the matching extension skill after this one.
 
 ## Follow project and language guidance
 

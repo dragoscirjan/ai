@@ -1,7 +1,7 @@
 ---
 name: coding-mts
 description: Write, refactor, review, or test .mts TypeScript with ECMAScript-module output, compiler-aware resolution, type-only imports, import metadata, and CommonJS interoperability. Use whenever an .mts file is changed.
-compatibility: Requires the coding and coding-ts skills and a TypeScript toolchain configured for ECMAScript modules.
+compatibility: Requires a TypeScript toolchain configured for ECMAScript modules.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,14 +9,6 @@ metadata:
 ---
 
 # MTS coding
-
-Apply `coding`, then `coding-ts`, then this extension-specific guidance.
-
-## Load dependencies
-
-Locate the advertised `coding` and `coding-ts` skills by exact name and path. Read their `SKILL.md` files in that order unless they are already loaded.
-
-If either dependency is unavailable, stop and ask the human to install or expose it. Do not install it automatically, duplicate its instructions, or rely on a harness-specific Skill tool.
 
 ## Preserve TypeScript ESM semantics
 
@@ -31,4 +23,4 @@ Use the [TypeScript modules reference](https://www.typescriptlang.org/docs/handb
 - Make CommonJS interoperability explicit and preserve package conditional exports.
 - Use top-level `await` only when module evaluation order and startup behavior permit it.
 
-Run the inherited TypeScript gates. Verify type checking, emitted or bundled module behavior, declaration output when published, and execution through the target ESM loader.
+Run project-configured TypeScript checks. Verify type checking, emitted or bundled module behavior, declaration output when published, and execution through the target ESM loader.

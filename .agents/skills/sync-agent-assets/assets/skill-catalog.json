@@ -5,7 +5,7 @@
   "profiles": {
     "manager": ["sync-agent-assets"],
     "bootstrap": ["grilling", "grill-me", "isolated-workspace"],
-    "coreInstructions": ["isolated-workspace", "cleanup-workspaces", "subagent-orchestration", "instruction-maintenance"]
+    "coreInstructions": ["coding", "isolated-workspace", "cleanup-workspaces", "subagent-orchestration", "instruction-maintenance"]
   },
   "skills": [
     {
@@ -60,7 +60,7 @@
       "name": "coding-bash",
       "category": "coding-wrapper",
       "selection": "optional",
-      "dependencies": ["coding", "coding-sh"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".bash", ".sh"] }
@@ -69,7 +69,7 @@
       "name": "coding-c",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".c"] }
@@ -78,7 +78,7 @@
       "name": "coding-cjs",
       "category": "coding-wrapper",
       "selection": "wrapper",
-      "dependencies": ["coding", "coding-js"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".cjs"] }
@@ -87,7 +87,7 @@
       "name": "coding-cpp",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".cc", ".cpp", ".cxx", ".hh", ".hpp", ".hxx"] }
@@ -96,7 +96,7 @@
       "name": "coding-cts",
       "category": "coding-wrapper",
       "selection": "wrapper",
-      "dependencies": ["coding", "coding-ts"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".cts"] }
@@ -105,7 +105,7 @@
       "name": "coding-gdscript",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["project.godot"], "extensions": [".gd"] }
@@ -114,7 +114,7 @@
       "name": "coding-go",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["go.mod", "go.work"], "extensions": [".go"] }
@@ -123,7 +123,7 @@
       "name": "coding-js",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".js"] }
@@ -132,7 +132,7 @@
       "name": "coding-jsx",
       "category": "coding-wrapper",
       "selection": "wrapper",
-      "dependencies": ["coding", "coding-js"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".jsx"] }
@@ -141,7 +141,7 @@
       "name": "coding-lua",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": [".luacheckrc"], "extensions": [".lua"] }
@@ -150,7 +150,7 @@
       "name": "coding-mjs",
       "category": "coding-wrapper",
       "selection": "wrapper",
-      "dependencies": ["coding", "coding-js"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".mjs"] }
@@ -159,7 +159,7 @@
       "name": "coding-mts",
       "category": "coding-wrapper",
       "selection": "wrapper",
-      "dependencies": ["coding", "coding-ts"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".mts"] }
@@ -168,7 +168,7 @@
       "name": "coding-php",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["composer.json"], "extensions": [".php"] }
@@ -177,7 +177,7 @@
       "name": "coding-py",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["pyproject.toml", "setup.py", "requirements.txt", "uv.lock"], "extensions": [".py"] }
@@ -186,7 +186,7 @@
       "name": "coding-pyi",
       "category": "coding-wrapper",
       "selection": "wrapper",
-      "dependencies": ["coding", "coding-py"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".pyi"] }
@@ -195,7 +195,7 @@
       "name": "coding-rs",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["Cargo.toml"], "extensions": [".rs"] }
@@ -204,7 +204,7 @@
       "name": "coding-sh",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".sh"] }
@@ -213,7 +213,7 @@
       "name": "coding-swift",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["Package.swift"], "extensions": [".swift"] }
@@ -222,7 +222,7 @@
       "name": "coding-ts",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["tsconfig.json"], "extensions": [".ts"] }
@@ -231,7 +231,7 @@
       "name": "coding-tsx",
       "category": "coding-wrapper",
       "selection": "wrapper",
-      "dependencies": ["coding", "coding-ts"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "extensions": [".tsx"] }
@@ -240,7 +240,7 @@
       "name": "coding-zig",
       "category": "coding-language",
       "selection": "detected",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["build.zig", "build.zig.zon"], "extensions": [".zig"] }
@@ -249,7 +249,7 @@
       "name": "debloat",
       "category": "refactoring",
       "selection": "optional",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "askWithoutSignals": true }
@@ -268,7 +268,7 @@
       "name": "grill-me",
       "category": "interview-wrapper",
       "selection": "bootstrap",
-      "dependencies": ["grilling"],
+      "dependencies": [],
       "safety": "read-only-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": {}
@@ -277,7 +277,7 @@
       "name": "init-gdscript",
       "category": "initializer",
       "selection": "initializer",
-      "dependencies": ["init-project", "coding", "coding-gdscript"],
+      "dependencies": ["init-project"],
       "safety": "project-and-user-write",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["project.godot"], "extensions": [".gd"] }
@@ -295,7 +295,7 @@
       "name": "init-typescript",
       "category": "initializer",
       "selection": "initializer",
-      "dependencies": ["init-project", "coding", "coding-ts"],
+      "dependencies": ["init-project"],
       "safety": "project-write",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "files": ["tsconfig.json"], "extensions": [".ts", ".tsx", ".mts", ".cts"] }
@@ -322,7 +322,7 @@
       "name": "scaffold",
       "category": "design",
       "selection": "optional",
-      "dependencies": ["coding", "isolated-workspace"],
+      "dependencies": [],
       "safety": "project-write-with-confirmation",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "askWithoutSignals": true }
@@ -331,7 +331,7 @@
       "name": "subagent-orchestration",
       "category": "orchestration",
       "selection": "core",
-      "dependencies": ["cleanup-workspaces", "isolated-workspace"],
+      "dependencies": [],
       "safety": "bounded-child-agents-and-workspace-lanes",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": {}
@@ -340,7 +340,7 @@
       "name": "sync-agent-assets",
       "category": "asset-manager",
       "selection": "manager",
-      "dependencies": ["grill-me", "grilling", "isolated-workspace", "instruction-maintenance"],
+      "dependencies": [],
       "safety": "project-write-with-confirmation",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": {}
@@ -349,7 +349,7 @@
       "name": "systematic-debugging",
       "category": "debugging",
       "selection": "optional",
-      "dependencies": ["coding"],
+      "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "provenance": "vendored",

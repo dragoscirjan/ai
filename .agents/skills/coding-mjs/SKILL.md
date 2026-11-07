@@ -1,7 +1,7 @@
 ---
 name: coding-mjs
 description: Write, refactor, review, or test .mjs JavaScript with ECMAScript-module loading, runtime-aware specifiers, import metadata, top-level await discipline, and CommonJS interoperability. Use whenever an .mjs file is changed.
-compatibility: Requires the coding and coding-js skills and an ECMAScript-module runtime supported by the project.
+compatibility: Requires an ECMAScript-module runtime supported by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,14 +9,6 @@ metadata:
 ---
 
 # MJS coding
-
-Apply `coding`, then `coding-js`, then this extension-specific guidance.
-
-## Load dependencies
-
-Locate the advertised `coding` and `coding-js` skills by exact name and path. Read their `SKILL.md` files in that order unless they are already loaded.
-
-If either dependency is unavailable, stop and ask the human to install or expose it. Do not install it automatically, duplicate its instructions, or rely on a harness-specific Skill tool.
 
 ## Preserve ECMAScript-module semantics
 
@@ -31,4 +23,4 @@ Use the [MDN modules guide](https://developer.mozilla.org/en-US/docs/Web/JavaScr
 - Use top-level `await` only when module evaluation order and startup latency are acceptable.
 - Avoid dual-package state: do not expose separate ESM and CommonJS instances that should share identity or state.
 
-Run the inherited JavaScript gates and test the module through the project's real ESM loader, not only through a transformed test environment.
+Run project-configured JavaScript checks and test the module through the project's real ESM loader, not only through a transformed test environment.

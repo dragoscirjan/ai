@@ -30,7 +30,7 @@
           "selection": {
             "enum": ["manager", "bootstrap", "core", "detected", "wrapper", "optional", "initializer"]
           },
-          "dependencies": { "$ref": "#/$defs/skillNames" },
+          "dependencies": { "$ref": "#/$defs/skillNames", "description": "Installation dependencies needed by shared helper code; prompt requirements come from SKILL.md require." },
           "safety": { "type": "string", "minLength": 1 },
           "harnesses": {
             "type": "array",

@@ -1,6 +1,6 @@
 # Python coding
 
-`coding-py` adds Python-specific guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to `.py` files, packages, Python environments, and build or test work.
+`coding-py` provides Python-specific guidance independently. It applies to `.py` files, packages, Python environments, and build or test work.
 
 ## Sources
 
@@ -22,10 +22,6 @@ When the project has no configured choice, the skill recommends:
 - [jscpd](https://jscpd.dev/) for duplicate detection
 
 Existing project configuration takes precedence. The agent must not install or reconfigure interpreters, environments, dependencies, or tools without human approval.
-
-## Dependency contract
-
-`coding-py` requires `coding`. The agent resolves it through the active harness's advertised skill names and paths, loads it first, and stops when it is unavailable. The skill does not rely on a harness-specific Skill tool.
 
 ## Invocation
 

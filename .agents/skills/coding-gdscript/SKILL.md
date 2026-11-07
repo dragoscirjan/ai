@@ -1,7 +1,7 @@
 ---
 name: coding-gdscript
 description: Write, refactor, review, or test Godot GDScript with engine-version compatibility, explicit scene and resource ownership, safe lifecycle and async behavior, validated game and network data, and project-first quality gates. Use for .gd files and related Godot scene, resource, addon, or project integration work.
-compatibility: Requires the coding skill and the Godot engine, renderer, export targets, addons, native extensions, and analysis tools selected by the project.
+compatibility: Requires the Godot engine, renderer, export targets, addons, native extensions, and analysis tools selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,14 +9,6 @@ metadata:
 ---
 
 # GDScript coding
-
-Apply the generic `coding` workflow, then apply the GDScript-specific rules in this skill.
-
-## Load the dependency
-
-Locate the advertised `coding` skill by exact name and path. If it is not already loaded, read its `SKILL.md` before continuing.
-
-If `coding` is unavailable, stop and ask the human to install or expose it. Do not install it automatically, copy its instructions into this skill, or assume its contents from memory.
 
 ## Follow the Godot project contract
 

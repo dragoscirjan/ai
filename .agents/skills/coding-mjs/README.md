@@ -1,6 +1,6 @@
 # MJS coding
 
-`coding-mjs` adds `.mjs` ECMAScript-module semantics to [`coding-js`](../coding-js/SKILL.md) and the generic [`coding`](../coding/SKILL.md) workflow.
+`coding-mjs` provides `.mjs` ECMAScript-module semantics independently.
 
 ## Scope
 
@@ -17,10 +17,6 @@ References:
 
 - [MDN JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 - [Node.js packages and module formats](https://nodejs.org/api/packages.html)
-
-## Dependencies
-
-Load `coding`, `coding-js`, and `coding-mjs` in that order. All are sibling skills. Stop when a dependency is unavailable; do not install it automatically.
 
 ## Invocation
 

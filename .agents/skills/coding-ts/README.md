@@ -1,8 +1,8 @@
 # TypeScript coding
 
-`coding-ts` adds TypeScript-specific guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to `.ts` files and uses the project's compiler, runtime, module, and build configuration.
+`coding-ts` provides TypeScript-specific guidance independently. It applies to `.ts` files and uses the project's compiler, runtime, module, and build configuration.
 
-Load `coding-mts`, `coding-cts`, or `coding-tsx` after this skill when the file extension requires additional semantics.
+The caller selects any additional module or JSX guidance; this skill does not load it.
 
 ## Sources
 
@@ -25,10 +25,6 @@ When the project has no configured choice, the skill recommends maintained packa
 - the active package manager's audit command
 
 Do not recommend `@tempel/tsconfig`; it is not currently maintained. Keep compiler settings in the project's own `tsconfig` files. Existing project configuration takes precedence, and the agent must not install or reconfigure tools without human approval.
-
-## Dependency contract
-
-`coding-ts` requires `coding`. The agent resolves it through the active harness's advertised skill names and paths, loads it first, and stops when it is unavailable. The skill does not rely on a harness-specific Skill tool.
 
 ## Invocation
 

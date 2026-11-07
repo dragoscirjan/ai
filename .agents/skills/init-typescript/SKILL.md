@@ -1,7 +1,7 @@
 ---
 name: init-typescript
-description: Initialize or adopt a TypeScript toolchain on the init-project foundation with project-owned compiler settings, pnpm-managed Tempel validation, tests, builds, and mise task integration. Use when adding TypeScript to a new or existing project.
-compatibility: Requires the init-project, coding, and coding-ts skills, the approved Node 24-or-newer and pnpm target toolchain, and Bun with Bun.TOML.parse to run the bundled helper. Hard-stops when Bun is unavailable.
+description: Initialize or adopt a TypeScript toolchain on an existing mise/Node/pnpm foundation with project-owned compiler settings, pnpm-managed Tempel validation, tests, builds, and mise task integration. Use when adding TypeScript to a new or existing project.
+compatibility: Requires the installed sibling init-project helper code, the approved Node 24-or-newer and pnpm target toolchain, and Bun with Bun.TOML.parse to run the bundled helper. Hard-stops when Bun is unavailable.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -10,17 +10,13 @@ metadata:
 
 # TypeScript initialization
 
-Add TypeScript to the repository-wide foundation from `init-project`. Keep compiler settings project-owned and use the TypeScript coding guidance for language decisions.
-
-## Load the dependencies
-
-Locate the advertised `init-project`, `coding`, and `coding-ts` skills by exact name and path. Read their `SKILL.md` files in that order if they are not already loaded.
-
-If any dependency is unavailable, stop and ask the human to install or expose it. Do not install a missing skill, copy its instructions here, or infer it from memory.
+Add TypeScript tooling to an existing mise/Node/pnpm foundation. Keep compiler settings and language conventions project-owned.
 
 ## Inspect the intended project
 
-Confirm that the `init-project` foundation exists or run its planning workflow first. Inspect `package.json`, pnpm files, `mise.toml`, all `tsconfig` files, module declarations, runtime targets, source and output directories, package exports, tests, build tools, CI, and existing lint or format configuration.
+Read applicable project instructions and contribution policy before planning. Before any mutation, satisfy project approval and workspace gates, and verify the checkout and write scope are authorized. Stop if a required instruction is unavailable.
+
+Require the existing mise/Node/pnpm foundation and its public quality-task contract. If absent, stop for separately approved foundation setup. Inspect `package.json`, pnpm files, `mise.toml`, all `tsconfig` files, module declarations, runtime targets, source and output directories, package exports, tests, build tools, CI, and existing lint or format configuration.
 
 Determine from project evidence or ask only when it changes the generated contract:
 
@@ -44,7 +40,7 @@ Before mutation, add the TypeScript-specific changes to the approved project pla
 - files or directories that initialization will create
 - commands that will install dependencies, generate files, build, or test
 
-Approval granted to `init-project` covers only the shared foundation. Present the complete TypeScript plan and wait for separate explicit approval before writing configuration, changing manifests, or installing dependencies. Stop on conflicts and show the exact proposed reconciliation.
+Approval for foundation setup does not authorize language initialization. Present the complete TypeScript plan and wait for separate explicit approval before writing configuration, changing manifests, or installing dependencies. Stop on conflicts and show the exact proposed reconciliation.
 
 ## Run the bundled initializer
 
@@ -110,13 +106,13 @@ Use these script semantics when applicable:
 - `test:watch`: optional interactive test mode
 - `build`: the selected application or library build
 
-Add namespaced mise implementations such as `typecheck:typescript`, `test:typescript`, and `build:typescript`, then append them to the corresponding public tasks from `init-project`. Reuse the project-wide lint, format, duplicate, and audit tasks when they already cover TypeScript. Extend their scope only when required.
+Add namespaced mise implementations such as `typecheck:typescript`, `test:typescript`, and `build:typescript`, then append them to the corresponding existing public tasks. Reuse the project-wide lint, format, duplicate, and audit tasks when they already cover TypeScript. Extend their scope only when required.
 
 Do not add universal coverage, duplication, or severity thresholds. Use project-defined values only.
 
 ## Use helpers without hiding changes
 
-Prefer the bundled helper for supported projects. Any replacement or additional Bun helper must follow the `init-project` helper-script contract, print or return the exact plan before apply, preserve unrelated manifest fields, and stop on conflicting scripts or versions.
+Prefer the bundled helper for supported projects. Any replacement Bun helper must preserve this safety contract. Additional helpers must default to a plan and require approved explicit apply; be idempotent and root-confined; use argument arrays; preserve unrelated manifest fields and scripts; stop on conflicts; avoid broad upgrades; propagate failures; and never read, log, or store credentials. Use the owning package manager for manifest and lockfile changes.
 
 Do not hand-edit `pnpm-lock.yaml` or write a helper that constructs it.
 

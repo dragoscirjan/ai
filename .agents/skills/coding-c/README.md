@@ -1,6 +1,6 @@
 # C coding
 
-`coding-c` adds C-specific guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to `.c` files and to `.h` files that the project's build and usage context identify as C.
+`coding-c` provides C-specific guidance independently. It applies to `.c` files and to `.h` files that the project's build and usage context identify as C.
 
 ## Source
 
@@ -22,12 +22,6 @@ When the project has no configured choice, the skill recommends:
 - a dependency audit only when the project's dependency format has a mature supported audit path
 
 Existing project configuration takes precedence. The agent must not install or reconfigure these tools without human approval. Tool support must match the selected C dialect and target.
-
-## Dependency contract
-
-`coding-c` requires `coding`. The agent resolves it through the active harness's advertised skill names and paths, loads it first, and stops when it is unavailable. The skill does not rely on a harness-specific Skill tool.
-
-C and C++ remain independent. This skill does not load `coding-cpp`.
 
 ## Invocation
 

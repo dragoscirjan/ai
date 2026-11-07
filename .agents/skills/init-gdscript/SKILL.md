@@ -1,7 +1,7 @@
 ---
 name: init-gdscript
-description: Initialize or adopt a Godot GDScript toolchain on the init-project foundation with pinned engine tooling, gdtoolkit validation, optional compatible tests, and mise task integration. Use when adding GDScript to a new or existing Godot project.
-compatibility: Requires the init-project, coding, and coding-gdscript skills, the Node 24-or-newer target control plane, a selected Godot version, and Bun with Bun.TOML.parse to run the bundled helper. Hard-stops when Bun is unavailable.
+description: Initialize or adopt a Godot GDScript toolchain on an existing mise/Node/pnpm foundation with pinned engine tooling, gdtoolkit validation, optional compatible tests, and mise task integration. Use when adding GDScript to a new or existing Godot project.
+compatibility: Requires the installed sibling init-project helper code, the Node 24-or-newer target control plane, a selected Godot version, and Bun with Bun.TOML.parse to run the bundled helper. Hard-stops when Bun is unavailable.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -10,17 +10,13 @@ metadata:
 
 # GDScript initialization
 
-Add Godot and GDScript tooling to the repository-wide foundation from `init-project`. Keep every generated command compatible with the project's exact Godot version.
-
-## Load the dependencies
-
-Locate the advertised `init-project`, `coding`, and `coding-gdscript` skills by exact name and path. Read their `SKILL.md` files in that order if they are not already loaded.
-
-If any dependency is unavailable, stop and ask the human to install or expose it. Do not install a missing skill, duplicate its instructions, or infer it from memory.
+Add Godot and GDScript tooling to an existing mise/Node/pnpm foundation. Keep every generated command compatible with the project's exact Godot version.
 
 ## Inspect the Godot contract
 
-Confirm that the `init-project` foundation exists or run its planning workflow first. Inspect `project.godot`, engine metadata, renderer, export presets, target platforms, source and addon paths, native extensions, autoloads, existing Python tooling, tests, CI, and import policy.
+Read applicable project instructions and contribution policy before planning. Before any mutation, satisfy project approval and workspace gates, and verify the checkout and write scope are authorized. Stop if a required instruction is unavailable.
+
+Require the existing mise/Node/pnpm foundation and its public quality-task contract. If absent, stop for separately approved foundation setup. Inspect `project.godot`, engine metadata, renderer, export presets, target platforms, source and addon paths, native extensions, autoloads, existing Python tooling, tests, CI, and import policy.
 
 Determine from project evidence or ask when unresolved:
 
@@ -45,7 +41,7 @@ Before mutation, add the GDScript-specific changes to the approved project plan:
 - downloaded addons or archives with version and integrity source
 - commands that install tools, import assets, run the editor, or update lockfiles
 
-Treat Godot addons, editor plugins, and native extensions as executable code. Approval granted to `init-project` covers only the shared foundation. Present the complete GDScript plan and wait for separate explicit approval before writing configuration, changing manifests, installing tools, downloading addons, or enabling executable content.
+Treat Godot addons, editor plugins, and native extensions as executable code. Approval for foundation setup does not authorize language initialization. Present the complete GDScript plan and wait for separate explicit approval before writing configuration, changing manifests, installing tools, downloading addons, or enabling executable content.
 
 ## Run the bundled initializer
 
@@ -101,7 +97,7 @@ Add namespaced implementations as applicable:
 - `build:gdscript`: validate or build configured export presets
 - `code-duplicate:gdscript`: extend the project jscpd scope to first-party `.gd` files when the shared duplicate task does not already cover them
 
-Append these implementations to the public tasks created by `init-project`. Preserve all existing language tasks and command semantics. Keep `lint`, `format`, `typecheck`, `test`, `build`, and `code-duplicate` non-mutating; only explicit `:fix` tasks may write source files.
+Append these implementations to the existing public tasks. Preserve all existing language tasks and command semantics. Keep `lint`, `format`, `typecheck`, `test`, `build`, and `code-duplicate` non-mutating; only explicit `:fix` tasks may write source files.
 
 Exclude `.godot`, imported assets, generated files, vendored addons, caches, and build outputs according to the actual project layout. Do not exclude first-party code merely to make a gate pass.
 
@@ -115,7 +111,7 @@ Godot and GDScript addons do not have one mature universal dependency-vulnerabil
 
 ## Use helpers without hiding changes
 
-Prefer the bundled helper for its supported baseline. Any replacement or additional Bun or Python initializer helper must follow the `init-project` helper-script contract. The generated project-local Godot parser helper remains Node-based because Node belongs to the target control plane.
+Prefer the bundled helper for its supported baseline. Replacement Bun or Python helpers must preserve this safety contract. Additional helpers must default to a plan and require approved explicit apply; be idempotent and root-confined; use argument arrays; preserve unrelated manifest fields and scripts; stop on conflicts; avoid broad upgrades; propagate failures; and never read, log, or store credentials. Use the owning package manager for manifest and lockfile changes. Keep the generated Godot parser helper Node-based because Node belongs to the target control plane.
 
 For downloaded addons, a helper must pin the source, verify the expected archive or content digest when available, extract only into the approved destination, reject path traversal, and avoid executing downloaded code during installation. Keep credentials out of download URLs, environment output, and generated files.
 
