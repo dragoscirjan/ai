@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 import zipfile
 
 from release_version import next_tag
@@ -64,7 +65,9 @@ class GitIntegrationTests(unittest.TestCase):
         self.root = Path(self.temp.name) / "repository"
         self.root.mkdir()
         self.git("init", "-q", "-b", "main")
-        self.git("config", "core.hooksPath", "/dev/null")
+        hooks = Path(self.temp.name) / "hooks"
+        hooks.mkdir()
+        self.git("config", "core.hooksPath", str(hooks))
         self.git(
             "-c",
             "user.name=Release Test",
@@ -77,13 +80,14 @@ class GitIntegrationTests(unittest.TestCase):
             "fixture",
         )
 
-    def git(self, *args):
+    def git(self, *args, input_text=None):
         return subprocess.run(
             ["git", *args],
             cwd=self.root,
             check=True,
             capture_output=True,
             text=True,
+            input=input_text,
         ).stdout
 
     def cli(self, *args, cwd=None):
@@ -120,14 +124,22 @@ class GitIntegrationTests(unittest.TestCase):
         self.assertIn("Cannot read Git tags", result.stderr)
         self.assertEqual(result.stdout, "")
 
-    def test_archive_preserves_skills_and_symlinks_but_not_untracked_files(self):
+    @mock.patch.object(Path, "symlink_to", side_effect=OSError("Symlinks unavailable"))
+    def test_archive_preserves_skills_without_native_symlink_support(self, _symlink):
         skill = self.root / ".agents" / "skills" / "example" / "SKILL.md"
         skill.parent.mkdir(parents=True)
         skill.write_text("example skill\n", encoding="utf-8")
-        projection = self.root / ".claude" / "skills" / "example"
-        projection.parent.mkdir(parents=True)
-        projection.symlink_to("../../.agents/skills/example")
-        self.git("add", ".agents", ".claude")
+        self.git("add", ".agents")
+        # Git archives the committed link mode without requiring OS symlink privileges.
+        link_blob = self.git(
+            "hash-object", "-w", "--stdin", input_text="../../.agents/skills/example"
+        ).strip()
+        self.git(
+            "update-index",
+            "--add",
+            "--cacheinfo",
+            f"120000,{link_blob},.claude/skills/example",
+        )
         self.git(
             "-c",
             "user.name=Release Test",

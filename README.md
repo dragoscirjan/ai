@@ -106,9 +106,32 @@ A manual run tests the release tooling, creates a tag at the exact selected `mai
 
 PRs and pushes affecting release tooling run its tests but never publish. Release jobs are serialized; concurrent pending runs may be superseded by GitHub, so do not queue multiple intended releases at once. If `main` advanced before the release checkout, the run stops; trigger a new run for the current commit. The workflow uses runner-provided Python 3.10+, Git, and GitHub CLI, plus the built-in `GITHUB_TOKEN` with `contents: write` only for the release job. No custom token, npm publishing, or Changesets setup is required. Repository or organization rules must permit tag creation and releases.
 
-Existing tags/releases are never overwritten. If publishing fails after tag creation, inspect the retained tag and any partial release before retrying; a fresh run calculates a new version from existing tags rather than repairing the old release. Do not delete or move tags automatically.
+### Recover a retained tag
 
-The [version calculator](.github/scripts/release_version.py) is read-only. To check it locally without creating a release:
+If publishing fails after tag creation, do not start a normal version run to repair it: that would select the next version. Recover the original tag instead. From a clone of this repository, fetch the retained tag without force and inspect its commit. Replace `v0.0.1` throughout these examples with the failed release's tag:
+
+```sh
+git fetch --no-tags origin refs/tags/v0.0.1:refs/tags/v0.0.1
+git show --no-patch --format=fuller refs/tags/v0.0.1
+```
+
+Stop if the fetch fails, the commit is not the intended release, or the release is already published. If no release exists, rebuild its ZIP from that tag and create the missing release:
+
+```sh
+archive_dir="$(mktemp -d)" &&
+git archive --format=zip --prefix=ai-v0.0.1/ \
+  --output="${archive_dir}/ai-v0.0.1.zip" refs/tags/v0.0.1 &&
+gh release create v0.0.1 "${archive_dir}/ai-v0.0.1.zip" \
+  --repo dragoscirjan/ai --verify-tag --title v0.0.1 --generate-notes --latest=false
+```
+
+`--verify-tag` requires the retained remote tag; creating a release fails if a release already exists. No tag is moved or replaced. `--latest=false` avoids promoting an older recovered release over a newer release. If a partial draft already exists, inspect it, add any missing ZIP in GitHub's UI, and publish that same draft only after checking its tag and assets. Do not delete or overwrite an existing release or asset to recover.
+
+### Preview the next version
+
+The [version calculator](.github/scripts/release_version.py) is read-only and uses only tags already present in the local clone; it does not fetch tags or reserve a version. Compare local tags with this repository's remote tags before relying on its output, fetching with `git fetch --tags origin` when appropriate. Missing local tags or a later release can change the result. The workflow fetches all tags before calculating its version.
+
+To check locally without creating a release:
 
 ```sh
 python3 -B .github/scripts/release_version.py --bump patch
