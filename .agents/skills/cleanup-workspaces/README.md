@@ -10,8 +10,6 @@ The skill includes Bun-executed TypeScript automation:
 - [`scripts/cleanup.test.ts`](scripts/cleanup.test.ts) exercises successful and protected Git and Jujutsu states.
 - Shared repository and path helpers come from [`isolated-workspace/scripts/lib.ts`](../isolated-workspace/scripts/lib.ts).
 
-The executable needs the sibling `isolated-workspace/scripts/lib.ts` helper; this is a code dependency, not an instruction-loading requirement. Stop if it is missing; installation still requires owner approval.
-
 The caller must select the VCS explicitly:
 
 ```sh

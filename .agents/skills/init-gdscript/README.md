@@ -22,6 +22,8 @@ This is an independent instruction set for an existing mise/Node/pnpm foundation
 
 The target project uses the Node 24-or-newer and pnpm control plane from `init-project`. The bundled initializer requires Bun with `Bun.TOML.parse`, hard-stops when Bun is unavailable, and does not add Bun to the target project. The generated project-local parser helper remains Node-based. Godot, Python, and uv are mise tools when selected. Python tooling dependencies belong in `pyproject.toml` and `uv.lock`.
 
+External Skills CLI commands do not infer shared-helper dependencies. With installation approval, install `init-project` and `init-gdscript` together from the same source into the same canonical skill root. Before running the initializer from its skill directory, require `test -f ../init-project/scripts/lib.ts`; stop and ask if it is missing.
+
 ## Invocation
 
 Pi:

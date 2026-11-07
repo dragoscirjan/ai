@@ -37,7 +37,7 @@ When another workflow needs hosted-repository identity, query project-scoped mem
 
 Keep each leaf skill useful on its own: state its scope, real prerequisites, and operation-specific safeguards. Project instructions or the user select additional skills; do not make leaves load them implicitly.
 
-Only thin, intentional compositions declare instruction dependencies in SKILL.md frontmatter:
+Declare instruction dependencies only for thin, intentional compositions or the owner-approved `cleanup-workspaces` → `isolated-workspace` exception. For example:
 
 ```yaml
 require: ["grilling"]

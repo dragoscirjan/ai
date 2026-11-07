@@ -95,7 +95,15 @@ Confirm VCS, base commit, branch/bookmark, absolute path, status, and write owne
 
 ## Select assets and resolve decisions
 
-Re-run inspection with the pinned catalog from that workspace. Classify by catalog selection:
+Re-run static inspection against the approved workspace, not the primary checkout:
+
+```sh
+node "$SYNC_AGENT_ASSETS_HELPER" inspect --root "$WORKSPACE_ROOT" \
+  --source-root "$SOURCE_ROOT" \
+  --catalog "$SOURCE_ROOT/.agents/skills/sync-agent-assets/assets/skill-catalog.json"
+```
+
+Classify by catalog selection:
 
 - **manager/bootstrap/core:** include the managed policy bundle and explain why.
 - **detected/wrapper:** include on strong project evidence, with code and instruction requirement closure.
@@ -104,6 +112,8 @@ Re-run inspection with the pinned catalog from that workspace. Classify by catal
 - **Uncatalogued:** stop and report the defect.
 
 Ask for decisions, not facts available from files or Git. Resolve ambiguous language/runtime evidence, initializer usefulness, harness support, instruction ownership/conflicts, local edits, upstream removals/renames, and optional skill choices. Record declined skills and reasons; reopen settled choices only when evidence changes. A deeper interview can be selected by the caller; it is not an implicit dependency here.
+
+Before installation, verify every selected skill and dependency supports this manager's Pi/OpenCode/Claude Code bundle using the pinned catalog's `harnesses`. Otherwise stop for a compatible plan/workflow; do not create unsupported projections. Recording enforces the same restriction.
 
 Do not install interview or workspace skills merely to perform this planning. The approved final selection may still include them through managed project profiles.
 
@@ -141,13 +151,21 @@ Wait for approval. Changed evidence, source commit, selection, dependency closur
 
 After approval:
 
-1. Write only approved root adaptations.
-2. Inspect every destination Claude path before installation; preserve conflicts until approved replacement.
-3. Install selected skills and their complete dependencies atomically with `npx skills@1.7.4 add "$SOURCE_ROOT"`, using repeated `--skill NAME`, `--agent pi --agent opencode --agent claude-code --yes`. Do not use `--copy`; retain canonical directories and relative projections.
-4. Do not pass rejected or removed skills to the installer. Preserve approved retained paths and reasons in `retainedFiles`.
-5. Update this manager last. If its workflow, helper, catalog, or lock schema changed, stop and require a fresh run before relying on the new version.
+1. Preserve approved local adaptations, merge results, and retained skill content outside directories the installer replaces and outside the fetched temporary checkout. Include restore paths/digests in the plan; never copy secrets.
+2. Write only approved root adaptations and inspect every Claude destination for conflicts.
+3. Install approved dependency-closed batches with `npx skills@1.7.4 add "$SOURCE_ROOT"`, repeated `--skill NAME`, and `--agent pi --agent opencode --agent claude-code --yes`. Exclude the manager until last. Do not use `--copy`; preserve canonical directories and relative projections.
+4. Restore and verify the approved content and retained paths after installation, before recording. Never pass rejected/removed skills to the installer or erase local content to make recording pass.
+5. Update this manager last. If its workflow, helper, catalog, or lock schema changed, stop for a fresh run before relying on the new version; reconcile the approved installation as described below.
+
+Skills CLI installation is not transactional: one command can leave a partial dependency closure on failure. Do not use incomplete assets or assume rollback.
 
 Skills CLI owns `skills-lock.json`; do not hand-edit it. This workflow owns `.agents/ai-assets.lock.json`.
+
+## Recover an interrupted or restarted update
+
+Retain the workspace, pinned source, approved plan, selection, and adaptation backups. Inspect actual state against that plan before retrying; complete/restore only approved changes. Unknown differences or changed source/content require a revised approval—never discard local edits or reclassify a conflict as approved merely because a file matches upstream.
+
+After a manager-version restart, reconcile the completed approved installation before ordinary comparison against the old lock: verify its closure, files, approved adaptations, and projections; generate a record plan from the same pinned source/selection; obtain exact lock-plan approval and record it, then compare. If the installation cannot be proven complete and approved, stop for recovery rather than overwriting the old lock.
 
 ## Record and verify
 
@@ -179,7 +197,7 @@ node "$SYNC_AGENT_ASSETS_HELPER" status --root "$WORKSPACE_ROOT"
 
 Report changed/installed/retained assets, source commit, actual checks and unrun limits, conflicts, rerun needs, and owner actions. Leave the workspace for the developer; do not publish automatically.
 
-Clean the fetched temporary checkout only after validation and recording:
+After completion, clean the fetched temporary checkout following validation/recording. On cancellation before target mutation, it may also be cleaned once unused. After partial mutation, retain needed source and recovery evidence until recovery or explicitly approved abandonment; never delete adaptation backups as incidental cleanup:
 
 ```sh
 node "$SYNC_AGENT_ASSETS_HELPER" cleanup --source-root "$SOURCE_ROOT"

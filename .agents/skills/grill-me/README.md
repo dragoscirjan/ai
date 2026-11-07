@@ -28,15 +28,16 @@ Use the upstream skill directory as the canonical upgrade source:
 
 https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me
 
-Download the current upstream files and compare them before replacing the vendored copies:
+Choose an exact upstream commit first and record it as `UPSTREAM_REF`; do not download from a moving branch. Download the snapshot and compare it before adapting or replacing files:
 
 ```sh
+UPSTREAM_REF=fcf0071560d32913c9d4f820e0d7ca467c881619 # replace with the chosen exact commit
 mkdir -p /tmp/grill-me/agents
 curl -fsSL \
-  https://raw.githubusercontent.com/mattpocock/skills/main/skills/productivity/grill-me/SKILL.md \
+  "https://raw.githubusercontent.com/mattpocock/skills/$UPSTREAM_REF/skills/productivity/grill-me/SKILL.md" \
   -o /tmp/grill-me/SKILL.md
 curl -fsSL \
-  https://raw.githubusercontent.com/mattpocock/skills/main/skills/productivity/grill-me/agents/openai.yaml \
+  "https://raw.githubusercontent.com/mattpocock/skills/$UPSTREAM_REF/skills/productivity/grill-me/agents/openai.yaml" \
   -o /tmp/grill-me/agents/openai.yaml
 
 diff -u .agents/skills/grill-me/SKILL.md /tmp/grill-me/SKILL.md
@@ -45,8 +46,8 @@ diff -u .agents/skills/grill-me/agents/openai.yaml /tmp/grill-me/agents/openai.y
 
 If an upgrade is accepted:
 
-1. Replace the reviewed upstream files.
-2. Refresh `LICENSE` from `https://raw.githubusercontent.com/mattpocock/skills/main/LICENSE` if it changed.
+1. Verify the untouched downloaded `SKILL.md` and other snapshot files against the chosen commit's recorded blob/digest before reapplying the local adaptation. Replace only reviewed files; do not record a revision resolved after downloading.
+2. If the license changed, fetch and verify it from the same chosen commit, not a moving branch.
 3. Update the revision, date, blob SHAs, SHA-256 values, and copy date in this README.
 4. Verify unchanged upstream files against the recorded revision, and review/reapply the documented local adaptation to `SKILL.md`.
 5. Validate skill discovery in each supported harness.

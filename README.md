@@ -48,7 +48,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 
 ## Independent skills and compositions
 
-Leaf skills do not load other skill instructions. Select combinations explicitly, or use a thin composition such as `grill-me`, which declares `require: ["grilling"]`. Project instructions resolve requirements before applying the composition; its body defines the workflow.
+Skills load other instructions only through declared requirements. Leaves normally omit them; `cleanup-workspaces` explicitly requires `isolated-workspace` as an owner-approved exception. Select combinations explicitly, or use a thin composition such as `grill-me`, which declares `require: ["grilling"]`. Project instructions resolve requirements before applying the composition; its body defines the workflow.
 
 `require` is a project extension, not a native harness loader or standard Agent Skills field. External Skills CLI commands do not automatically install its requirements. See [the declaration and compatibility contract](CONTRIBUTING.md#independent-skills-and-explicit-composition). Shared helper-code dependencies remain distinct.
 

@@ -167,6 +167,32 @@ function selectionFile(root) {
   return path;
 }
 
+test("review snapshot commands distinguish endpoints and ignore uncommitted source fixes", () => {
+  const repository = fixture("skill-review-snapshots-");
+  try {
+    const base = git(repository, ["rev-parse", "HEAD"]);
+    git(repository, ["checkout", "-qb", "left-snapshot"]);
+    writeFileSync(join(repository, "left-only.txt"), "left snapshot\n");
+    const left = commitAll(repository, "left-only file");
+    git(repository, ["checkout", "-q", "--detach", base]);
+    writeFileSync(join(repository, "helper.txt"), "committed defect\n");
+    const head = commitAll(repository, "reviewed head");
+    writeFileSync(join(repository, "helper.txt"), "uncommitted fix\n");
+    const mergeBase = git(repository, ["merge-base", left, head]);
+    assert.doesNotMatch(git(repository, ["diff", "--name-status", mergeBase, head]), /left-only/);
+    assert.match(git(repository, ["diff", "--name-status", left, head]), /D\s+left-only\.txt/);
+    assert.equal(git(repository, ["show", head + ":helper.txt"]), "committed defect");
+    assert.equal(readFileSync(join(repository, "helper.txt"), "utf8"), "uncommitted fix\n");
+    const instructions = readFileSync(join(repositoryRoot, ".agents", "skills", "code-review", "SKILL.md"), "utf8");
+    assert.match(instructions, /remaining project\/harness reviewer capacity/);
+    assert.match(instructions, /exact endpoint snapshots/);
+    assert.match(instructions, /relevant check completed successfully on the reviewed snapshot/);
+    assert.match(instructions, /without omitting concrete findings/);
+  } finally {
+    rmSync(repository, { recursive: true, force: true });
+  }
+});
+
 test("help documents prerequisites and approval-bound recording", () => {
   const result = run(["--help"]);
   assert.equal(result.status, 0, result.stderr);
@@ -284,7 +310,7 @@ test("the catalog covers every repository skill directory", () => {
   assert.equal(names.has("coding-tsx"), true);
   assert.equal(names.has("instruction-maintenance"), true);
   assert.equal(output.skills.every((entry) => entry.harnesses.includes("claude-code")), true);
-  assert.deepEqual(output.skills.filter((entry) => entry.require.length).map((entry) => [entry.name, entry.require]), [["grill-me", ["grilling"]]]);
+  assert.deepEqual(output.skills.filter((entry) => entry.require.length).map((entry) => [entry.name, entry.require]), [["cleanup-workspaces", ["isolated-workspace"]], ["grill-me", ["grilling"]]]);
   assert.deepEqual(output.skills.filter((entry) => entry.dependencies.length).map((entry) => [entry.name, entry.dependencies]), [
     ["cleanup-workspaces", ["isolated-workspace"]],
     ["init-gdscript", ["init-project"]],
@@ -477,6 +503,62 @@ test("require rejects missing targets, prompt cycles and mixed code/prompt cycle
   }
 });
 
+test("installed partial managers inspect inventory without guessing unavailable requirements", () => {
+  const source = syntheticSource();
+  const target = fixture("sync-partial-manager-");
+  try {
+    const installed = join(target, ".agents", "skills", "sync-agent-assets");
+    cpSync(join(source.root, ".agents", "skills", "sync-agent-assets"), installed, { recursive: true });
+    mkdirSync(join(installed, "scripts"), { recursive: true });
+    cpSync(script, join(installed, "scripts", "sync-agent-assets.mjs"));
+    const before = git(target, ["status", "--porcelain"]);
+    const command = join(installed, "scripts", "sync-agent-assets.mjs");
+    const partial = spawnSync(process.execPath, [command, "inspect", "--root", target], { cwd: target, encoding: "utf8" });
+    assert.equal(partial.status, 0, partial.stderr);
+    const output = JSON.parse(partial.stdout);
+    assert.equal(output.mode, "init");
+    assert.equal(output.recommendedClosure, null);
+    assert.ok(output.unavailableRequirementMetadata.includes("grill-me"));
+    assert.equal(output.recommendedSkills.find((entry) => entry.name === "grill-me").require, null);
+    assert.deepEqual(output.recommendedSkills.find((entry) => entry.name === "sync-agent-assets").harnesses, ["pi", "opencode", "claude-code"]);
+    assert.equal(git(target, ["status", "--porcelain"]), before);
+    const full = spawnSync(process.execPath, [command, "inspect", "--root", target, "--source-root", source.root], { cwd: target, encoding: "utf8" });
+    assert.equal(full.status, 0, full.stderr);
+    assert.deepEqual(JSON.parse(full.stdout).unavailableRequirementMetadata, []);
+    assert.ok(JSON.parse(full.stdout).recommendedClosure.includes("grilling"));
+    const strict = spawnSync(process.execPath, [command, "catalog"], { cwd: target, encoding: "utf8" });
+    assert.equal(strict.status, 3);
+    assert.match(strict.stderr, /Missing skill frontmatter/);
+  } finally {
+    rmSync(source.root, { recursive: true, force: true });
+    rmSync(target, { recursive: true, force: true });
+  }
+});
+
+test("recording rejects selections unsupported by the managed harness bundle", () => {
+  const source = syntheticSource();
+  const target = fixture("sync-harness-selection-");
+  try {
+    const path = join(source.root, ".agents", "skills", "sync-agent-assets", "assets", "skill-catalog.json");
+    const catalog = JSON.parse(readFileSync(path, "utf8"));
+    catalog.skills.find((entry) => entry.name === "optional-skill").harnesses = ["pi"];
+    writeFileSync(path, JSON.stringify(catalog));
+    source.commit = commitAll(source.root, "single-harness optional skill");
+    const selection = selectionFile(target);
+    const data = JSON.parse(readFileSync(selection, "utf8"));
+    data.selectedSkills = ["optional-skill"];
+    data.declinedSkills = [];
+    writeFileSync(selection, JSON.stringify(data));
+    const result = run(["record", "--root", target, "--source-root", source.root, "--source-commit", source.commit, "--selection", selection]);
+    assert.equal(result.status, 3, result.stderr);
+    assert.match(result.stderr, /does not support managed harnesses: opencode, claude-code/);
+    assert.equal(existsSync(join(target, ".agents", "ai-assets.lock.json")), false);
+  } finally {
+    rmSync(source.root, { recursive: true, force: true });
+    rmSync(target, { recursive: true, force: true });
+  }
+});
+
 test("inspect detects mode, language skills, wrappers, and ambiguous initializers", () => {
   const root = fixture("sync-agent-assets-inspect-");
   try {
@@ -592,6 +674,57 @@ test("record plans, requires confirmation, writes a portable lock, and detects l
   } finally {
     rmSync(source.root, { recursive: true, force: true });
     rmSync(target, { recursive: true, force: true });
+  }
+});
+
+test("approved adaptations survive installer replacement and reconciliation precedes ordinary comparison", { timeout: 120_000 }, () => {
+  const source = syntheticSource();
+  const target = fixture("sync-approved-adaptation-");
+  const backup = mkdtempSync(join(tmpdir(), "sync-approved-backup-"));
+  try {
+    installSyntheticAssets(source.root, target);
+    const selection = selectionFile(target);
+    const recordArgs = () => ["record", "--root", target, "--source-root", source.root, "--source-commit", source.commit, "--selection", selection];
+    let result = run(recordArgs());
+    assert.equal(result.status, 0, result.stderr);
+    let plan = JSON.parse(result.stdout);
+    assert.equal(run([...recordArgs(), "--apply", "--confirm", "--plan-id", plan.planId]).status, 0);
+    const lockPath = join(target, ".agents", "ai-assets.lock.json");
+    const oldLock = readFileSync(lockPath, "utf8");
+    const relativeSkill = join(".agents", "skills", "grilling", "SKILL.md");
+    const sourceSkill = join(source.root, relativeSkill);
+    writeFileSync(sourceSkill, readFileSync(sourceSkill, "utf8") + "\nUpstream refresh.\n");
+    source.commit = commitAll(source.root, "approved upstream candidate");
+    const approved = readFileSync(sourceSkill, "utf8") + "\nApproved local guidance.\n";
+    const saved = join(backup, "SKILL.md");
+    writeFileSync(saved, approved);
+    const installed = join(target, relativeSkill);
+    writeFileSync(installed, approved);
+    const cli = spawnSync("npx", ["--yes", "skills@1.7.4", "add", source.root,
+      "--skill", "grilling", "--skill", "grill-me", "--skill", "sync-agent-assets",
+      "--agent", "pi", "--agent", "opencode", "--agent", "claude-code", "--yes",
+    ], { cwd: target, encoding: "utf8", timeout: 110_000 });
+    assert.equal(cli.status, 0, cli.stderr);
+    assert.equal(readFileSync(installed, "utf8"), readFileSync(sourceSkill, "utf8"));
+    cpSync(saved, installed);
+    assert.equal(readFileSync(installed, "utf8"), approved);
+    const compare = () => run(["compare", "--root", target, "--source-root", source.root]);
+    result = compare();
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(JSON.parse(result.stdout).files.find((file) => file.path === relativeSkill).state, "conflict");
+    result = run(recordArgs());
+    assert.equal(result.status, 0, result.stderr);
+    plan = JSON.parse(result.stdout);
+    assert.equal(readFileSync(lockPath, "utf8"), oldLock);
+    assert.notEqual(plan.lock.files[relativeSkill].sourceSha256, plan.lock.files[relativeSkill].installedSha256);
+    assert.equal(run([...recordArgs(), "--apply", "--confirm", "--plan-id", plan.planId]).status, 0);
+    result = compare();
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(JSON.parse(result.stdout).files.find((file) => file.path === relativeSkill).state, "unchanged");
+  } finally {
+    rmSync(source.root, { recursive: true, force: true });
+    rmSync(target, { recursive: true, force: true });
+    rmSync(backup, { recursive: true, force: true });
   }
 });
 

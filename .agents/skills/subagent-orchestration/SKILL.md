@@ -81,7 +81,7 @@ A writable child receives one explicit write lease:
 
 A worker must request parent permission before editing an unassigned or already claimed file. The parent either changes the lease explicitly or keeps the file parent-owned.
 
-When more than one writer is active, create every temporary lane through an owner-approved workspace procedure. Stop if none is available. Name each lane ref `${CANONICAL_REF}--lane-${LANE_KEY}` with a one-component lane key; its workspace leaf is that ref's basename. Reserve `--lane-` for lanes, never canonical refs. Pass the canonical ref explicitly as the base; never default to trunk or base one lane on another. Preserve one writer per workspace.
+Before assigning any reused lane, inspect its status and provenance and confirm that all existing changes belong to this task and its assigned owner. Unrelated or uncertain work blocks assignment; never overwrite or absorb it. When more than one writer is active, create every temporary lane through an owner-approved workspace procedure. Stop if none is available. Name each lane ref `${CANONICAL_REF}--lane-${LANE_KEY}` with a one-component lane key; its workspace leaf is that ref's basename. Reserve `--lane-` for lanes, never canonical refs. Pass the canonical ref explicitly as the base; never default to trunk or base one lane on another. Preserve one writer per workspace.
 
 ## Maintain one canonical pull-request workspace
 

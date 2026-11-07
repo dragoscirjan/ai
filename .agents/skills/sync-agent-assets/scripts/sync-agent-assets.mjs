@@ -289,10 +289,11 @@ function skillMap(catalog) {
   return new Map(catalog.skills.map((entry) => [entry.name, entry]));
 }
 
-function readInstructionRequirements(sourceRoot, name) {
+function readInstructionRequirements(sourceRoot, name, { allowMissingMetadata = false } = {}) {
   const path = safePath(sourceRoot, `.agents/skills/${name}/SKILL.md`);
   assertNoSymlinkComponents(sourceRoot, path);
   if (!existsSync(path)) {
+    if (allowMissingMetadata) return null;
     throw new SyncError(`Missing skill frontmatter for ${name}; use a complete source checkout`, EXIT.CONFLICT);
   }
   const text = readFileSync(path, "utf8").replace(/^\uFEFF/, "");
@@ -320,7 +321,7 @@ function readInstructionRequirements(sourceRoot, name) {
   return requirements;
 }
 
-function validateCatalog(catalog, sourceRoot) {
+function validateCatalog(catalog, sourceRoot, { allowMissingMetadata = false } = {}) {
   if (!catalog || catalog.schemaVersion !== SCHEMA_VERSION || !Array.isArray(catalog.skills)) {
     throw new SyncError(`Catalog schemaVersion must be ${SCHEMA_VERSION}`, EXIT.CONFLICT);
   }
@@ -343,7 +344,7 @@ function validateCatalog(catalog, sourceRoot) {
     if (Object.hasOwn(entry, "require") || Object.hasOwn(entry, "instructionRequirements")) {
       throw new SyncError(`Declare instruction requirements in SKILL.md, not the catalog: ${entry.name}`, EXIT.CONFLICT);
     }
-    entry.instructionRequirements = readInstructionRequirements(sourceRoot, entry.name);
+    entry.instructionRequirements = readInstructionRequirements(sourceRoot, entry.name, { allowMissingMetadata });
     if (!Array.isArray(entry.dependencies) || !Array.isArray(entry.harnesses)) {
       throw new SyncError(`Catalog dependencies and harnesses must be arrays: ${entry.name}`);
     }
@@ -355,7 +356,7 @@ function validateCatalog(catalog, sourceRoot) {
   }
   const byName = skillMap(catalog);
   for (const entry of catalog.skills) {
-    for (const dependency of [...entry.dependencies, ...entry.instructionRequirements]) {
+    for (const dependency of [...entry.dependencies, ...(entry.instructionRequirements ?? [])]) {
       if (!byName.has(dependency)) {
         throw new SyncError(`Unknown dependency ${dependency} for ${entry.name}`);
       }
@@ -368,7 +369,7 @@ function validateCatalog(catalog, sourceRoot) {
     if (visited.has(name)) return;
     visiting.add(name);
     const entry = byName.get(name);
-    for (const dependency of [...entry.dependencies, ...entry.instructionRequirements]) visit(dependency);
+    for (const dependency of [...entry.dependencies, ...(entry.instructionRequirements ?? [])]) visit(dependency);
     visiting.delete(name);
     visited.add(name);
   }
@@ -377,7 +378,7 @@ function validateCatalog(catalog, sourceRoot) {
     if (!Array.isArray(members)) throw new SyncError(`Catalog profile must be an array: ${profile}`);
     for (const name of members) if (!names.has(name)) throw new SyncError(`Unknown ${profile} profile skill: ${name}`);
   }
-  if (sourceRoot) {
+  if (sourceRoot && !allowMissingMetadata) {
     const skillsRoot = safePath(sourceRoot, ".agents/skills");
     const directories = readdirSync(skillsRoot, { withFileTypes: true })
       .filter((entry) => entry.isDirectory() && existsSync(join(skillsRoot, entry.name, "SKILL.md")))
@@ -393,8 +394,8 @@ function validateCatalog(catalog, sourceRoot) {
   return catalog;
 }
 
-function loadCatalog(path = DEFAULT_CATALOG, sourceRoot = resolve(dirname(path), "../../../..")) {
-  return validateCatalog(readJson(path, "skill catalog"), sourceRoot ?? resolve(dirname(path), "../../../.."));
+function loadCatalog(path = DEFAULT_CATALOG, sourceRoot = resolve(dirname(path), "../../../.."), options = {}) {
+  return validateCatalog(readJson(path, "skill catalog"), sourceRoot ?? resolve(dirname(path), "../../../.."), options);
 }
 
 function dependencyClosure(names, catalog) {
@@ -404,6 +405,9 @@ function dependencyClosure(names, catalog) {
     const entry = byName.get(name);
     if (!entry) throw new SyncError(`Unknown selected skill: ${name}`);
     if (result.has(name)) return;
+    if (entry.instructionRequirements === null) {
+      throw new SyncError(`Missing instruction requirement metadata for ${name}; provide a complete source checkout`, EXIT.CONFLICT);
+    }
     for (const dependency of [...entry.dependencies, ...entry.instructionRequirements]) add(dependency);
     result.add(name);
   }
@@ -548,8 +552,9 @@ function preflightCommand(options) {
 
 function inspectCommand(options) {
   const root = resolveGitRoot(options.root);
-  const catalogPath = options.catalog ? resolve(options.catalog) : DEFAULT_CATALOG;
-  const catalog = loadCatalog(catalogPath, options["source-root"] ? resolveDirectory(options["source-root"], "--source-root") : undefined);
+  const sourceRoot = options["source-root"] ? resolveDirectory(options["source-root"], "--source-root") : undefined;
+  const catalogPath = options.catalog ? resolve(options.catalog) : sourceRoot ? safePath(sourceRoot, SOURCE_CATALOG) : DEFAULT_CATALOG;
+  const catalog = loadCatalog(catalogPath, sourceRoot, { allowMissingMetadata: !sourceRoot && !options.catalog });
   const inventory = projectInventory(root);
   const recommended = [];
   const ambiguous = [];
@@ -557,16 +562,17 @@ function inspectCommand(options) {
   for (const entry of catalog.skills) {
     const reasons = signalReasons(entry, inventory);
     if (["manager", "bootstrap", "core"].includes(entry.selection)) {
-      recommended.push({ name: entry.name, reason: entry.selection, dependencies: entry.dependencies, require: entry.instructionRequirements });
+      recommended.push({ name: entry.name, reason: entry.selection, dependencies: entry.dependencies, require: entry.instructionRequirements, harnesses: entry.harnesses });
     } else if (["detected", "wrapper"].includes(entry.selection) && reasons.length > 0) {
-      recommended.push({ name: entry.name, reason: reasons.join(", "), dependencies: entry.dependencies, require: entry.instructionRequirements });
+      recommended.push({ name: entry.name, reason: reasons.join(", "), dependencies: entry.dependencies, require: entry.instructionRequirements, harnesses: entry.harnesses });
     } else if (["optional", "initializer"].includes(entry.selection) && (reasons.length > 0 || entry.signals?.askWithoutSignals)) {
-      ambiguous.push({ name: entry.name, reason: reasons.join(", ") || "optional", safety: entry.safety, dependencies: entry.dependencies, require: entry.instructionRequirements });
+      ambiguous.push({ name: entry.name, reason: reasons.join(", ") || "optional", safety: entry.safety, dependencies: entry.dependencies, require: entry.instructionRequirements, harnesses: entry.harnesses });
     } else {
       skipped.push({ name: entry.name, reason: "no applicability signal" });
     }
   }
-  const recommendedClosure = dependencyClosure(recommended.map((entry) => entry.name), catalog);
+  const unavailableRequirementMetadata = catalog.skills.filter((entry) => entry.instructionRequirements === null).map((entry) => entry.name);
+  const recommendedClosure = unavailableRequirementMetadata.length ? null : dependencyClosure(recommended.map((entry) => entry.name), catalog);
   const lock = readLock(root);
   emit({
     skill: "sync-agent-assets",
@@ -589,6 +595,7 @@ function inspectCommand(options) {
     },
     recommendedSkills: recommended,
     recommendedClosure,
+    unavailableRequirementMetadata,
     ambiguousSkills: ambiguous,
     skippedSkills: skipped,
     lock: lock ? { source: lock.source, selection: lock.selection, status: managedStatus(root, lock).counts } : null,
@@ -734,6 +741,10 @@ function normalizeSelection(selection, catalog) {
   const requiredProfileSkills = ["manager", "bootstrap", "coreInstructions"]
     .flatMap((profile) => catalog.profiles?.[profile] ?? []);
   const selectedSkills = dependencyClosure([...selection.selectedSkills, ...requiredProfileSkills], catalog);
+  for (const name of selectedSkills) {
+    const unsupported = [...SUPPORTED_HARNESSES].filter((harness) => !byName.get(name).harnesses.includes(harness));
+    if (unsupported.length) throw new SyncError(`Selected skill ${name} does not support managed harnesses: ${unsupported.join(", ")}`, EXIT.CONFLICT);
+  }
   const rootFiles = [...new Set(selection.rootFiles)].sort();
   for (const path of rootFiles) safePath("/virtual-root", path);
   const declinedSkills = Array.isArray(selection.declinedSkills) ? selection.declinedSkills : [];

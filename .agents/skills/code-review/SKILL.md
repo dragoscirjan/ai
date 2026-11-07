@@ -18,16 +18,21 @@ Use separate parallel, read-only subagents. They may inspect state and run non-m
 
 ## 1. Pin the comparison
 
-Ask for a fixed point if none was supplied. Resolve it with `git rev-parse <fixed-point>` and confirm the diff is nonempty before launching reviewers. Stop on an invalid ref or empty diff.
+Ask for a fixed point if none was supplied. Resolve it and HEAD to immutable commit IDs before review. Stop on an invalid ref or empty diff.
 
-Give both reviewers the same comparison:
+For a review “since” a branch/ref, compare its merge-base with the pinned HEAD. If the user explicitly requests exact endpoint snapshots, compare those endpoints instead; do not silently substitute a merge-base:
 
 ```sh
-git diff <fixed-point>...HEAD
-git log <fixed-point>..HEAD --oneline
+HEAD_SHA=$(git rev-parse --verify 'HEAD^{commit}')
+BASE_SHA=$(git rev-parse --verify --end-of-options "${FIXED_POINT}^{commit}")
+# Default since-ref comparison:
+LEFT_SHA=$(git merge-base "$BASE_SHA" "$HEAD_SHA")
+# For an explicit endpoint comparison, use LEFT_SHA=$BASE_SHA instead.
+git diff --no-ext-diff --no-textconv "$LEFT_SHA" "$HEAD_SHA"
+git log "$BASE_SHA..$HEAD_SHA" --oneline
 ```
 
-The three-dot diff uses the merge-base. Capture the diff command and commit list once.
+Give both reviewers the same resolved IDs, comparison mode, diff, and commit list. Read surrounding source from those snapshots, not a dirty or moving worktree: use `git show "$HEAD_SHA:path"` for reviewed code and the left snapshot for removed/old code. Do not move refs, discard local edits, or create a worktree merely to obtain context.
 
 ## 2. Locate the specification
 
@@ -44,7 +49,7 @@ If the user confirms no spec exists, skip only the Spec reviewer and report “n
 
 Find repository documents governing code, always including CODING_STANDARDS.md and CONTRIBUTING.md when present.
 
-The Standards reviewer also receives the complete Fowler smell baseline below. Documented repository standards override these heuristics. Label smells as possible issues, not hard violations, and skip matters already enforced by tooling. Refactor only when the context justifies the suggested remedy.
+The Standards reviewer also receives the complete Fowler smell baseline below. Documented repository standards override these heuristics. Label smells as possible issues, not hard violations, and suppress duplicate findings only when the relevant check completed successfully on the reviewed snapshot. If tooling is unavailable, failed, or unrun, report source-proven defects and disclose that limit. Refactor only when the context justifies the suggested remedy.
 
 - **Mysterious Name:** intent is unclear. Rename honestly; an impossible name may indicate unclear design.
 - **Duplicated Code:** repeated logic represents the same concept. Consider a shared implementation.
@@ -61,15 +66,17 @@ The Standards reviewer also receives the complete Fowler smell baseline below. D
 
 ## 4. Launch the independent reviewers together
 
+Before either launch, check remaining project/harness reviewer capacity, counting earlier and failed attempts. If both required reviewers will not fit, ask the owner to raise the limit or stop. Never silently drop an axis or exceed the limit.
+
 Each receives the diff command, commit list, read-only boundary, and its own evidence sources. Keep their contexts and reports separate.
 
-**Standards reviewer:** include the standards-file list and paste the full smell baseline. Ask for fewer than 400 words covering:
+**Standards reviewer:** include the standards-file list and paste the full smell baseline. Aim for a concise summary around 400 words, without omitting concrete findings; retain a complete report when needed. Cover:
 
 - Documented-standard violations by file/hunk, citing the source file and rule.
 - Possible baseline smells, naming the smell and quoting the hunk.
-- A clear distinction between hard documented breaches and contextual heuristics. Repository rules win; tooling-enforced issues are excluded.
+- A clear distinction between hard documented breaches and contextual heuristics. Repository rules win; suppress only duplicates covered by a successful relevant check on the reviewed snapshot.
 
-**Spec reviewer:** include the spec path or fetched contents. Ask for fewer than 400 words covering:
+**Spec reviewer:** include the spec path or fetched contents. Aim for a concise summary around 400 words, without omitting concrete findings; retain a complete report when needed. Cover:
 
 - Missing or partial requirements.
 - Unrequested behavior or scope creep.

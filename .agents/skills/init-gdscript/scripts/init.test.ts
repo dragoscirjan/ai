@@ -44,6 +44,24 @@ function run(root: string, extra: readonly string[] = []) {
   );
 }
 
+test("unconfigured aggregate tasks block apply without changing project files", () => {
+  const root = fixture();
+  try {
+    const misePath = join(root, "mise.toml");
+    const manifestPath = join(root, "package.json");
+    const before = readFileSync(misePath, "utf8") + '\n[tasks.typecheck]\nrun = "echo \'typecheck is not configured\' >&2; exit 1"\n';
+    writeFileSync(misePath, before);
+    const manifest = readFileSync(manifestPath, "utf8");
+    const result = run(root, ["--apply", "--confirm"]);
+    assert.equal(result.status, 3, result.stderr);
+    assert.match(result.stderr, /Unconfigured aggregate task typecheck.*reconcile/i);
+    assert.equal(readFileSync(misePath, "utf8"), before);
+    assert.equal(readFileSync(manifestPath, "utf8"), manifest);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test("plan is non-mutating and rejects a non-Godot root", () => {
   const invalidRoot = fixture({ godot: false });
   try {

@@ -47,9 +47,16 @@ Treat Godot addons, editor plugins, and native extensions as executable code. Ap
 
 Use the tested helper in [`scripts/init.ts`](scripts/init.ts) for the baseline Godot, Python, uv, gdtoolkit, and task setup. Run commands from this skill directory and pass the absolute Godot project root. Bun runs the initializer only; it is not added to the target project's toolchain or generated GDScript parser helper.
 
+Before invocation, also verify `../init-project/scripts/lib.ts` from this skill directory. If missing, stop and request an approved installation of both skills into the same skill root; do not install automatically. External Skills CLI commands do not infer helper dependencies:
+
+```sh
+npx skills@1.7.4 add SOURCE_ROOT --skill init-project --skill init-gdscript
+```
+
 Before any invocation, require Bun and hard-stop if it is unavailable:
 
 ```sh
+test -f ../init-project/scripts/lib.ts || { echo "The sibling init-project helper is required; obtain installation approval." >&2; exit 1; }
 command -v bun >/dev/null 2>&1 || { echo "Bun is required to run init-gdscript." >&2; exit 1; }
 ```
 
@@ -82,6 +89,8 @@ Godot test addons do not have one universal package manifest. When the project s
 Preserve existing addon managers and vendoring policy. Do not install a second mechanism without approval.
 
 ## Add scripts and mise tasks
+
+Inspect existing aggregate task commands before appending dependencies. A failing “not configured” placeholder must be reconciled in an explicitly approved plan; do not retain it alongside a real checker or delete real checks automatically. The helper rejects recognized unconditional placeholders; inspect other forms manually.
 
 Use project scripts and mise tasks together without recursion. A project that already uses the shared `package.json` may expose convenience scripts there; mise remains the stable cross-language entry point.
 

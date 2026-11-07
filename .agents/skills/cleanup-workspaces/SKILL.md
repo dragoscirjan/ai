@@ -1,6 +1,7 @@
 ---
 name: cleanup-workspaces
 description: Plan and safely remove clean integrated Git worktrees or Jujutsu workspaces, including one exact temporary orchestration lane, and prune safe stale registrations. Use for owner-authorized cleanup or current-task lane cleanup authorized by the orchestration workflow.
+require: ["isolated-workspace"]
 disable-model-invocation: true
 compatibility: Requires Bun and either Git with worktree support or Jujutsu 0.38 or newer with workspace support.
 metadata:
@@ -16,8 +17,6 @@ Audit isolated workspaces with deterministic TypeScript automation. Show the com
 Ordinary cleanup requires explicit owner authorization. For one current-task temporary lane created under the approved `subagent-orchestration` workflow, the owner's initial lane authorization permits the parent to confirm the exact lane plan without another owner round trip. It does not authorize another task, ordinary cleanup, or a broader target.
 
 Run ordinary cleanup from a surviving primary/other checkout, and exact-lane cleanup from the surviving canonical sibling. Read the applicable project instructions and workspace configuration first.
-
-The executable imports `../isolated-workspace/scripts/lib.ts`; that helper must be installed, but its skill instructions need not be loaded. Stop if the helper is missing. Do not install it without owner approval or recreate it from memory.
 
 ## Select the VCS and base
 

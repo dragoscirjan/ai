@@ -27,7 +27,7 @@ Each skill entry contains:
 - `signals.extensions`: source extensions that suggest applicability
 - `signals.askWithoutSignals`: ask about the skill even when no stack signal exists
 
-The helper reads requirements from a complete source checkout. It rejects malformed declarations, duplicate or invalid names, missing targets, combined dependency cycles, invalid profile references, and catalog coverage mismatches. Prompt requirements are not duplicated in authored catalog entries. Runtime output keeps their array order; installation closure is a deduplicated sorted set, not instruction load order. The `inspect --catalog` option expects the standard source catalog layout or an explicit `--source-root`.
+The helper reads requirements from a complete source checkout. It rejects malformed declarations, duplicate or invalid names, missing targets, combined dependency cycles, invalid profile references, and catalog coverage mismatches. Prompt requirements are not duplicated in authored catalog entries. Runtime output keeps their array order; installation closure is a deduplicated sorted set, not instruction load order. Explicit `inspect --catalog`/`--source-root` inputs require complete source. Default inspection from a partial installation still reports inventory and signals: unavailable frontmatter is exposed as `require: null` and listed in `unavailableRequirementMetadata`, with `recommendedClosure: null` until complete pinned source is supplied. Null means unknown, never independent. No automatic fetch or metadata cache is introduced.
 
 ## Selection file
 
@@ -73,6 +73,7 @@ Create the selection file outside the target repository. Its schema is [`../asse
 Rules:
 
 - `selectedSkills` and `rootFiles` are required arrays.
+- This manager installs the Pi/OpenCode/Claude Code bundle. Every selected skill/dependency must support all three; otherwise stop for a compatible selection/workflow before installation. Recording rejects unsupported selections. Standalone harness-specific installation remains outside this managed bundle.
 - The helper adds the `manager`, `bootstrap`, and `coreInstructions` policy bundles plus their combined code-dependency and instruction-requirement closure to `selectedSkills`. These project profiles are separate from a leaf skill's dependencies; selection does not authorize instruction loading or installation by itself.
 - `declinedSkills` entries require `name` and `reason` strings.
 - `adaptations` records concise, non-sensitive project decisions.

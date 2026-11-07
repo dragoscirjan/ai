@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "bun:test";
+import { ensureTomlTask } from "./lib.ts";
 
 const script = join(dirname(fileURLToPath(import.meta.url)), "init.ts");
 
@@ -21,6 +22,22 @@ function run(root: string, extra: readonly string[] = []) {
     { encoding: "utf8" },
   );
 }
+
+test("aggregate task wiring refuses recognized failing placeholders but preserves real checks", () => {
+  for (const command of [
+    "echo 'typecheck is not configured' >&2; exit 1",
+    'printf "typecheck not yet configured"; exit 1',
+  ]) {
+    for (const run of [JSON.stringify(command), JSON.stringify([command])]) {
+      const text = "[tasks.typecheck]\nrun = " + run + "\n";
+      assert.throws(() => ensureTomlTask(text, "typecheck", { depends: ["typecheck:typescript"] }), /Unconfigured aggregate task typecheck.*reconcile/i);
+    }
+  }
+  const text = '[tasks.typecheck]\nrun = "pnpm run typecheck:legacy"\n';
+  const merged = ensureTomlTask(text, "typecheck", { depends: ["typecheck:typescript"] });
+  assert.match(merged, /run = "pnpm run typecheck:legacy"/);
+  assert.match(merged, /depends = \["typecheck:typescript"\]/);
+});
 
 test("help documents safeguards and exit codes", () => {
   assert.equal(typeof Bun.TOML.parse, "function");
