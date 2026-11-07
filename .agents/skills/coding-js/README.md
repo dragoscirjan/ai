@@ -1,8 +1,8 @@
 # JavaScript coding
 
-`coding-js` adds JavaScript-specific guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to `.js` files and JavaScript runtimes such as browsers, Node.js, Deno, Bun, and embedded engines.
+`coding-js` provides JavaScript-specific guidance independently. It applies to `.js` files and JavaScript runtimes such as browsers, Node.js, Deno, Bun, and embedded engines.
 
-Load `coding-mjs`, `coding-cjs`, or `coding-jsx` after this skill when the file extension requires additional semantics.
+The caller selects any additional module or JSX guidance; this skill does not load it.
 
 ## Sources
 
@@ -24,10 +24,6 @@ When the project has no configured choice, the skill recommends maintained packa
 - the active package manager's audit command
 
 Existing project configuration takes precedence. The agent must not install or reconfigure these tools without human approval.
-
-## Dependency contract
-
-`coding-js` requires `coding`. The agent resolves it through the active harness's advertised skill names and paths, loads it first, and stops when it is unavailable. The skill does not rely on a harness-specific Skill tool.
 
 ## Invocation
 

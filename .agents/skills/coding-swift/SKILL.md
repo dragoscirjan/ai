@@ -1,7 +1,7 @@
 ---
 name: coding-swift
 description: Write, refactor, review, or test Swift with version-compatible APIs, explicit value and reference semantics, safe structured concurrency, controlled interop and unsafe boundaries, platform-aware builds, and project-first quality gates. Use for .swift files, Swift packages, Xcode projects, and Swift build or test work.
-compatibility: Requires the coding skill and the Swift toolchain, SDKs, deployment platforms, package or Xcode configuration, and analysis tools selected by the project.
+compatibility: Requires the Swift toolchain, SDKs, deployment platforms, package or Xcode configuration, and analysis tools selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,14 +9,6 @@ metadata:
 ---
 
 # Swift coding
-
-Apply the generic `coding` workflow, then apply the Swift-specific rules in this skill.
-
-## Load the dependency
-
-Locate the advertised `coding` skill by exact name and path. If it is not already loaded, read its `SKILL.md` before continuing.
-
-If `coding` is unavailable, stop and ask the human to install or expose it. Do not install it automatically, copy its instructions into this skill, or assume its contents from memory.
 
 ## Follow project and Swift guidance
 

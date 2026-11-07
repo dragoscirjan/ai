@@ -1,6 +1,6 @@
 # CTS coding
 
-`coding-cts` adds `.cts` TypeScript CommonJS semantics to [`coding-ts`](../coding-ts/SKILL.md) and the generic [`coding`](../coding/SKILL.md) workflow.
+`coding-cts` provides `.cts` TypeScript CommonJS semantics independently.
 
 ## Scope
 
@@ -12,10 +12,6 @@
 - dual-package state hazards
 
 Reference: [TypeScript modules reference](https://www.typescriptlang.org/docs/handbook/modules/reference.html).
-
-## Dependencies
-
-Load `coding`, `coding-ts`, and `coding-cts` in that order. All are sibling skills. Stop when a dependency is unavailable; do not install it automatically.
 
 ## Invocation
 

@@ -18,7 +18,7 @@ It pins the selected Godot executable through mise when supported, keeps Python-
 
 ## Dependency contract
 
-Load `init-project`, then `coding`, then `coding-gdscript`. Stop when one is unavailable; do not install a missing skill automatically.
+This is an independent instruction set for an existing mise/Node/pnpm foundation. Its executable imports the sibling `init-project/scripts/lib.ts` helper, which must be installed without requiring its skill instructions to load. Missing project prerequisites block initialization.
 
 The target project uses the Node 24-or-newer and pnpm control plane from `init-project`. The bundled initializer requires Bun with `Bun.TOML.parse`, hard-stops when Bun is unavailable, and does not add Bun to the target project. The generated project-local parser helper remains Node-based. Godot, Python, and uv are mise tools when selected. Python tooling dependencies belong in `pyproject.toml` and `uv.lock`.
 

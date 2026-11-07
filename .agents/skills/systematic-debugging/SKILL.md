@@ -18,13 +18,7 @@ Use four phases: investigate, compare, test a hypothesis, then fix and verify. K
 
 ## Follow project boundaries
 
-This skill owns diagnosis. It does not grant mutation, delegation, infrastructure, or publication authority.
-
-- Read the applicable project instructions first. Honor workspace and approval gates before diagnostic edits, generated files, tests that write state, or other mutations.
-- Before changing code, load the sibling `coding` skill by its advertised name and path, then the applicable language and extension skills. If `coding` is missing, stop that phase and ask the owner to expose or install it; do not install it automatically or recreate its rules.
-- Before validation, follow the project's validation instructions, including `VALIDATION.md` when applicable. Use project-owned test and tool configuration rather than introducing a competing toolchain.
-- Before any delegation, load and follow the advertised `subagent-orchestration` skill. If it is unavailable, do not delegate. This skill does not create extra agent capacity.
-- Read-only investigation does not require loading all implementation skills. These are phase handoffs, not instructions to preload every dependency.
+This skill owns diagnosis, not authority to mutate, delegate, change infrastructure, or publish. Follow project instructions and approval/workspace gates before diagnostic edits, generated files, or state-writing tests. Use project coding standards, validation commands, and tool configuration. Delegation requires separate authorization and must respect the project's capacity limits. Read-only investigation needs no implementation workflow.
 
 ## Phase 1: investigate the failure
 
@@ -90,7 +84,7 @@ If an exploratory edit remains, identify whether it belongs in the final fix. Re
 6. Remove temporary instrumentation and test fixtures you introduced unless they are an intentional part of the fix. Re-run affected checks after removal.
 7. Inspect the complete diff for unintended behavior and report verification gaps.
 
-Use `coding` for implementation standards and project validation policy for quality gates. Do not weaken tests, suppress unexplained errors, add arbitrary sleeps, or call a failure fixed because its message disappeared.
+Apply project implementation standards and validation gates. Do not weaken tests, suppress unexplained errors, add arbitrary sleeps, or call a failure fixed because its message disappeared.
 
 ## Stop and reassess
 

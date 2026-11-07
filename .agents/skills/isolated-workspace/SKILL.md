@@ -138,4 +138,4 @@ Exit codes are:
 
 ## Cleanup handoff
 
-Do not remove the workspace here. When the owner asks to clean completed workspaces, load and follow the `cleanup-workspaces` skill. Creation does not authorize cleanup, merge, or release.
+Stop after establishing the workspace. The project or user selects a cleanup procedure separately when requested; creation grants no cleanup, merge, or release authority.

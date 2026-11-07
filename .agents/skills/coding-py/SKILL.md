@@ -1,7 +1,7 @@
 ---
 name: coding-py
 description: Write, refactor, review, or test Python with explicit data and resource boundaries, compatible typing and packaging, safe dynamic behavior, dependency checks, and project-first quality gates. Use for .py files and Python package, build, or test work.
-compatibility: Requires the coding skill and the Python interpreters, environment, package tooling, and analysis tools selected by the project.
+compatibility: Requires the Python interpreters, environment, package tooling, and analysis tools selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,14 +9,6 @@ metadata:
 ---
 
 # Python coding
-
-Apply the generic `coding` workflow, then apply the Python-specific rules in this skill.
-
-## Load the dependency
-
-Locate the advertised `coding` skill by exact name and path. If it is not already loaded, read its `SKILL.md` before continuing.
-
-If `coding` is unavailable, stop and ask the human to install or expose it. Do not install it automatically, copy its instructions into this skill, or assume its contents from memory.
 
 ## Follow project and language guidance
 

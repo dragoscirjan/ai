@@ -1,6 +1,6 @@
 # POSIX shell coding
 
-`coding-sh` adds portable POSIX shell guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to `.sh` files and shell fragments that must run under a project-selected POSIX-compatible `sh`.
+`coding-sh` provides portable POSIX shell guidance independently. It applies to `.sh` files and shell fragments that must run under a project-selected POSIX-compatible `sh`.
 
 ## Sources
 
@@ -22,10 +22,6 @@ When the project has no configured choice, the skill recommends:
 Shell has no universal dependency-vulnerability audit. The agent reports that category as unsupported when no package or image audit applies.
 
 Existing project configuration takes precedence. The agent must not install or reconfigure shells, utilities, formatters, linters, or tests without human approval.
-
-## Dependency contract
-
-`coding-sh` requires `coding`. The agent resolves it through the active harness's advertised skill names and paths, loads it first, and stops when it is unavailable. The skill does not rely on a harness-specific Skill tool.
 
 ## Invocation
 

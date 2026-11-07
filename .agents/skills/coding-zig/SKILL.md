@@ -1,7 +1,7 @@
 ---
 name: coding-zig
 description: Write, refactor, review, or test Zig with explicit allocation and ownership, checked low-level operations, complete cleanup and error paths, compiler-version compatibility, and project-first quality gates. Use for .zig files and Zig build or package work.
-compatibility: Requires the coding skill and the Zig compiler, targets, build configuration, and analysis tools selected by the project.
+compatibility: Requires the Zig compiler, targets, build configuration, and analysis tools selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,14 +9,6 @@ metadata:
 ---
 
 # Zig coding
-
-Apply the generic `coding` workflow, then apply the Zig-specific rules in this skill.
-
-## Load the dependency
-
-Locate the advertised `coding` skill by exact name and path. If it is not already loaded, read its `SKILL.md` before continuing.
-
-If `coding` is unavailable, stop and ask the human to install or expose it. Do not install it automatically, copy its instructions into this skill, or assume its contents from memory.
 
 ## Follow the project toolchain and guidance
 

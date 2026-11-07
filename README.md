@@ -46,6 +46,12 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`sync-agent-assets`](.agents/skills/sync-agent-assets/SKILL.md) | Initialize or update project instructions and skills with project detection, grilling, dependency closure, and conflict-safe managed state. |
 | [`unslop`](.agents/skills/unslop/SKILL.md) | Remove common AI writing patterns from an existing draft. |
 
+## Independent skills and compositions
+
+Leaf skills do not load other skill instructions. Select combinations explicitly, or use a thin composition such as `grill-me`, which declares `require: ["grilling"]`. Project instructions resolve requirements before applying the composition; its body defines the workflow.
+
+`require` is a project extension, not a native harness loader or standard Agent Skills field. External Skills CLI commands do not automatically install its requirements. See [the declaration and compatibility contract](CONTRIBUTING.md#independent-skills-and-explicit-composition). Shared helper-code dependencies remain distinct.
+
 ## Use the skills
 
 Pi and OpenCode discover project skills from `.agents/skills/`. Claude Code discovers the same canonical skills through relative links under `.claude/skills/` and loads the shared instruction graph through [`CLAUDE.md`](CLAUDE.md). Claude Code support requires a Git checkout that preserves symbolic links.

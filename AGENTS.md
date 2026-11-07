@@ -13,6 +13,7 @@ Load only the instructions required for the current phase. When several rows mat
 | Read-only questions, inspection, comparison, or research | No deferred project document is required unless the workflow needs repository identity; then read and follow `CONTRIBUTING.md`. |
 | Before planning or performing a repository architecture, design, implementation, documentation, configuration, policy, or publication change | Read and follow `CONTRIBUTING.md`. |
 | Before any repository mutation | Read and follow `.agents/skills/isolated-workspace/SKILL.md`. |
+| Before designing, changing, testing, or reviewing source code | Read `coding`, then the applicable advertised language and extension skills, in that order. |
 | Before delegating work to child agents | Read and follow `.agents/skills/subagent-orchestration/SKILL.md`. |
 | Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
 | Before auditing or removing old workspaces | Read and follow `.agents/skills/cleanup-workspaces/SKILL.md`. |
@@ -20,7 +21,7 @@ Load only the instructions required for the current phase. When several rows mat
 
 Stop before the gated phase if a required document or skill is unavailable. Do not recreate missing instructions from memory.
 
-Use skill frontmatter descriptions to select optional task-specific skills. Do not preload every skill.
+Use skill frontmatter descriptions to select task-specific skills; do not preload every skill. Before applying a selected skill, inspect its frontmatter and resolve its `require` skills recursively in array order, then apply the selected skill. Stop on missing requirements or cycles; do not install missing skills without approval. Requirements load instructions, not authority to act. The declaration format is defined in `CONTRIBUTING.md`.
 
 ## Isolated workspace
 

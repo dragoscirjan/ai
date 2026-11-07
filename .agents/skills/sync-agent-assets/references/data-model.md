@@ -17,16 +17,17 @@ Each skill entry contains:
 - `name`: exact skill directory and frontmatter name
 - `category`: stable functional group
 - `selection`: `manager`, `bootstrap`, `core`, `detected`, `wrapper`, `optional`, or `initializer`
-- `dependencies`: required skill names
+- `dependencies`: installation dependencies required by shared helper code; not skill-instruction loaders
+- `SKILL.md` frontmatter `require`: the sole authored list of prompt requirements, using the inline array convention in `CONTRIBUTING.md`; runtime catalog output exposes it as `require`
 - `safety`: invocation risk summary
-- `harnesses`: validated harnesses; this manager supports `pi`, `opencode`, and `claude-code`
+- `harnesses`: supported target harnesses (`pi`, `opencode`, `claude-code`), not proof of live validation of every extension
 - `requires`: optional harness capabilities
 - `provenance`: `local` by default or an explicit external provenance class
 - `signals.files`: project files or manifests that suggest applicability
 - `signals.extensions`: source extensions that suggest applicability
 - `signals.askWithoutSignals`: ask about the skill even when no stack signal exists
 
-The helper rejects duplicate names, invalid names, missing dependencies, dependency cycles, profile references to missing skills, and catalog coverage that differs from source skill directories.
+The helper reads requirements from a complete source checkout. It rejects malformed declarations, duplicate or invalid names, missing targets, combined dependency cycles, invalid profile references, and catalog coverage mismatches. Prompt requirements are not duplicated in authored catalog entries. Runtime output keeps their array order; installation closure is a deduplicated sorted set, not instruction load order. The `inspect --catalog` option expects the standard source catalog layout or an explicit `--source-root`.
 
 ## Selection file
 
@@ -72,7 +73,7 @@ Create the selection file outside the target repository. Its schema is [`../asse
 Rules:
 
 - `selectedSkills` and `rootFiles` are required arrays.
-- The helper adds the `manager`, `bootstrap`, and `coreInstructions` profiles plus their complete dependency closure to `selectedSkills`.
+- The helper adds the `manager`, `bootstrap`, and `coreInstructions` policy bundles plus their combined code-dependency and instruction-requirement closure to `selectedSkills`. These project profiles are separate from a leaf skill's dependencies; selection does not authorize instruction loading or installation by itself.
 - `declinedSkills` entries require `name` and `reason` strings.
 - `adaptations` records concise, non-sensitive project decisions.
 - `retainedFiles` records previously managed files that remain unchanged until deletion, migration, or re-selection is approved.

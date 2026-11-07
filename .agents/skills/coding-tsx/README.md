@@ -1,6 +1,6 @@
 # TSX coding
 
-`coding-tsx` adds `.tsx` typing, transform, rendering, security, and accessibility guidance to [`coding-ts`](../coding-ts/SKILL.md) and the generic [`coding`](../coding/SKILL.md) workflow.
+`coding-tsx` provides `.tsx` typing, transform, rendering, security, and accessibility guidance independently.
 
 The skill does not assume React. It follows the TypeScript JSX mode, import source, framework, renderer, and test utilities configured by the project.
 
@@ -18,10 +18,6 @@ References:
 
 - [TypeScript JSX documentation](https://www.typescriptlang.org/docs/handbook/jsx.html)
 - [WCAG overview](https://www.w3.org/WAI/standards-guidelines/wcag/)
-
-## Dependencies
-
-Load `coding`, `coding-ts`, and `coding-tsx` in that order. All are sibling skills. Stop when a dependency is unavailable; do not install it automatically.
 
 ## Invocation
 

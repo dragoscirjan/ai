@@ -10,14 +10,14 @@ metadata:
 
 # Sync agent assets
 
-Initialize and update project instructions and skills from `dragoscirjan/ai`. Preserve target-project ownership. Never turn the target into a blind mirror of this repository.
+Initialize or update instructions and skills from `dragoscirjan/ai`. Preserve target ownership rather than blindly mirroring upstream.
 
-Use one workflow for both modes:
+- **Init:** no `.agents/ai-assets.lock.json`.
+- **Update:** that managed lock exists.
 
-- **init**: `.agents/ai-assets.lock.json` is absent.
-- **update**: `.agents/ai-assets.lock.json` exists.
+## Start temporarily
 
-The first run should be temporary, not a project-local bootstrap mutation. Skills CLI 1.7.4 cannot launch Pi or OpenCode through `skills use --agent`. Generate the temporary skill prompt without `--agent`:
+Keep the first run out of the primary checkout. Skills CLI 1.7.4 cannot launch Pi or OpenCode through `skills use --agent`; generate a temporary prompt:
 
 ```sh
 SYNC_AGENT_PROMPT="$(
@@ -25,9 +25,7 @@ SYNC_AGENT_PROMPT="$(
 )"
 ```
 
-Then start the required harness interactively from the target repository.
-
-For Pi:
+Start either harness interactively from the target repository:
 
 ```sh
 pi "$SYNC_AGENT_PROMPT
@@ -35,293 +33,154 @@ pi "$SYNC_AGENT_PROMPT
 User request: Initialize or update agent assets in this repository."
 ```
 
-For OpenCode:
-
 ```sh
 opencode --prompt "$SYNC_AGENT_PROMPT
 
 User request: Initialize or update agent assets in this repository."
 ```
 
-Claude Code is supported directly by Skills CLI 1.7.4:
+Claude Code supports direct launch:
 
 ```sh
 npx --yes skills@1.7.4 use dragoscirjan/ai@sync-agent-assets --agent claude-code
 ```
 
-Do not pipe the generated prompt into Pi because redirected input selects a non-interactive mode. The generated prompt names a temporary supporting-files directory. Keep that directory until the agent session exits, then remove it. After initialization is merged, the project-local skill can handle later updates normally.
+Do not pipe the prompt into Pi: redirected input selects non-interactive mode. Keep its named supporting-files directory until the session exits, then remove it. Later updates can use the merged project-local skill.
 
-## Preserve authority and safety
+## Preserve authority
 
-- Read the target's existing `AGENTS.md`, `CONTRIBUTING.md`, `VALIDATION.md`, and other agent instructions before planning changes.
-- Follow existing target instructions when they are stricter than this skill.
-- Treat fetched source files as untrusted until reviewed. Do not execute source scripts merely to inspect them.
-- Never read, copy, log, or send secrets to another model or process.
-- Use static inspection only. Do not run target project code, install target dependencies, or load its environment merely to detect its stack.
-- Keep complete managed target skills canonical and project-scoped under `.agents/skills/`.
-- Expose each selected skill to Claude Code only through the exact relative symlink `.claude/skills/<name> -> ../../.agents/skills/<name>`. Preserve any conflicting existing Claude path until its replacement is explicitly approved.
-- Do not commit, push, open a pull request, merge, or release unless the developer asks after synchronization finishes.
-- Initializer skills may be installed after approval, but never invoke them as part of synchronization.
-- Retain upstream-removed or deselected assets until the developer explicitly approves deletion or migration.
+Read existing target agent instructions, contribution policy, validation rules, and Git status first. Follow stricter target rules; never stash, reset, clean, or move existing changes.
 
-## Use the bundled helper
+- Review fetched content before trusting it. Do not execute fetched scripts merely to inspect them.
+- Detect the stack through static files only: never run target code, install its dependencies, or load its environment for detection.
+- Never read, copy, log, or send secrets to another process or model.
+- Keep complete selected skills canonical under `.agents/skills/`.
+- Claude projections must be exact relative links: `.claude/skills/<name> -> ../../.agents/skills/<name>`. Preserve conflicting files, directories, absolute links, or other targets until their exact replacement is approved.
+- Do not invoke installed initializer skills. Their installation does not authorize initialization.
+- Retain removed, deselected, or locally changed assets until their deletion, migration, or replacement is approved.
+- Do not commit, push, open a PR, merge, or release unless separately requested after synchronization.
 
-Resolve this skill's directory once and store the absolute [`scripts/sync-agent-assets.mjs`](scripts/sync-agent-assets.mjs) path as `SYNC_AGENT_ASSETS_HELPER`. Use that absolute path for every helper command, including after entering the isolated workspace. Read [`references/data-model.md`](references/data-model.md) before creating a selection file or interpreting lock state.
+## Prepare the helper and pinned source
 
-The helper:
+Set `SYNC_AGENT_ASSETS_HELPER` to the absolute path of this skill's [helper](scripts/sync-agent-assets.mjs); retain that path after changing workspaces. In the examples, `TARGET_ROOT` is the actual target Git root, `WORKSPACE_ROOT` its approved isolated checkout, and source variables come from the fetch result—not guesses.
 
-- performs static project inspection
-- validates the skill catalog
-- fetches an exact source revision with argument-array Git calls
-- compares managed file hashes
-- creates an approval-bound lock-file plan
-- never copies, edits, installs, deletes, commits, or publishes project assets
-
-Inspect its interface and verify local prerequisites first:
+Inspect the interface and prerequisites:
 
 ```sh
 node "$SYNC_AGENT_ASSETS_HELPER" --help
 node "$SYNC_AGENT_ASSETS_HELPER" preflight
-```
-
-The source fetch verifies network access. Stop if Git, Bun, network access, or Node.js 22.20 or newer is unavailable. Do not install or reconfigure prerequisites without explicit approval.
-
-## Phase 1: inspect without mutation
-
-1. Locate the exact target Git root.
-2. Read its existing agent instructions and repository policies.
-3. Inspect `git status` without cleaning, stashing, resetting, or moving existing changes.
-4. Run static inspection:
-
-```sh
-node "$SYNC_AGENT_ASSETS_HELPER" inspect --root /absolute/target
-```
-
-5. Record the detected mode, current instructions, installed skills, manifests, extensions, recommended skill closure, ambiguous skills, and existing managed-file status.
-6. If existing target instructions define another workspace or change workflow, follow that workflow. Do not impose this repository's Git branch names, base branch, or publication policy.
-
-## Phase 2: fetch and pin the source
-
-Fetch the default update candidate from upstream `main`, or use a developer-supplied ref:
-
-```sh
 node "$SYNC_AGENT_ASSETS_HELPER" fetch --ref main
 ```
 
-Keep the returned `sourceRoot`, `tempRoot`, and exact `commit`. Do not store temporary absolute paths in reusable files or lock data.
+Use a developer-supplied ref instead of `main` when requested. Keep the returned sourceRoot, tempRoot, and exact commit. Stop if Git, Bun, network access, or Node.js 22.20+ is missing; do not install or reconfigure prerequisites without approval.
 
-Validate the fetched catalog and complete source skill inventory:
+The helper performs static inspection, source fetching, hash comparison, and approval-bound lock recording. It does not copy, install, edit, delete, commit, or publish target assets.
 
-```sh
-node "$SYNC_AGENT_ASSETS_HELPER" catalog --source-root SOURCE_ROOT
-```
-
-Stop on a missing catalog entry, stale catalog entry, dependency cycle, invalid name, or absent dependency. An uncatalogued new skill is not safe to install automatically.
-
-## Phase 3: establish the isolated workspace
-
-The first managed mutation must occur in an isolated workspace.
-
-1. Review the fetched `.agents/skills/isolated-workspace/SKILL.md` and its complete supporting directory.
-2. If the target already supplies an approved workspace mechanism, use it instead.
-3. Otherwise, use the fetched helper with the target's VCS, base, and branch decisions. Do not invent those decisions when the target policy or developer has not supplied them.
-4. Run its plan mode and present the exact workspace path, base commit, branch, action, commands, and plan ID.
-5. Wait for approval.
-6. Apply only with the approved `--apply --confirm --plan-id` arguments.
-7. Run every later command and edit from the isolated workspace.
-
-The fetched workspace helper requires Bun. Do not recreate its commands inside this skill.
-
-## Phase 4: install the bootstrap skills
-
-Before deep project classification, present a small bootstrap installation plan. The first project-scoped skill installation must contain only the grilling pair:
+Read the [data model](references/data-model.md) before interpreting lock state or creating selection JSON. Validate the complete fetched source:
 
 ```sh
-npx skills@1.7.4 add SOURCE_ROOT \
-  --skill grilling \
-  --skill grill-me \
-  --agent pi \
-  --agent opencode \
-  --agent claude-code \
-  --yes
+node "$SYNC_AGENT_ASSETS_HELPER" catalog --source-root "$SOURCE_ROOT"
+node "$SYNC_AGENT_ASSETS_HELPER" inspect --root "$TARGET_ROOT" \
+  --source-root "$SOURCE_ROOT" \
+  --catalog "$SOURCE_ROOT/.agents/skills/sync-agent-assets/assets/skill-catalog.json"
 ```
 
-Then install `isolated-workspace` from the same pinned source:
+Record mode, current instructions, installed skills, manifests, extensions, recommendations, ambiguities, and managed status. The complete source is needed to read frontmatter requirements. Stop on invalid names, malformed requirements, missing targets, cycles, or catalog coverage drift; never auto-install an uncatalogued skill.
 
-```sh
-npx skills@1.7.4 add SOURCE_ROOT \
-  --skill isolated-workspace \
-  --agent pi \
-  --agent opencode \
-  --agent claude-code \
-  --yes
-```
+## Require an approved workspace
 
-These commands may create or update `skills-lock.json`. Include that file in the plan and final review.
+Before the first managed mutation, require an isolated workspace established through the target's owner-approved procedure. The project or user supplies workspace creation; this skill does not load another skill to choose it.
 
-Before each installation, inspect every selected `.claude/skills/<name>` path. Continue automatically only when it is absent or already the exact approved relative symlink. Treat a file, directory, absolute symlink, or differently targeted symlink as a conflict. Preserve it until the developer approves its exact replacement.
+Confirm VCS, base commit, branch/bookmark, absolute path, status, and write ownership. Missing decisions or approval block mutation. Do not impose this source repository's branch names, base, or publication policy. Run every later command and edit from the approved workspace; never recreate a missing workspace procedure or mutate the primary checkout.
 
-Reload project skill discovery when the harness supports it. In Pi, stop and ask the developer to invoke `/skill:grill-me`, because `grill-me` disables model invocation. In OpenCode, explicitly load `grill-me` by skill ID. In Claude Code, ask the developer to invoke `/grill-me`; Claude Code supports `disable-model-invocation` and project skills from `.claude/skills/`. If the harness cannot invoke or load `grill-me`, load and follow `grilling` directly before continuing. Do not treat reading the `grill-me` wrapper alone as completing the interview.
+## Select assets and resolve decisions
 
-## Phase 5: inspect deeply and grill decisions
+Re-run inspection with the pinned catalog from that workspace. Classify by catalog selection:
 
-Re-run static inspection from the isolated workspace. Use the catalog at [`assets/skill-catalog.json`](assets/skill-catalog.json) to classify skills:
+- **manager/bootstrap/core:** include the managed policy bundle and explain why.
+- **detected/wrapper:** include on strong project evidence, with code and instruction requirement closure.
+- **optional/initializer:** ask when relevant or marked for consideration.
+- **New but catalogued:** apply its selection mode; never install merely because it is new.
+- **Uncatalogued:** stop and report the defect.
 
-- **manager, bootstrap, core**: include automatically and explain why
-- **detected, wrapper**: include when the catalog has a strong project signal; add their complete dependency closure
-- **optional, initializer**: grill the developer when relevant or marked for unconditional consideration
-- **new to the target lock but catalogued**: use the current metadata, then auto-select or grill by its selection mode
-- **uncatalogued**: stop; report the catalog defect and do not install the skill
+Ask for decisions, not facts available from files or Git. Resolve ambiguous language/runtime evidence, initializer usefulness, harness support, instruction ownership/conflicts, local edits, upstream removals/renames, and optional skill choices. Record declined skills and reasons; reopen settled choices only when evidence changes. A deeper interview can be selected by the caller; it is not an implicit dependency here.
 
-Use `grill-me` to resolve every open decision, including:
+Do not install interview or workspace skills merely to perform this planning. The approved final selection may still include them through managed project profiles.
 
-- ambiguous language or runtime evidence
-- initializer usefulness
-- harness-specific requirements
-- existing instruction conflicts
-- local modifications to managed files
-- upstream removals or renames
-- optional communication, review, and workflow skills
+## Obtain the exact instruction adaptation
 
-Do not ask the developer for facts available from files or version-control metadata. Ask for decisions and preferences.
+Manage the root closure `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, and `VALIDATION.md`.
 
-Record declined skills and reasons so later updates do not repeat settled questions unless the project evidence or catalog entry changes.
+Require an approved instruction-graph proposal through the target's workflow before writing these files. Preserve target rules and owner authority; merge rather than overwrite. Derive VCS, base, prefixes, quality commands, identity, and publication policy from the target. Remove source-specific identity and personal paths. Include only routes whose requirements will exist after installation; stop on missing instructions, unresolved conflicts, or ambiguous ownership.
 
-## Phase 6: adapt the instruction graph
+Keep `CLAUDE.md` as `@AGENTS.md` when no Claude-specific rules exist. Otherwise preserve those rules and place the import first so the shared graph is loaded.
 
-The managed root instruction closure is:
+Show complete proposed contents or precise diffs for each root file and wait for explicit approval. Neither skill selection nor a general synchronization request approves instruction changes.
 
-- `AGENTS.md`
-- `CLAUDE.md`
-- `CONTRIBUTING.md`
-- `VALIDATION.md`
+## Plan and apply synchronization
 
-Keep `CLAUDE.md` as the minimal `@AGENTS.md` import unless the target already has Claude-specific instructions. In that case, preserve them and place the import before the Claude-specific content. This guarantees that Claude Code loads the shared instruction graph even when a repository-level `CLAUDE.md` would otherwise take precedence over `AGENTS.md`.
-
-Install `instruction-maintenance` as part of the approved skill set before mutating these files. Follow that skill to audit the target instruction graph and produce an exact proposal.
-
-Adapt rather than copy blindly:
-
-- preserve existing target rules and owner authority
-- merge approved routes into an existing `AGENTS.md`
-- derive VCS, base branch, workspace prefix, validation commands, and publication rules from the target
-- remove source-repository-specific identity and absolute paths
-- include only routes whose dependencies will exist after the approved installation
-- stop on unresolved conflicts, missing mandatory instructions, or ambiguous ownership
-
-For each managed root file, show the complete proposed content or a precise diff. Wait for explicit approval of that exact proposal before editing.
-
-## Phase 7: plan the complete synchronization
-
-For update mode, compare the pinned candidate with the current lock:
+For updates, compare the pinned candidate to the lock:
 
 ```sh
 node "$SYNC_AGENT_ASSETS_HELPER" compare \
-  --root /absolute/worktree \
-  --source-root SOURCE_ROOT
+  --root "$WORKSPACE_ROOT" --source-root "$SOURCE_ROOT"
 ```
 
-Classify each managed file:
+Handle states without discarding local work:
 
-- `unchanged`: no action
-- `upstream-changed-clean`: safe skill update candidate
-- `adaptation-required`: upstream instruction changed; regenerate and approve the target adaptation
-- `local-modified`: preserve and ask whether it becomes the new target adaptation
-- `conflict`: upstream and target changed; grill and produce an exact merge proposal
-- `missing`: ask whether to restore or stop managing it
-- `upstream-removed-retain`: retain until deletion or migration is approved
-- `retained-no-update`: preserve a previously approved retained file without updating it
+- `unchanged`: no action.
+- `upstream-changed-clean`: update candidate, not automatic permission.
+- `adaptation-required`: regenerate and approve the instruction adaptation.
+- `local-modified` or `conflict`: preserve and obtain an exact adaptation/merge decision.
+- `missing`: ask whether to restore or stop managing it.
+- `upstream-removed-retain` or `retained-no-update`: retain until an explicit migration, deletion, or re-selection is approved.
 
-Present one complete plan containing:
+Present one plan covering mode, pinned commit, workspace, exact root diffs, selected/declined/new/retained/removed assets, combined dependency closure, complete skill directories, every Claude projection, both lockfiles, mutation commands, validation, conflicts, and any required manager rerun.
 
-- detected mode and pinned source commit
-- isolated workspace identity
-- exact root instruction diffs or contents
-- selected, declined, automatically included, new, retained, and removed skills
-- dependency closure
-- every complete skill directory to install or update
-- every Claude Code projection to create, preserve, or replace
-- `skills-lock.json` effects
-- `.agents/ai-assets.lock.json` effects
-- all commands that will mutate files
-- validation commands
-- conflicts and decisions
-- whether `sync-agent-assets` itself changed and a rerun will be required
+Wait for approval. Changed evidence, source commit, selection, dependency closure, conflicts, or content invalidates the plan and requires renewed approval.
 
-Wait for explicit approval. Changed evidence, selected skills, dependencies, conflicts, source commit, or file content requires a new plan and approval.
+After approval:
 
-## Phase 8: apply the approved plan
+1. Write only approved root adaptations.
+2. Inspect every destination Claude path before installation; preserve conflicts until approved replacement.
+3. Install selected skills and their complete dependencies atomically with `npx skills@1.7.4 add "$SOURCE_ROOT"`, using repeated `--skill NAME`, `--agent pi --agent opencode --agent claude-code --yes`. Do not use `--copy`; retain canonical directories and relative projections.
+4. Do not pass rejected or removed skills to the installer. Preserve approved retained paths and reasons in `retainedFiles`.
+5. Update this manager last. If its workflow, helper, catalog, or lock schema changed, stop and require a fresh run before relying on the new version.
 
-Apply only the approved changes.
+Skills CLI owns `skills-lock.json`; do not hand-edit it. This workflow owns `.agents/ai-assets.lock.json`.
 
-1. Write the approved root instruction adaptations.
-2. Install or update selected skills from `SOURCE_ROOT` with repeated `--skill NAME`, then `--agent pi`, `--agent opencode`, `--agent claude-code`, and `--yes` arguments in one command. Do not pass `--copy`; Skills CLI must keep canonical directories under `.agents/skills/` and create Claude Code's relative symlink projections.
-3. Install dependencies atomically with their selected skills.
-4. Do not pass removed or rejected skills to the Skills CLI.
-5. Keep locally modified, deselected, or upstream-removed assets unchanged until their separate action is approved. Record every retained path and reason in `retainedFiles`.
-6. Update `sync-agent-assets` last.
-7. If the manager workflow, helper, catalog, or lock schema changed, stop after installation and require a fresh run before making decisions that depend on the new version.
+## Record and verify
 
-The standard Skills CLI owns `skills-lock.json`. This skill owns `.agents/ai-assets.lock.json`. Do not hand-edit `skills-lock.json`.
+Create selection JSON outside the target with selected skills, declined reasons, root files, adaptations, and approved retained paths/reasons. Never include credentials or personal/temporary absolute paths.
 
-## Phase 9: record managed state
-
-Create a temporary selection JSON file outside the target repository. It must list selected skills, declined skills with reasons, managed root files, adaptation notes, and every approved retained file with its reason. Never put credentials or absolute personal paths in it.
-
-Generate a non-mutating record plan:
+Generate a read-only record plan:
 
 ```sh
 node "$SYNC_AGENT_ASSETS_HELPER" record \
-  --root /absolute/worktree \
-  --source-root SOURCE_ROOT \
-  --source-commit SOURCE_COMMIT \
-  --repository SOURCE_REPOSITORY \
-  --ref SOURCE_REF \
-  --selection /temporary/selection.json
+  --root "$WORKSPACE_ROOT" --source-root "$SOURCE_ROOT" \
+  --source-commit "$SOURCE_COMMIT" --repository "$SOURCE_REPOSITORY" \
+  --ref "$SOURCE_REF" --selection "$SELECTION_FILE"
 ```
 
-Review the selected skills, declined skills, root files, managed-file count, complete lock content, and plan ID. After approval, rebuild and apply the exact plan:
+Review selection, roots, file count, complete lock, and plan ID. Rebuild the same command with `--apply --confirm --plan-id PLAN_ID` only after approval. It rejects source/target structural differences, dirty or changed source commits, unsafe or symlinked managed paths, missing files, stale plans, and invalid catalog/dependency state.
+
+Run target validation and verify:
+
+- `git diff --check` and only approved changes.
+- Skill directory/frontmatter names, complete supporting files, and installed dependency closure.
+- Pi/OpenCode discovery and exact Claude projections; distinguish static checks from live discovery.
+- The shared import precedes Claude-specific instructions.
+- Installer lock consistency and no secrets/personal paths in the managed lock.
+- Managed status is clean immediately after recording:
 
 ```sh
-node "$SYNC_AGENT_ASSETS_HELPER" record \
-  --root /absolute/worktree \
-  --source-root SOURCE_ROOT \
-  --source-commit SOURCE_COMMIT \
-  --repository SOURCE_REPOSITORY \
-  --ref SOURCE_REF \
-  --selection /temporary/selection.json \
-  --apply \
-  --confirm \
-  --plan-id PLAN_ID
+node "$SYNC_AGENT_ASSETS_HELPER" status --root "$WORKSPACE_ROOT"
 ```
 
-The helper rejects structural differences between pinned source skills and installed target skills, source-commit changes, dirty source checkouts, unsafe paths, symlinked managed paths, stale plan IDs, missing files, invalid dependencies, and catalog drift.
+Report changed/installed/retained assets, source commit, actual checks and unrun limits, conflicts, rerun needs, and owner actions. Leave the workspace for the developer; do not publish automatically.
 
-## Phase 10: validate and report
-
-Run all target validation required by its instructions. Also verify:
-
-- `git diff --check`
-- only approved files changed
-- every skill directory matches its frontmatter name
-- all selected dependencies exist
-- complete skill supporting files were installed
-- Pi discovers every selected project skill
-- OpenCode discovers every selected project skill
-- Claude Code discovers every selected project skill through an exact relative `.claude/skills/` symlink
-- `CLAUDE.md` imports `AGENTS.md` before any Claude-specific instructions
-- `skills-lock.json` reflects Skills CLI installation
-- `.agents/ai-assets.lock.json` contains no absolute paths or secrets
-- managed files report clean immediately after recording:
+Clean the fetched temporary checkout only after validation and recording:
 
 ```sh
-node "$SYNC_AGENT_ASSETS_HELPER" status --root /absolute/worktree
-```
-
-Report changed files, installed and retained skills, source commit, validation results, conflicts, unrun checks, rerun requirements, and remaining owner actions. Leave the isolated workspace and changes for the developer. Do not publish them automatically.
-
-Clean the fetched temporary checkout only after validation and state recording:
-
-```sh
-node "$SYNC_AGENT_ASSETS_HELPER" cleanup --source-root SOURCE_ROOT
+node "$SYNC_AGENT_ASSETS_HELPER" cleanup --source-root "$SOURCE_ROOT"
 ```

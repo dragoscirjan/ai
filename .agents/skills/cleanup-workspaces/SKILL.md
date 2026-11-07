@@ -15,9 +15,9 @@ Audit isolated workspaces with deterministic TypeScript automation. Show the com
 
 Ordinary cleanup requires explicit owner authorization. For one current-task temporary lane created under the approved `subagent-orchestration` workflow, the owner's initial lane authorization permits the parent to confirm the exact lane plan without another owner round trip. It does not authorize another task, ordinary cleanup, or a broader target.
 
-Run ordinary cleanup from the primary checkout or another workspace that will survive. Run exact lane cleanup from the surviving canonical sibling workspace. Read the nearest `AGENTS.md` and the `isolated-workspace` skill first.
+Run ordinary cleanup from the primary checkout or another workspace that will survive. Run exact lane cleanup from the surviving canonical sibling workspace. Read the applicable project instructions and workspace configuration first.
 
-This skill depends on `isolated-workspace` and imports its advertised `scripts/lib.ts` helper through the sibling skill path. If that skill or helper is unavailable, stop. Do not install a missing dependency without owner approval and do not recreate it from memory.
+The executable imports `../isolated-workspace/scripts/lib.ts`; that helper must be installed, but its skill instructions need not be loaded. Stop if the helper is missing. Do not install it without owner approval or recreate it from memory.
 
 ## Select the VCS and base
 

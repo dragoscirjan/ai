@@ -1,7 +1,7 @@
 ---
 name: subagent-orchestration
 description: Bound and coordinate child-agent workers, read-only reviewers, isolated temporary lanes, integration, validation, and lane cleanup. Use before delegating any task to child agents.
-compatibility: Requires a harness with child-agent support. Writable parallel lanes also require the isolated-workspace and cleanup-workspaces skills.
+compatibility: Requires a harness with child-agent support; writable parallel lanes also need owner-approved workspace creation and exact-lane cleanup procedures.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -81,7 +81,7 @@ A writable child receives one explicit write lease:
 
 A worker must request parent permission before editing an unassigned or already claimed file. The parent either changes the lease explicitly or keeps the file parent-owned.
 
-When more than one writer is active, use the existing `isolated-workspace` automation for every temporary lane. Name each lane ref `${CANONICAL_REF}--lane-${LANE_KEY}` with a one-component lane key; its workspace leaf is the basename of that ref. The `--lane-` marker is reserved, so the canonical ref must not contain it. Pass `CANONICAL_REF` exactly through `--base`; do not default a lane to the repository trunk or base a lane on another lane. Preserve one writer per workspace.
+When more than one writer is active, create every temporary lane through an owner-approved workspace procedure. Stop if none is available. Name each lane ref `${CANONICAL_REF}--lane-${LANE_KEY}` with a one-component lane key; its workspace leaf is that ref's basename. Reserve `--lane-` for lanes, never canonical refs. Pass the canonical ref explicitly as the base; never default to trunk or base one lane on another. Preserve one writer per workspace.
 
 ## Maintain one canonical pull-request workspace
 
@@ -101,22 +101,13 @@ Do not squash or copy changes in a way that discards accepted lane ancestry. Lat
 
 A complex mutation normally receives one or two fresh-context, read-only reviewers after integration. Reviewer limits are task-wide, and reviewers do not edit, commit, or delegate.
 
-When the `code-review` skill is invoked, preserve its existing two-axis behavior: one Standards review and one Spec review, kept separate and aggregated as that skill requires. Those child launches count against the two-reviewer limit.
+For a requested two-axis review, keep Standards and Spec reviewers separate and aggregate their results without collapsing the axes. Both launches count against the two-reviewer limit.
 
 The parent evaluates findings, applies or delegates approved fixes within the remaining worker limit, reruns relevant validation, and makes final acceptance decisions.
 
 ## Clean temporary lanes
 
-Remove every integrated temporary lane before presenting the pull request. Use `cleanup-workspaces` exact lane mode from the surviving canonical workspace:
-
-```sh
-bun <cleanup-skill-directory>/scripts/cleanup.ts \
-  --vcs git \
-  --lane CANONICAL_LEAF--lane-LANE_KEY \
-  --base CANONICAL_REF
-```
-
-Use `--vcs jj` for Jujutsu. The cleanup caller must be the canonical workspace, and the named target ref must be the direct `${CANONICAL_REF}--lane-${LANE_KEY}` lane whose workspace leaf was supplied. Review the bound plan, then apply it with `--apply --confirm --plan-id PLAN_ID` as documented by that skill.
+Remove every integrated temporary lane before presenting the pull request. Use an owner-approved exact-lane cleanup procedure from the surviving canonical workspace; stop if none is available. The target ref must be the direct `${CANONICAL_REF}--lane-${LANE_KEY}` lane, with the matching workspace leaf. Review its bound plan before applying with confirmation and the matching plan ID.
 
 For a temporary lane created for the current task under this approved orchestration workflow, the owner's initial authorization to use temporary lanes also authorizes the parent to confirm that exact cleanup plan without another owner round trip. This exception does not authorize ordinary cleanup, cleanup of another task, or cleanup of an unrelated workspace.
 

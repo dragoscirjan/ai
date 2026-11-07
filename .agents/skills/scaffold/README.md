@@ -1,6 +1,6 @@
 # Scaffold
 
-[Scaffold](SKILL.md) creates minimal source skeleton files for an approved feature while preserving existing implementations. It follows project conventions and hands off to `coding` and applicable language guidance rather than defining another coding standard. It is independently usable and can accompany a separately approved `debloat` task.
+[Scaffold](SKILL.md) creates minimal approved source skeletons without replacing working implementations. It applies project source conventions and can accompany a separately approved simplification task, but loads no other skills.
 
 The result belongs in an approved isolated workspace and, when publishing is authorized, a scaffold-only PR. Loading the skill does not authorize publication. No DSL, generator, runtime, or framework is required.
 

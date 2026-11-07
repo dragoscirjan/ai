@@ -1,7 +1,7 @@
 ---
 name: coding-sh
 description: Write, refactor, review, or test portable POSIX shell with explicit interpreter constraints, safe quoting and expansion, reliable status and cleanup handling, command-injection defenses, and project-first quality gates. Use for .sh files and shell fragments that must run under a POSIX-compatible sh.
-compatibility: Requires the coding skill and the POSIX-compatible shell, operating systems, utilities, and analysis tools selected by the project.
+compatibility: Requires the POSIX-compatible shell, operating systems, utilities, and analysis tools selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,14 +9,6 @@ metadata:
 ---
 
 # POSIX shell coding
-
-Apply the generic `coding` workflow, then apply the POSIX shell-specific rules in this skill.
-
-## Load the dependency
-
-Locate the advertised `coding` skill by exact name and path. If it is not already loaded, read its `SKILL.md` before continuing.
-
-If `coding` is unavailable, stop and ask the human to install or expose it. Do not install it automatically, copy its instructions into this skill, or assume its contents from memory.
 
 ## Confirm the portability contract
 

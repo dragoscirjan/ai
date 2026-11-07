@@ -1,6 +1,6 @@
 # Swift coding
 
-`coding-swift` adds Swift-specific guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to `.swift` files, Swift packages, Xcode projects, platform integration, and Swift build or test work.
+`coding-swift` provides Swift-specific guidance independently. It applies to `.swift` files, Swift packages, Xcode projects, platform integration, and Swift build or test work.
 
 ## Sources
 
@@ -25,10 +25,6 @@ When the project has no configured choice, the skill recommends:
 Swift has no mature universal dependency-vulnerability audit command. The agent reports that category as unsupported when the project has no suitable service or tool.
 
 Existing project configuration takes precedence. The agent must not install or reconfigure Swift, SDKs, dependencies, Xcode settings, formatters, linters, or tests without human approval. It does not mutate `Package.resolved` or generated project files unless the approved task requires it.
-
-## Dependency contract
-
-`coding-swift` requires `coding`. The agent resolves it through the active harness's advertised skill names and paths, loads it first, and stops when it is unavailable. The skill does not rely on a harness-specific Skill tool.
 
 ## Invocation
 

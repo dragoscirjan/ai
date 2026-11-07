@@ -1,6 +1,6 @@
 # GDScript coding
 
-`coding-gdscript` adds Godot GDScript guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to `.gd` files and related scenes, resources, addons, native integration, and project behavior.
+`coding-gdscript` provides Godot GDScript guidance independently. It applies to `.gd` files and related scenes, resources, addons, native integration, and project behavior.
 
 ## Sources
 
@@ -24,10 +24,6 @@ When the project has no configured choice, the skill recommends:
 Godot addons do not have one mature universal dependency-vulnerability audit. The agent reports that category as unsupported when the project has no suitable configured tool.
 
 Existing project configuration takes precedence. The agent must not install or reconfigure Godot, addons, native extensions, test frameworks, or analysis tools without human approval.
-
-## Dependency contract
-
-`coding-gdscript` requires `coding`. The agent resolves it through the active harness's advertised skill names and paths, loads it first, and stops when it is unavailable. The skill does not rely on a harness-specific Skill tool.
 
 ## Invocation
 

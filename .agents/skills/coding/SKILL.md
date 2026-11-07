@@ -1,6 +1,6 @@
 ---
 name: coding
-description: Design, implement, refactor, review, or test code with project-first conventions, contextual engineering principles, risk-based security, behavior-focused tests, and applicable quality gates. Use for any task that writes or changes code in any language. Combine it with the matching coding language or extension skills when available.
+description: Design, implement, refactor, review, or test code with project-first conventions, contextual engineering principles, risk-based security, behavior-focused tests, and applicable quality gates. Use for code work in any language; project instructions or the user select complementary language guidance.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -20,7 +20,7 @@ Before changing code:
 1. Read the applicable project instructions.
 2. Inspect nearby code, public interfaces, tests, build files, tool configuration, and CI commands.
 3. Identify the language, runtime, deployment environment, compatibility requirements, and trust boundaries.
-4. Load the matching `coding-*` skills when the harness advertises them.
+4. Identify the task's applicable language and extension constraints.
 5. Prefer established project architecture, terminology, tools, and conventions unless they are unsafe or conflict with the task.
 
 Do not install, replace, or reconfigure development tools without human approval.

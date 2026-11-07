@@ -1,7 +1,7 @@
 ---
 name: coding-rs
 description: Write, refactor, review, or test Rust with explicit ownership, stable invariants, bounded unsafe code, compatible public APIs, supply-chain checks, and project-first quality gates. Use for .rs files, Cargo manifests, and Rust build or test work.
-compatibility: Requires the coding skill and the Rust toolchain, targets, build configuration, and analysis tools selected by the project.
+compatibility: Requires the Rust toolchain, targets, build configuration, and analysis tools selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,14 +9,6 @@ metadata:
 ---
 
 # Rust coding
-
-Apply the generic `coding` workflow, then apply the Rust-specific rules in this skill.
-
-## Load the dependency
-
-Locate the advertised `coding` skill by exact name and path. If it is not already loaded, read its `SKILL.md` before continuing.
-
-If `coding` is unavailable, stop and ask the human to install or expose it. Do not install it automatically, copy its instructions into this skill, or assume its contents from memory.
 
 ## Follow the project toolchain and guidance
 

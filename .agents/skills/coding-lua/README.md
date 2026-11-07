@@ -1,6 +1,6 @@
 # Lua coding
 
-`coding-lua` adds Lua-specific guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to Lua source, modules, native integration, and Lua or LuaJIT build and test work.
+`coding-lua` provides Lua-specific guidance independently. It applies to Lua source, modules, native integration, and Lua or LuaJIT build and test work.
 
 ## Sources
 
@@ -22,10 +22,6 @@ When the project has no configured choice, the skill recommends:
 Lua does not have one mature universal dependency-vulnerability audit. The agent reports that category as unsupported when the project has no suitable configured tool.
 
 Existing project configuration takes precedence. The agent must not install or reconfigure runtimes, rocks, native dependencies, or tools without human approval.
-
-## Dependency contract
-
-`coding-lua` requires `coding`. The agent resolves it through the active harness's advertised skill names and paths, loads it first, and stops when it is unavailable. The skill does not rely on a harness-specific Skill tool.
 
 ## Invocation
 

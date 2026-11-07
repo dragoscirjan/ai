@@ -20,15 +20,7 @@ Choose the mode from the request:
 
 Confirm the affected behavior, allowed files or subsystem, public contracts, and whether the request permits edits. A review-only request stays read-only: report candidates and evidence without editing files, generating artifacts, or running checks that write state. Do not turn a local task into repository-wide cleanup. Ask before expanding scope or changing behavior or contracts.
 
-This skill does not authorize mutation or publication and does not require `scaffold`. Either skill can be used independently. It is engineering guidance, not a writing-compression workflow.
-
-Follow applicable project instructions by phase:
-
-- Before code design or implementation, locate and read the sibling `coding` skill through its advertised name and path. Load the applicable advertised language and extension skills in their required order. Use their standards rather than duplicating them here.
-- Before any repository mutation, satisfy the project's workspace and approval gates, including `isolated-workspace` when required.
-- Before validation, follow the project's validation policy and configured checks.
-
-If a required skill or instruction is unavailable, stop its gated phase and ask the owner to expose it. Do not reconstruct it or automatically install skills, tools, or dependencies. A read-only inventory does not require preloading implementation skills.
+This guidance grants no mutation or publication authority. Follow project approval, workspace, coding, and validation requirements at their applicable phases. Stop if a required instruction is missing; do not reconstruct it or install missing tools without approval. A read-only inventory does not require implementation guidance.
 
 ## Gather evidence
 
@@ -69,7 +61,7 @@ Assign each candidate a decision:
 
 ## Apply authorized changes
 
-For an edit-authorized task, follow `coding` and applicable language guidance. Make small, reviewable, behavior-preserving steps. Establish focused behavioral coverage before removing or collapsing a mechanism; use contract or integration checks when callers cross a boundary. If coverage is infeasible, report the limitation before relying on a weaker check.
+When edits are authorized, use project source conventions and make small, reviewable, behavior-preserving steps. Establish focused behavioral coverage before removing or collapsing a mechanism; use contract or integration checks when callers cross a boundary. If coverage is infeasible, report the limitation before relying on a weaker check.
 
 Preserve public behavior, defaults, errors, side effects, and compatibility unless a change is explicitly approved. Check consumers again after rewiring them. Remove only mechanisms made unnecessary within the approved scope, and inspect the complete diff for collateral changes.
 

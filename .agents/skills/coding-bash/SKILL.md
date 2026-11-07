@@ -1,7 +1,7 @@
 ---
 name: coding-bash
 description: Write, refactor, review, or test Bash 4 or newer with version-compatible arrays, tests, options, process handling, pipeline status, and introspection. Use whenever the shebang, invocation, sourced context, project configuration, or Bash-only syntax establishes Bash, including files with a .sh extension.
-compatibility: Requires the coding and coding-sh skills plus Bash 4 or newer and the operating systems, utilities, and test tools selected by the project.
+compatibility: Requires Bash 4 or newer and the operating systems, utilities, and test tools selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -10,19 +10,11 @@ metadata:
 
 # Bash coding
 
-Apply `coding`, then `coding-sh`, then this Bash-specific guidance.
-
-## Load dependencies
-
-Locate the advertised `coding` and `coding-sh` skills by exact name and path. Read their `SKILL.md` files in that order unless they are already loaded.
-
-If either dependency is unavailable, stop and ask the human to install or expose it. Do not install it automatically, duplicate its instructions, or rely on a harness-specific Skill tool.
-
 ## Select Bash by interpreter contract
 
 Do not select shell guidance from the filename suffix alone. Many Bash programs use `.sh`, while some extensionless files are portable shell or Bash.
 
-Select this wrapper when at least one authoritative project signal establishes Bash:
+Select Bash guidance when at least one authoritative project signal establishes Bash:
 
 1. The shebang resolves to Bash.
 2. A command, build tool, service, or host invokes the file with Bash.
@@ -39,6 +31,10 @@ Inspect the shebang, invocation, minimum Bash version, operating systems, shell 
 
 Do not add Bash features to a script that must remain portable. If Bash is required, make that interpreter contract explicit through the project's shebang and invocation conventions.
 
+## Preserve shell safety
+
+Quote expansions unless splitting is intentional; use arrays for command arguments and `--` where supported. Never evaluate untrusted shell text. Check command and pipeline status explicitly, clean up temporary resources with tested traps, and keep signal/exit behavior correct in sourced and executed modes.
+
 ## Use Bash features deliberately
 
 - Use indexed or associative arrays to preserve collections and argument boundaries. Quote array expansions and distinguish `"${array[@]}"` from `"${array[*]}"`.
@@ -51,8 +47,8 @@ Do not add Bash features to a script that must remain portable. If Bash is requi
 
 ## Validate Bash behavior
 
-Run inherited formatting and lint gates in Bash mode. Use [ShellCheck](https://www.shellcheck.net/) with the Bash dialect selected explicitly through project configuration or its equivalent command option; do not let a `.sh` suffix make the linter assume POSIX `sh`. Use the project's test framework first; when none is configured, ask before installing [Bats-core](https://bats-core.readthedocs.io/) for behavior tests. Use `bash -n` with the project's minimum supported Bash 4+ version for syntax checking.
+Run project formatting and lint checks in Bash mode; prefer shfmt when no formatter is configured. Use [ShellCheck](https://www.shellcheck.net/) with the Bash dialect selected explicitly through project configuration or its equivalent command option; do not let a `.sh` suffix make the linter assume POSIX `sh`. Use the project's test framework first; when none is configured, ask before installing [Bats-core](https://bats-core.readthedocs.io/) for behavior tests. Use `bash -n` with the project's minimum supported Bash 4+ version for syntax checking.
 
 Test sourced and executed modes, option changes, arrays with empty elements, pipeline failures, process substitution, traps, signals, jobs or coprocesses when used, and minimum-version compatibility.
 
-Report every applicable gate as passed, failed, not run, or unsupported. Inherit jscpd, quoting, security, cleanup, and other shell-wide requirements from `coding-sh`; do not duplicate or replace them here.
+Use project-configured duplicate detection, or jscpd when available; do not install missing tools without approval. Report checks as passed, failed, not run, or unsupported.

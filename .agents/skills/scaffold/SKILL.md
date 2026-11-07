@@ -15,7 +15,7 @@ Produce source skeleton files, not a chat-only implementation plan. Keep the cha
 
 Read the project's instructions and contribution policy. Inspect existing behavior, nearby source, tests, public contracts, build configuration, and CI before proposing structure.
 
-Hand off to [coding](../coding/SKILL.md) for project-first analysis and applicable language or extension guidance. Load the matching advertised skills based on repository evidence, not a preferred language or framework. Apply their standards within this scaffold-only scope; their implementation steps do not authorize business logic here. If a required skill or instruction is missing, stop that phase and report it. Never auto-install it.
+Use the project's source conventions and the language established by repository evidence, not a preferred framework. Missing instructions block the affected phase; never auto-install them. Engineering guidance does not authorize business logic within a scaffold-only task.
 
 Establish:
 
@@ -30,13 +30,13 @@ Present a concise file-level scope and obtain approval before writing skeletons.
 
 ## Phase 2: establish the workspace
 
-Before any repository mutation, follow the project's workspace gate through [isolated-workspace](../isolated-workspace/SKILL.md). Verify the approved workspace, branch or bookmark, base, current status, and write ownership before editing. Do not duplicate its commands here or modify the primary checkout.
+Before mutation, satisfy project workspace and approval gates. Verify the approved isolated workspace, branch or bookmark, base, status, and write ownership. Do not modify the primary checkout.
 
 Loading this skill grants no commit, push, pull-request, merge, or release authority. Follow the current request and project workflow. Stop at a missing permission or conflicting gate; do not bypass it to produce files or publish a PR.
 
 ## Phase 3: write only the structure
 
-Hand off to `coding` and the selected language guidance for source conventions, constrained as follows:
+Apply the existing source conventions within these limits:
 
 - Write the smallest justified source files in the approved workspace using existing naming, layout, and type conventions. Do not force classes, interfaces, frameworks, or new dependencies.
 - Add only necessary types, declarations, signatures, and contracts. Abstract or interface declarations need no body.
@@ -45,11 +45,11 @@ Hand off to `coding` and the selected language guidance for source conventions, 
 - Preserve existing working function bodies. Do not replace implementations with stubs, or route production entrypoints to unfinished code. If an agreed structure cannot coexist safely, stop and seek a revised scope.
 - Keep comments brief and about behavior or constraints. Do not hide implementation in prose, add boilerplate footers, or invent requirements to fill a file.
 
-Neither `debloat` nor this skill requires the other. If both are requested, keep their scopes and approvals separate; simplification is not permission to stub working behavior.
+Keep any separately requested simplification scope and approvals distinct. Simplification never authorizes stubbing working behavior.
 
 ## Phase 4: validate the scaffold
 
-Read the project's validation instructions. Hand off to `coding` and the selected language guidance for applicable checks using declared existing toolchains. Run checks that generate files or state only within the approved workspace and authorized scope. Aim for syntactically and type-valid skeletons where feasible; do not auto-install tooling or change the toolchain to make them pass.
+Use project validation instructions and existing toolchains. Run state-writing checks only within the approved workspace and scope. Aim for syntactically and type-valid skeletons where feasible; do not install tools or change the toolchain to make them pass.
 
 Review the complete diff for structural scope and preserved behavior. Verify that unimplemented callable bodies fail explicitly and no production route reaches them through new wiring. Follow existing test conventions for any contract checks justified by this scope; do not assert that unfinished functionality works.
 

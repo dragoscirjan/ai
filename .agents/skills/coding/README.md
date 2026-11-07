@@ -18,27 +18,11 @@ The duplicate-code fallback is [jscpd](https://jscpd.dev/), which supports more 
 
 These sources guide risk analysis. They are not copied into the skill and do not replace project-specific requirements.
 
-## Dependency contract
+## Independent guidance and composition
 
-All coding skills are sibling directories directly under `.agents/skills/`. Do not nest one skill inside another.
+Keep all coding skills as flat siblings under `.agents/skills/`, with exact relative Claude projections under `.claude/skills/`. Generic, language, and extension skills are independent leaves; none loads another implicitly.
 
-A future language skill must:
-
-1. Declare in `compatibility` that it requires `coding`.
-2. Locate `coding` through the harness's advertised skill names and paths.
-3. Read `coding/SKILL.md` before applying language-specific instructions unless it is already loaded.
-4. Stop and ask the human to install or expose `coding` when it is unavailable.
-5. Never install the dependency automatically.
-
-A future extension skill follows the same rules for both `coding` and its language skill. Load instructions in this order:
-
-1. Generic `coding` guidance.
-2. Language guidance.
-3. Extension guidance.
-
-The more specific skill overrides only an explicit conflict. Dependencies must not form a cycle.
-
-Do not rely on a harness-specific Skill tool. Use the skill metadata and paths that the active harness advertises. Pi and OpenCode must discover every canonical skill as a flat sibling under `.agents/skills/`; Claude Code must discover equivalent flat sibling projections under `.claude/skills/`.
+The user or project selects the needed set. This repository's `AGENTS.md` selects generic, then language, then extension guidance for code work. Thin workflow compositions declare prompt prerequisites through the project's `require` convention; real shared-code dependencies remain separate. No harness-specific Skill tool is needed.
 
 ## Quality gates
 
@@ -72,12 +56,12 @@ OpenCode exposes this skill as `/coding` because its frontmatter sets `metadata.
 /coding Implement the approved change and run the applicable project gates.
 ```
 
-Both harnesses also advertise the skill for automatic model selection. For language-specific work, load the matching `coding-*` skill when available.
+Both harnesses also advertise the skill for automatic model selection. For language-specific work, the caller can select complementary language or extension guidance.
 
 ## Files
 
 - [`SKILL.md`](SKILL.md) contains the coding workflow.
-- `README.md` explains the design, sources, and dependency contract.
+- `README.md` explains the design, sources, and composition contract.
 
 Keep the directory name and the `name` field in `SKILL.md` set to `coding` for portable Agent Skills discovery.
 

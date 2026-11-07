@@ -16,7 +16,8 @@ This repository does not define one automated test suite for every asset. Record
 
 When a change adds or modifies a skill:
 
-- Verify that every `SKILL.md` has valid `name` and `description` frontmatter.
+- Verify core `name` and `description` frontmatter and the approved project/harness extensions. Do not claim raw strict Agent Skills compliance for files using nonstandard fields.
+- Validate optional `require` as one nonempty inline JSON-compatible array: unique valid names, existing targets, and no self-reference or cycles. Check its declared load order and independence of unmarked leaves.
 - Verify that each skill directory name matches its declared `name`.
 - Verify that Pi and OpenCode discover the changed skill from `.agents/skills/`.
 - Verify that Claude Code discovers it through an exact relative `.claude/skills/` symlink to the canonical `.agents/skills/` directory.
@@ -46,16 +47,16 @@ When a change modifies `sync-agent-assets` or its catalog:
 When a change adds or modifies `coding` or a `coding-*` skill:
 
 - Confirm that all coding skills are sibling directories directly under `.agents/skills/`.
-- Confirm that language skills require `coding` and extension skills require both `coding` and their language skill.
-- Confirm that dependencies resolve through advertised skill names and paths without a harness-specific Skill tool.
-- Test generic-to-language-to-extension load order, missing-dependency stops, and dependency-cycle rejection when those relationships exist.
-- Confirm that wrappers contain only extension-specific differences and do not duplicate generic or language instructions.
+- Confirm language and extension skills are independent leaves containing their own language or extension scope, not loaders for other skills.
+- Confirm project routing selects `coding`, then applicable language and extension guidance. Test declared composition load order, missing-requirement stops, and cycle rejection without a harness-specific Skill tool.
+- Keep code-helper dependencies separate from instruction requirements; test their combined installation closure.
+- Confirm extension guidance does not duplicate generic or language instructions.
 - Confirm that project configuration takes precedence over fallback tools.
 - Confirm that no skill installs, replaces, or reconfigures tools without human approval.
 - Confirm that every language uses jscpd as the fallback duplicate detector while honoring project-configured alternatives.
 - Confirm that numeric thresholds come only from project configuration.
 - Check source links and maintenance-status notes for external guidance.
-- Verify flat discovery in Pi, OpenCode, and Claude Code.
+- Verify flat discovery in Pi, OpenCode, and Claude Code; distinguish source/static checks from live discovery.
 
 ## Workspace-skill changes
 
