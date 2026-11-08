@@ -1,50 +1,29 @@
-# POSIX shell coding
+# POSIX shell rules
 
-## Confirm the portability contract
+## Portability
 
-Inspect the shebang, invoking process, container or host images, supported operating systems, available utilities, shell options, formatter and lint configuration, tests, and CI before editing. A `.sh` extension does not prove which shell runs the file. Treat `/bin/sh` as the project's documented POSIX-compatible implementation, not as Bash.
+- `/bin/sh` means the project's POSIX-compatible implementation, not Bash. A `.sh` suffix does not establish the interpreter.
+- Syntax and utility options must exist on every supported target. Arrays, `[[ ... ]]`, process substitution, `source`, `function`, and `local` are not portable POSIX features.
+- Quote parameter and command substitutions unless field splitting or pathname expansion is intentional. Preserve positional arguments with `"$@"`.
+- Prefer `printf` for predictable output. Use `read -r` and deliberate `IFS` settings for field parsing.
+- Distinguish empty and unset values. Parameter expansion must not depend on accidental `set -u` behavior.
+- Under the POSIX contract, pipeline status is the last command's status. Pipeline subshells may prevent variable changes from reaching later code.
 
-Use the current [POSIX Shell Command Language](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html) as the portability authority. Use the [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) only where its Bash-oriented advice is compatible with the project's POSIX contract. Project conventions and target-shell behavior take precedence.
+## Failure and process boundaries
 
-## Write portable shell
+- `set -e` and `set -u` depend on command position, functions, subshells, and conditionals; `pipefail` cannot be assumed portable. Use explicit status handling at recoverable boundaries.
+- Cleanup must retain the original failure status. Signal handling and traps must tolerate repeated cleanup and the target shell's actual `EXIT` semantics.
+- Build argument lists with positional parameters and direct invocation, not `eval` or concatenated shell source.
+- Quote here-document delimiters when expansion is not intended. Shell tracing and process arguments can expose secrets.
+- `PATH`, sourced files, locale, working directory, and environment variables affect executable and data interpretation.
+- Temporary files need appropriate `umask`, unpredictable names, ownership checks where relevant, and immediate cleanup registration. Validate symlinks and archive members before privileged filesystem operations.
 
-- Use only syntax and utility options available on every declared target. Do not use arrays, `[[ ... ]]`, process substitution, `source`, `function`, `local`, or other non-POSIX features in portable code.
-- Quote parameter and command substitutions unless intentional field splitting or pathname expansion is required and documented. Preserve argument boundaries with `"$@"`.
-- Use `printf` for predictable output. Use `read -r` and control `IFS` deliberately when parsing fields.
-- Treat empty and unset states explicitly. Use parameter expansion deliberately rather than relying on accidental `set -u` behavior.
-- Keep functions small and distinguish command output from exit status. Remember that pipeline status is the last command's status under POSIX shell.
-- Avoid loops in pipeline subshells when later code depends on mutated state.
-- Create temporary resources safely for the supported platform, set restrictive permissions when needed, and register cleanup immediately with `trap`.
-- Preserve command-line behavior, output, exit codes, environment contracts, and supported platforms unless the approved task changes them.
+## Tool defaults
 
-## Handle failures deliberately
+- Formatting: [shfmt](https://github.com/mvdan/sh) in POSIX-compatible mode.
+- Analysis: [ShellCheck](https://www.shellcheck.net/) with the actual dialect.
+- Syntax: each supported POSIX shell; a Bash-only check does not establish portability.
+- Behavior tests: [ShellSpec](https://shellspec.info/), including whitespace, globs, option-like arguments, signals, locale, cleanup, and subshell behavior.
+- Dependency auditing depends on the package or image ecosystem; there is no universal shell audit.
 
-Do not add `set -e`, `set -u`, or a non-POSIX `pipefail` option mechanically. Their behavior depends on command position, subshells, functions, conditionals, and the selected shell. Follow project policy, use explicit status checks at recoverable boundaries, and test every option-dependent path.
-
-Keep the original failure status when cleanup runs. Make signal handling and traps idempotent, and do not assume `EXIT` trap behavior beyond the selected shell's contract.
-
-## Enforce shell security boundaries
-
-- Keep untrusted values out of shell source and command strings. Do not use `eval` to reconstruct argument lists.
-- Build commands with positional parameters and direct invocation instead of concatenated strings. Use an end-of-options marker only when the called utility supports it.
-- Validate paths, filenames, archive members, glob results, and symlink behavior before privileged filesystem operations.
-- Quote here-document delimiters when expansion is not required. Keep secrets out of arguments visible to other processes, tracing, logs, and error output.
-- Treat sourced files, executable lookup through `PATH`, environment variables, locale, and current working directory as trust boundaries.
-- Set an appropriate `umask` before creating sensitive files. Avoid predictable temporary names and check ownership and permissions where security depends on them.
-- Bound retries, reads, generated arguments, and recursion when inputs can consume resources.
-
-## Test and run POSIX shell gates
-
-Use the project's commands, selected shells, and configured tools first. When the project has no configured choice, ask before installing or configuring these fallbacks:
-
-- [ShellSpec](https://shellspec.info/) for focused and broader behavior tests
-- [shfmt](https://github.com/mvdan/sh) in the project's POSIX-compatible mode for formatting
-- [ShellCheck](https://www.shellcheck.net/) with the project-selected shell dialect for static analysis
-- syntax checks with each supported POSIX shell
-- [jscpd](https://jscpd.dev/) as the duplicate detector when the project has no configured alternative
-
-Test quoting, empty and whitespace-containing values, glob characters, option-like arguments, failures, signals, cleanup, pipeline and subshell behavior, locale differences, and every supported shell. Do not use a Bash-only check as proof of POSIX portability.
-
-Shell scripts do not have one universal dependency-vulnerability audit. Report that category as unsupported when the project has no suitable package or image audit; do not claim that linting or tests satisfy it.
-
-Apply only project-defined thresholds. Report every applicable gate as passed, failed, not run, or unsupported.
+References: [POSIX Shell Command Language](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html). The [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) is Bash-oriented and applies only where compatible.

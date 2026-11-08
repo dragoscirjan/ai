@@ -1,16 +1,13 @@
-# MJS coding
+# .mjs rules
 
-## Preserve ECMAScript-module semantics
+- `.mjs` is an ECMAScript module regardless of the nearest `package.json` `type` field.
+- Use `import` and `export`. `require`, `module.exports`, `exports`, `__filename`, and `__dirname` are not native ESM globals.
+- Use supported `import.meta` and URL-aware APIs for module-relative resources.
+- Specifiers and file extensions must follow the target runtime; Node.js rules are not universal browser, Deno, or Bun rules.
+- Preserve conditional package exports and existing consumer behavior.
+- CommonJS interoperability must handle default and named export conversion explicitly.
+- Top-level `await` affects module evaluation order and startup latency.
+- Avoid separate ESM/CommonJS instances of state that must share identity.
+- Module behavior must hold through the actual ESM loader, not only a transformed test environment.
 
-Use the [MDN modules guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) and the project's runtime documentation. For Node.js package behavior, use the [Node.js packages documentation](https://nodejs.org/api/packages.html).
-
-- Treat `.mjs` as an ECMAScript module regardless of the nearest Node.js `package.json` `type` field.
-- Use `import` and `export`. Do not introduce `require`, `module.exports`, `exports`, `__filename`, or `__dirname` as if they were native ESM globals.
-- Use `import.meta` and URL-aware APIs for module-relative resources when the runtime supports them.
-- Follow the target runtime's specifier and file-extension rules. Do not rewrite specifiers based on one runtime's behavior when the project supports another.
-- Keep package `exports` and conditional-export behavior compatible with existing consumers.
-- Add a CommonJS interoperability boundary only when a real dependency requires one. Make default and named export conversion explicit.
-- Use top-level `await` only when module evaluation order and startup latency are acceptable.
-- Avoid dual-package state: do not expose separate ESM and CommonJS instances that should share identity or state.
-
-Run project-configured JavaScript checks and test the module through the project's real ESM loader, not only through a transformed test environment.
+References: [MDN modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), [Node.js packages](https://nodejs.org/api/packages.html).

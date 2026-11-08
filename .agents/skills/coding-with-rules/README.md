@@ -9,7 +9,9 @@
 - Use project evidence for ambiguous headers, interpreters, and configuration files. Do not combine contradictory Bash and POSIX rules.
 - Use the base workflow and project conventions for unsupported languages, and report the coverage gap. A missing mapped reference is an error.
 
-The 21 reference bodies preserve the former language and extension skills' rules. They have no skill frontmatter and are not advertised as separate skills. The generic [`coding`](../coding/SKILL.md) skill remains independently useful.
+The 21 references contain only language/extension semantics, language-specific safety constraints, and tool defaults. Each is a regular Markdown file inside this directory, not a symlink or a link to a removed skill. They have no skill frontmatter, standalone-skill instructions, or generic workflow sections.
+
+The generic [`coding`](../coding/SKILL.md) skill owns the shared workflow, security baseline, test and quality-gate procedure, duplicate-detector fallback, tool-installation approval, and result reporting. The references adapt the former language rules to that shared workflow rather than copying whole skill bodies. `coding` remains independently useful.
 
 `require` is a project convention, not a native harness loader. Project instructions resolve it; external Skills CLI commands do not install it automatically. Managed synchronization installs the router in its core profile and includes `coding` through requirement closure. Complete installation includes every reference, but the model reads only applicable files.
 

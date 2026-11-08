@@ -12,7 +12,9 @@ metadata:
 
 Select languages from task files and project, runtime, build, and interpreter evidence—not filenames alone. For toolchain or configuration work, use the associated language's rules. Do not load every reference in a mixed-language repository.
 
-Before designing, changing, reviewing, or testing code, read the applicable references below once, in listed order. For multiple affected languages, apply each relevant set. Project conventions take precedence where the references allow them.
+Before designing, changing, reviewing, or testing code, read the applicable references below once, in listed order. For multiple affected languages, apply each relevant set.
+
+References add only language/extension rules and tool defaults. The required `coding` skill owns project inspection, shared security controls, testing workflow, quality-gate ordering, duplicate detection, installation approval, and reporting. Project-configured tools override reference defaults.
 
 | Language or file context | References, in order |
 |---|---|

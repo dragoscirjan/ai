@@ -4,6 +4,7 @@ import {
   chmodSync,
   cpSync,
   existsSync,
+  lstatSync,
   mkdtempSync,
   mkdirSync,
   readFileSync,
@@ -364,6 +365,34 @@ test("coding composition links plain references with language-before-extension r
   assert.match(instructions, /unsupported language/i);
   assert.match(instructions, /mapped reference is missing/i);
   assert.match(instructions, /Bash.*POSIX/);
+});
+
+test("coding references contain language rules rather than standalone skill workflows", () => {
+  const root = join(repositoryRoot, ".agents", "skills", "coding-with-rules", "references");
+  for (const name of readdirSync(root)) {
+    const path = join(root, name);
+    assert.equal(lstatSync(path).isFile(), true, `${name} must be a regular file, not a symlink`);
+    const text = readFileSync(path, "utf8");
+    assert.match(text, /^# .+ rules\n/, name);
+    assert.doesNotMatch(text, /^---\r?\n|\bthis skill\b|\blanguage skills?\b/im, name);
+    assert.doesNotMatch(text, /^## (?:Test and run|Follow project|Confirm the .* contract)|Report every applicable gate/im, name);
+    assert.doesNotMatch(text, /\]\([^)]*coding-[^)]*\/SKILL\.md\)/, name);
+  }
+  for (const [name, rules] of [
+    ["bash", [/Bash 4\.0/, /PIPESTATUS/, /sourced/]],
+    ["c", [/overflow/, /alias/]],
+    ["cpp", [/RAII/, /JSF/]],
+    ["go", [/context\.Context/, /goroutine/]],
+    ["ts", [/unknown/, /erased/, /@tempel\/tsconfig/]],
+    ["tsx", [/React/, /escaping/, /accessibility/]],
+    ["pyi", [/runtime/, /declarative/, /stubtest/]],
+    ["rs", [/unsafe/, /Send/, /Sync/]],
+    ["swift", [/Sendable/, /continuation/]],
+    ["zig", [/errdefer/, /allocator/]],
+  ]) {
+    const text = readFileSync(join(root, `${name}.md`), "utf8");
+    for (const rule of rules) assert.match(text, rule, name);
+  }
 });
 
 for (const indent of [0, 2]) {

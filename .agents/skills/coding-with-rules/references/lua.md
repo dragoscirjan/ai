@@ -1,44 +1,30 @@
-# Lua coding
+# Lua rules
 
-## Follow the selected Lua runtime
+## Runtime and tables
 
-Inspect the declared Lua or LuaJIT versions, host application, module loader, rockspecs and lock data, native modules, formatter and lint settings, tests, documentation, and CI before editing. Lua 5.1 through 5.4 and LuaJIT differ in syntax, standard libraries, integer and number behavior, garbage collection, and C APIs. Use the reference manual that matches the project runtime.
+- Lua 5.1–5.4 and LuaJIT differ in syntax, libraries, numbers, garbage collection, and C APIs. Documentation and `luac` must match the selected runtime.
+- Prefer `local` bindings and explicit module exports; avoid accidental globals.
+- `nil`, `false`, missing keys, and absent return values have different meanings. Holes make table sequence length and iteration unreliable.
+- Multiple returns, varargs, method-call syntax, and metamethod dispatch can change call behavior.
+- Module resolution depends on `package.path`, `package.cpath`, host embedding, and bundling.
+- Preserve traceback information at recoverable boundaries. Protected calls are not a substitute for handling an error.
+- Files, handles, native resources, and temporary state need cleanup mechanisms supported by the selected Lua version.
 
-Use the [Lua 5.4 Reference Manual](https://www.lua.org/manual/5.4/manual.html) only as the current upstream reference when it matches the project, and use the [LuaRocks Lua Style Guide](https://github.com/luarocks/lua-style-guide) as established community guidance. Safe, internally consistent project and host-runtime conventions take precedence.
+## Executable boundaries
 
-## Write idiomatic Lua
+- Untrusted text must not reach `load`, `loadfile`, `dofile`, legacy `loadstring`, or equivalent host evaluators.
+- A restricted environment is unsafe if it exposes powerful capabilities. The debug library, bytecode loader, FFI, and C modules are privileged.
+- `os.execute`, `io.popen`, module paths, format strings, and native calls must not interpret untrusted data as code.
+- Bound pattern matching, recursion, allocation, and instruction use for attacker-controlled workloads.
+- Validate filesystem containment and native-module results where sandbox boundaries depend on them.
 
-- Prefer `local` bindings and explicit module exports. Do not create or mutate globals unintentionally.
-- Keep functions and data flow clear. Isolate I/O, clocks, randomness, host APIs, registry state, and mutable module state.
-- Preserve distinctions among `nil`, `false`, missing table keys, and absent return values. Remember that table holes make sequence length and iteration behavior unreliable.
-- Handle multiple returns, varargs, method-call syntax, and metamethod dispatch deliberately. Avoid clever metatable behavior that hides ownership or control flow.
-- Keep module loading compatible with the project's `package.path`, `package.cpath`, bundling, and embedding rules.
-- Propagate errors with useful context and preserve traceback information where the host can act on it. Use protected calls only at boundaries that can recover.
-- Release files, handles, native resources, and temporary state on success and failure using mechanisms supported by the selected runtime.
-- Preserve public module names, return shapes, serialization formats, and host integration unless the approved task changes them.
+## Tool defaults
 
-## Enforce Lua security boundaries
+- Tests: [Busted](https://lunarmodules.github.io/busted/).
+- Formatting: [StyLua](https://github.com/JohnnyMorganz/StyLua).
+- Analysis: [Luacheck](https://github.com/lunarmodules/luacheck), including accidental globals.
+- Syntax: the selected runtime's compatible compiler/interpreter. A different `luac` version does not prove compatibility.
+- Relevant cases include nil/false distinctions, table holes, multiple returns, module loading, cleanup, and native integration.
+- There is no universal Lua dependency-vulnerability audit; LuaRocks resolution is not vulnerability analysis.
 
-- Treat loaded chunks, configuration, network data, save data, environment values, paths, and native-module results as untrusted at entry points.
-- Do not pass untrusted text to `load`, `loadfile`, `dofile`, legacy `loadstring`, or equivalent host APIs. A restricted environment is not safe if it exposes dangerous capabilities.
-- Keep untrusted values out of `os.execute`, `io.popen`, shell command strings, format strings, module paths, and native calls without context-specific validation.
-- Validate path containment, symlink behavior, archive entries, and module resolution when security depends on filesystem boundaries.
-- Treat the debug library, bytecode loading, FFI, and C modules as privileged capabilities. Minimize what sandboxed code can reach.
-- Bound parsing, pattern matching, recursion, allocation, and instruction use when attacker-controlled input can consume resources.
-- Keep credentials and personal data out of source, logs, tracebacks, generated files, and serialized state.
-
-## Test and run Lua gates
-
-Use the project's commands, runtime, and configured tools first. When the project has no configured choice, ask before installing or configuring these fallbacks:
-
-- [Busted](https://lunarmodules.github.io/busted/) for focused and broader tests
-- [StyLua](https://github.com/JohnnyMorganz/StyLua) for formatting
-- [Luacheck](https://github.com/lunarmodules/luacheck) for linting and global-use checks
-- syntax checking with the selected runtime's compatible compiler or interpreter
-- [jscpd](https://jscpd.dev/) as the duplicate detector when the project has no configured alternative
-
-Test observable behavior, nil and false cases, table boundaries, errors and cleanup, module loading, supported runtimes, native integration, and security regressions. Do not use a different `luac` version to validate bytecode or syntax compatibility.
-
-Lua does not have one mature universal dependency-vulnerability audit. Report that category as unsupported when the project has no suitable configured tool; do not claim that LuaRocks resolution, linting, or tests satisfy it.
-
-Apply only project-defined thresholds. Report every applicable gate as passed, failed, not run, or unsupported.
+References: the runtime-matched [Lua manual](https://www.lua.org/manual/5.4/manual.html), [LuaRocks style guide](https://github.com/luarocks/lua-style-guide).

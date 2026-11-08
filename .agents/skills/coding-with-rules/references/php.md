@@ -1,44 +1,31 @@
-# PHP coding
+# PHP rules
 
-## Follow project and language guidance
+## Types and package contracts
 
-Inspect `composer.json`, `composer.lock`, PHP platform constraints, required extensions, autoloading, framework configuration, formatter and static-analysis settings, tests, templates, database layers, deployment targets, and CI before editing. Do not update dependencies, lockfiles, platform constraints, or generated autoload files unless the approved task requires it.
+- Composer platform constraints, PHP versions, and required extensions define supported syntax, types, attributes, and APIs.
+- Follow the selected `strict_types` policy. Parameter, property, and return types must preserve supported call contracts.
+- Distinguish `null`, `false`, empty strings, zero, and absent array keys. Loose comparisons can coerce them unexpectedly.
+- Preserve exception causes and framework error conventions; release resources and roll back transactions on failure.
+- Composer autoloading and namespaces define class resolution. Dynamic includes, class names, and callbacks can introduce executable boundaries.
+- Named arguments make parameter names part of public compatibility. Preserve serialized formats, routes, templates, and migrations.
 
-Use the [official PHP Manual](https://www.php.net/manual/en/) and current [PHP-FIG PER Coding Style](https://www.php-fig.org/per/coding-style/) as external guidance. Follow [PSR-12](https://www.php-fig.org/psr/psr-12/) only when project configuration or compatibility requires it. Safe framework and project conventions take precedence.
+## Web and data boundaries
 
-## Write idiomatic PHP
+- Validate superglobals, request bodies, cookies, headers, uploads, and deserialized data before use.
+- Parameterize SQL. HTML text, attributes, JavaScript, CSS, URLs, and headers require different escaping; template autoescaping is not universal.
+- Restrict redirects and outbound destinations to prevent open redirects and SSRF. Reject header injection.
+- Uploads need bounded sizes, validated media expectations, generated storage names, path containment, and non-executable storage.
+- Untrusted `unserialize` objects, dynamic includes, reflection-driven construction, and callbacks can execute code.
+- Use framework session, CSRF, authentication, authorization, and secure-cookie facilities. Protect each action, not only UI visibility.
+- Secret comparisons may require timing-safe functions; caches and error output must not expose credentials.
 
-- Target the PHP versions and extensions declared by the project. Do not use unsupported syntax, types, attributes, or library APIs.
-- Follow the project's `strict_types` policy consistently. Use parameter, property, and return types where they clarify contracts without breaking compatibility.
-- Prefer clear value flow, immutable value objects where useful, and explicit dependencies. Keep request state, globals, clocks, randomness, I/O, and service containers at visible boundaries.
-- Preserve distinctions among `null`, `false`, empty strings, zero, and missing array keys. Avoid loose comparisons where coercion can change meaning.
-- Use exceptions and result conventions consistently with the framework. Preserve causes and release resources or roll back transactions on every failure path.
-- Use Composer autoloading and project namespaces. Avoid manual include paths, dynamic class names, and runtime code generation unless the architecture requires them.
-- Preserve public APIs, named-argument compatibility, serialized data, routes, templates, database migrations, and package behavior unless the approved task changes them.
+## Tool defaults
 
-## Enforce PHP security boundaries
+- Syntax: `php -l` with the supported PHP version.
+- Tests: [PHPUnit](https://phpunit.de/documentation.html), or framework-owned bootstrapping where required.
+- Formatting: [PHP-CS-Fixer](https://cs.symfony.com/) in check/dry-run mode.
+- Analysis: [PHPStan](https://phpstan.org/user-guide/getting-started) at the configured level.
+- Metadata: `composer validate`; vulnerabilities: `composer audit`.
+- Relevant cases include output contexts, authorization, uploads, exceptions, database rollback, and supported extensions.
 
-- Treat superglobals, request bodies, headers, cookies, uploaded files, environment values, database records, and deserialized data as untrusted at entry points.
-- Parameterize database queries. Do not build SQL, shell commands, or code from untrusted strings.
-- Apply context-specific escaping for HTML text, attributes, JavaScript, CSS, URLs, and headers. Template autoescaping does not make every output context safe.
-- Validate redirect and outbound-request destinations to prevent open redirects and server-side request forgery. Reject header injection.
-- Validate upload size, media expectations, generated storage names, and path containment. Keep uploaded files outside executable locations.
-- Avoid deserializing untrusted PHP objects. Treat `unserialize`, dynamic includes, reflection-driven construction, and user-controlled callbacks as code-execution boundaries.
-- Use framework protections for sessions, authentication, authorization, CSRF, and secure cookies. Keep authorization checks at every protected action, not only in the UI.
-- Use timing-safe comparison for secrets where applicable, and keep credentials and personal data out of source, logs, errors, caches, and generated artifacts.
-
-## Test and run PHP gates
-
-Use the project's commands and configured tools first. When the project has no configured choice, ask before installing or configuring these fallbacks:
-
-- `php -l` for syntax checking with the project's PHP version
-- [PHPUnit](https://phpunit.de/documentation.html) for focused and broader tests
-- [PHP-CS-Fixer](https://cs.symfony.com/) in check or dry-run mode for formatting
-- [PHPStan](https://phpstan.org/user-guide/getting-started) at the project's configured level for static analysis
-- `composer validate` when package metadata changes
-- `composer audit` for dependency vulnerability auditing
-- [jscpd](https://jscpd.dev/) as the duplicate detector when the project has no configured alternative
-
-Test observable behavior, invalid requests, authorization, encoding contexts, exception and rollback paths, supported PHP versions, database behavior, templates, CLI behavior, and security regressions. Use the project's framework test harness when it owns bootstrapping or isolation.
-
-Apply only project-defined thresholds and static-analysis levels. Report every applicable gate as passed, failed, not run, or unsupported. Never describe an unchecked PHP version, extension set, database, route, or unavailable audit as passed.
+References: [PHP Manual](https://www.php.net/manual/en/), [PHP-FIG PER Coding Style](https://www.php-fig.org/per/coding-style/). [PSR-12](https://www.php-fig.org/psr/psr-12/) applies where project compatibility requires it.

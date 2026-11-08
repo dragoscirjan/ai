@@ -1,48 +1,33 @@
-# JavaScript coding
+# JavaScript rules
 
-## Follow project and language guidance
+## Values and modules
 
-Inspect `package.json`, the lockfile, runtime declarations, module settings, build configuration, lint and formatter configuration, tests, and CI before editing.
+- Runtime declarations and package module settings constrain syntax and APIs. Preserve ECMAScript-module versus CommonJS boundaries.
+- Prefer `const`; use `let` for reassignment. Avoid `var` in modern code.
+- Prefer strict equality unless coercion is intentional and documented.
+- Keep mutation and coercion explicit. JavaScript object and array aliases share mutable state.
+- Await or return promises deliberately; rejection, cancellation, timeout, and cleanup remain distinct paths.
+- Preserve error causes, public exports, and module initialization behavior.
 
-Use the [MDN JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide) for current language guidance. The [Google JavaScript Style Guide](https://google.github.io/styleguide/jsguide.html) is an archived secondary reference; Google no longer updates it and recommends TypeScript for new Google code. Existing project conventions take precedence when they are safe and internally consistent.
+## Runtime boundaries
 
-## Write idiomatic JavaScript
+- Untrusted content must not reach `eval`, the `Function` constructor, or string-built timers.
+- Parsed JSON, messages, DOM values, URL values, and package metadata need validation before use.
+- Guard prototype-sensitive writes and dynamic property access on attacker-controlled keys.
+- Render text through safe DOM APIs and contextual encoding, not untrusted markup.
+- Node subprocess APIs take argument arrays; do not convert untrusted values into shell source.
+- Browser bundles and source maps can expose credentials and internal data.
 
-- Target the runtime versions declared by the project. Do not use unsupported syntax or APIs.
-- Preserve the project's module format. Do not mix ECMAScript modules and CommonJS without an explicit interoperability boundary.
-- Prefer `const`. Use `let` only for intentional reassignment. Do not introduce `var` into modern code.
-- Prefer strict equality unless a documented coercion is required.
-- Use clear control flow and explicit return values. Avoid clever coercion and hidden mutation.
-- Prefer small pure transformations for simple logic. Keep I/O, clocks, randomness, process state, and browser globals at explicit boundaries.
-- Await or return promises deliberately. Handle rejection, cancellation, timeout, and cleanup paths when they matter.
-- Preserve error causes and add context at the layer that can act on the failure.
-- Use platform and standard-library APIs before adding a dependency.
-- Preserve public exports and runtime behavior unless the approved task changes them.
+## Tool defaults
 
-## Apply JavaScript security controls
+The maintained [Tempel toolkit](https://github.com/dragoscirjan/tempel-javascript) provides compatible shared configurations:
 
-- Do not use `eval`, the `Function` constructor, or string-built timers for untrusted content.
-- Treat parsed JSON, URL values, messages, DOM values, environment variables, and package data as untrusted at their boundaries.
-- Avoid unsafe prototype writes and guard dynamic property access where attacker-controlled keys are possible.
-- Use contextual output encoding and safe DOM APIs. Do not insert untrusted markup.
-- Pass subprocess arguments as arrays and keep untrusted data out of shell command strings.
-- Keep credentials and tokens out of client bundles, source maps, logs, and exceptions.
-- Audit direct and transitive packages with the active package manager. Do not change lockfiles unless the task requires a dependency change.
+- Tests: [`@tempel/vitest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/vitest); [`@tempel/jest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/jest) when Jest is selected.
+- Lint: [`@tempel/eslint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/eslint).
+- Formatting: [`@tempel/prettier`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/prettier).
+- Commit messages: [`@tempel/commitlint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/commitlint) when Conventional Commits are validated.
+- Dependency vulnerabilities: the active package manager's audit command.
 
-## Test and run JavaScript gates
+Tempel package versions must support the selected underlying tools. Runtime-specific behavior includes asynchronous rejection and execution in the actual supported environment.
 
-Use the project's scripts and tools first. When the project has no configured choice, prefer the maintained shared configurations from the [Tempel JavaScript Development Toolkit](https://github.com/dragoscirjan/tempel-javascript) and ask before installing them:
-
-- [`@tempel/vitest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/vitest) for the Vitest fallback
-- [`@tempel/jest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/jest) when the project has chosen Jest instead of Vitest
-- [`@tempel/eslint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/eslint) for ESLint
-- [`@tempel/prettier`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/prettier) for Prettier
-- [`@tempel/commitlint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/commitlint) when the repository validates Conventional Commits
-- [jscpd](https://jscpd.dev/) for duplicate detection
-- the active package manager's audit command for dependency vulnerabilities
-
-Use a Tempel package only when it is compatible with the project's chosen underlying tool and version. Tempel recommendations do not override existing project configuration.
-
-Test observable behavior, asynchronous success and failure, relevant runtime boundaries, and security regressions. Run tests in the runtime environment that the project supports.
-
-Apply only project-defined thresholds. Report every applicable gate as passed, failed, not run, or unsupported. Never describe an unavailable or unexecuted gate as passed.
+Reference: [MDN JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide). The [Google JavaScript Style Guide](https://google.github.io/styleguide/jsguide.html) is archived, not a maintained primary source.

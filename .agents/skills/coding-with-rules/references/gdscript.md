@@ -1,42 +1,30 @@
-# GDScript coding
+# GDScript rules
 
-## Follow the Godot project contract
+## Engine and lifecycle
 
-Inspect `project.godot`, the pinned Godot version, renderer and export targets, scene and resource files, autoloads, input actions, addons, native extensions, static-typing policy, formatter and lint settings, tests, import state, and CI before editing. Godot releases can change GDScript syntax and engine APIs; use documentation matching the project's exact supported version.
+- GDScript syntax and engine APIs depend on the pinned Godot version, renderer, and export targets. Typed/dynamic policy must not hide incompatibilities behind broad `Variant` values or unsafe casts.
+- Scene-tree ownership determines who creates, adds, removes, queues, and frees each node. References may become invalid after lifecycle changes.
+- Signal connections follow node lifetime; avoid duplicate connections and disconnect where required.
+- `_process` handles frame work; `_physics_process` handles fixed-step physics. Use the appropriate delta and avoid unnecessary per-frame allocation or tree lookup.
+- Initialize scene-dependent references at the correct lifecycle point. Exported properties, autoloads, and shared or duplicated resources have distinct ownership.
+- `await`, timers, tweens, deferred calls, and asynchronous signals must account for cancellation and freed instances.
+- Scene paths, serialized properties, signal contracts, save formats, and input actions are public engine-facing contracts.
 
-Use the stable official [GDScript reference](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html), [GDScript style guide](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html), and [static typing guidance](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/static_typing.html) as upstream references when they match the selected engine. Project architecture and version-specific documentation take precedence.
+## Resource and multiplayer boundaries
 
-## Write idiomatic GDScript
+- Saves, mods, imported assets, resource paths, packets, and RPC arguments require validation before use.
+- State-changing RPCs need checks on the authoritative peer. Client identity, position, inventory, timing, and permissions are not authoritative.
+- Constrain dynamic resource paths and writes to intended filesystem locations.
+- Untrusted text must not become GDScript, expressions, shaders, or dynamic calls. Addons, editor plugins, resource scripts, and native extensions execute code.
+- Bound decompression, spawned nodes, physics objects, queued work, and messages.
+- Exported resources and client builds must not contain secrets.
 
-- Follow the project's typed or dynamic policy. Use static types where they improve contracts and editor feedback without hiding engine-version incompatibility behind broad `Variant` values or unsafe casts.
-- Keep scene-tree ownership clear. Know which node creates, adds, removes, queues, and frees each object, and do not retain stale node references after lifecycle changes.
-- Use signals for event boundaries when they reduce coupling. Connect and disconnect them according to node lifetime and avoid duplicate connections.
-- Use `_process` for frame work and `_physics_process` for fixed-step physics. Apply the appropriate delta and keep per-frame allocation and tree lookup out of hot paths unless profiling justifies it.
-- Initialize scene-dependent references at the correct lifecycle point. Treat exported values, autoload state, shared resources, and duplicated resources according to their actual ownership semantics.
-- Handle `await`, timers, tweens, deferred calls, and asynchronous signals with cancellation and object-lifetime changes in mind. Verify that captured instances remain valid before use.
-- Keep gameplay rules in testable functions or components when practical, and keep rendering, input, audio, persistence, and network side effects at visible boundaries.
-- Preserve scene paths, signal contracts, serialized properties, save formats, input actions, and exported behavior unless the approved task changes them.
+## Tool defaults
 
-## Enforce game and engine security boundaries
+- Parser, import, and headless-load checks use the supported Godot version.
+- Tests: [GdUnit4](https://github.com/MikeSchulze/gdUnit4) or [GUT](https://github.com/bitwes/Gut) only when compatible with that version.
+- Formatting/analysis: [gdformat and gdlint](https://github.com/Scony/godot-gdscript-toolkit) only when gdtoolkit supports the selected syntax.
+- Relevant cases include scene lifecycle, signal connections, save compatibility, async cancellation, authoritative RPCs, and export-specific behavior.
+- Godot addons have no universal dependency-vulnerability audit.
 
-- Treat save files, configuration, mod data, imported assets, command-line arguments, network packets, RPC arguments, and platform-service data as untrusted at entry points.
-- Make multiplayer authority explicit and validate every state-changing RPC on the authoritative peer. Do not trust client-reported identity, position, inventory, timing, or permissions.
-- Validate dynamic resource paths and filesystem access. Restrict writes to intended locations and account for path traversal and symlink behavior on supported platforms.
-- Do not evaluate untrusted text as GDScript, expressions, shaders, or dynamic calls. Treat addons, editor plugins, resource scripts, and native extensions as executable trusted code.
-- Bound parsing, decompression, spawned nodes, queued work, physics objects, and network messages to prevent resource exhaustion.
-- Keep secrets and personal data out of exported resources, project settings, logs, crash reports, save files, and client builds.
-
-## Test and run GDScript gates
-
-Use the project's Godot executable, commands, test framework, and configured tools first. When the project has no configured choice, ask before installing or configuring these fallbacks:
-
-- parser, import, and headless project-load checks with the exact supported Godot version
-- a test framework verified compatible with the selected Godot version, such as [GdUnit4](https://github.com/MikeSchulze/gdUnit4) or [GUT](https://github.com/bitwes/Gut)
-- [`gdformat` and `gdlint`](https://github.com/Scony/godot-gdscript-toolkit) only when gdtoolkit supports the project's GDScript version and configured style
-- [jscpd](https://jscpd.dev/) as the duplicate detector when the project has no configured alternative
-
-Test gameplay rules, scene lifecycle, signal connections, invalid data, save compatibility, async cancellation, authoritative multiplayer paths, supported input modes, headless behavior, and export-target-specific logic. Use profiling evidence for performance changes.
-
-GDScript and Godot addons do not have one mature universal dependency-vulnerability audit. Report that category as unsupported when the project has no suitable configured tool; do not claim that parser, linter, or tests satisfy it.
-
-Apply only project-defined thresholds. Report every applicable gate as passed, failed, not run, or unsupported.
+References: official [GDScript reference](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html), [style guide](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html), and [typing guidance](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/static_typing.html), matched to the supported engine version.

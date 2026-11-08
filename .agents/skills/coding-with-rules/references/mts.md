@@ -1,16 +1,13 @@
-# MTS coding
+# .mts rules
 
-## Preserve TypeScript ESM semantics
+- `.mts` is ECMAScript-module TypeScript. Node-aware compiler modes emit `.mjs` and use `.d.mts` declarations.
+- `module` and `moduleResolution` define resolution and emit. Node.js rules must not be assumed for bundlers, browsers, Deno, or Bun.
+- Runtime import specifiers target the emitted environment. Node-aware output can require the emitted extension rather than `.mts`.
+- `import type` and `export type` must match emit and `verbatimModuleSyntax` settings.
+- CommonJS globals and synchronous `require` are not native ESM features.
+- Use supported `import.meta` for module metadata.
+- Preserve explicit CommonJS interoperability and conditional package exports.
+- Top-level `await` affects evaluation order and startup.
+- Type checking, emitted/bundled behavior, published declarations, and execution through the target ESM loader are distinct compatibility contracts.
 
-Use the [TypeScript modules reference](https://www.typescriptlang.org/docs/handbook/modules/reference.html) and the project's runtime documentation.
-
-- Treat `.mts` as an ECMAScript module. With TypeScript's Node-aware modes, it emits an `.mjs` file and uses `.d.mts` declarations.
-- Preserve the configured `module` and `moduleResolution` modes. Do not copy Node.js specifier rules into bundler, browser, Deno, or Bun projects without evidence.
-- Write runtime import specifiers for the emitted environment. In Node-aware configurations, this can require the output file extension rather than the source `.mts` extension.
-- Use `import type` and `export type` where required by the project's emit and `verbatimModuleSyntax` settings.
-- Do not introduce CommonJS globals or synchronous `require` as if they were native ESM features.
-- Use `import.meta` for module metadata when supported by the target.
-- Make CommonJS interoperability explicit and preserve package conditional exports.
-- Use top-level `await` only when module evaluation order and startup behavior permit it.
-
-Run project-configured TypeScript checks. Verify type checking, emitted or bundled module behavior, declaration output when published, and execution through the target ESM loader.
+Reference: [TypeScript modules](https://www.typescriptlang.org/docs/handbook/modules/reference.html).

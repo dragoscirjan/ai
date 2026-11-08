@@ -1,50 +1,34 @@
-# TypeScript coding
+# TypeScript rules
 
-## Follow project and language guidance
+## Type contracts
 
-Inspect `package.json`, the lockfile, every applicable `tsconfig` file, runtime and module declarations, build configuration, lint and formatter configuration, tests, and CI before editing.
+- The supported TypeScript version and `tsconfig` settings define type-checking, module, and emit behavior.
+- Prefer inference for clear local values and explicit types at exported, serialized, cross-module, and dependency-injection boundaries.
+- Use `unknown` for unvalidated values and narrow before use; `any` bypasses checking.
+- Assertions, non-null assertions, and suppression comments require an invariant the compiler cannot express.
+- Discriminated unions can encode alternatives without invalid combinations. Preserve distinctions between null, undefined, and present values.
+- Use meaningful constrained generics, stable exported types, and `readonly` where ownership requires it.
+- Type-only imports and exports must match compiler settings and required runtime initialization.
 
-Use the [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) and the [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html) as primary references. Apply them through the project's compiler options, runtime constraints, and established conventions.
+## Erased types and runtime data
 
-## Model types precisely
+- TypeScript types are erased. JSON, environment values, requests, storage, messages, and JavaScript dependencies remain runtime trust boundaries.
+- A cast does not validate an object. Narrow caught errors before reading their properties.
+- Guard prototype-sensitive operations on attacker-controlled keys.
+- Browser bundles, source maps, declarations, and exceptions can expose secrets.
+- Compile-time type tests protect type contracts; they do not establish runtime behavior.
 
-- Preserve the project's supported TypeScript version and compiler settings.
-- Prefer compiler inference for clear local values. Write explicit types at public, cross-module, serialized, and dependency-injection boundaries.
-- Prefer `unknown` to `any` for values that need validation. Narrow before use.
-- Avoid unchecked type assertions, non-null assertions, and suppression comments. Use them only with a documented invariant that the compiler cannot express.
-- Model alternatives with discriminated unions when they make invalid states harder to represent.
-- Preserve null and undefined semantics. Do not hide a missing-value problem with an assertion.
-- Use `readonly`, immutable transformations, and pure functions when they simplify ownership and state flow.
-- Keep generic parameters meaningful and constrained. Do not generalize a concrete operation without a real caller need.
-- Keep exported types stable unless the approved task changes the API.
-- Use type-only imports and exports where they clarify runtime boundaries and match project compiler settings.
+## Tool defaults
 
-## Keep runtime boundaries safe
+The maintained [Tempel toolkit](https://github.com/dragoscirjan/tempel-javascript) provides compatible shared configurations:
 
-TypeScript types are erased. Validate untrusted values from JSON, environment variables, network requests, storage, messages, and JavaScript dependencies before treating them as typed data.
+- Tests: [`@tempel/vitest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/vitest); [`@tempel/jest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/jest) for Jest projects.
+- Lint: [`@tempel/eslint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/eslint).
+- Formatting: [`@tempel/prettier`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/prettier).
+- Commit messages: [`@tempel/commitlint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/commitlint) where applicable.
+- Type checking: the selected compiler and project-owned `tsconfig` files; [`noEmit`](https://www.typescriptlang.org/tsconfig/noEmit.html) when another tool emits code.
+- Dependency vulnerabilities: the active package manager's audit command.
 
-- Keep validation near the trust boundary.
-- Do not cast an unvalidated object merely to satisfy the compiler.
-- Preserve error causes and narrow caught values before reading properties.
-- Avoid prototype-sensitive object operations on attacker-controlled keys.
-- Keep secrets out of browser bundles, source maps, logs, declarations, and exceptions.
-- Audit direct and transitive packages with the active package manager.
+Do not recommend `@tempel/tsconfig`; it is not maintained. Tempel versions must match the underlying selected tools.
 
-## Test and run TypeScript gates
-
-Use the project's scripts and tools first. When the project has no configured choice, prefer the maintained shared configurations from the [Tempel JavaScript Development Toolkit](https://github.com/dragoscirjan/tempel-javascript) and ask before installing them:
-
-- [`@tempel/vitest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/vitest) for the Vitest fallback
-- [`@tempel/jest`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/jest) when the project has chosen Jest instead of Vitest
-- [`@tempel/eslint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/eslint) for ESLint
-- [`@tempel/prettier`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/prettier) for Prettier
-- [`@tempel/commitlint`](https://github.com/dragoscirjan/tempel-javascript/tree/main/packages/commitlint) when the repository validates Conventional Commits
-- the TypeScript compiler with [`noEmit`](https://www.typescriptlang.org/tsconfig/noEmit.html) for type checking when another tool emits code
-- [jscpd](https://jscpd.dev/) for duplicate detection
-- the active package manager's audit command for dependency vulnerabilities
-
-Do not recommend `@tempel/tsconfig`; it is not currently maintained. Keep TypeScript compiler configuration project-owned and use the project's `tsconfig` files directly. Tempel recommendations do not override existing project configuration.
-
-Test observable runtime behavior, not only type relationships. Add compile-time type tests only when they protect an intentional public type contract.
-
-Apply only project-defined thresholds. Report every applicable gate as passed, failed, not run, or unsupported. Never describe an unavailable or unexecuted gate as passed.
+References: [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html), [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html).

@@ -1,17 +1,11 @@
-# JSX coding
+# .jsx rules
 
-## Follow the configured JSX runtime
-
-Inspect the project's compiler, bundler, JSX import source, framework, rendering target, test utilities, and accessibility rules. JSX transformation semantics are implementation-specific; do not assume React, a browser, or a virtual DOM.
-
-- Use the element, fragment, attribute, and event conventions of the configured runtime.
-- Preserve component and property contracts exposed by the project.
-- Keep rendering expressions understandable. Move complex transformation and state logic into named functions when that improves testability.
-- Preserve framework lifecycle, ownership, and reactivity rules. Do not import patterns from another JSX framework.
-- Keep components or render functions pure when the framework expects purity. Put effects at the framework's explicit effect boundaries.
-- Treat interpolated values as untrusted when they cross a trust boundary. Use the runtime's normal contextual escaping for rendered text.
-- Validate or allowlist URL schemes and destinations, style values, and spread property names and values before rendering them. Normal JSX escaping does not make these sinks safe.
-- Treat raw markup separately. Use raw-markup or escaping-bypass APIs only for a demonstrated need and only after context-appropriate sanitization.
-- When JSX renders a user interface, use semantic elements, labels, keyboard access, focus behavior, and project accessibility checks consistent with [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/).
-
-Run project-configured JavaScript checks. Test observable rendered behavior and accessibility with the project's framework-aware utilities; do not test only serialized implementation structure.
+- JSX transformation and rendering semantics belong to the configured compiler/runtime; React, browsers, and virtual DOMs are not universal defaults.
+- Elements, fragments, attributes, events, component properties, and render results must match that runtime's contracts.
+- Framework lifecycle, ownership, effect, and reactivity rules are not interchangeable across JSX frameworks.
+- Render functions remain pure where the framework requires purity; effects belong at explicit framework effect boundaries.
+- Normal contextual escaping protects rendered text, not every sink.
+- URL schemes/destinations, style values, and spread property keys/values need validation or allowlisting before rendering.
+- Raw-markup and escaping-bypass APIs require a demonstrated need and context-appropriate sanitization.
+- UI output needs semantic elements, labels, keyboard access, focus behavior, and accessibility consistent with [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/).
+- Observable rendering and accessibility behavior, not serialized internal structure alone, define UI compatibility.
