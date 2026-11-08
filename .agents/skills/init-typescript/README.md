@@ -19,9 +19,11 @@ It keeps compiler configuration in project-owned `tsconfig` files, installs Node
 
 ## Dependency contract
 
-Load `init-project`, then `coding`, then `coding-ts`. Stop when one is unavailable; do not install a missing skill automatically.
+This is an independent instruction set for an existing mise/Node/pnpm foundation. Its executable imports the sibling `init-project/scripts/lib.ts` helper, which must be installed without requiring its skill instructions to load. Missing project prerequisites block initialization.
 
 The target project uses the approved Node 24-or-newer and pnpm toolchain from `init-project`. The bundled initializer requires Bun with `Bun.TOML.parse`, hard-stops when Bun is unavailable, and does not add Bun or another package manager to the target project.
+
+External Skills CLI commands do not infer shared-helper dependencies. With installation approval, install `init-project` and `init-typescript` together from the same source into the same canonical skill root. Before running the initializer from its skill directory, require `test -f ../init-project/scripts/lib.ts`; stop and ask if it is missing.
 
 ## Invocation
 

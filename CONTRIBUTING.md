@@ -25,13 +25,31 @@ When another workflow needs hosted-repository identity, query project-scoped mem
 
 ## Architecture rules
 
-- Follow the [Agent Skills specification](https://agentskills.io/specification) for every skill under `.agents/skills/`.
+- Follow the [Agent Skills specification](https://agentskills.io/specification) for core skill fields. The `require` convention below is an explicit project extension, not a standard or native harness feature. Preserve documented harness-specific fields where applicable.
 - Match each skill directory name to the `name` in its `SKILL.md` frontmatter.
 - Keep reusable assets independent of absolute machine paths and individual harnesses unless the coupling is explicit.
 - Keep detailed reusable workflows in skills. Keep only startup routing, project configuration, security boundaries, and owner authority in `AGENTS.md`.
 - Preserve security boundaries and required workflow gates when simplifying imported instructions.
 - Prefer direct, testable instructions over commentary about intent.
 - Do not duplicate workspace commands outside the workspace skills.
+
+## Independent skills and explicit composition
+
+Keep each leaf skill useful on its own: state its scope, real prerequisites, and operation-specific safeguards. Project instructions or the user select additional skills; do not make leaves load them implicitly.
+
+Declare instruction dependencies only for thin, intentional compositions or the owner-approved `cleanup-workspaces` → `isolated-workspace` exception. For example:
+
+```yaml
+require: ["grilling"]
+```
+
+Omit the field when no skills are required. When present, use exactly one unquoted top-level `require` key with a nonempty, single-line JSON-compatible array of unique skill names. Multiline lists, unquoted items, anchors, and trailing comments are unsupported for this property. Names must exist; self-references and cycles are invalid.
+
+The declaration is the sole source of mandatory prompt dependencies. Resolve requirements recursively in array order, loading each skill once before its caller. The composition body defines execution sequence, handoffs, and stops; do not repeat loading procedures or component instructions. An optional reference is not a requirement.
+
+Keep shared-code installation dependencies in catalog `dependencies`; capability `requires` is separate. The synchronization planner includes both code dependencies and frontmatter requirements in the approval-bound installation closure. Managed project profiles may add the policy bundle required by imported instructions.
+
+Top-level `require` is not part of the Agent Skills standard and fails its strict reference validator. It acquires model-driven semantics through project routing, not a custom harness loader. External Skills CLI commands do not automatically install these requirements. Outside a managed project, install the declared skills and supply this routing convention explicitly. Report tested harness behavior separately from source inspection or unverified compatibility.
 
 ## Human-approved instruction adaptation
 

@@ -1,6 +1,6 @@
 # PHP coding
 
-`coding-php` adds PHP-specific guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to PHP source, templates, Composer packages, framework code, and PHP build or test work.
+`coding-php` provides PHP-specific guidance independently. It applies to PHP source, templates, Composer packages, framework code, and PHP build or test work.
 
 ## Sources
 
@@ -23,10 +23,6 @@ When the project has no configured choice, the skill recommends:
 - [jscpd](https://jscpd.dev/) for duplicate detection
 
 Existing project configuration takes precedence. The agent must not install or reconfigure PHP, extensions, Composer dependencies, or tools without human approval.
-
-## Dependency contract
-
-`coding-php` requires `coding`. The agent resolves it through the active harness's advertised skill names and paths, loads it first, and stops when it is unavailable. The skill does not rely on a harness-specific Skill tool.
 
 ## Invocation
 

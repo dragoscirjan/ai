@@ -1,7 +1,7 @@
 ---
 name: coding-pyi
 description: Write, review, or test Python .pyi stub files that accurately describe runtime interfaces, overloads, exports, versions, and platform conditions without adding runtime behavior. Use whenever a .pyi file is changed.
-compatibility: Requires the coding and coding-py skills plus the type checker and stub-validation tools selected by the project.
+compatibility: Requires the type checker and stub-validation tools selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,14 +9,6 @@ metadata:
 ---
 
 # Python stub coding
-
-Apply `coding`, then `coding-py`, then this extension-specific guidance.
-
-## Load dependencies
-
-Locate the advertised `coding` and `coding-py` skills by exact name and path. Read their `SKILL.md` files in that order unless they are already loaded.
-
-If either dependency is unavailable, stop and ask the human to install or expose it. Do not install it automatically, duplicate its instructions, or rely on a harness-specific Skill tool.
 
 ## Describe the runtime interface
 
@@ -36,4 +28,4 @@ Run the project's configured formatter, type checker, stub linter, and interface
 
 Test representative accepted and rejected type-checking examples when the project has typing tests. Do not treat a clean type-checker result as proof of runtime parity.
 
-Report each applicable gate as passed, failed, not run, or unsupported. Inherit jscpd and other language-wide gates from `coding-py`; do not duplicate or replace them here.
+Use project duplicate detection, or jscpd when available, and report each applicable check as passed, failed, not run, or unsupported. Do not install missing tools without approval.

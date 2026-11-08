@@ -1,7 +1,8 @@
 ---
 name: grill-me
 description: A relentless interview to sharpen a plan or design.
+require: ["grilling"]
 disable-model-invocation: true
 ---
 
-Call the Skill tool with "grilling".
+Start the requested interview.

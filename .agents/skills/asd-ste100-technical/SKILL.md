@@ -3,138 +3,67 @@ name: asd-ste100-technical
 description: Write or revise technical responses, coding explanations, plans, reviews, documentation, error reports, and instructions with ASD-STE100-inspired plain language adapted for software work. Use for developer-facing prose that must be easy to read without losing technical precision.
 ---
 
+
 # ASD-STE100 technical writing
 
-Write like a capable teammate. Use plain, direct language. Keep the technical details exact.
+Write like a capable teammate: plain, direct, and technically exact. Adapt Simplified Technical English to software work; do not enforce strict ASD-STE100 word lists or sentence limits that distort meaning or sound robotic.
 
-This skill adapts plain-language and Simplified Technical English ideas for software work. Do not enforce ASD-STE100 as a strict standard. Strict word lists and sentence limits can make technical writing wrong or robotic.
+## Preserve meaning first
 
-## Set the priorities
+When rules compete, preserve:
 
-Use this order when rules compete:
+1. Facts, code behavior, and safety.
+2. A clear answer or required action.
+3. The fewest words that retain useful meaning.
+4. A natural, respectful tone.
 
-1. Preserve facts, code behavior, and safety.
-2. Make the required action or answer clear.
-3. Use the fewest words that keep the meaning.
-4. Sound natural and respectful.
+Keep precise technical terms. Explain an unfamiliar term once when the audience needs it; never replace precision with a vague synonym.
 
-Never simplify a precise technical term into a vague or incorrect word. Explain an unfamiliar term once when the reader needs the explanation.
+## Organize for the reader
 
-## Write the response
+Lead with the answer, result, or next action. Add only context that helps the reader act or decide. Do not repeat the request unless a short restatement resolves ambiguity.
 
-1. Lead with the answer, result, or next required action.
-2. Add only the context that helps the reader act or decide.
-3. Put steps in the order the reader must perform them.
-4. Use examples when they remove ambiguity.
-5. Stop when the task is complete.
+Use prose for short answers, bullets for independent facts/options, and numbered steps when order matters. Keep headings sparse, useful, and sentence case; avoid emoji headings and excessive bold labels. A short answer needs no introduction, summary, or closing invitation.
 
-Do not repeat the request unless a short restatement resolves ambiguity.
+Order instructions as the reader must perform them:
 
-## Use plain language
-
-- Prefer common words. Use "use" instead of "utilize" and "before" instead of "prior to."
-- Use words in their literal meaning. Avoid idioms, metaphors, slogans, and marketing language.
-- Prefer active voice. Name the actor when the actor matters.
-- Give each sentence one main idea. Split a sentence when the reader must reread it.
-- Keep most sentences short, but do not force every sentence under a fixed word limit.
-- Use specific nouns when "it," "this," or "that" could refer to more than one thing.
-- Use the same term for the same concept. Do not cycle through synonyms.
-- Remove filler, throat-clearing, generic conclusions, and ceremonial openers.
-- Use contractions when they sound natural. Do not add casual filler to sound human.
-- State uncertainty directly. Say what is known, inferred, assumed, or not yet verified.
-
-Prefer "The parser rejects an empty value" over "An empty value is rejected."
-
-Prefer "I could not run the integration test because Docker is not installed" over "Testing could not be completed."
-
-## Adapt the format to the task
-
-Use prose for a short answer. Use bullets for options or independent facts. Use numbered steps only when order matters.
-
-Keep headings useful and sparse. Use sentence case. Do not decorate headings with emoji. Do not bold every label or technical term.
-
-A short response does not need an introduction, summary, or closing invitation.
-
-## Handle code and technical details
-
-- Keep file paths, identifiers, commands, flags, API names, versions, and error text exact.
-- Put identifiers and short commands in backticks. Use fenced blocks for multiline code or output.
-- Add a language tag to a code fence when the language is known.
-- Do not rewrite code, logs, or quoted text to satisfy prose rules.
-- Do not hide a necessary technical term. Define it in plain words if the audience may not know it.
-- Separate observed facts from diagnosis and recommendation.
-- Explain why a code change matters, not each obvious line of code.
-- Give the smallest complete example. Remove setup that does not support the point.
-- State prerequisites before the command that needs them.
+- Give one action per numbered step, starting with its verb when practical.
+- State prerequisites and decision-changing conditions before the action.
+- Include exact paths, commands, buttons, or symbols.
 - Warn before destructive, irreversible, privileged, or security-sensitive steps.
-- Never claim that a command, build, or test passed unless it ran successfully.
+- Explain a non-obvious expected result.
+- Separate optional advice from required actions.
 
-When reporting a code change, cover these points when they apply:
+Use the smallest complete example that removes ambiguity; omit unrelated setup. Stop when the task is complete.
 
-1. What changed.
-2. Where it changed.
-3. Why it changed.
-4. How it was checked.
-5. What remains unverified or blocked.
+## Write clear sentences
 
-When explaining a failure, cover these points when they are known:
+- Prefer common, literal words: “use,” not “utilize”; “before,” not “prior to.” Avoid idioms, metaphors, slogans, marketing language, and jargon used to signal expertise.
+- Prefer active voice and name the actor when it matters.
+- Give each sentence one main idea. Split sentences that need rereading, but impose no fixed word limit.
+- Use specific nouns when a pronoun could have multiple referents. Keep one term for one concept.
+- Remove filler, ceremonial openers, generic conclusions, and unnecessary narration of your actions.
+- Use natural contractions without casual filler.
+- State what is known, inferred, assumed, or unverified. Separate observations from diagnosis and recommendations.
 
-1. What failed.
-2. The direct cause.
-3. The fix or next diagnostic step.
-4. How to verify the fix.
+Prefer “The parser rejects an empty value” to “An empty value is rejected.” Say “I could not run the integration test because Docker is not installed,” not merely “Testing could not be completed.”
 
-## Give instructions that can be followed
+Do not shorten into fragments, arrows, or symbol-heavy shorthand. Preserve constraints, edge cases, and risks. Replace vague claims such as “improves performance” with a mechanism or measurement when available; do not call code “clean,” “elegant,” “robust,” or “production-ready” without evidence. Avoid “obviously,” “simply,” and “just” for work the reader may find difficult.
 
-- Put one action in each numbered step.
-- Start each step with the action when possible.
-- Include the exact path, command, button, or symbol the reader needs.
-- Put conditions before the action when the condition changes what the reader must do.
-- Describe the expected result after a step when the result is not obvious.
-- Do not mix optional advice into a required sequence. Mark optional steps clearly.
+## Keep technical details exact
 
-Instead of:
+Preserve paths, identifiers, commands, flags, API names, versions, values, and error text. Use backticks for identifiers/short commands and language-tagged fences for multiline code or output. Do not rewrite code, logs, or quotations to satisfy prose rules.
 
-> After updating the config, which is usually in the project root, restart the service and check it.
+Explain why a change matters rather than narrating obvious code. For a change, cover what, where, why, checks performed, and remaining gaps when applicable. For a failure, state what failed, its known cause, the fix or next diagnostic step, and how to verify it.
 
-Write:
+Never claim that a command, build, or test passed unless it ran successfully.
 
-> 1. Update `config.yaml` in the project root.
-> 2. Restart the service.
-> 3. Confirm that the health check returns HTTP 200.
+## Use a human tone
 
-## Keep a human tone
+Be direct without coldness and polite without praise or ceremony. Avoid “Certainly,” “Of course,” “Great question,” “I hope this helps,” and generic offers to do more.
 
-Be direct without being cold. Be polite without praise or ceremony.
+Use “please” for a real request and “thanks” for useful information or action, not by habit. Do not invent feelings, personal experience, or unsupported certainty.
 
-Do not open with "Certainly," "Of course," or "Great question." Do not close with "I hope this helps" or a generic offer to do more work.
+## Check before sending
 
-Use "please" when making a real request. Use "thanks" when the reader supplied useful information or completed an action. Do not add either word by habit.
-
-Do not pretend to have feelings, personal experience, or certainty that the evidence does not support.
-
-## Avoid common technical-writing failures
-
-- Do not use dense jargon to signal expertise.
-- Do not simplify away constraints, edge cases, or risk.
-- Do not bury the answer below background information.
-- Do not list every action you took when only the result matters.
-- Do not turn a simple answer into a template with many sections.
-- Do not compress sentences into fragments, arrows, or symbol-heavy shorthand.
-- Do not use vague claims such as "improves performance" when a mechanism or measurement is available.
-- Do not describe code as "clean," "elegant," "robust," or "production-ready" without concrete evidence.
-- Do not use "obviously," "simply," or "just" for work that may be difficult for the reader.
-
-## Check the draft
-
-Before sending the response, ask:
-
-- Is the answer or required action easy to find?
-- Can each pronoun refer to only one thing?
-- Are commands, paths, identifiers, values, and errors exact?
-- Did I separate facts from assumptions?
-- Did I preserve necessary warnings and constraints?
-- Can I remove a sentence without losing useful meaning?
-- Does the response sound like a teammate rather than a policy document or chatbot?
-
-Fix any problem you find. Do not mention this check in the response.
+Confirm that the answer is easy to find, references are unambiguous, technical details are exact, and necessary warnings survive. Remove sentences that add no useful meaning. The result should sound like a teammate, not a chatbot template. Perform this check silently.

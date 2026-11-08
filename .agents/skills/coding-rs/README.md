@@ -1,6 +1,6 @@
 # Rust coding
 
-`coding-rs` adds Rust-specific guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to `.rs` files, Cargo manifests, workspaces, and Rust build or test work.
+`coding-rs` provides Rust-specific guidance independently. It applies to `.rs` files, Cargo manifests, workspaces, and Rust build or test work.
 
 ## Sources
 
@@ -24,10 +24,6 @@ When the project has no configured choice, the skill recommends:
 - [jscpd](https://jscpd.dev/) for duplicate detection
 
 Existing project configuration takes precedence. The agent must not install or reconfigure tools, components, targets, or policies without human approval. Commands must use the project's target and feature combinations rather than assuming `--all-features` is valid.
-
-## Dependency contract
-
-`coding-rs` requires `coding`. The agent resolves it through the active harness's advertised skill names and paths, loads it first, and stops when it is unavailable. The skill does not rely on a harness-specific Skill tool.
 
 ## Invocation
 

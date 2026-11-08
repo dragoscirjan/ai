@@ -594,6 +594,11 @@ function formatTomlStringArray(values: readonly string[]): string {
   return `[${values.map((value) => JSON.stringify(value)).join(", ")}]`;
 }
 
+function ownTableValue(value: unknown, key: string): unknown {
+  if (value === null || typeof value !== "object") return undefined;
+  return Object.getOwnPropertyDescriptor(value, key)?.value;
+}
+
 export function ensureTomlTask(
   text: string,
   name: string,
@@ -614,6 +619,19 @@ export function ensureTomlTask(
     );
   }
 
+  if (definition.depends?.length && !definition.run) {
+    const task = ownTableValue(ownTableValue(Bun.TOML.parse(text), "tasks"), name);
+    const run = ownTableValue(task, "run");
+    const commands = Array.isArray(run) ? run : [run];
+    // Recognize only unconditional literal failing placeholders; never erase commands.
+    const placeholder = /^(?:echo|printf)\s+(['"])[^'"]*\bnot (?:yet )?configured\b[^'"]*\1\s*(?:>&2\s*)?(?:;|&&)\s*exit\s+1\s*;?$/i;
+    if (commands.some((command) => typeof command === "string" && placeholder.test(command.trim()))) {
+      throw new InitError(
+        `Unconfigured aggregate task ${name}; reconcile its placeholder through an approved plan before adding checks`,
+        EXIT.CONFLICT,
+      );
+    }
+  }
   if (definition.run) {
     ensureSimpleKey(lines, bounds, "run", JSON.stringify(definition.run), `tasks.${name}`);
     bounds = sectionBounds(lines, taskHeaderPattern(name)) ?? bounds;

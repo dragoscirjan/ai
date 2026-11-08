@@ -1,7 +1,7 @@
 ---
 name: coding-js
 description: Write, refactor, review, or test JavaScript in .js files for browser, Node.js, Deno, Bun, or embedded runtimes. Use for JavaScript work and combine with coding-mjs, coding-cjs, or coding-jsx when those extension semantics apply.
-compatibility: Requires the coding skill and the JavaScript runtime and toolchain selected by the project.
+compatibility: Requires the JavaScript runtime and toolchain selected by the project.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,16 +9,6 @@ metadata:
 ---
 
 # JavaScript coding
-
-Apply the generic `coding` workflow, then apply the JavaScript-specific rules in this skill.
-
-## Load the dependency
-
-Locate the advertised `coding` skill by exact name and path. If it is not already loaded, read its `SKILL.md` before continuing.
-
-If `coding` is unavailable, stop and ask the human to install or expose it. Do not install it automatically, copy its instructions into this skill, or assume its contents from memory.
-
-For `.mjs`, `.cjs`, or `.jsx` files, also load the matching extension skill after this one.
 
 ## Follow project and language guidance
 

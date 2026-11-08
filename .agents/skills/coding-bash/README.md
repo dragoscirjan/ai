@@ -1,6 +1,6 @@
 # Bash coding
 
-`coding-bash` adds Bash 4-or-newer semantics. Apply [`coding`](../coding/SKILL.md), then [`coding-sh`](../coding-sh/SKILL.md), then this wrapper.
+`coding-bash` adds Bash 4-or-newer semantics. It is independent of other skill instructions.
 
 The skill has a hard minimum of Bash 4.0. The agent verifies the interpreter on every supported target and stops for a decision when any target resolves an older Bash.
 
@@ -10,7 +10,7 @@ Select this skill from the interpreter contract, not from the filename suffix. A
 
 ## Scope
 
-The wrapper covers only Bash-specific concerns:
+The skill focuses on Bash-specific concerns:
 
 - indexed and associative arrays
 - `[[ ... ]]`, arithmetic contexts, extended globs, and regular-expression matching
@@ -20,16 +20,10 @@ The wrapper covers only Bash-specific concerns:
 - [ShellCheck](https://www.shellcheck.net/) with the Bash dialect selected explicitly, regardless of a `.sh` suffix
 - Bats-core and Bash 4+-version syntax checks
 
-It inherits quoting, injection, cleanup, POSIX-baseline, shfmt, and jscpd guidance from `coding-sh` instead of duplicating it.
-
 ## Sources
 
 - [GNU Bash Manual](https://www.gnu.org/software/bash/manual/bash.html)
 - [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
-
-## Dependency contract
-
-`coding-bash` requires `coding` and `coding-sh`. The agent resolves both through advertised skill names and paths, loads them in that order, and stops when either is unavailable. The skill does not rely on a harness-specific Skill tool.
 
 ## Invocation
 

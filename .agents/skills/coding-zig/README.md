@@ -1,6 +1,6 @@
 # Zig coding
 
-`coding-zig` adds Zig-specific guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to `.zig` files, `build.zig`, `build.zig.zon`, and Zig build or package work.
+`coding-zig` provides Zig-specific guidance independently. It applies to `.zig` files, `build.zig`, `build.zig.zon`, and Zig build or package work.
 
 ## Sources
 
@@ -22,10 +22,6 @@ When the project has no configured choice, the skill recommends:
 Zig does not have one mature universal dependency-audit or separate static-analysis fallback. The agent reports those categories as unsupported when the project has no suitable configured tool. It does not treat compilation or tests as equivalent gates.
 
 Existing project configuration takes precedence. The agent must not install or reconfigure Zig, dependencies, or tools without human approval.
-
-## Dependency contract
-
-`coding-zig` requires `coding`. The agent resolves it through the active harness's advertised skill names and paths, loads it first, and stops when it is unavailable. The skill does not rely on a harness-specific Skill tool.
 
 ## Invocation
 

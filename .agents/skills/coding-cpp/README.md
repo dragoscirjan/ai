@@ -1,6 +1,6 @@
 # C++ coding
 
-`coding-cpp` adds C++-specific guidance to the generic [`coding`](../coding/SKILL.md) workflow. It applies to C++ source, module, and header files identified by the project's build and usage context.
+`coding-cpp` provides C++-specific guidance independently. It applies to C++ source, module, and header files identified by the project's build and usage context.
 
 ## Sources
 
@@ -24,12 +24,6 @@ When the project has no configured choice, the skill recommends:
 - a dependency audit only when the project's dependency format has a mature supported audit path
 
 Existing project configuration takes precedence. The agent must not install or reconfigure these tools without human approval. Tool support must match the selected C++ standard and target.
-
-## Dependency contract
-
-`coding-cpp` requires `coding`. The agent resolves it through the active harness's advertised skill names and paths, loads it first, and stops when it is unavailable. The skill does not rely on a harness-specific Skill tool.
-
-C++ does not inherit C guidance. This skill does not load `coding-c`.
 
 ## Invocation
 

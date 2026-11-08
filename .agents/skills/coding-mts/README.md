@@ -1,6 +1,6 @@
 # MTS coding
 
-`coding-mts` adds `.mts` TypeScript ESM semantics to [`coding-ts`](../coding-ts/SKILL.md) and the generic [`coding`](../coding/SKILL.md) workflow.
+`coding-mts` provides `.mts` TypeScript ESM semantics independently.
 
 ## Scope
 
@@ -12,10 +12,6 @@
 - `.d.mts` declarations and package exports
 
 Reference: [TypeScript modules reference](https://www.typescriptlang.org/docs/handbook/modules/reference.html).
-
-## Dependencies
-
-Load `coding`, `coding-ts`, and `coding-mts` in that order. All are sibling skills. Stop when a dependency is unavailable; do not install it automatically.
 
 ## Invocation
 
