@@ -20,7 +20,7 @@ import {
   validateVersion,
   writeJsonObject,
   type TomlTaskDefinition,
-} from "../../../init-project/scripts/lib.ts";
+} from "../lib.ts";
 
 interface GdscriptOptions {
   godot: string;
@@ -254,7 +254,7 @@ async function main(): Promise<void> {
 
   emit(
     {
-      skill: "init-with-rules",
+      skill: "init-project",
       language: "gdscript",
       mode,
       root,

@@ -46,8 +46,8 @@ Create the selection file outside the target repository. Its schema is [`../asse
   ],
   "declinedSkills": [
     {
-      "name": "init-with-rules",
-      "reason": "The existing language toolchains are already configured."
+      "name": "init-project",
+      "reason": "The existing foundation and language toolchains are already configured."
     }
   ],
   "rootFiles": [

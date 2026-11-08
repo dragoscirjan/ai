@@ -1,7 +1,7 @@
 ---
 name: init-project
-description: Initialize or adopt the shared mise, Node, pnpm, Tempel, and Husky project foundation. Use alone for repository-wide setup or as the shared foundation for init-with-rules.
-compatibility: Requires mise, Git, and Bun with Bun.TOML.parse. Hard-stops when Bun is unavailable. Target projects require Node 24 or newer; tool installation and lockfile updates need explicit approval.
+description: Initialize or adopt the shared project foundation, TypeScript tooling, or Godot GDScript tooling through on-demand setup references and bundled helpers. Use for explicitly requested initialization, not ordinary coding or automatic setup during installation.
+compatibility: Requires Git, mise, and Bun with Bun.TOML.parse. Initialized targets require an approved Node 24-or-newer/pnpm control plane; GDScript also needs an explicitly selected compatible Godot toolchain. Installation and lockfile updates require approval.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -10,40 +10,32 @@ metadata:
 
 # Project initialization
 
-Plan or adopt the shared tooling foundation. Loading these instructions as a prerequisite does not request foundation changes or authorize installation. Language setup belongs to `init-with-rules` and requires separate approval.
+Loading instructions does not authorize initialization. Read applicable project instructions and contribution policy before planning; satisfy project approval and workspace gates before mutation. Stop on unavailable mandatory instructions or tools. Bun runs the helpers only and is not added to target toolchains.
 
-## Inspect and approve
+## Select the requested phase
 
-Read project instructions and contribution policy; satisfy its workspace and mutation gates. Require Git, mise, and Bun; stop if a prerequisite is unavailable. Bun runs the helper only and is not added to the target toolchain.
+| Requested setup | Definition | Helper from this directory |
+|---|---|---|
+| Shared foundation | [Project foundation](references/project.md) | `scripts/init.ts` |
+| TypeScript | [TypeScript rules](references/typescript.md) | `scripts/typescript/init.ts` |
+| Godot GDScript | [GDScript rules](references/gdscript.md) | `scripts/gdscript/init.ts` |
 
-Inspect existing manifests, locks, mise tasks, hooks, validation, CI, platforms, and Git state. Preserve equivalent tools, package managers, versions, publishable-package contracts, and custom hooks. Stop on conflicts; propose exact reconciliation rather than overwrite.
+Read only applicable definitions, following linked prerequisites first and each document once per task. Stop on missing references or cycles. Unsupported languages or project shapes require a new approved plan, not another language's template.
 
-Before mutation, show the complete plan: changed files and final contents, selected versions and their sources, dependencies/overrides, scripts/tasks, hooks, conflicts, installation commands, and lockfile changes. Redact sensitive existing values without hiding proposed edits. Wait for explicit approval. Upgrades, fixes, and language setup are not implied.
+Foundation approval does not authorize language setup. Language helpers require the approved foundation to exist; if missing, stop for separately approved foundation setup. Do not run foundation changes automatically because a language document references its definitions. Preserve other languages in mixed projects.
 
-## Use the tested helper
+## Inspect, plan, and approve
 
-Run from this skill directory with an absolute target root:
+Inspect Git state, manifests/locks, mise tasks, hooks, validation, CI, runtimes, and platform constraints. Preserve equivalent tools, package managers, versions, existing hooks, publishable-package contracts, and unrelated settings.
 
-```text
-bun scripts/init.ts --help
-bun scripts/init.ts --root /absolute/project --node 24 --pnpm 10.33.0
-```
+Show the complete phase plan before mutation: final proposed file contents, selected versions and sources, dependencies/overrides, scripts/tasks, hooks, conflicts, install commands, and lockfile changes. Redact sensitive existing values without hiding proposed edits. Wait for explicit approval; language setup needs its own approval after foundation setup. Upgrades, automatic fixes, and executable addons are not implied.
 
-The default is a non-mutating JSON plan. Review every proposed file. After approval, repeat the selected arguments with `--apply --confirm`. Add `--install` only with installation and lockfile approval; it also changes the user-level mise trust store. Treat stdout as result data and stderr as diagnostics. Resolve unsupported shapes or conflicts through a revised plan, never forced templates.
+Run the selected helper's `--help` from this directory and pass an absolute target root. The default JSON plan is non-mutating; inspect every proposed file. After approval, repeat selected arguments with `--apply --confirm`. Add `--install` only when installation, lockfiles, and user-level mise trust-store changes are approved. Treat stdout as result data and stderr as diagnostics. Resolve conflicts and unsupported shapes through a revised plan, never forced templates.
 
-## Foundation contract
+## Shared safeguards and verification
 
-- Require Node 24 or newer. Propose a maintained compatible Node/pnpm pair, not floating `latest`; do not lower the baseline.
-- Mise owns executable tools and `mise.lock`. `package.json`, pnpm, and `pnpm-lock.yaml` own Node dependencies. Never hand-edit lockfiles or put Node packages in mise.
-- Tooling-only manifests are private; changing an existing package's identity, publication, workspaces, exports, or release metadata needs approval.
-- Default manifest tooling: Husky, jscpd, `@commitlint/cli` + `@tempel/commitlint`, ESLint + `@tempel/eslint`, and Prettier + `@tempel/prettier`. Reuse compatible project choices and the helper's tested pins. Use documented Tempel APIs; `@tempel/tsconfig` is unmaintained.
-- Keep leaf commands in their owning manifest; mise orchestrates namespaced tasks without recursion. Language additions append implementations without replacing real checks. Reconcile failing placeholders explicitly; unconfigured categories must not pretend to pass.
-- Checking tasks (`lint`, `format`, `code-duplicate`, `audit`, `typecheck`, `test`) must not rewrite source. `build` produces approved output artifacts. `quality` runs applicable gates; `validate` aliases it. Explicit `lint:fix`/`format:fix` tasks may write source. `deps:sync` installs pinned tools and locked dependencies.
-- Proposed Husky policy: fast formatting/lint checks at pre-commit, Commitlint with the quoted message-file argument at commit-msg, and `mise run validate` at pre-push. Preserve existing managers and hooks.
-- Ignore paths and numeric thresholds come only from project configuration.
+Use the owning package manager for manifest/lock changes; never hand-edit lockfiles. Project-configured tools take precedence. Use only approved project ignore paths. Do not invent numeric thresholds. Unconfigured quality categories must not pretend to pass.
 
-## Verify and report
+Bundled helpers are the default for supported contracts. Any approved replacement must remain plan-first, confirmation-gated, idempotent, root-confined, argument-array based, conflict-detecting, and failure-propagating; preserve unrelated fields and avoid broad upgrades. Never read, log, or persist credentials.
 
-After approved application, inspect generated configuration, hooks and executability, lockfiles, and the full diff. Run `deps:sync` and applicable non-mutating tasks. Report each gate as passed, failed, not run, or unsupported; missing implementations never pass.
-
-Use bundled helpers for supported contracts. Any approved replacement must remain plan-first, confirmation-gated, idempotent, root-confined, argument-array based, conflict-detecting, and failure-propagating; preserve unrelated fields and avoid broad upgrades. Never read, log, or persist credentials.
+After approved application, run dependency synchronization and applicable language/aggregate checks, then inspect generated configuration, hook executability, outputs, lockfiles, and the complete diff. Report each gate as passed, failed, not run, or unsupported; missing implementations and unchecked targets remain gaps.

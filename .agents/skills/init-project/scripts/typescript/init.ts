@@ -20,7 +20,7 @@ import {
   writeJsonObject,
   type JsonObject,
   type TomlTaskDefinition,
-} from "../../../init-project/scripts/lib.ts";
+} from "../lib.ts";
 
 type Runtime = "browser" | "node";
 type ModuleKind = "commonjs" | "esm";
@@ -257,7 +257,7 @@ async function main(): Promise<void> {
 
   emit(
     {
-      skill: "init-with-rules",
+      skill: "init-project",
       language: "typescript",
       mode,
       root,

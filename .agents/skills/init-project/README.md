@@ -1,14 +1,16 @@
 # Project initialization
 
-`init-project` provides the shared mise/Node/pnpm foundation and its approval workflow. [`init-with-rules`](../init-with-rules/SKILL.md) adds language-specific setup through plain reference files and dedicated helpers.
+`init-project` is the only initializer skill. Its compact [`SKILL.md`](SKILL.md) owns routing, approval, and shared safeguards; plain reference files define each setup phase.
 
-## Contract
+## Definitions and dependencies
 
-- Independent skill: no instruction dependencies.
-- Runtime: Git, mise, and Bun with `Bun.TOML.parse`. Bun is not added to initialized projects.
-- Target control plane: Node 24 or newer and an approved compatible pnpm version.
-- Plan first; apply only with confirmation. Installation, lockfiles, and user-level mise trust changes require explicit consent.
-- Foundation approval does not authorize language setup. Preserve existing tooling, hooks, and package ownership.
+- [Project foundation](references/project.md): mise, Node, pnpm, Tempel, Husky, and the public task contract.
+- [TypeScript](references/typescript.md): explicitly reads `project.md` first.
+- [Godot GDScript](references/gdscript.md): explicitly reads `project.md` first.
+
+Read each applicable definition once. Foundation definitions do not authorize running foundation setup. Foundation and language changes keep separate approvals. Missing foundation state, references, or tools stop initialization.
+
+There are no inter-skill instruction or code dependencies. Every helper, test, and reference is bundled here. Language helpers import the local [`scripts/lib.ts`](scripts/lib.ts); references are regular Markdown files, not symlinks or separate skills.
 
 ## Use
 
@@ -16,22 +18,31 @@
 /skill:init-project
 ```
 
-Run the helper from this directory:
+Run the selected helper from this directory:
 
 ```text
 bun scripts/init.ts --help
-bun scripts/init.ts --root /absolute/project --node 24 --pnpm 10.33.0
+bun scripts/typescript/init.ts --help
+bun scripts/gdscript/init.ts --help
 ```
 
-Review the JSON plan before repeating approved arguments with `--apply --confirm`; add `--install` only when approved. See [`SKILL.md`](SKILL.md) for the complete shared workflow.
+Pass an absolute target root. The default is a non-mutating plan; application requires `--apply --confirm`. Add `--install` only with explicit approval for installation, lockfiles, and user-level mise trust changes. Bun runs the helpers but is not added to target toolchains; the shared control plane requires Node 24 or newer.
 
-## Files
+Manual installation needs just one asset:
 
-- [`scripts/init.ts`](scripts/init.ts): foundation planning/application.
-- [`scripts/lib.ts`](scripts/lib.ts): shared safe manifest, TOML, process, and output helpers.
-- [`scripts/init.test.ts`](scripts/init.test.ts): Bun prerequisites, dry-run, approval, idempotence, permissions, and conflicts.
+```sh
+npx skills@1.7.4 add dragoscirjan/ai --skill init-project --agent pi --agent opencode --agent claude-code
+```
 
-The language helpers import this library. Managed installations declare both code dependencies and instruction requirements; external Skills CLI installations must select both skills explicitly.
+Managed synchronization includes the complete directory and treats initialization as an approval-bound choice, not automatic core setup. Claude Code uses the exact relative projection; reload the harness after installation.
+
+## Migration and verification
+
+Replace obsolete `init-typescript`/`init-gdscript` selections or declines with the appropriate `init-project` decision. Review target instruction changes and retain legacy files/projections until their removal is explicitly approved. No automatic remapping, downstream deletion, or lockfile hand-editing is added.
+
+Language helpers now live under `scripts/<language>/init.ts` and return `skill: "init-project"` plus a `language` field. The foundation helper and shared library retain their existing paths and behavior.
+
+Run the foundation and language tests with `bun test` using explicit `./.agents/...` paths. See [issue #59](https://github.com/dragoscirjan/ai/issues/59).
 
 ## Sources
 

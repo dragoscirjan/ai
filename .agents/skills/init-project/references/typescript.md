@@ -1,6 +1,6 @@
 # TypeScript initialization rules
 
-Prerequisite: Read [project foundation](../../init-project/SKILL.md) first. If already loaded for this task, do not read it again. The approved mise/Node/pnpm foundation must already exist; missing foundation setup requires separate approval.
+Prerequisite: Read [project foundation](project.md) first. If already loaded for this task, do not read it again. The approved mise/Node/pnpm foundation must already exist; missing foundation setup requires separate approval.
 
 ## Project shape
 
@@ -20,7 +20,7 @@ Prerequisite: Read [project foundation](../../init-project/SKILL.md) first. If a
 
 ## Helper usage
 
-Run from the `init-with-rules` directory:
+Run from the `init-project` directory:
 
 ```text
 bun scripts/typescript/init.ts --help
