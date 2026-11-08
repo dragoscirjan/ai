@@ -312,20 +312,22 @@ test("the catalog covers every repository skill directory", () => {
   assert.equal(names.has("coding-with-rules"), true);
   assert.deepEqual([...names].filter((name) => name.startsWith("coding-")), ["coding-with-rules"]);
   assert.equal(names.has("instruction-maintenance"), true);
+  assert.equal(names.has("init-with-rules"), false);
+  assert.deepEqual([...names].filter((name) => name.startsWith("init-")), ["init-project"]);
+  assert.equal(names.has("init-project"), true);
+  assert.equal(names.has("init-typescript"), false);
+  assert.equal(names.has("init-gdscript"), false);
   assert.equal(output.skills.every((entry) => entry.harnesses.includes("claude-code")), true);
   assert.deepEqual(output.skills.filter((entry) => entry.require.length).map((entry) => [entry.name, entry.require]), [["cleanup-workspaces", ["isolated-workspace"]], ["coding-with-rules", ["coding"]], ["grill-me", ["grilling"]]]);
   assert.deepEqual(output.skills.filter((entry) => entry.dependencies.length).map((entry) => [entry.name, entry.dependencies]), [
     ["cleanup-workspaces", ["isolated-workspace"]],
-    ["init-gdscript", ["init-project"]],
-    ["init-typescript", ["init-project"]],
   ]);
   assert.equal(output.profiles.coreInstructions.includes("coding-with-rules"), true);
   assert.equal(output.profiles.coreInstructions.includes("coding"), false);
-  for (const name of ["init-typescript", "init-gdscript"]) {
-    const text = readFileSync(join(repositoryRoot, ".agents", "skills", name, "SKILL.md"), "utf8");
-    assert.match(text, /Read applicable project instructions and contribution policy before planning/);
-    assert.match(text, /satisfy project approval and workspace gates/);
-  }
+  const initializer = readFileSync(join(repositoryRoot, ".agents", "skills", "init-project", "SKILL.md"), "utf8");
+  assert.match(initializer, /Read applicable project instructions and contribution policy before planning/);
+  assert.match(initializer, /satisfy project approval and workspace gates/);
+  assert.equal(output.profiles.coreInstructions.includes("init-project"), false);
   for (const entry of output.skills.filter((skill) => skill.require.length === 0)) {
     const text = readFileSync(join(repositoryRoot, ".agents", "skills", entry.name, "SKILL.md"), "utf8");
     assert.doesNotMatch(text, /^## Load (?:the dependency|dependencies)/m, entry.name);
@@ -338,6 +340,43 @@ test("the catalog covers every repository skill directory", () => {
       `../../.agents/skills/${entry.name}`,
     );
   }
+});
+
+test("initializer references declare local foundation prerequisites inside one complete skill", () => {
+  const root = join(repositoryRoot, ".agents", "skills", "init-project");
+  const instructions = readFileSync(join(root, "SKILL.md"), "utf8");
+  assert.doesNotMatch(instructions, /^require:/m);
+  assert.match(instructions, /Loading instructions does not authorize initialization/);
+  assert.match(instructions, /Foundation approval does not authorize language setup/);
+  assert.match(instructions, /Never read, log, or persist credentials/);
+  assert.match(instructions, /Do not invent numeric thresholds/);
+  assert.deepEqual(readdirSync(join(root, "references")).sort(), ["gdscript.md", "project.md", "typescript.md"]);
+  const project = readFileSync(join(root, "references", "project.md"), "utf8");
+  assert.doesNotMatch(project, /^Prerequisite:/m);
+  assert.match(project, /`build` produces approved output artifacts/);
+  for (const name of ["project", "typescript", "gdscript"]) {
+    const reference = join(root, "references", `${name}.md`);
+    assert.equal(lstatSync(reference).isFile(), true);
+    const text = readFileSync(reference, "utf8");
+    assert.doesNotMatch(text, /^---\r?\n|\bthis skill\b/im);
+    const dependencies = [...text.matchAll(/\]\((?!https?:)([^)#]+\.md)\)/g)].map((match) => match[1]);
+    assert.deepEqual(dependencies, name === "project" ? [] : ["project.md"], name);
+    if (name !== "project") {
+      assert.match(text, /^Prerequisite: Read \[project foundation\]\(project\.md\) first\./m);
+      assert.match(text, new RegExp(`scripts/${name}/init\\.ts`));
+      assert.equal(existsSync(join(root, "scripts", name, "init.test.ts")), true);
+      assert.equal(existsSync(join(repositoryRoot, ".agents", "skills", `init-${name}`)), false);
+      assert.equal(existsSync(join(repositoryRoot, ".claude", "skills", `init-${name}`)), false);
+    }
+    for (const match of text.matchAll(/\]\((?!https?:)([^)]+)\)/g)) {
+      assert.equal(lstatSync(resolve(dirname(reference), match[1])).isFile(), true, match[1]);
+    }
+  }
+  for (const parent of [".agents", ".claude"]) {
+    assert.equal(existsSync(join(repositoryRoot, parent, "skills", "init-with-rules")), false);
+  }
+  const gdscript = readFileSync(join(root, "references", "gdscript.md"), "utf8");
+  assert.match(gdscript, /never execute downloaded addon code during inspection or installation/);
 });
 
 test("coding composition links plain references with language-before-extension routing", () => {
@@ -675,8 +714,11 @@ test("inspect detects mode, language skills, wrappers, and ambiguous initializer
     assert.equal(recommended.has("coding-ts"), false);
     assert.equal(recommended.has("coding-tsx"), false);
     const ambiguous = new Set(output.ambiguousSkills.map((entry) => entry.name));
-    assert.equal(ambiguous.has("init-typescript"), true);
+    assert.equal(ambiguous.has("init-with-rules"), false);
+    assert.equal(ambiguous.has("init-typescript"), false);
+    assert.equal(ambiguous.has("init-gdscript"), false);
     assert.equal(ambiguous.has("init-project"), true);
+    assert.equal(recommended.has("init-project"), false);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -977,6 +1019,58 @@ test("old locks remain readable and report missing Claude Code projections", () 
   }
 });
 
+test("initializer migration retains removed skills and rejects implicit remapping", () => {
+  const source = syntheticSource();
+  const target = fixture("sync-init-migration-");
+  try {
+    const catalogPath = join(source.root, ".agents", "skills", "sync-agent-assets", "assets", "skill-catalog.json");
+    const catalog = JSON.parse(readFileSync(catalogPath, "utf8"));
+    const entry = (name, dependencies = []) => ({ name, category: "initializer", selection: "initializer", dependencies, safety: "project-and-user-write", harnesses: ["pi", "opencode", "claude-code"], signals: {} });
+    writeSkill(source.root, "init-typescript");
+    catalog.skills.push(entry("init-typescript"));
+    writeFileSync(catalogPath, JSON.stringify(catalog));
+    source.commit = commitAll(source.root, "legacy initializer source");
+    installSyntheticAssets(source.root, target);
+    const legacyPath = ".agents/skills/init-typescript/SKILL.md";
+    cpSync(join(source.root, ".agents", "skills", "init-typescript"), join(target, ".agents", "skills", "init-typescript"), { recursive: true });
+    symlinkSync("../../.agents/skills/init-typescript", join(target, ".claude", "skills", "init-typescript"), "dir");
+    const selection = selectionFile(target);
+    const selected = JSON.parse(readFileSync(selection, "utf8"));
+    selected.selectedSkills = ["init-typescript"];
+    writeFileSync(selection, JSON.stringify(selected));
+    const args = () => ["record", "--root", target, "--source-root", source.root, "--source-commit", source.commit, "--selection", selection];
+    let result = run(args());
+    assert.equal(result.status, 0, result.stderr);
+    const plan = JSON.parse(result.stdout);
+    assert.equal(run([...args(), "--apply", "--confirm", "--plan-id", plan.planId]).status, 0);
+    const lockPath = join(target, ".agents", "ai-assets.lock.json");
+    const oldLock = readFileSync(lockPath, "utf8");
+    const oldContent = readFileSync(join(target, legacyPath), "utf8");
+
+    rmSync(join(source.root, ".agents", "skills", "init-typescript"), { recursive: true });
+    catalog.skills = catalog.skills.filter((skill) => skill.name !== "init-typescript");
+    cpSync(join(repositoryRoot, ".agents", "skills", "init-project"), join(source.root, ".agents", "skills", "init-project"), { recursive: true });
+    catalog.skills.push(entry("init-project"));
+    writeFileSync(catalogPath, JSON.stringify(catalog));
+    source.commit = commitAll(source.root, "consolidated initializer source");
+    result = run(["compare", "--root", target, "--source-root", source.root]);
+    assert.equal(result.status, 0, result.stderr);
+    const compared = JSON.parse(result.stdout);
+    assert.ok(compared.removedCatalogSkills.includes("init-typescript"));
+    assert.ok(compared.newCatalogSkills.includes("init-project"));
+    assert.equal(compared.files.find((file) => file.path === legacyPath).state, "upstream-removed-retain");
+    result = run(args());
+    assert.equal(result.status, 3, result.stderr);
+    assert.match(result.stderr, /Unknown selected skill: init-typescript/);
+    assert.equal(readFileSync(lockPath, "utf8"), oldLock);
+    assert.equal(readFileSync(join(target, legacyPath), "utf8"), oldContent);
+    assert.equal(readlinkSync(join(target, ".claude", "skills", "init-typescript")), "../../.agents/skills/init-typescript");
+  } finally {
+    rmSync(source.root, { recursive: true, force: true });
+    rmSync(target, { recursive: true, force: true });
+  }
+});
+
 test("coding migration installs complete references and retains legacy files without remapping", () => {
   const source = syntheticSource();
   const target = fixture("sync-coding-migration-");
@@ -1098,6 +1192,7 @@ test("Skills CLI installs canonical skills with Claude Code symlink projections"
       "--skill", "sync-agent-assets",
       "--skill", "coding",
       "--skill", "coding-with-rules",
+      "--skill", "init-project",
       "--agent", "pi",
       "--agent", "opencode",
       "--agent", "claude-code",
@@ -1107,7 +1202,7 @@ test("Skills CLI installs canonical skills with Claude Code symlink projections"
     const projection = join(target, ".claude", "skills", "sync-agent-assets");
     assert.equal(readlinkSync(projection), "../../.agents/skills/sync-agent-assets");
     assert.equal(existsSync(join(target, ".agents", "skills", "sync-agent-assets", "scripts", "sync-agent-assets.mjs")), true);
-    for (const name of ["coding", "coding-with-rules"]) {
+    for (const name of ["coding", "coding-with-rules", "init-project"]) {
       assert.equal(readlinkSync(join(target, ".claude", "skills", name)), `../../.agents/skills/${name}`);
       assert.equal(existsSync(join(target, ".agents", "skills", name, "SKILL.md")), true);
     }
@@ -1115,6 +1210,19 @@ test("Skills CLI installs canonical skills with Claude Code symlink projections"
     for (const name of readdirSync(join(repositoryRoot, references))) {
       assert.equal(readFileSync(join(target, references, name), "utf8"), readFileSync(join(repositoryRoot, references, name), "utf8"));
     }
+    const initializerRoot = join(target, ".agents", "skills", "init-project");
+    for (const file of ["project.md", "typescript.md", "gdscript.md"]) {
+      assert.equal(readFileSync(join(initializerRoot, "references", file), "utf8"), readFileSync(join(repositoryRoot, ".agents", "skills", "init-project", "references", file), "utf8"));
+    }
+    for (const language of ["typescript", "gdscript"]) {
+      const helper = join(initializerRoot, "scripts", language, "init.ts");
+      const help = spawnSync("bun", [helper, "--help"], { cwd: initializerRoot, encoding: "utf8" });
+      assert.equal(help.status, 0, help.stderr);
+      assert.ok(help.stdout.includes(`scripts/${language}/init.ts`));
+    }
+    rmSync(join(target, ".agents", "skills", "init-project", "scripts", "lib.ts"));
+    const missing = spawnSync("bun", [join(initializerRoot, "scripts", "typescript", "init.ts"), "--help"], { encoding: "utf8" });
+    assert.notEqual(missing.status, 0, "missing shared helper code must fail closed");
     assert.equal(existsSync(join(target, "skills-lock.json")), true);
   } finally {
     rmSync(target, { recursive: true, force: true });

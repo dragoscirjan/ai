@@ -1,47 +1,49 @@
 # Project initialization
 
-`init-project` creates or adopts the repository-wide tooling foundation before a language initializer runs.
+`init-project` is the only initializer skill. Its compact [`SKILL.md`](SKILL.md) owns routing, approval, and shared safeguards; plain reference files define each setup phase.
 
-It uses mise for executable toolchains, `package.json` and pnpm for Node dependencies, maintained Tempel packages for shared validation, and Husky for Git hooks. It defines stable `mise run` entry points that language initializers extend.
+## Definitions and dependencies
 
-## Sources
+- [Project foundation](references/project.md): mise, Node, pnpm, Tempel, Husky, and the public task contract.
+- [TypeScript](references/typescript.md): explicitly reads `project.md` first.
+- [Godot GDScript](references/gdscript.md): explicitly reads `project.md` first.
 
-- [mise configuration](https://mise.jdx.dev/configuration.html)
-- [mise tasks](https://mise.jdx.dev/tasks/)
-- [pnpm `package.json`](https://pnpm.io/package_json)
-- [Husky setup](https://typicode.github.io/husky/get-started.html)
-- [Tempel JavaScript Development Toolkit](https://github.com/dragoscirjan/tempel-javascript)
-- [Commitlint](https://commitlint.js.org/)
-- [jscpd](https://jscpd.dev/)
-- [Agent Skills: using scripts in skills](https://agentskills.io/skill-creation/using-scripts)
-- [Bun TOML parser](https://bun.com/docs/runtime/toml)
+Read each applicable definition once. Foundation definitions do not authorize running foundation setup. Foundation and language changes keep separate approvals. Missing foundation state, references, or tools stop initialization.
 
-## Dependency contract
+There are no inter-skill instruction or code dependencies. Every helper, test, and reference is bundled here. Language helpers import the local [`scripts/lib.ts`](scripts/lib.ts); references are regular Markdown files, not symlinks or separate skills.
 
-The skill has no skill dependency. It requires mise, Git, and Bun with `Bun.TOML.parse`. Bun is required only to run the initializer; the helper hard-stops when Bun is unavailable and does not add Bun to the target project. The initialized target requires Node 24 or newer. The helper installs tools and manifest dependencies only after an exact plan receives human approval.
-
-Language initializers depend on `init-project`; `init-project` does not depend on them.
-
-## Invocation
-
-Pi:
+## Use
 
 ```text
 /skill:init-project
 ```
 
-OpenCode:
+Run the selected helper from this directory:
 
 ```text
-/init-project
+bun scripts/init.ts --help
+bun scripts/typescript/init.ts --help
+bun scripts/gdscript/init.ts --help
 ```
 
-Direct invocation requests an initialization plan. It does not authorize unreviewed overwrites, package-manager migration, dependency upgrades, or automatic fixes.
+Pass an absolute target root. The default is a non-mutating plan; application requires `--apply --confirm`. Add `--install` only with explicit approval for installation, lockfiles, and user-level mise trust changes. Bun runs the helpers but is not added to target toolchains; the shared control plane requires Node 24 or newer.
 
-## Files
+Manual installation needs just one asset:
 
-- `SKILL.md` contains the initialization workflow and safety contract.
-- `scripts/init.ts` plans and applies the supported initialization contract.
-- `scripts/lib.ts` provides shared safe manifest, Bun TOML, process, and output helpers to the initializer family.
-- `scripts/init.test.ts` runs with `bun test` and tests the Bun prerequisite, TOML handling, dry-run, approval, idempotence, permissions, and conflict behavior.
-- `README.md` contains supporting references and invocation notes.
+```sh
+npx skills@1.7.4 add dragoscirjan/ai --skill init-project --agent pi --agent opencode --agent claude-code
+```
+
+Managed synchronization includes the complete directory and treats initialization as an approval-bound choice, not automatic core setup. Claude Code uses the exact relative projection; reload the harness after installation.
+
+## Migration and verification
+
+Replace obsolete `init-typescript`/`init-gdscript` selections or declines with the appropriate `init-project` decision. Review target instruction changes and retain legacy files/projections until their removal is explicitly approved. No automatic remapping, downstream deletion, or lockfile hand-editing is added.
+
+Language helpers now live under `scripts/<language>/init.ts` and return `skill: "init-project"` plus a `language` field. The foundation helper and shared library retain their existing paths and behavior.
+
+Run the foundation and language tests with `bun test` using explicit `./.agents/...` paths. See [issue #59](https://github.com/dragoscirjan/ai/issues/59).
+
+## Sources
+
+[mise configuration](https://mise.jdx.dev/configuration.html), [mise tasks](https://mise.jdx.dev/tasks/), [pnpm manifests](https://pnpm.io/package_json), [Husky](https://typicode.github.io/husky/get-started.html), [Tempel toolkit](https://github.com/dragoscirjan/tempel-javascript), [Commitlint](https://commitlint.js.org/), [jscpd](https://jscpd.dev/), [skill scripts](https://agentskills.io/skill-creation/using-scripts), [Bun TOML](https://bun.com/docs/runtime/toml).
