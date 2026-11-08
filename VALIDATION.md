@@ -44,19 +44,20 @@ When a change modifies `sync-agent-assets` or its catalog:
 
 ## Coding-family changes
 
-When a change adds or modifies `coding` or a `coding-*` skill:
+When a change adds or modifies `coding`, `coding-with-rules`, or its references:
 
-- Confirm that all coding skills are sibling directories directly under `.agents/skills/`.
-- Confirm language and extension skills are independent leaves containing their own language or extension scope, not loaders for other skills.
-- Confirm project routing selects `coding`, then applicable language and extension guidance. Test declared composition load order, missing-requirement stops, and cycle rejection without a harness-specific Skill tool.
+- Confirm that `coding` and `coding-with-rules` are sibling skills directly under `.agents/skills/`.
+- Confirm that `coding` remains independent and `coding-with-rules` declares exactly `require: ["coding"]`.
+- Confirm that language and extension documents are plain Markdown under `coding-with-rules/references/`, not separately discoverable skills or `require` targets.
+- Confirm project routing selects `coding-with-rules`, resolves `coding` first, and reads only task-relevant language references before extension references. Check ambiguous headers, Bash versus POSIX selection, unsupported-language fallback, and missing-mapped-reference stops. Test declared requirement order, missing-requirement stops, and cycle rejection without a harness-specific Skill tool.
 - Keep code-helper dependencies separate from instruction requirements; test their combined installation closure.
 - Confirm extension guidance does not duplicate generic or language instructions.
 - Confirm that project configuration takes precedence over fallback tools.
 - Confirm that no skill installs, replaces, or reconfigures tools without human approval.
-- Confirm that every language uses jscpd as the fallback duplicate detector while honoring project-configured alternatives.
+- Confirm that every language reference uses jscpd as the fallback duplicate detector while honoring project-configured alternatives.
 - Confirm that numeric thresholds come only from project configuration.
 - Check source links and maintenance-status notes for external guidance.
-- Verify flat discovery in Pi, OpenCode, and Claude Code; distinguish source/static checks from live discovery.
+- Verify discovery of `coding` and `coding-with-rules` in Pi, OpenCode, and Claude Code, including exact relative Claude projections. Do not advertise reference files as skills; distinguish source/static checks from live discovery.
 
 ## Workspace-skill changes
 

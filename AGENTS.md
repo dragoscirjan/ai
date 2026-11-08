@@ -13,7 +13,7 @@ Load only the instructions required for the current phase. When several rows mat
 | Read-only questions, inspection, comparison, or research | No deferred project document is required unless the workflow needs repository identity; then read and follow `CONTRIBUTING.md`. |
 | Before planning or performing a repository architecture, design, implementation, documentation, configuration, policy, or publication change | Read and follow `CONTRIBUTING.md`. |
 | Before any repository mutation | Read and follow `.agents/skills/isolated-workspace/SKILL.md`. |
-| Before designing, changing, testing, or reviewing source code | Read `coding`, then the applicable advertised language and extension skills, in that order. |
+| Before designing, changing, testing, or reviewing source code | Read `coding-with-rules` and follow its language and extension reference selection. Resolve its declared requirements first. |
 | Before delegating work to child agents | Read and follow `.agents/skills/subagent-orchestration/SKILL.md`. |
 | Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
 | Before auditing or removing old workspaces | Read and follow `.agents/skills/cleanup-workspaces/SKILL.md`. |

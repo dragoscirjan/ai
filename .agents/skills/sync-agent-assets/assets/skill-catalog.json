@@ -5,7 +5,7 @@
   "profiles": {
     "manager": ["sync-agent-assets"],
     "bootstrap": ["grilling", "grill-me", "isolated-workspace"],
-    "coreInstructions": ["coding", "isolated-workspace", "cleanup-workspaces", "subagent-orchestration", "instruction-maintenance"]
+    "coreInstructions": ["coding-with-rules", "isolated-workspace", "cleanup-workspaces", "subagent-orchestration", "instruction-maintenance"]
   },
   "skills": [
     {
@@ -57,193 +57,13 @@
       }
     },
     {
-      "name": "coding-bash",
+      "name": "coding-with-rules",
       "category": "coding-wrapper",
-      "selection": "optional",
+      "selection": "core",
       "dependencies": [],
       "safety": "project-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "extensions": [".bash", ".sh"] }
-    },
-    {
-      "name": "coding-c",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "extensions": [".c"] }
-    },
-    {
-      "name": "coding-cjs",
-      "category": "coding-wrapper",
-      "selection": "wrapper",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "extensions": [".cjs"] }
-    },
-    {
-      "name": "coding-cpp",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "extensions": [".cc", ".cpp", ".cxx", ".hh", ".hpp", ".hxx"] }
-    },
-    {
-      "name": "coding-cts",
-      "category": "coding-wrapper",
-      "selection": "wrapper",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "extensions": [".cts"] }
-    },
-    {
-      "name": "coding-gdscript",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "files": ["project.godot"], "extensions": [".gd"] }
-    },
-    {
-      "name": "coding-go",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "files": ["go.mod", "go.work"], "extensions": [".go"] }
-    },
-    {
-      "name": "coding-js",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "extensions": [".js"] }
-    },
-    {
-      "name": "coding-jsx",
-      "category": "coding-wrapper",
-      "selection": "wrapper",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "extensions": [".jsx"] }
-    },
-    {
-      "name": "coding-lua",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "files": [".luacheckrc"], "extensions": [".lua"] }
-    },
-    {
-      "name": "coding-mjs",
-      "category": "coding-wrapper",
-      "selection": "wrapper",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "extensions": [".mjs"] }
-    },
-    {
-      "name": "coding-mts",
-      "category": "coding-wrapper",
-      "selection": "wrapper",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "extensions": [".mts"] }
-    },
-    {
-      "name": "coding-php",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "files": ["composer.json"], "extensions": [".php"] }
-    },
-    {
-      "name": "coding-py",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "files": ["pyproject.toml", "setup.py", "requirements.txt", "uv.lock"], "extensions": [".py"] }
-    },
-    {
-      "name": "coding-pyi",
-      "category": "coding-wrapper",
-      "selection": "wrapper",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "extensions": [".pyi"] }
-    },
-    {
-      "name": "coding-rs",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "files": ["Cargo.toml"], "extensions": [".rs"] }
-    },
-    {
-      "name": "coding-sh",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "extensions": [".sh"] }
-    },
-    {
-      "name": "coding-swift",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "files": ["Package.swift"], "extensions": [".swift"] }
-    },
-    {
-      "name": "coding-ts",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "files": ["tsconfig.json"], "extensions": [".ts"] }
-    },
-    {
-      "name": "coding-tsx",
-      "category": "coding-wrapper",
-      "selection": "wrapper",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "extensions": [".tsx"] }
-    },
-    {
-      "name": "coding-zig",
-      "category": "coding-language",
-      "selection": "detected",
-      "dependencies": [],
-      "safety": "project-write-guidance",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "files": ["build.zig", "build.zig.zon"], "extensions": [".zig"] }
+      "signals": {}
     },
     {
       "name": "debloat",

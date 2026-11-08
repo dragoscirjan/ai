@@ -20,15 +20,15 @@ These sources guide risk analysis. They are not copied into the skill and do not
 
 ## Independent guidance and composition
 
-Keep all coding skills as flat siblings under `.agents/skills/`, with exact relative Claude projections under `.claude/skills/`. Generic, language, and extension skills are independent leaves; none loads another implicitly.
+`coding` is an independent base skill. [`coding-with-rules`](../coding-with-rules/SKILL.md) is the language-aware entry point and declares `require: ["coding"]`. Both remain discoverable siblings under `.agents/skills/`, with exact relative Claude projections under `.claude/skills/`.
 
-The user or project selects the needed set. This repository's `AGENTS.md` selects generic, then language, then extension guidance for code work. Thin workflow compositions declare prompt prerequisites through the project's `require` convention; real shared-code dependencies remain separate. No harness-specific Skill tool is needed.
+This repository's `AGENTS.md` selects the composition for code work. Project routing resolves `coding` first, then the composition selects task-relevant language and extension documents from its `references/` directory. Those documents are supporting files, not separate skills. Shared-code dependencies remain distinct from instruction requirements. No native harness dependency loader is assumed.
 
 ## Quality gates
 
-The generic skill defines gate categories and reporting. Language skills select project-first fallback tools for those categories.
+The generic skill defines gate categories and reporting. Language references select project-first fallback tools for those categories.
 
-Every language skill must account for:
+Every language reference must account for:
 
 - formatting
 - compilation or type checking when applicable
@@ -38,7 +38,7 @@ Every language skill must account for:
 - security analysis
 - dependency or package auditing
 
-A language skill may mark a category unsupported when its ecosystem has no mature option. It must explain that result and must not claim the gate passed.
+A language reference may mark a category unsupported when its ecosystem has no mature option. It must explain that result and must not claim the gate passed.
 
 Numeric thresholds come from project configuration. The skill family does not define universal coverage, duplication, or complexity numbers.
 
@@ -56,7 +56,7 @@ OpenCode exposes this skill as `/coding` because its frontmatter sets `metadata.
 /coding Implement the approved change and run the applicable project gates.
 ```
 
-Both harnesses also advertise the skill for automatic model selection. For language-specific work, the caller can select complementary language or extension guidance.
+For language-specific work, select `coding-with-rules` and its declared `coding` requirement. See its [usage and migration guide](../coding-with-rules/README.md).
 
 ## Files
 
