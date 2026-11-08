@@ -12,9 +12,8 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`coding`](.agents/skills/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
 | [`debloat`](.agents/skills/debloat/SKILL.md) | Prevent overengineering and simplify existing mechanisms with evidence while preserving required behavior and boundaries. |
 | [`coding-with-rules`](.agents/skills/coding-with-rules/SKILL.md) | Combine the `coding` workflow with on-demand language and extension reference files. |
-| [`init-gdscript`](.agents/skills/init-gdscript/SKILL.md) | Initialize Godot and GDScript tooling, validation, tests, and mise tasks. |
-| [`init-project`](.agents/skills/init-project/SKILL.md) | Initialize mise, Node, pnpm, Tempel validation, Husky hooks, and stable project tasks. |
-| [`init-typescript`](.agents/skills/init-typescript/SKILL.md) | Initialize project-owned TypeScript configuration, validation, tests, builds, and mise tasks. |
+| [`init-project`](.agents/skills/init-project/SKILL.md) | Initialize the shared mise, Node, pnpm, Tempel, and Husky foundation. |
+| [`init-with-rules`](.agents/skills/init-with-rules/SKILL.md) | Add TypeScript or Godot GDScript tooling through on-demand language setup references. |
 | [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
 | [`grilling`](.agents/skills/grilling/SKILL.md) | Interview a user until a plan or decision has no unresolved branches. |
 | [`wait-what`](.agents/skills/wait-what/SKILL.md) | Ask the agent to re-pitch its last response with missing context and simpler language. |

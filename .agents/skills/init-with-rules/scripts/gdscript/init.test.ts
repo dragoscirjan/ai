@@ -8,7 +8,7 @@ import { test } from "bun:test";
 
 const scripts = dirname(fileURLToPath(import.meta.url));
 const script = join(scripts, "init.ts");
-const projectScript = resolve(scripts, "../../init-project/scripts/init.ts");
+const projectScript = resolve(scripts, "../../../init-project/scripts/init.ts");
 
 function fixture({ godot = true }: { godot?: boolean } = {}): string {
   const root = mkdtempSync(join(tmpdir(), "init-gdscript-test-"));
@@ -77,6 +77,8 @@ test("plan is non-mutating and rejects a non-Godot root", () => {
     const plan = run(root);
     assert.equal(plan.status, 0, plan.stderr);
     const planData = JSON.parse(plan.stdout);
+    assert.equal(planData.skill, "init-with-rules");
+    assert.equal(planData.language, "gdscript");
     assert.equal(planData.selected.godot, "4.7.2-stable");
     assert.deepEqual(planData.pythonDependencies.dev, ["gdtoolkit==4.5.0"]);
     assert.match(planData.scripts["typecheck:gdscript"], /check-gdscript/);

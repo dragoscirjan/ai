@@ -94,15 +94,6 @@
       "signals": {}
     },
     {
-      "name": "init-gdscript",
-      "category": "initializer",
-      "selection": "initializer",
-      "dependencies": ["init-project"],
-      "safety": "project-and-user-write",
-      "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "files": ["project.godot"], "extensions": [".gd"] }
-    },
-    {
       "name": "init-project",
       "category": "initializer",
       "selection": "initializer",
@@ -112,13 +103,13 @@
       "signals": { "askWithoutSignals": true }
     },
     {
-      "name": "init-typescript",
+      "name": "init-with-rules",
       "category": "initializer",
       "selection": "initializer",
       "dependencies": ["init-project"],
-      "safety": "project-write",
+      "safety": "project-and-user-write",
       "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "files": ["tsconfig.json"], "extensions": [".ts", ".tsx", ".mts", ".cts"] }
+      "signals": { "files": ["project.godot", "tsconfig.json"], "extensions": [".gd", ".ts", ".tsx", ".mts", ".cts"] }
     },
     {
       "name": "instruction-maintenance",

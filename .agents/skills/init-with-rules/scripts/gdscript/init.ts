@@ -20,7 +20,7 @@ import {
   validateVersion,
   writeJsonObject,
   type TomlTaskDefinition,
-} from "../../init-project/scripts/lib.ts";
+} from "../../../init-project/scripts/lib.ts";
 
 interface GdscriptOptions {
   godot: string;
@@ -99,8 +99,8 @@ console.log(\`Checked \${files.length} GDScript file(s)\`);
 `;
 
 const HELP = `Usage:
-  bun scripts/init.ts --root PATH --godot VERSION --python VERSION --uv VERSION [options]
-  bun scripts/init.ts --root PATH --godot VERSION --python VERSION --uv VERSION --apply --confirm [--install]
+  bun scripts/gdscript/init.ts --root PATH --godot VERSION --python VERSION --uv VERSION [options]
+  bun scripts/gdscript/init.ts --root PATH --godot VERSION --python VERSION --uv VERSION --apply --confirm [--install]
 
 Adds pinned Godot, Python, uv, gdtoolkit, package scripts, and mise tasks to an
 existing init-project foundation. The default mode is a dry-run plan.
@@ -126,8 +126,8 @@ Exit codes:
   5 external command failed  6 filesystem or unexpected failure
 
 Example:
-  bun scripts/init.ts --root /work/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25
-  bun scripts/init.ts --root /work/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --apply --confirm --install`;
+  bun scripts/gdscript/init.ts --root /work/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25
+  bun scripts/gdscript/init.ts --root /work/game --godot 4.7.2-stable --python 3.13.13 --uv 0.11.25 --apply --confirm --install`;
 
 function pythonRequirement(version: string): string {
   const match = version.match(/^(\d+)\.(\d+)/);
@@ -254,7 +254,8 @@ async function main(): Promise<void> {
 
   emit(
     {
-      skill: "init-gdscript",
+      skill: "init-with-rules",
+      language: "gdscript",
       mode,
       root,
       selected: {

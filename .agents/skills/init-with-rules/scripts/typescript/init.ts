@@ -20,7 +20,7 @@ import {
   writeJsonObject,
   type JsonObject,
   type TomlTaskDefinition,
-} from "../../init-project/scripts/lib.ts";
+} from "../../../init-project/scripts/lib.ts";
 
 type Runtime = "browser" | "node";
 type ModuleKind = "commonjs" | "esm";
@@ -39,8 +39,8 @@ interface TypeScriptOptions {
 }
 
 const HELP = `Usage:
-  bun scripts/init.ts --root PATH --runtime node|browser --module esm|commonjs --kind app|library [options]
-  bun scripts/init.ts --root PATH --runtime node|browser --module esm|commonjs --kind app|library --apply --confirm [--install]
+  bun scripts/typescript/init.ts --root PATH --runtime node|browser --module esm|commonjs --kind app|library [options]
+  bun scripts/typescript/init.ts --root PATH --runtime node|browser --module esm|commonjs --kind app|library --apply --confirm [--install]
 
 Adds TypeScript configuration, pinned manifest dependencies, package scripts, and
 mise tasks to an existing init-project foundation. The default mode is a dry-run.
@@ -69,8 +69,8 @@ Exit codes:
   5 external command failed  6 filesystem or unexpected failure
 
 Example:
-  bun scripts/init.ts --root /work/project --runtime node --module esm --kind app --node-types 24.19.2
-  bun scripts/init.ts --root /work/project --runtime node --module esm --kind app --node-types 24.19.2 --apply --confirm --install`;
+  bun scripts/typescript/init.ts --root /work/project --runtime node --module esm --kind app --node-types 24.19.2
+  bun scripts/typescript/init.ts --root /work/project --runtime node --module esm --kind app --node-types 24.19.2 --apply --confirm --install`;
 
 function compilerOptions(options: TypeScriptOptions): JsonObject {
   const nodeTarget = options.runtime === "node";
@@ -257,7 +257,8 @@ async function main(): Promise<void> {
 
   emit(
     {
-      skill: "init-typescript",
+      skill: "init-with-rules",
+      language: "typescript",
       mode,
       root,
       selected: {

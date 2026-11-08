@@ -46,8 +46,8 @@ Create the selection file outside the target repository. Its schema is [`../asse
   ],
   "declinedSkills": [
     {
-      "name": "init-typescript",
-      "reason": "The existing TypeScript toolchain is already configured."
+      "name": "init-with-rules",
+      "reason": "The existing language toolchains are already configured."
     }
   ],
   "rootFiles": [

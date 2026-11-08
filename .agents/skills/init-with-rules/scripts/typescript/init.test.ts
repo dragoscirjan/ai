@@ -8,7 +8,7 @@ import { test } from "bun:test";
 
 const scripts = dirname(fileURLToPath(import.meta.url));
 const script = join(scripts, "init.ts");
-const projectScript = resolve(scripts, "../../init-project/scripts/init.ts");
+const projectScript = resolve(scripts, "../../../init-project/scripts/init.ts");
 
 function fixture(): string {
   const root = mkdtempSync(join(tmpdir(), "init-typescript-test-"));
@@ -67,6 +67,8 @@ test("plan is non-mutating and apply requires confirmation", () => {
     const plan = run(root);
     assert.equal(plan.status, 0, plan.stderr);
     const planData = JSON.parse(plan.stdout);
+    assert.equal(planData.skill, "init-with-rules");
+    assert.equal(planData.language, "typescript");
     assert.equal(planData.selected.runtime, "node");
     assert.equal(planData.devDependencies.vitest, "4.1.11");
     assert.equal(planData.scripts.typecheck, "tsc --noEmit");
