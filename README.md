@@ -11,27 +11,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`code-review`](.agents/skills/code-review/SKILL.md) | Review a diff against repository standards and its originating issue or specification with separate read-only subagents. |
 | [`coding`](.agents/skills/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
 | [`debloat`](.agents/skills/debloat/SKILL.md) | Prevent overengineering and simplify existing mechanisms with evidence while preserving required behavior and boundaries. |
-| [`coding-js`](.agents/skills/coding-js/SKILL.md) | Apply JavaScript guidance and project-first quality gates to `.js` files. |
-| [`coding-mjs`](.agents/skills/coding-mjs/SKILL.md) | Add ECMAScript-module semantics for `.mjs` files. |
-| [`coding-cjs`](.agents/skills/coding-cjs/SKILL.md) | Add CommonJS semantics for `.cjs` files. |
-| [`coding-jsx`](.agents/skills/coding-jsx/SKILL.md) | Add framework-neutral JSX rendering, security, and accessibility guidance. |
-| [`coding-ts`](.agents/skills/coding-ts/SKILL.md) | Apply TypeScript typing, runtime-boundary, and quality-gate guidance to `.ts` files. |
-| [`coding-mts`](.agents/skills/coding-mts/SKILL.md) | Add TypeScript ECMAScript-module semantics for `.mts` files. |
-| [`coding-cts`](.agents/skills/coding-cts/SKILL.md) | Add TypeScript CommonJS semantics for `.cts` files. |
-| [`coding-tsx`](.agents/skills/coding-tsx/SKILL.md) | Add framework-neutral TSX typing, rendering, security, and accessibility guidance. |
-| [`coding-c`](.agents/skills/coding-c/SKILL.md) | Apply C ownership, memory-safety, portability, and project-first quality-gate guidance. |
-| [`coding-cpp`](.agents/skills/coding-cpp/SKILL.md) | Apply modern C++ lifetime, ownership, type-safety, portability, and project-first quality-gate guidance. |
-| [`coding-rs`](.agents/skills/coding-rs/SKILL.md) | Apply Rust ownership, unsafe-boundary, API-compatibility, supply-chain, and project-first quality-gate guidance. |
-| [`coding-zig`](.agents/skills/coding-zig/SKILL.md) | Apply Zig allocation, cleanup, low-level safety, compiler-compatibility, and project-first quality-gate guidance. |
-| [`coding-py`](.agents/skills/coding-py/SKILL.md) | Apply Python runtime, typing, packaging, security, and project-first quality-gate guidance. |
-| [`coding-pyi`](.agents/skills/coding-pyi/SKILL.md) | Add Python stub declaration, interface-parity, overload, export, and compatibility guidance. |
-| [`coding-lua`](.agents/skills/coding-lua/SKILL.md) | Apply Lua runtime, module, table, dynamic-execution, native-boundary, and project-first quality-gate guidance. |
-| [`coding-php`](.agents/skills/coding-php/SKILL.md) | Apply PHP runtime, Composer, web-security, compatibility, and project-first quality-gate guidance. |
-| [`coding-sh`](.agents/skills/coding-sh/SKILL.md) | Apply POSIX shell portability, quoting, cleanup, injection-safety, and project-first quality-gate guidance. |
-| [`coding-bash`](.agents/skills/coding-bash/SKILL.md) | Add interpreter-aware Bash 4+ routing, arrays, tests, options, process handling, and pipeline-status guidance regardless of filename extension. |
-| [`coding-go`](.agents/skills/coding-go/SKILL.md) | Apply Go error, context, concurrency, module, supply-chain, and project-first quality-gate guidance. |
-| [`coding-gdscript`](.agents/skills/coding-gdscript/SKILL.md) | Apply Godot GDScript lifecycle, ownership, game-security, compatibility, and project-first quality-gate guidance. |
-| [`coding-swift`](.agents/skills/coding-swift/SKILL.md) | Apply Swift API, ownership, concurrency, interop, platform, security, and project-first quality-gate guidance. |
+| [`coding-with-rules`](.agents/skills/coding-with-rules/SKILL.md) | Combine the `coding` workflow with on-demand language and extension reference files. |
 | [`init-gdscript`](.agents/skills/init-gdscript/SKILL.md) | Initialize Godot and GDScript tooling, validation, tests, and mise tasks. |
 | [`init-project`](.agents/skills/init-project/SKILL.md) | Initialize mise, Node, pnpm, Tempel validation, Husky hooks, and stable project tasks. |
 | [`init-typescript`](.agents/skills/init-typescript/SKILL.md) | Initialize project-owned TypeScript configuration, validation, tests, builds, and mise tasks. |
@@ -48,7 +28,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 
 ## Independent skills and compositions
 
-Skills load other instructions only through declared requirements. Leaves normally omit them; `cleanup-workspaces` explicitly requires `isolated-workspace` as an owner-approved exception. Select combinations explicitly, or use a thin composition such as `grill-me`, which declares `require: ["grilling"]`. Project instructions resolve requirements before applying the composition; its body defines the workflow.
+Skills load other instructions only through declared requirements. Leaves normally omit them; `cleanup-workspaces` explicitly requires `isolated-workspace` as an owner-approved exception. Select combinations explicitly, or use a thin composition such as `grill-me`, which declares `require: ["grilling"]`. For code work, `coding-with-rules` declares `require: ["coding"]` and selects its own language and extension reference files on demand. The former language and extension skills are replaced by those plain documents; see the [migration guide](.agents/skills/coding-with-rules/README.md#migrate-existing-installations). Project instructions resolve requirements before applying the composition; its body defines the workflow.
 
 `require` is a project extension, not a native harness loader or standard Agent Skills field. External Skills CLI commands do not automatically install its requirements. See [the declaration and compatibility contract](CONTRIBUTING.md#independent-skills-and-explicit-composition). Shared helper-code dependencies remain distinct.
 

@@ -45,7 +45,7 @@ require: ["grilling"]
 
 Omit the field when no skills are required. When present, use exactly one unquoted top-level `require` key with a nonempty, single-line JSON-compatible array of unique skill names. Multiline lists, unquoted items, anchors, and trailing comments are unsupported for this property. Names must exist; self-references and cycles are invalid.
 
-The declaration is the sole source of mandatory prompt dependencies. Resolve requirements recursively in array order, loading each skill once before its caller. The composition body defines execution sequence, handoffs, and stops; do not repeat loading procedures or component instructions. An optional reference is not a requirement.
+The declaration is the sole source of mandatory skill-to-skill instruction dependencies. Resolve requirements recursively in array order, loading each skill once before its caller. The composition body defines execution sequence, handoffs, and stops; do not repeat loading procedures or component instructions. A skill may conditionally load its own supporting documents, such as language reference files. Those documents are not separately discoverable skills or `require` targets, and must not hide undeclared skill dependencies. An optional reference is not a requirement.
 
 Keep shared-code installation dependencies in catalog `dependencies`; capability `requires` is separate. The synchronization planner includes both code dependencies and frontmatter requirements in the approval-bound installation closure. Managed project profiles may add the policy bundle required by imported instructions.
 

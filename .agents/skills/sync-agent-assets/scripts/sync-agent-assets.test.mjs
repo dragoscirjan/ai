@@ -4,9 +4,11 @@ import {
   chmodSync,
   cpSync,
   existsSync,
+  lstatSync,
   mkdtempSync,
   mkdirSync,
   readFileSync,
+  readdirSync,
   readlinkSync,
   renameSync,
   rmSync,
@@ -307,16 +309,18 @@ test("the catalog covers every repository skill directory", () => {
   const output = JSON.parse(result.stdout);
   const names = new Set(output.skills.map((entry) => entry.name));
   assert.equal(names.has("sync-agent-assets"), true);
-  assert.equal(names.has("coding-tsx"), true);
+  assert.equal(names.has("coding-with-rules"), true);
+  assert.deepEqual([...names].filter((name) => name.startsWith("coding-")), ["coding-with-rules"]);
   assert.equal(names.has("instruction-maintenance"), true);
   assert.equal(output.skills.every((entry) => entry.harnesses.includes("claude-code")), true);
-  assert.deepEqual(output.skills.filter((entry) => entry.require.length).map((entry) => [entry.name, entry.require]), [["cleanup-workspaces", ["isolated-workspace"]], ["grill-me", ["grilling"]]]);
+  assert.deepEqual(output.skills.filter((entry) => entry.require.length).map((entry) => [entry.name, entry.require]), [["cleanup-workspaces", ["isolated-workspace"]], ["coding-with-rules", ["coding"]], ["grill-me", ["grilling"]]]);
   assert.deepEqual(output.skills.filter((entry) => entry.dependencies.length).map((entry) => [entry.name, entry.dependencies]), [
     ["cleanup-workspaces", ["isolated-workspace"]],
     ["init-gdscript", ["init-project"]],
     ["init-typescript", ["init-project"]],
   ]);
-  assert.equal(output.profiles.coreInstructions.includes("coding"), true);
+  assert.equal(output.profiles.coreInstructions.includes("coding-with-rules"), true);
+  assert.equal(output.profiles.coreInstructions.includes("coding"), false);
   for (const name of ["init-typescript", "init-gdscript"]) {
     const text = readFileSync(join(repositoryRoot, ".agents", "skills", name, "SKILL.md"), "utf8");
     assert.match(text, /Read applicable project instructions and contribution policy before planning/);
@@ -333,6 +337,99 @@ test("the catalog covers every repository skill directory", () => {
       readlinkSync(join(repositoryRoot, ".claude", "skills", entry.name)),
       `../../.agents/skills/${entry.name}`,
     );
+  }
+});
+
+test("coding composition links plain references with language-before-extension routing", () => {
+  const root = join(repositoryRoot, ".agents", "skills", "coding-with-rules");
+  const instructions = readFileSync(join(root, "SKILL.md"), "utf8");
+  const suffixes = ["bash", "c", "cjs", "cpp", "cts", "gdscript", "go", "js", "jsx", "lua", "mjs", "mts", "php", "py", "pyi", "rs", "sh", "swift", "ts", "tsx", "zig"];
+  assert.deepEqual(readdirSync(join(root, "references")).sort(), suffixes.map((name) => `${name}.md`));
+  const links = [...instructions.matchAll(/\]\(references\/([a-z]+)\.md\)/g)].map((match) => match[1]);
+  assert.deepEqual([...new Set(links)].sort(), suffixes);
+  for (const suffix of suffixes) {
+    const text = readFileSync(join(root, "references", `${suffix}.md`), "utf8");
+    assert.doesNotMatch(text, /^---\r?\n/);
+    assert.match(text, /^# /);
+    assert.equal(existsSync(join(repositoryRoot, ".agents", "skills", `coding-${suffix}`)), false);
+    assert.equal(existsSync(join(repositoryRoot, ".claude", "skills", `coding-${suffix}`)), false);
+  }
+  for (const [extension, expected] of [
+    ["mjs", ["js", "mjs"]], ["cjs", ["js", "cjs"]], ["jsx", ["js", "jsx"]],
+    ["mts", ["ts", "mts"]], ["cts", ["ts", "cts"]], ["tsx", ["ts", "tsx"]], ["pyi", ["py", "pyi"]],
+  ]) {
+    const row = instructions.split("\n").find((line) => line.startsWith("|") && line.includes(`\`.${extension}\``));
+    assert.ok(row, extension);
+    assert.deepEqual([...row.matchAll(/\]\(references\/([a-z]+)\.md\)/g)].map((match) => match[1]), expected);
+  }
+  assert.match(instructions, /unsupported language/i);
+  assert.match(instructions, /mapped reference is missing/i);
+  assert.match(instructions, /Bash.*POSIX/);
+});
+
+test("extension references declare existing acyclic base-language prerequisites", () => {
+  const root = join(repositoryRoot, ".agents", "skills", "coding-with-rules", "references");
+  const expected = new Map([
+    ["cjs.md", "js.md"], ["mjs.md", "js.md"], ["jsx.md", "js.md"],
+    ["cts.md", "ts.md"], ["mts.md", "ts.md"], ["tsx.md", "ts.md"], ["pyi.md", "py.md"],
+  ]);
+  const files = new Set(readdirSync(root));
+  const graph = new Map();
+  for (const name of files) {
+    const text = readFileSync(join(root, name), "utf8");
+    const targets = [...text.matchAll(/\]\((?!https?:)([^)]+)\)/g)].map((match) => match[1]);
+    for (const target of targets) {
+      assert.match(target, /^[a-z]+\.md$/, name);
+      assert.ok(files.has(target), `${name}: missing prerequisite ${target}`);
+      assert.equal(lstatSync(join(root, target)).isFile(), true, target);
+    }
+    graph.set(name, targets);
+    if (expected.has(name)) {
+      assert.match(text, /^Prerequisite: Read \[[^\]]+\]\([a-z]+\.md\) first\./m, name);
+      assert.match(text, /If already loaded for this task, do not read it again\./, name);
+    }
+  }
+  const active = new Set();
+  const complete = new Set();
+  const visit = (name) => {
+    assert.equal(active.has(name), false, `Reference dependency cycle at ${name}`);
+    if (complete.has(name)) return;
+    active.add(name);
+    for (const target of graph.get(name)) visit(target);
+    active.delete(name);
+    complete.add(name);
+  };
+  for (const name of files) visit(name);
+  for (const [name, targets] of graph) {
+    assert.deepEqual(targets, expected.has(name) ? [expected.get(name)] : [], name);
+  }
+});
+
+test("coding references contain language rules rather than standalone skill workflows", () => {
+  const root = join(repositoryRoot, ".agents", "skills", "coding-with-rules", "references");
+  for (const name of readdirSync(root)) {
+    const path = join(root, name);
+    assert.equal(lstatSync(path).isFile(), true, `${name} must be a regular file, not a symlink`);
+    const text = readFileSync(path, "utf8");
+    assert.match(text, /^# .+ rules\n/, name);
+    assert.doesNotMatch(text, /^---\r?\n|\bthis skill\b|\blanguage skills?\b/im, name);
+    assert.doesNotMatch(text, /^## (?:Test and run|Follow project|Confirm the .* contract)|Report every applicable gate/im, name);
+    assert.doesNotMatch(text, /\]\([^)]*coding-[^)]*\/SKILL\.md\)/, name);
+  }
+  for (const [name, rules] of [
+    ["bash", [/Bash 4\.0/, /PIPESTATUS/, /sourced/]],
+    ["c", [/overflow/, /alias/]],
+    ["cpp", [/RAII/, /JSF/]],
+    ["go", [/context\.Context/, /goroutine/]],
+    ["ts", [/unknown/, /erased/, /@tempel\/tsconfig/]],
+    ["tsx", [/React/, /escaping/, /accessibility/]],
+    ["pyi", [/runtime/, /declarative/, /stubtest/]],
+    ["rs", [/unsafe/, /Send/, /Sync/]],
+    ["swift", [/Sendable/, /continuation/]],
+    ["zig", [/errdefer/, /allocator/]],
+  ]) {
+    const text = readFileSync(join(root, `${name}.md`), "utf8");
+    for (const rule of rules) assert.match(text, rule, name);
   }
 });
 
@@ -574,8 +671,9 @@ test("inspect detects mode, language skills, wrappers, and ambiguous initializer
     assert.equal(recommended.has("sync-agent-assets"), true);
     assert.equal(recommended.has("grill-me"), true);
     assert.equal(recommended.has("coding"), true);
-    assert.equal(recommended.has("coding-ts"), true);
-    assert.equal(recommended.has("coding-tsx"), true);
+    assert.equal(recommended.has("coding-with-rules"), true);
+    assert.equal(recommended.has("coding-ts"), false);
+    assert.equal(recommended.has("coding-tsx"), false);
     const ambiguous = new Set(output.ambiguousSkills.map((entry) => entry.name));
     assert.equal(ambiguous.has("init-typescript"), true);
     assert.equal(ambiguous.has("init-project"), true);
@@ -879,6 +977,90 @@ test("old locks remain readable and report missing Claude Code projections", () 
   }
 });
 
+test("coding migration installs complete references and retains legacy files without remapping", () => {
+  const source = syntheticSource();
+  const target = fixture("sync-coding-migration-");
+  try {
+    const catalogPath = join(source.root, ".agents", "skills", "sync-agent-assets", "assets", "skill-catalog.json");
+    const catalog = JSON.parse(readFileSync(catalogPath, "utf8"));
+    const entry = (name, selection) => ({ name, category: "coding", selection, dependencies: [], safety: "project-write-guidance", harnesses: ["pi", "opencode", "claude-code"], signals: {} });
+    writeSkill(source.root, "coding");
+    writeSkill(source.root, "coding-ts");
+    catalog.skills.push(entry("coding", "core"), entry("coding-ts", "detected"));
+    catalog.profiles.coreInstructions = ["coding"];
+    writeFileSync(catalogPath, JSON.stringify(catalog));
+    source.commit = commitAll(source.root, "legacy coding source");
+    installSyntheticAssets(source.root, target);
+    for (const name of ["coding", "coding-ts"]) {
+      cpSync(join(source.root, ".agents", "skills", name), join(target, ".agents", "skills", name), { recursive: true });
+      symlinkSync(`../../.agents/skills/${name}`, join(target, ".claude", "skills", name), "dir");
+    }
+    const selection = selectionFile(target);
+    const selected = JSON.parse(readFileSync(selection, "utf8"));
+    selected.selectedSkills = ["coding-ts"];
+    writeFileSync(selection, JSON.stringify(selected));
+    const args = () => ["record", "--root", target, "--source-root", source.root, "--source-commit", source.commit, "--selection", selection];
+    let result = run(args());
+    assert.equal(result.status, 0, result.stderr);
+    let plan = JSON.parse(result.stdout);
+    assert.equal(run([...args(), "--apply", "--confirm", "--plan-id", plan.planId]).status, 0);
+    const legacyPath = ".agents/skills/coding-ts/SKILL.md";
+    const legacyText = readFileSync(join(target, legacyPath), "utf8");
+    const lockPath = join(target, ".agents", "ai-assets.lock.json");
+    const oldLock = readFileSync(lockPath, "utf8");
+
+    rmSync(join(source.root, ".agents", "skills", "coding-ts"), { recursive: true });
+    cpSync(join(repositoryRoot, ".agents", "skills", "coding-with-rules"), join(source.root, ".agents", "skills", "coding-with-rules"), { recursive: true });
+    catalog.skills = catalog.skills.filter((skill) => skill.name !== "coding-ts");
+    catalog.skills.push(entry("coding-with-rules", "core"));
+    catalog.profiles.coreInstructions = ["coding-with-rules"];
+    writeFileSync(catalogPath, JSON.stringify(catalog));
+    source.commit = commitAll(source.root, "replace language skill with coding composition");
+    result = run(["compare", "--root", target, "--source-root", source.root]);
+    assert.equal(result.status, 0, result.stderr);
+    const compared = JSON.parse(result.stdout);
+    assert.ok(compared.removedCatalogSkills.includes("coding-ts"));
+    assert.ok(compared.newCatalogSkills.includes("coding-with-rules"));
+    assert.equal(compared.files.find((file) => file.path === legacyPath).state, "upstream-removed-retain");
+    result = run(args());
+    assert.equal(result.status, 3, result.stderr);
+    assert.match(result.stderr, /Unknown selected skill: coding-ts/);
+    assert.equal(readFileSync(lockPath, "utf8"), oldLock);
+
+    cpSync(join(source.root, ".agents", "skills", "coding-with-rules"), join(target, ".agents", "skills", "coding-with-rules"), { recursive: true });
+    symlinkSync("../../.agents/skills/coding-with-rules", join(target, ".claude", "skills", "coding-with-rules"), "dir");
+    selected.selectedSkills = ["coding-with-rules"];
+    selected.retainedFiles = [{ path: legacyPath, reason: "Legacy removal is not approved." }];
+    writeFileSync(selection, JSON.stringify(selected));
+    const referencePath = ".agents/skills/coding-with-rules/references/tsx.md";
+    rmSync(join(target, referencePath));
+    result = run(args());
+    assert.equal(result.status, 3, result.stderr);
+    assert.match(result.stderr, /differs structurally/);
+    cpSync(join(source.root, referencePath), join(target, referencePath));
+    result = run(args());
+    assert.equal(result.status, 0, result.stderr);
+    plan = JSON.parse(result.stdout);
+    assert.ok(plan.selectedSkills.includes("coding"));
+    assert.ok(plan.selectedSkills.includes("coding-with-rules"));
+    assert.equal(plan.selectedSkills.includes("coding-ts"), false);
+    for (const name of readdirSync(join(source.root, ".agents", "skills", "coding-with-rules", "references"))) {
+      assert.ok(plan.lock.files[`.agents/skills/coding-with-rules/references/${name}`]);
+    }
+    assert.equal(plan.lock.files[legacyPath].retained, true);
+    assert.equal(readFileSync(lockPath, "utf8"), oldLock);
+    assert.equal(run([...args(), "--apply", "--confirm", "--plan-id", plan.planId]).status, 0);
+    assert.equal(readFileSync(join(target, legacyPath), "utf8"), legacyText);
+    assert.equal(readlinkSync(join(target, ".claude", "skills", "coding-ts")), "../../.agents/skills/coding-ts");
+    result = run(["status", "--root", target]);
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(JSON.parse(result.stdout).counts.modified, 0);
+  } finally {
+    rmSync(source.root, { recursive: true, force: true });
+    rmSync(target, { recursive: true, force: true });
+  }
+});
+
 test("record rejects missing or conflicting Claude Code projections", () => {
   const source = syntheticSource();
   const target = fixture("sync-agent-assets-claude-conflict-");
@@ -914,6 +1096,8 @@ test("Skills CLI installs canonical skills with Claude Code symlink projections"
     const result = spawnSync("npx", [
       "--yes", "skills@1.7.4", "add", repositoryRoot,
       "--skill", "sync-agent-assets",
+      "--skill", "coding",
+      "--skill", "coding-with-rules",
       "--agent", "pi",
       "--agent", "opencode",
       "--agent", "claude-code",
@@ -923,6 +1107,14 @@ test("Skills CLI installs canonical skills with Claude Code symlink projections"
     const projection = join(target, ".claude", "skills", "sync-agent-assets");
     assert.equal(readlinkSync(projection), "../../.agents/skills/sync-agent-assets");
     assert.equal(existsSync(join(target, ".agents", "skills", "sync-agent-assets", "scripts", "sync-agent-assets.mjs")), true);
+    for (const name of ["coding", "coding-with-rules"]) {
+      assert.equal(readlinkSync(join(target, ".claude", "skills", name)), `../../.agents/skills/${name}`);
+      assert.equal(existsSync(join(target, ".agents", "skills", name, "SKILL.md")), true);
+    }
+    const references = join(".agents", "skills", "coding-with-rules", "references");
+    for (const name of readdirSync(join(repositoryRoot, references))) {
+      assert.equal(readFileSync(join(target, references, name), "utf8"), readFileSync(join(repositoryRoot, references, name), "utf8"));
+    }
     assert.equal(existsSync(join(target, "skills-lock.json")), true);
   } finally {
     rmSync(target, { recursive: true, force: true });
