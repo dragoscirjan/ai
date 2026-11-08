@@ -1,5 +1,7 @@
 # .mts rules
 
+Prerequisite: Read [TypeScript rules](ts.md) first. If already loaded for this task, do not read it again.
+
 - `.mts` is ECMAScript-module TypeScript. Node-aware compiler modes emit `.mjs` and use `.d.mts` declarations.
 - `module` and `moduleResolution` define resolution and emit. Node.js rules must not be assumed for bundlers, browsers, Deno, or Bun.
 - Runtime import specifiers target the emitted environment. Node-aware output can require the emitted extension rather than `.mts`.

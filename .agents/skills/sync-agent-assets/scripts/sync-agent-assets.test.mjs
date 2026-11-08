@@ -367,6 +367,44 @@ test("coding composition links plain references with language-before-extension r
   assert.match(instructions, /Bash.*POSIX/);
 });
 
+test("extension references declare existing acyclic base-language prerequisites", () => {
+  const root = join(repositoryRoot, ".agents", "skills", "coding-with-rules", "references");
+  const expected = new Map([
+    ["cjs.md", "js.md"], ["mjs.md", "js.md"], ["jsx.md", "js.md"],
+    ["cts.md", "ts.md"], ["mts.md", "ts.md"], ["tsx.md", "ts.md"], ["pyi.md", "py.md"],
+  ]);
+  const files = new Set(readdirSync(root));
+  const graph = new Map();
+  for (const name of files) {
+    const text = readFileSync(join(root, name), "utf8");
+    const targets = [...text.matchAll(/\]\((?!https?:)([^)]+)\)/g)].map((match) => match[1]);
+    for (const target of targets) {
+      assert.match(target, /^[a-z]+\.md$/, name);
+      assert.ok(files.has(target), `${name}: missing prerequisite ${target}`);
+      assert.equal(lstatSync(join(root, target)).isFile(), true, target);
+    }
+    graph.set(name, targets);
+    if (expected.has(name)) {
+      assert.match(text, /^Prerequisite: Read \[[^\]]+\]\([a-z]+\.md\) first\./m, name);
+      assert.match(text, /If already loaded for this task, do not read it again\./, name);
+    }
+  }
+  const active = new Set();
+  const complete = new Set();
+  const visit = (name) => {
+    assert.equal(active.has(name), false, `Reference dependency cycle at ${name}`);
+    if (complete.has(name)) return;
+    active.add(name);
+    for (const target of graph.get(name)) visit(target);
+    active.delete(name);
+    complete.add(name);
+  };
+  for (const name of files) visit(name);
+  for (const [name, targets] of graph) {
+    assert.deepEqual(targets, expected.has(name) ? [expected.get(name)] : [], name);
+  }
+});
+
 test("coding references contain language rules rather than standalone skill workflows", () => {
   const root = join(repositoryRoot, ".agents", "skills", "coding-with-rules", "references");
   for (const name of readdirSync(root)) {

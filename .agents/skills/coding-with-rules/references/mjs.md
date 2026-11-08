@@ -1,5 +1,7 @@
 # .mjs rules
 
+Prerequisite: Read [JavaScript rules](js.md) first. If already loaded for this task, do not read it again.
+
 - `.mjs` is an ECMAScript module regardless of the nearest `package.json` `type` field.
 - Use `import` and `export`. `require`, `module.exports`, `exports`, `__filename`, and `__dirname` are not native ESM globals.
 - Use supported `import.meta` and URL-aware APIs for module-relative resources.

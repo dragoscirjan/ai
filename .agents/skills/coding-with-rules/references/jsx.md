@@ -1,5 +1,7 @@
 # .jsx rules
 
+Prerequisite: Read [JavaScript rules](js.md) first. If already loaded for this task, do not read it again.
+
 - JSX transformation and rendering semantics belong to the configured compiler/runtime; React, browsers, and virtual DOMs are not universal defaults.
 - Elements, fragments, attributes, events, component properties, and render results must match that runtime's contracts.
 - Framework lifecycle, ownership, effect, and reactivity rules are not interchangeable across JSX frameworks.

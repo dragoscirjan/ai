@@ -1,5 +1,7 @@
 # .tsx rules
 
+Prerequisite: Read [TypeScript rules](ts.md) first. If already loaded for this task, do not read it again.
+
 - `jsx`, `jsxImportSource`, framework types, and the renderer define TypeScript JSX semantics. Do not assume React.
 - Element, intrinsic-element, property, children, event, and ref types come from the configured runtime.
 - Preserve public component/property contracts; use inference internally and explicit types at exported boundaries.

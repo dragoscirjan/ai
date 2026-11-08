@@ -1,5 +1,7 @@
 # .cts rules
 
+Prerequisite: Read [TypeScript rules](ts.md) first. If already loaded for this task, do not read it again.
+
 - `.cts` is CommonJS TypeScript. Node-aware compiler modes emit `.cjs` and use `.d.cts` declarations.
 - `module`, `moduleResolution`, and `verbatimModuleSyntax` constrain permitted module syntax and emit.
 - Preserve public export shapes consumed by CommonJS callers.

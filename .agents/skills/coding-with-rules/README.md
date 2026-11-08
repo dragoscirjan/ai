@@ -5,7 +5,7 @@
 ## How it works
 
 - Read `coding` through the declared requirement, then apply the router in [`SKILL.md`](SKILL.md).
-- Load only the relevant documents under [`references/`](references/), with language guidance before extension guidance. For `.tsx`, read `ts.md` then `tsx.md`; do not assume React.
+- Load only the relevant documents under [`references/`](references/), with language guidance before extension guidance. Each extension document explicitly links its main-language prerequisite. For `.tsx`, read `ts.md` then `tsx.md`; do not assume React. Read each document once per task and stop on missing prerequisites or cycles.
 - Use project evidence for ambiguous headers, interpreters, and configuration files. Do not combine contradictory Bash and POSIX rules.
 - Use the base workflow and project conventions for unsupported languages, and report the coverage gap. A missing mapped reference is an error.
 

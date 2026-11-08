@@ -1,5 +1,7 @@
 # .cjs rules
 
+Prerequisite: Read [JavaScript rules](js.md) first. If already loaded for this task, do not read it again.
+
 - `.cjs` is CommonJS regardless of the nearest `package.json` `type` field.
 - Preserve the public export shape. Replacing `module.exports` and mutating export properties are not interchangeable for all consumers.
 - `require` resolution, cache identity, circular dependencies, and initialization order affect observable behavior.
