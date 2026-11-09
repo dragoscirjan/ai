@@ -158,6 +158,16 @@
       "signals": { "askWithoutSignals": true }
     },
     {
+      "name": "tdd",
+      "category": "testing",
+      "selection": "optional",
+      "dependencies": [],
+      "safety": "project-write-guidance",
+      "harnesses": ["pi", "opencode", "claude-code"],
+      "provenance": "vendored",
+      "signals": { "askWithoutSignals": true }
+    },
+    {
       "name": "unslop",
       "category": "communication",
       "selection": "optional",
