@@ -317,8 +317,12 @@ test("the catalog covers every repository skill directory", () => {
   assert.equal(names.has("init-project"), true);
   assert.equal(names.has("init-typescript"), false);
   assert.equal(names.has("init-gdscript"), false);
+  for (const name of ["research", "initiative", "specify", "plan-tasks", "retrospective"]) {
+    assert.equal(names.has(name), true, name);
+    assert.equal(output.skills.find((entry) => entry.name === name).selection, "optional", name);
+  }
   assert.equal(output.skills.every((entry) => entry.harnesses.includes("claude-code")), true);
-  assert.deepEqual(output.skills.filter((entry) => entry.require.length).map((entry) => [entry.name, entry.require]), [["cleanup-workspaces", ["isolated-workspace"]], ["coding-with-rules", ["coding"]], ["grill-me", ["grilling"]]]);
+  assert.deepEqual(output.skills.filter((entry) => entry.require.length).map((entry) => [entry.name, entry.require]), [["cleanup-workspaces", ["isolated-workspace"]], ["coding-with-rules", ["coding"]], ["grill-me", ["grilling"]], ["initiative", ["grilling"]]]);
   assert.deepEqual(output.skills.filter((entry) => entry.dependencies.length).map((entry) => [entry.name, entry.dependencies]), [
     ["cleanup-workspaces", ["isolated-workspace"]],
   ]);
