@@ -23,6 +23,17 @@ Stop before the gated phase if a required document or skill is unavailable. Do n
 
 Use skill frontmatter descriptions to select task-specific skills; do not preload every skill. Before applying a selected skill, inspect its frontmatter and resolve its `require` skills recursively in array order, then apply the selected skill. Stop on missing requirements or cycles; do not install missing skills without approval. Requirements load instructions, not authority to act. The declaration format is defined in `CONTRIBUTING.md`.
 
+## Skill discovery
+
+Before proposing a skill solution in this project, including revisions to current drafts, search all four sources:
+
+- https://github.com/mattpocock/skills/tree/main/skills/
+- https://github.com/obra/superpowers/tree/main/skills/
+- https://github.com/cursor/plugins/
+- https://github.com/vercel-labs/skills
+
+Read relevant skill instructions, compare them with local capabilities, and explain what to reuse, adapt, or write anew. Report unavailable sources; do not treat an unsuccessful search as evidence that no suitable skill exists.
+
 ## Isolated workspace
 
 Workspace configuration:

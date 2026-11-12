@@ -103,6 +103,15 @@
       "signals": { "askWithoutSignals": true, "files": ["project.godot", "tsconfig.json"], "extensions": [".gd", ".ts", ".tsx", ".mts", ".cts"] }
     },
     {
+      "name": "initiative",
+      "category": "planning",
+      "selection": "optional",
+      "dependencies": [],
+      "safety": "document-write-guidance",
+      "harnesses": ["pi", "opencode", "claude-code"],
+      "signals": { "askWithoutSignals": true }
+    },
+    {
       "name": "instruction-maintenance",
       "category": "instruction-policy",
       "selection": "core",
@@ -121,11 +130,47 @@
       "signals": {}
     },
     {
+      "name": "plan-tasks",
+      "category": "planning",
+      "selection": "optional",
+      "dependencies": [],
+      "safety": "document-write-guidance",
+      "harnesses": ["pi", "opencode", "claude-code"],
+      "signals": { "askWithoutSignals": true }
+    },
+    {
+      "name": "research",
+      "category": "research",
+      "selection": "optional",
+      "dependencies": [],
+      "safety": "document-write-guidance",
+      "harnesses": ["pi", "opencode", "claude-code"],
+      "signals": { "askWithoutSignals": true }
+    },
+    {
+      "name": "retro",
+      "category": "review",
+      "selection": "optional",
+      "dependencies": [],
+      "safety": "document-write-guidance",
+      "harnesses": ["pi", "opencode", "claude-code"],
+      "signals": { "askWithoutSignals": true }
+    },
+    {
       "name": "scaffold",
       "category": "design",
       "selection": "optional",
       "dependencies": [],
       "safety": "project-write-with-confirmation",
+      "harnesses": ["pi", "opencode", "claude-code"],
+      "signals": { "askWithoutSignals": true }
+    },
+    {
+      "name": "specify",
+      "category": "planning",
+      "selection": "optional",
+      "dependencies": [],
+      "safety": "document-write-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "askWithoutSignals": true }
     },
