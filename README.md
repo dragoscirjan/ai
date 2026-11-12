@@ -21,7 +21,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`initiative`](.agents/skills/initiative/SKILL.md) | Turn an idea and evidence into an outcome-level brief, using the required grilling interview. |
 | [`plan-tasks`](.agents/skills/plan-tasks/SKILL.md) | Divide agreed scope into bounded tasks with completion evidence and genuine dependencies. |
 | [`research`](.agents/skills/research/SKILL.md) | Answer bounded questions with sourced findings, uncertainty, and decision implications. |
-| [`retrospective`](.agents/skills/retrospective/SKILL.md) | Propose small process improvements from evidence about a work period. |
+| [`retro`](.agents/skills/retro/SKILL.md) | Propose small process improvements from evidence about a work period. |
 | [`specify`](.agents/skills/specify/SKILL.md) | Record agreed behavior, acceptance criteria, constraints, and test boundaries. |
 | [`scaffold`](.agents/skills/scaffold/SKILL.md) | Create reviewable source skeleton files with fail-fast placeholders and stop before implementing behavior. |
 | [`subagent-orchestration`](.agents/skills/subagent-orchestration/SKILL.md) | Bound child-agent workers and reviewers, coordinate isolated write lanes, and clean integrated temporary lanes. |
@@ -47,16 +47,28 @@ flowchart TD
     R["research<br/>Gather evidence"] --> I["initiative<br/>Agree on the outcome"]
     I -->|Brief| S["specify<br/>Define expected behavior"]
     S -->|Specification| P["plan-tasks<br/>Split the work"]
-    P -->|Tasks| C["coding-with-rules<br/>Implement; use tdd when selected"]
-    C --> V["code-review<br/>Check standards and the spec"]
-    V --> T["retrospective<br/>Propose improvements"]
-    V -. Code needs work .-> C
+    P -->|Tasks| N
+    subgraph TASKS["Implementation: repeat for each task"]
+        N["Pick a ready task"] --> F["scaffold<br/>Prepare this task's structure"]
+        F --> C["coding-with-rules<br/>Implement; use tdd when selected"]
+        C --> K{"Task checks pass?"}
+        K -->|No| C
+        K -->|Yes| M{"More tasks?"}
+        M -->|Yes| N
+    end
+    M -->|No| V["code-review<br/>Check standards and the spec"]
+    V --> T["retro<br/>Propose improvements"]
+    V -. Code needs work .-> N
     V -. Requirements need work .-> S
 ```
 
-Solid arrows show the usual hand-offs, not automatic execution. Dotted arrows show where review can send work back. Research can happen at any point, and a retrospective can help during a long effort as well as afterward.
+Solid arrows show the usual hand-offs, not automatic execution. Dotted arrows show where review can send work back. Research can happen at any point, and a retro can help during a long effort as well as afterward.
 
-The documents answer different questions:
+Scaffold at the start of each task, after the tasks have been planned. Prepare the files, signatures, and contracts for that task, then implement and verify it before moving to the next. Preserve working code; do not replace it with placeholders.
+
+The standalone `scaffold` skill still stops at its handoff. Continuing into implementation requires a separate explicit instruction; the arrows do not grant that permission.
+
+Each skill answers a different question:
 
 | Skill | Question | Output |
 |---|---|---|
@@ -64,14 +76,15 @@ The documents answer different questions:
 | `initiative` | Why do this, and what outcome matters? | Outcome brief |
 | `specify` | What must the solution do? | Behavior, acceptance criteria, and test boundaries |
 | `plan-tasks` | What work can we execute and verify? | Bounded tasks with dependencies and completion evidence |
-| `retrospective` | What should we improve next time? | Evidence-backed recommendations |
+| `scaffold` | What structure does this task need? | Source files, types, signatures, and explicit placeholders |
+| `retro` | What should we improve next time? | Evidence-backed recommendations |
 
 One initiative can lead to several specifications, each with several tasks. That does not require a separate file or issue for every level. Reuse what already exists, and implement and review one task at a time when that fits the work.
 
 ### Shorter paths
 
-- **Small fix:** `systematic-debugging` if the cause is unknown → `coding-with-rules`, with `tdd` when selected → `code-review`.
-- **Clear feature:** `specify` → `plan-tasks` if splitting the work helps → implementation → review. No new initiative is needed if the outcome is already agreed.
+- **Small fix:** `systematic-debugging` if the cause is unknown → `scaffold` for the task → `coding-with-rules`, with `tdd` when selected → `code-review`.
+- **Clear feature:** `specify` → `plan-tasks` if splitting the work helps → the scaffold, implementation, and verification loop above → `code-review`. No new initiative is needed if the outcome is already agreed.
 - **Unclear direction:** move between `research` and `initiative` until the direction is settled, then write the specification. Return to research if new questions appear.
 
 ### Dependencies are not workflow order
@@ -86,7 +99,7 @@ flowchart LR
 
 `initiative` uses the required interview to settle open decisions. `coding-with-rules` adds language and extension guidance to the base coding workflow. Project routing loads each requirement before its caller, and managed synchronization includes it in the installation closure.
 
-`research`, `specify`, `plan-tasks`, and `retrospective` have no declared skill dependencies. For example, `plan-tasks` can work from clear direct scope without first running `specify`. Select `tdd` and `code-review` separately; placing them in a workflow diagram does not make them declared requirements.
+`research`, `specify`, `plan-tasks`, and `retro` have no declared skill dependencies. For example, `plan-tasks` can work from clear direct scope without first running `specify`. Select `tdd` and `code-review` separately; placing them in a workflow diagram does not make them declared requirements.
 
 ### Where the output goes
 

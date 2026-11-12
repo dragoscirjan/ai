@@ -148,7 +148,7 @@
       "signals": { "askWithoutSignals": true }
     },
     {
-      "name": "retrospective",
+      "name": "retro",
       "category": "review",
       "selection": "optional",
       "dependencies": [],

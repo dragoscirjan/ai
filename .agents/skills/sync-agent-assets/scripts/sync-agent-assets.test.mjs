@@ -317,7 +317,7 @@ test("the catalog covers every repository skill directory", () => {
   assert.equal(names.has("init-project"), true);
   assert.equal(names.has("init-typescript"), false);
   assert.equal(names.has("init-gdscript"), false);
-  for (const name of ["research", "initiative", "specify", "plan-tasks", "retrospective"]) {
+  for (const name of ["research", "initiative", "specify", "plan-tasks", "retro"]) {
     assert.equal(names.has(name), true, name);
     assert.equal(output.skills.find((entry) => entry.name === name).selection, "optional", name);
   }
