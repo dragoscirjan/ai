@@ -20,7 +20,7 @@ These sources guide risk analysis. They are not copied into the skill and do not
 
 ## Independent guidance and composition
 
-`coding` is an independent base skill. [`coding-with-rules`](../coding-with-rules/SKILL.md) is the language-aware entry point and declares `require: ["coding"]`. Both remain discoverable siblings under `.agents/skills/`, with exact relative Claude projections under `.claude/skills/`.
+`coding` is an independent base skill. [`coding-with-rules`](../coding-with-rules/SKILL.md) is the language-aware entry point and declares `requires: ["coding"]`. Both remain discoverable siblings under `.agents/skills/`, with exact relative Claude projections under `.claude/skills/`.
 
 This repository's `AGENTS.md` selects the composition for code work. Project routing resolves `coding` first, then the composition selects task-relevant language and extension documents from its `references/` directory. Those documents are supporting files, not separate skills. Shared-code dependencies remain distinct from instruction requirements. No native harness dependency loader is assumed.
 

@@ -1,7 +1,7 @@
 ---
 name: coding-with-rules
 description: Design, implement, refactor, review, or test code using the coding workflow plus on-demand language and file-extension rules. Use for source code and related toolchain, build, or test work in any language.
-require: ["coding"]
+requires: ["coding"]
 metadata:
   author: dragoscirjan
   version: "1.0"

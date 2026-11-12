@@ -20,8 +20,8 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`instruction-maintenance`](.agents/skills/instruction-maintenance/SKILL.md) | Diagnose instruction drift, propose an exact adaptation, and wait for human approval before mutation. |
 | [`initiative`](.agents/skills/initiative/SKILL.md) | Turn an idea and evidence into an outcome-level brief, using the required grilling interview. |
 | [`plan-tasks`](.agents/skills/plan-tasks/SKILL.md) | Divide agreed scope into bounded tasks with completion evidence and genuine dependencies. |
-| [`research`](.agents/skills/research/SKILL.md) | Answer bounded questions with sourced findings, uncertainty, and decision implications. |
-| [`retrospective`](.agents/skills/retrospective/SKILL.md) | Propose small process improvements from evidence about a work period. |
+| [`research`](.agents/skills/research/SKILL.md) | Research a question or idea using relevant sources, with or without an existing project. |
+| [`retro`](.agents/skills/retro/SKILL.md) | Propose small process improvements from evidence about a work period. |
 | [`specify`](.agents/skills/specify/SKILL.md) | Record agreed behavior, acceptance criteria, constraints, and test boundaries. |
 | [`scaffold`](.agents/skills/scaffold/SKILL.md) | Create reviewable source skeleton files with fail-fast placeholders and stop before implementing behavior. |
 | [`subagent-orchestration`](.agents/skills/subagent-orchestration/SKILL.md) | Bound child-agent workers and reviewers, coordinate isolated write lanes, and clean integrated temporary lanes. |
@@ -32,46 +32,65 @@ This repository contains reusable skills, instructions, configuration assets, an
 
 ## Independent skills and compositions
 
-Skills load other instructions only through declared requirements. Leaves normally omit them; `cleanup-workspaces` explicitly requires `isolated-workspace` as an owner-approved exception. Select combinations explicitly, or use a thin composition such as `grill-me`, which declares `require: ["grilling"]`. For code work, `coding-with-rules` declares `require: ["coding"]` and selects its own language and extension reference files on demand. The former language and extension skills are replaced by those plain documents; see the [migration guide](.agents/skills/coding-with-rules/README.md#migrate-existing-installations). Project instructions resolve requirements before applying the composition; its body defines the workflow.
+Skills load other instructions only through declared requirements. Leaves normally omit them; `cleanup-workspaces` explicitly requires `isolated-workspace` as an owner-approved exception. Select combinations explicitly, or use a thin composition such as `grill-me`, which declares `requires: ["grilling"]`. For code work, `coding-with-rules` declares `requires: ["coding"]` and selects its own language and extension reference files on demand. The former language and extension skills are replaced by those plain documents; see the [migration guide](.agents/skills/coding-with-rules/README.md#migrate-existing-installations). Project instructions resolve requirements before applying the composition; its body defines the workflow.
 
-`require` is a project extension, not a native harness loader or standard Agent Skills field. External Skills CLI commands do not automatically install its requirements. See [the declaration and compatibility contract](CONTRIBUTING.md#independent-skills-and-explicit-composition). Shared helper-code dependencies remain distinct.
+`requires` is a project extension, not a native harness loader or standard Agent Skills field. External Skills CLI commands do not automatically install its requirements. See [the declaration and compatibility contract](CONTRIBUTING.md#independent-skills-and-explicit-composition). Shared helper-code dependencies remain distinct.
 
 ## Development flow
 
 Start where you need help. If the goal is unclear, work through an initiative. If facts are missing, research them. If the work is already understood, go straight to a specification, task, or implementation. You do not need to run every skill.
+
+`research` also works on its own for general questions and new ideas. It does not require a repository, an initiative, or an implementation decision. It clarifies the request when needed and delivers findings where the user chooses.
+
+`initiative` accepts research findings, a direct request, or both. It reuses available context, investigates missing facts, and uses `grilling` to settle initiative-level decisions before writing. Research recommendations count as agreed decisions only after the user accepts them. Once the initiative is defined, it resolves where and how to save an agreement record, saves and verifies it, and reports the path or URL.
 
 ### Usual order and feedback
 
 ```mermaid
 flowchart TD
     R["research<br/>Gather evidence"] --> I["initiative<br/>Agree on the outcome"]
-    I -->|Brief| S["specify<br/>Define expected behavior"]
+    U["Direct user request"] --> I
+    I -->|Agreement record| S["specify<br/>Define expected behavior"]
     S -->|Specification| P["plan-tasks<br/>Split the work"]
-    P -->|Tasks| C["coding-with-rules<br/>Implement; use tdd when selected"]
-    C --> V["code-review<br/>Check standards and the spec"]
-    V --> T["retrospective<br/>Propose improvements"]
-    V -. Code needs work .-> C
+    P -->|Tasks| N
+    subgraph TASKS["Implementation: repeat for each task"]
+        N["Pick a ready task"] --> F["scaffold<br/>Prepare this task's structure"]
+        F --> C["coding-with-rules<br/>Implement; use tdd when selected"]
+        C --> K{"Task checks pass?"}
+        K -->|No| C
+        K -->|Yes| M{"More tasks?"}
+        M -->|Yes| N
+    end
+    M -->|No| V["code-review<br/>Check standards and the spec"]
+    V --> T["retro<br/>Propose improvements"]
+    V -. Code needs work .-> N
     V -. Requirements need work .-> S
+    I -. Missing evidence .-> R
 ```
 
-Solid arrows show the usual hand-offs, not automatic execution. Dotted arrows show where review can send work back. Research can happen at any point, and a retrospective can help during a long effort as well as afterward.
+Solid arrows show the usual hand-offs, not automatic execution. Dotted arrows show where missing evidence or review findings send work back. Research can happen at any point, and a retro can help during a long effort as well as afterward.
 
-The documents answer different questions:
+Scaffold at the start of each task, after the tasks have been planned. Prepare the files, signatures, and contracts for that task, then implement and verify it before moving to the next. Preserve working code; do not replace it with placeholders.
+
+The standalone `scaffold` skill still stops at its handoff. Continuing into implementation requires a separate explicit instruction; the arrows do not grant that permission.
+
+Each skill answers a different question:
 
 | Skill | Question | Output |
 |---|---|---|
 | `research` | What do we know, and what is still uncertain? | Findings with sources |
-| `initiative` | Why do this, and what outcome matters? | Outcome brief |
-| `specify` | What must the solution do? | Behavior, acceptance criteria, and test boundaries |
+| `initiative` | Why do this, and what outcome matters? | Saved agreement record |
+| `specify` | What must the solution do? | Saved specification with behavior, acceptance criteria, and test boundaries |
 | `plan-tasks` | What work can we execute and verify? | Bounded tasks with dependencies and completion evidence |
-| `retrospective` | What should we improve next time? | Evidence-backed recommendations |
+| `scaffold` | What structure does this task need? | Source files, types, signatures, and explicit placeholders |
+| `retro` | What should we improve next time? | Evidence-backed recommendations |
 
 One initiative can lead to several specifications, each with several tasks. That does not require a separate file or issue for every level. Reuse what already exists, and implement and review one task at a time when that fits the work.
 
 ### Shorter paths
 
-- **Small fix:** `systematic-debugging` if the cause is unknown → `coding-with-rules`, with `tdd` when selected → `code-review`.
-- **Clear feature:** `specify` → `plan-tasks` if splitting the work helps → implementation → review. No new initiative is needed if the outcome is already agreed.
+- **Small fix:** `systematic-debugging` if the cause is unknown → `scaffold` for the task → `coding-with-rules`, with `tdd` when selected → `code-review`.
+- **Clear feature:** `specify` → `plan-tasks` if splitting the work helps → the scaffold, implementation, and verification loop above → `code-review`. No new initiative is needed if the outcome is already agreed.
 - **Unclear direction:** move between `research` and `initiative` until the direction is settled, then write the specification. Return to research if new questions appear.
 
 ### Dependencies are not workflow order
@@ -80,17 +99,21 @@ These arrows mean **requires the target's instructions**, not **run this next**:
 
 ```mermaid
 flowchart LR
-    I["initiative"] -->|require| G["grilling"]
-    W["coding-with-rules"] -->|require| C["coding"]
+    I["initiative"] -->|requires| G["grilling"]
+    R["research"] -->|requires| G
+    S["specify"] -->|requires| G
+    W["coding-with-rules"] -->|requires| C["coding"]
 ```
 
-`initiative` uses the required interview to settle open decisions. `coding-with-rules` adds language and extension guidance to the base coding workflow. Project routing loads each requirement before its caller, and managed synchronization includes it in the installation closure.
+`initiative` uses the required interview to settle open decisions. `research` uses it only when the question, scope, or expected result is unclear. A clear research request skips the interview, although the required instructions still load. `specify` also uses `grilling` when detailed requirements or test boundaries need clarification, then records the confirmed answers. `coding-with-rules` adds language and extension guidance to the base coding workflow. Project routing loads each requirement before its caller, and managed synchronization includes it in the installation closure.
 
-`research`, `specify`, `plan-tasks`, and `retrospective` have no declared skill dependencies. For example, `plan-tasks` can work from clear direct scope without first running `specify`. Select `tdd` and `code-review` separately; placing them in a workflow diagram does not make them declared requirements.
+`plan-tasks` and `retro` have no declared skill dependencies. For example, `plan-tasks` can work from clear direct scope without first running `specify`. Select `tdd` and `code-review` separately; placing them in a workflow diagram does not make them declared requirements.
 
 ### Where the output goes
 
-Before generating a document, each skill checks the target project's `AGENTS.md` and `CONTRIBUTING.md` for its destination and format. If those instructions do not say where it belongs, the skill asks rather than choosing chat, a local file, or a tracker issue.
+`initiative` and `specify` resolve delivery after clarifying their contents. They save at the agreed destination, verify the saved content, and return the actual path or URL. If saving is blocked, they provide prepared content marked "not saved".
+
+For project work, document-generating skills consult `AGENTS.md` and `CONTRIBUTING.md` for destination and format. If those instructions leave this unclear, or there is no project context, ask the user where and how to deliver the output. Do not assume chat, a local file, or a tracker issue.
 
 Agreeing on a document does not automatically authorize the next stage, delegation, or publication. Existing project gates still apply. Keep local, committed, pushed, and PR state separate: reviewed code is not necessarily published code.
 

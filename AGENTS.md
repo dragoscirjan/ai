@@ -21,7 +21,7 @@ Load only the instructions required for the current phase. When several rows mat
 
 Stop before the gated phase if a required document or skill is unavailable. Do not recreate missing instructions from memory.
 
-Use skill frontmatter descriptions to select task-specific skills; do not preload every skill. Before applying a selected skill, inspect its frontmatter and resolve its `require` skills recursively in array order, then apply the selected skill. Stop on missing requirements or cycles; do not install missing skills without approval. Requirements load instructions, not authority to act. The declaration format is defined in `CONTRIBUTING.md`.
+Use skill frontmatter descriptions to select task-specific skills; do not preload every skill. Before applying a selected skill, inspect its frontmatter and resolve its `requires` skills recursively in array order, then apply the selected skill. Stop on missing requirements or cycles; do not install missing skills without approval. Requirements load instructions, not authority to act. The declaration format is defined in `CONTRIBUTING.md`.
 
 ## Skill discovery
 

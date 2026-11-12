@@ -17,7 +17,7 @@ This repository does not define one automated test suite for every asset. Record
 When a change adds or modifies a skill:
 
 - Verify core `name` and `description` frontmatter and the approved project/harness extensions. Do not claim raw strict Agent Skills compliance for files using nonstandard fields.
-- Validate optional `require` as one nonempty inline JSON-compatible array: unique valid names, existing targets, and no self-reference or cycles. Check its declared load order and independence of unmarked leaves.
+- Validate optional `requires` as one nonempty inline JSON-compatible array: unique valid names, existing targets, and no self-reference or cycles. Check its declared load order and independence of unmarked leaves.
 - Verify that each skill directory name matches its declared `name`.
 - Verify that Pi and OpenCode discover the changed skill from `.agents/skills/`.
 - Verify that Claude Code discovers it through an exact relative `.claude/skills/` symlink to the canonical `.agents/skills/` directory.
@@ -47,8 +47,8 @@ When a change modifies `sync-agent-assets` or its catalog:
 When a change adds or modifies `coding`, `coding-with-rules`, or its references:
 
 - Confirm that `coding` and `coding-with-rules` are sibling skills directly under `.agents/skills/`.
-- Confirm that `coding` remains independent and `coding-with-rules` declares exactly `require: ["coding"]`.
-- Confirm that language and extension documents are plain Markdown under `coding-with-rules/references/`, not separately discoverable skills or `require` targets.
+- Confirm that `coding` remains independent and `coding-with-rules` declares exactly `requires: ["coding"]`.
+- Confirm that language and extension documents are plain Markdown under `coding-with-rules/references/`, not separately discoverable skills or `requires` targets.
 - Confirm project routing selects `coding-with-rules`, resolves `coding` first, and reads only task-relevant language references before extension references. Check ambiguous headers, Bash versus POSIX selection, unsupported-language fallback, and missing-mapped-reference stops. Test declared requirement order, missing-requirement stops, and cycle rejection without a harness-specific Skill tool.
 - Keep code-helper dependencies separate from instruction requirements; test their combined installation closure.
 - Confirm extension guidance does not duplicate generic or language instructions.

@@ -1,7 +1,7 @@
 ---
 name: grill-me
 description: A relentless interview to sharpen a plan or design.
-require: ["grilling"]
+requires: ["grilling"]
 disable-model-invocation: true
 ---
 

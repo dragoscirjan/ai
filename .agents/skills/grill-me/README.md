@@ -20,7 +20,7 @@ The skill is licensed under the upstream [MIT license](https://github.com/mattpo
 
 ## Local adaptation
 
-`SKILL.md` adds `require: ["grilling"]` and replaces the harness-specific Skill-tool call with a short interview entry instruction. The base project routing loads the requirement first. This file is not byte-identical to the imported snapshot above; the other listed files are unchanged.
+`SKILL.md` adds `requires: ["grilling"]` and replaces the harness-specific Skill-tool call with a short interview entry instruction. The base project routing loads the requirement first. This file is not byte-identical to the imported snapshot above; the other listed files are unchanged.
 
 ## Checking for upgrades
 

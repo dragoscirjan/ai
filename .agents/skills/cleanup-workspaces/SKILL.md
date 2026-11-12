@@ -1,7 +1,7 @@
 ---
 name: cleanup-workspaces
 description: Plan and safely remove clean integrated Git worktrees or Jujutsu workspaces, including one exact temporary orchestration lane, and prune safe stale registrations. Use for owner-authorized cleanup or current-task lane cleanup authorized by the orchestration workflow.
-require: ["isolated-workspace"]
+requires: ["isolated-workspace"]
 disable-model-invocation: true
 compatibility: Requires Bun and either Git with worktree support or Jujutsu 0.38 or newer with workspace support.
 metadata:

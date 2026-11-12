@@ -25,7 +25,7 @@ When another workflow needs hosted-repository identity, query project-scoped mem
 
 ## Architecture rules
 
-- Follow the [Agent Skills specification](https://agentskills.io/specification) for core skill fields. The `require` convention below is an explicit project extension, not a standard or native harness feature. Preserve documented harness-specific fields where applicable.
+- Follow the [Agent Skills specification](https://agentskills.io/specification) for core skill fields. The `requires` convention below is an explicit project extension, not a standard or native harness feature. Preserve documented harness-specific fields where applicable.
 - Match each skill directory name to the `name` in its `SKILL.md` frontmatter.
 - Keep reusable assets independent of absolute machine paths and individual harnesses unless the coupling is explicit.
 - Keep detailed reusable workflows in skills. Keep only startup routing, project configuration, security boundaries, and owner authority in `AGENTS.md`.
@@ -40,16 +40,16 @@ Keep each leaf skill useful on its own: state its scope, real prerequisites, and
 Declare instruction dependencies only for thin, intentional compositions or the owner-approved `cleanup-workspaces` → `isolated-workspace` exception. For example:
 
 ```yaml
-require: ["grilling"]
+requires: ["grilling"]
 ```
 
-Omit the field when no skills are required. When present, use exactly one unquoted top-level `require` key with a nonempty, single-line JSON-compatible array of unique skill names. Multiline lists, unquoted items, anchors, and trailing comments are unsupported for this property. Names must exist; self-references and cycles are invalid.
+Omit the field when no skills are required. When present, use exactly one unquoted top-level `requires` key with a nonempty, single-line JSON-compatible array of unique skill names. Multiline lists, unquoted items, anchors, and trailing comments are unsupported for this property. Names must exist; self-references and cycles are invalid. The former `require` spelling is rejected. Rename it to `requires` and do not declare both.
 
-The declaration is the sole source of mandatory skill-to-skill instruction dependencies. Resolve requirements recursively in array order, loading each skill once before its caller. The composition body defines execution sequence, handoffs, and stops; do not repeat loading procedures or component instructions. A skill may conditionally load its own supporting documents, such as language reference files. Those documents are not separately discoverable skills or `require` targets, and must not hide undeclared skill dependencies. An optional reference is not a requirement.
+The declaration is the sole source of mandatory skill-to-skill instruction dependencies. Resolve requirements recursively in array order, loading each skill once before its caller. The composition body defines execution sequence, handoffs, and stops; do not repeat loading procedures or component instructions. A skill may conditionally load its own supporting documents, such as language reference files. Those documents are not separately discoverable skills or `requires` targets, and must not hide undeclared skill dependencies. An optional reference is not a requirement.
 
 Keep shared-code installation dependencies in catalog `dependencies`; capability `requires` is separate. The synchronization planner includes both code dependencies and frontmatter requirements in the approval-bound installation closure. Managed project profiles may add the policy bundle required by imported instructions.
 
-Top-level `require` is not part of the Agent Skills standard and fails its strict reference validator. It acquires model-driven semantics through project routing, not a custom harness loader. External Skills CLI commands do not automatically install these requirements. Outside a managed project, install the declared skills and supply this routing convention explicitly. Report tested harness behavior separately from source inspection or unverified compatibility.
+Top-level `requires` is not part of the Agent Skills standard and fails its strict reference validator. It acquires model-driven semantics through project routing, not a custom harness loader. External Skills CLI commands do not automatically install these requirements. Outside a managed project, install the declared skills and supply this routing convention explicitly. Report tested harness behavior separately from source inspection or unverified compatibility.
 
 ## Human-approved instruction adaptation
 
