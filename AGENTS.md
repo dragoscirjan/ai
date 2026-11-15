@@ -14,6 +14,7 @@ Load only the instructions required for the current phase. When several rows mat
 | Before planning or performing a repository architecture, design, implementation, documentation, configuration, policy, or publication change | Read and follow `CONTRIBUTING.md`. |
 | Before any repository mutation | Read and follow `.agents/skills/isolated-workspace/SKILL.md`. |
 | Before designing, changing, testing, or reviewing source code | Read `coding-with-rules` and follow its language and extension reference selection. Resolve its declared requirements first. |
+| During implementation, and before creating or revising project documentation | Read and follow `document-project`, `asd-ste100-technical`, and `unslop`. Assess documentation impact and update affected documentation in the same change. |
 | Before delegating work to child agents | Read and follow `.agents/skills/subagent-orchestration/SKILL.md`. |
 | Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
 | Before auditing or removing old workspaces | Read and follow `.agents/skills/cleanup-workspaces/SKILL.md`. |

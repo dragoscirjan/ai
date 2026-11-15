@@ -312,6 +312,7 @@ test("the catalog covers every repository skill directory", () => {
   assert.equal(names.has("coding-with-rules"), true);
   assert.deepEqual([...names].filter((name) => name.startsWith("coding-")), ["coding-with-rules"]);
   assert.equal(names.has("instruction-maintenance"), true);
+  assert.equal(names.has("document-project"), true);
   assert.equal(names.has("init-with-rules"), false);
   assert.deepEqual([...names].filter((name) => name.startsWith("init-")), ["init-project"]);
   assert.equal(names.has("init-project"), true);
@@ -328,6 +329,10 @@ test("the catalog covers every repository skill directory", () => {
   ]);
   assert.equal(output.profiles.coreInstructions.includes("coding-with-rules"), true);
   assert.equal(output.profiles.coreInstructions.includes("coding"), false);
+  for (const name of ["document-project", "asd-ste100-technical", "unslop"]) {
+    assert.equal(output.profiles.coreInstructions.includes(name), true, name);
+    assert.equal(output.skills.find((entry) => entry.name === name).selection, "core", name);
+  }
   assert.deepEqual(output.skills.find((entry) => entry.name === "code-review").requires, ["parallel-subagents"]);
   assert.deepEqual(output.skills.find((entry) => entry.name === "code-review").instructionRequirements, []);
   assert.equal(output.skills.some((entry) => Object.hasOwn(entry, "require")), false);
@@ -347,6 +352,52 @@ test("the catalog covers every repository skill directory", () => {
       `../../.agents/skills/${entry.name}`,
     );
   }
+});
+
+test("inspect recommends documentation guidance without language signals or site initialization", () => {
+  const root = fixture("sync-agent-assets-documentation-");
+  try {
+    const before = readdirSync(root).sort();
+    const result = run(["inspect", "--root", root]);
+    assert.equal(result.status, 0, result.stderr);
+    const output = JSON.parse(result.stdout);
+    for (const name of ["document-project", "asd-ste100-technical", "unslop"]) {
+      assert.equal(output.recommendedClosure.includes(name), true, name);
+    }
+    assert.deepEqual(readdirSync(root).sort(), before);
+    assert.equal(git(root, ["status", "--porcelain=v1"]), "");
+    assert.equal(existsSync(join(root, "docs")), false);
+    assert.equal(existsSync(join(root, ".agents")), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("documentation routes resolve to core skills with independent instructions and Claude projections", () => {
+  const result = run(["catalog", "--source-root", repositoryRoot]);
+  assert.equal(result.status, 0, result.stderr);
+  const output = JSON.parse(result.stdout);
+  const agents = readFileSync(join(repositoryRoot, "AGENTS.md"), "utf8");
+  const route = agents.split("\n").find((line) => line.startsWith("| During implementation,"));
+  assert.ok(route, "documentation must have an explicit implementation-phase route");
+  for (const name of ["document-project", "asd-ste100-technical", "unslop"]) {
+    assert.ok(route.includes(`\`${name}\``), name);
+    assert.equal(output.profiles.coreInstructions.includes(name), true, name);
+    const entry = output.skills.find((skill) => skill.name === name);
+    assert.equal(entry.selection, "core", name);
+    assert.deepEqual(entry.instructionRequirements, [], name);
+    assert.equal(readlinkSync(join(repositoryRoot, ".claude", "skills", name)), `../../.agents/skills/${name}`);
+  }
+  const root = join(repositoryRoot, ".agents", "skills", "document-project");
+  const instructions = readFileSync(join(root, "SKILL.md"), "utf8");
+  assert.doesNotMatch(instructions, /^requires:/m);
+  for (const reference of ["vitepress", "examples"]) {
+    assert.ok(instructions.includes(`references/${reference}.md`), reference);
+    assert.equal(lstatSync(join(root, "references", `${reference}.md`)).isFile(), true);
+  }
+  const contributing = readFileSync(join(repositoryRoot, "CONTRIBUTING.md"), "utf8");
+  assert.match(contributing, /Update affected documentation in the same change before marking the work complete/);
+  assert.match(contributing, /Required documentation is part of completing the change/);
 });
 
 test("initializer references declare local foundation prerequisites inside one complete skill", () => {

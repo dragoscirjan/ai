@@ -10,12 +10,20 @@ Read this document before planning or performing a repository architecture, desi
 2. Create or link a GitHub issue before architecture, design, implementation, or policy changes. Typo and broken-link fixes do not require an issue.
 3. Keep each change focused on one issue or task.
 4. Follow the isolated-workspace gate and configuration in `AGENTS.md` before changing repository state.
-5. Update documentation when behavior, policy, or usage changes.
+5. Assess documentation impact during implementation with `document-project`, `asd-ste100-technical`, and `unslop`. Update affected documentation in the same change before marking the work complete. Explain when no documentation change is needed.
 6. Read and follow [`VALIDATION.md`](VALIDATION.md) before validating or publishing the change.
 7. Commit with [Conventional Commits](https://www.conventionalcommits.org/).
 8. Open a pull request linked to the issue when an issue is required.
 
 Do not merge or release without explicit owner instruction. Approval, completed checks, or a mergeable pull request is not permission to merge or release.
+
+## Documentation during development
+
+For new features, behavior-changing fixes, configuration, and public interfaces, create or improve the affected reader instructions, examples, reference, and navigation. Write task-based instructions that a nontechnical first-time user can follow. Refactor unclear affected pages instead of appending repetitive sections. Keep unrelated cleanup separately approved.
+
+Propose and obtain approval for a new documentation baseline or migration to VitePress before creating or replacing a site. Preserve correct existing content and address existing links. Documentation work does not authorize deployment.
+
+Required documentation is part of completing the change. If documentation or required checks are blocked, report the gap and obtain an explicit owner decision rather than silently declaring the work complete.
 
 ## Repository identity for automated contributors
 

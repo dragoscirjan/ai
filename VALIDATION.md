@@ -95,6 +95,15 @@ When a change modifies Markdown:
 - Review code fences, commands, paths, and examples manually.
 - Use sentence-case headings and clear, concrete language.
 
+## Documentation changes
+
+- Verify the documentation impact assessment. User-visible changes need affected documentation updated in the same change; a no-change decision needs a concrete reason.
+- Walk through the first-use instructions from the stated starting point. Check prerequisites, working directory, file names, commands or UI actions, expected results, likely failures, and recovery. Do not assume terminal or project knowledge from a nontechnical reader.
+- Check affected navigation, links, examples, and obsolete instructions. Preserve correct content and keep unrelated cleanup out of scope.
+- Run the approved site's build and available link checks. For VitePress, verify navigation and the configured base path. Do not install tools, create a site, migrate a site, or weaken checks without approval.
+- Report site checks, executed examples, documentation walkthroughs, and actual user testing separately. Do not claim that a successful build proves usability or that an unexecuted walkthrough passed.
+- Report blocked required documentation or checks and obtain an explicit owner decision before treating the change as complete.
+
 ## Policy and instruction changes
 
 When a change modifies `AGENTS.md`, `CONTRIBUTING.md`, `VALIDATION.md`, or another instruction file:
