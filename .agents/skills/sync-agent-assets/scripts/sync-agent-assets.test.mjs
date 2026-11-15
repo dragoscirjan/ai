@@ -61,7 +61,7 @@ function writeSkill(root, name, body = `# ${name}\n`, requirements = []) {
   mkdirSync(skillRoot, { recursive: true });
   writeFileSync(
     join(skillRoot, "SKILL.md"),
-    `---\nname: ${name}\ndescription: Test skill ${name}.\n${requirements.length ? `require: ${JSON.stringify(requirements)}\n` : ""}---\n\n${body}`,
+    `---\nname: ${name}\ndescription: Test skill ${name}.\n${requirements.length ? `requires: ${JSON.stringify(requirements)}\n` : ""}---\n\n${body}`,
   );
 }
 
@@ -317,18 +317,25 @@ test("the catalog covers every repository skill directory", () => {
   assert.equal(names.has("init-project"), true);
   assert.equal(names.has("init-typescript"), false);
   assert.equal(names.has("init-gdscript"), false);
+  for (const name of ["research", "initiative", "specify", "plan-tasks", "retro"]) {
+    assert.equal(names.has(name), true, name);
+    assert.equal(output.skills.find((entry) => entry.name === name).selection, "optional", name);
+  }
   assert.equal(output.skills.every((entry) => entry.harnesses.includes("claude-code")), true);
-  assert.deepEqual(output.skills.filter((entry) => entry.require.length).map((entry) => [entry.name, entry.require]), [["cleanup-workspaces", ["isolated-workspace"]], ["coding-with-rules", ["coding"]], ["grill-me", ["grilling"]]]);
+  assert.deepEqual(output.skills.filter((entry) => entry.instructionRequirements.length).map((entry) => [entry.name, entry.instructionRequirements]), [["cleanup-workspaces", ["isolated-workspace"]], ["coding-with-rules", ["coding"]], ["grill-me", ["grilling"]], ["initiative", ["grilling"]], ["research", ["grilling"]], ["specify", ["grilling"]]]);
   assert.deepEqual(output.skills.filter((entry) => entry.dependencies.length).map((entry) => [entry.name, entry.dependencies]), [
     ["cleanup-workspaces", ["isolated-workspace"]],
   ]);
   assert.equal(output.profiles.coreInstructions.includes("coding-with-rules"), true);
   assert.equal(output.profiles.coreInstructions.includes("coding"), false);
+  assert.deepEqual(output.skills.find((entry) => entry.name === "code-review").requires, ["parallel-subagents"]);
+  assert.deepEqual(output.skills.find((entry) => entry.name === "code-review").instructionRequirements, []);
+  assert.equal(output.skills.some((entry) => Object.hasOwn(entry, "require")), false);
   const initializer = readFileSync(join(repositoryRoot, ".agents", "skills", "init-project", "SKILL.md"), "utf8");
   assert.match(initializer, /Read applicable project instructions and contribution policy before planning/);
   assert.match(initializer, /satisfy project approval and workspace gates/);
   assert.equal(output.profiles.coreInstructions.includes("init-project"), false);
-  for (const entry of output.skills.filter((skill) => skill.require.length === 0)) {
+  for (const entry of output.skills.filter((skill) => skill.instructionRequirements.length === 0)) {
     const text = readFileSync(join(repositoryRoot, ".agents", "skills", entry.name, "SKILL.md"), "utf8");
     assert.doesNotMatch(text, /^## Load (?:the dependency|dependencies)/m, entry.name);
     assert.doesNotMatch(text, /(?:load|read|follow) (?:the (?:sibling|matching|advertised) )?`(?:coding(?:-[a-z]+)?|cleanup-workspaces|isolated-workspace|grilling|grill-me|instruction-maintenance|subagent-orchestration)`/i, entry.name);
@@ -345,7 +352,7 @@ test("the catalog covers every repository skill directory", () => {
 test("initializer references declare local foundation prerequisites inside one complete skill", () => {
   const root = join(repositoryRoot, ".agents", "skills", "init-project");
   const instructions = readFileSync(join(root, "SKILL.md"), "utf8");
-  assert.doesNotMatch(instructions, /^require:/m);
+  assert.doesNotMatch(instructions, /^requires:/m);
   assert.match(instructions, /Loading instructions does not authorize initialization/);
   assert.match(instructions, /Foundation approval does not authorize language setup/);
   assert.match(instructions, /Never read, log, or persist credentials/);
@@ -491,7 +498,7 @@ for (const indent of [0, 2]) {
       source.commit = commitAll(source.root, "separate prompt and code dependencies");
       const output = JSON.parse(run(["catalog", "--source-root", source.root]).stdout);
       const entry = output.skills.find((skill) => skill.name === "grill-me");
-      assert.deepEqual(entry.require, ["optional-skill", "grilling"]);
+      assert.deepEqual(entry.instructionRequirements, ["optional-skill", "grilling"]);
       assert.deepEqual(entry.dependencies, ["optional-skill"]);
       assert.deepEqual(entry.requires, []);
       installSyntheticAssets(source.root, target);
@@ -542,42 +549,75 @@ test("nested metadata is not a root instruction requirement", () => {
   const source = syntheticSource();
   try {
     const path = join(source.root, ".agents", "skills", "grill-me", "SKILL.md");
-    writeFileSync(path, '---\n# unindented comment\n  name: grill-me\n  description: Fixture.\n  metadata:\n    require: "not a project requirement"\n---\nrequire: ["missing-skill"]\n');
+    writeFileSync(path, '---\n# unindented comment\n  name: grill-me\n  description: Fixture.\n  metadata:\n    requires: "not a project requirement"\n---\nrequires: ["missing-skill"]\n');
     const result = run(["catalog", "--source-root", source.root]);
     assert.equal(result.status, 0, result.stderr);
-    assert.deepEqual(JSON.parse(result.stdout).skills.find((entry) => entry.name === "grill-me").require, []);
+    assert.deepEqual(JSON.parse(result.stdout).skills.find((entry) => entry.name === "grill-me").instructionRequirements, []);
   } finally {
     rmSync(source.root, { recursive: true, force: true });
   }
 });
 
-test("require accepts only the declared inline array contract and ignores body examples", () => {
+test("requires accepts only the declared inline array contract and ignores body examples", () => {
   const source = syntheticSource();
   const path = join(source.root, ".agents", "skills", "grill-me", "SKILL.md");
   try {
     for (const declaration of [
-      'require: []', 'require: true', 'require: "grilling"', 'require: null',
-      'require: {}', 'require: [1]', 'require: [""]', 'require: ["../grilling"]',
-      'require: ["grilling", "grilling"]', 'require: [grilling]',
-      'require:\n  - grilling', 'require: &skills ["grilling"]',
-      'require: ["grilling"] # comment', 'require: ["grilling",]',
-      'require: ["grilling"]\nrequire: ["grilling"]', '"require": ["grilling"]',
-      'require: SECRET_NOT_FOR_ERRORS',
+      'requires: []', 'requires: true', 'requires: "grilling"', 'requires: null',
+      'requires: {}', 'requires: [1]', 'requires: [""]', 'requires: ["../grilling"]',
+      'requires: ["grilling", "grilling"]', 'requires: [grilling]',
+      'requires:\n  - grilling', 'requires: &skills ["grilling"]',
+      'requires: ["grilling"] # comment', 'requires: ["grilling",]',
+      'requires: ["grilling"]\nrequires: ["grilling"]', '"requires": ["grilling"]',
+      'requires: SECRET_NOT_FOR_ERRORS',
     ]) {
       writeFileSync(path, `---\nname: grill-me\ndescription: Fixture.\n${declaration}\n---\nBody\n`);
       const result = run(["catalog", "--source-root", source.root]);
       assert.equal(result.status, 3, declaration + result.stderr);
-      assert.match(result.stderr, /Invalid require/);
+      assert.match(result.stderr, /Invalid requires/);
       assert.doesNotMatch(result.stderr, /SECRET_NOT_FOR_ERRORS/);
     }
-    writeSkill(source.root, "grill-me", 'require: ["missing-skill"]\n');
+    writeSkill(source.root, "grill-me", 'requires: ["missing-skill"]\n');
     let result = run(["catalog", "--source-root", source.root]);
     assert.equal(result.status, 0, result.stderr);
-    assert.deepEqual(JSON.parse(result.stdout).skills.find((entry) => entry.name === "grill-me").require, []);
-    writeFileSync(path, '\uFEFF---\r\nname: grill-me\r\ndescription: Fixture.\r\nrequire: ["grilling"]\r\n---\r\nBody\r\n');
+    assert.deepEqual(JSON.parse(result.stdout).skills.find((entry) => entry.name === "grill-me").instructionRequirements, []);
+    writeFileSync(path, '\uFEFF---\r\nname: grill-me\r\ndescription: Fixture.\r\nrequires: ["grilling"]\r\n---\r\nBody\r\n');
     result = run(["catalog", "--source-root", source.root]);
     assert.equal(result.status, 0, result.stderr);
-    assert.deepEqual(JSON.parse(result.stdout).skills.find((entry) => entry.name === "grill-me").require, ["grilling"]);
+    assert.deepEqual(JSON.parse(result.stdout).skills.find((entry) => entry.name === "grill-me").instructionRequirements, ["grilling"]);
+  } finally {
+    rmSync(source.root, { recursive: true, force: true });
+  }
+});
+
+test("legacy require declarations fail with a migration error", () => {
+  const source = syntheticSource();
+  const path = join(source.root, ".agents", "skills", "grill-me", "SKILL.md");
+  try {
+    for (const indent of [0, 2]) {
+      for (const declaration of [
+        'require: ["grilling"]', '"require": ["grilling"]', "'require': [\"grilling\"]",
+        'requires: ["grilling"]\nrequire: ["grilling"]', 'require: SECRET_NOT_FOR_ERRORS',
+      ]) {
+        writeFileSync(path, `---\nname: grill-me\ndescription: Fixture.\n${declaration}\n---\nBody\n`);
+        if (indent) indentSkillFrontmatter(source.root, "grill-me");
+        const result = run(["catalog", "--source-root", source.root]);
+        assert.equal(result.status, 3, result.stderr);
+        assert.match(result.stderr, /Obsolete require.*requires/);
+        assert.doesNotMatch(result.stderr, /SECRET_NOT_FOR_ERRORS/);
+      }
+    }
+    writeSkill(source.root, "grill-me", 'require: ["missing-skill"]\n');
+    const bodyOnly = run(["catalog", "--source-root", source.root]);
+    assert.equal(bodyOnly.status, 0, bodyOnly.stderr);
+    assert.deepEqual(JSON.parse(bodyOnly.stdout).skills.find((entry) => entry.name === "grill-me").instructionRequirements, []);
+    const catalogPath = join(source.root, ".agents", "skills", "sync-agent-assets", "assets", "skill-catalog.json");
+    const catalog = JSON.parse(readFileSync(catalogPath, "utf8"));
+    catalog.skills.find((entry) => entry.name === "grill-me").require = ["grilling"];
+    writeFileSync(catalogPath, JSON.stringify(catalog));
+    const misplaced = run(["catalog", "--source-root", source.root]);
+    assert.equal(misplaced.status, 3, misplaced.stderr);
+    assert.match(misplaced.stderr, /SKILL.md, not the catalog/);
   } finally {
     rmSync(source.root, { recursive: true, force: true });
   }
@@ -604,7 +644,7 @@ test("catalog never follows symbolic links while reading requirement metadata", 
   }
 });
 
-test("require rejects missing targets, prompt cycles and mixed code/prompt cycles", () => {
+test("requires rejects missing targets, prompt cycles and mixed code/prompt cycles", () => {
   const source = syntheticSource();
   try {
     writeSkill(source.root, "grill-me", undefined, ["missing-skill"]);
@@ -629,7 +669,7 @@ test("require rejects missing targets, prompt cycles and mixed code/prompt cycle
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, /cycle/);
     catalog.skills.find((entry) => entry.name === "grilling").dependencies = [];
-    catalog.skills.find((entry) => entry.name === "grill-me").require = ["grilling"];
+    catalog.skills.find((entry) => entry.name === "grill-me").instructionRequirements = ["grilling"];
     writeFileSync(path, JSON.stringify(catalog));
     result = run(["catalog", "--source-root", source.root]);
     assert.equal(result.status, 3, result.stderr);
@@ -655,7 +695,7 @@ test("installed partial managers inspect inventory without guessing unavailable 
     assert.equal(output.mode, "init");
     assert.equal(output.recommendedClosure, null);
     assert.ok(output.unavailableRequirementMetadata.includes("grill-me"));
-    assert.equal(output.recommendedSkills.find((entry) => entry.name === "grill-me").require, null);
+    assert.equal(output.recommendedSkills.find((entry) => entry.name === "grill-me").instructionRequirements, null);
     assert.deepEqual(output.recommendedSkills.find((entry) => entry.name === "sync-agent-assets").harnesses, ["pi", "opencode", "claude-code"]);
     assert.equal(git(target, ["status", "--porcelain"]), before);
     const full = spawnSync(process.execPath, [command, "inspect", "--root", target, "--source-root", source.root], { cwd: target, encoding: "utf8" });

@@ -303,15 +303,18 @@ function readInstructionRequirements(sourceRoot, name, { allowMissingMetadata = 
   const lines = frontmatter.split(/\r?\n/);
   const firstField = lines.find((line) => line.trim() && !line.trimStart().startsWith("#"));
   const rootIndent = firstField?.match(/^ */)[0] ?? "";
-  const declarations = lines.filter((line) => line.startsWith(rootIndent))
-    .map((line) => line.slice(rootIndent.length))
-    .filter((line) => /^(?:require|["']require["'])\s*:/.test(line));
+  const rootFields = lines.filter((line) => line.startsWith(rootIndent))
+    .map((line) => line.slice(rootIndent.length));
+  if (rootFields.some((line) => /^(?:require|["']require["'])\s*:/.test(line))) {
+    throw new SyncError(`Obsolete require in ${name}: rename it to requires in SKILL.md`, EXIT.CONFLICT);
+  }
+  const declarations = rootFields.filter((line) => /^(?:requires|["']requires["'])\s*:/.test(line));
   if (declarations.length === 0) return [];
-  const invalid = () => new SyncError(`Invalid require in ${name}: use one nonempty inline JSON array of unique skill names`, EXIT.CONFLICT);
-  if (declarations.length !== 1 || !declarations[0].startsWith("require:")) throw invalid();
+  const invalid = () => new SyncError(`Invalid requires in ${name}: use one nonempty inline JSON array of unique skill names`, EXIT.CONFLICT);
+  if (declarations.length !== 1 || !declarations[0].startsWith("requires:")) throw invalid();
   let requirements;
   try {
-    requirements = JSON.parse(declarations[0].slice("require:".length).trim());
+    requirements = JSON.parse(declarations[0].slice("requires:".length).trim());
   } catch {
     throw invalid();
   }
@@ -562,11 +565,11 @@ function inspectCommand(options) {
   for (const entry of catalog.skills) {
     const reasons = signalReasons(entry, inventory);
     if (["manager", "bootstrap", "core"].includes(entry.selection)) {
-      recommended.push({ name: entry.name, reason: entry.selection, dependencies: entry.dependencies, require: entry.instructionRequirements, harnesses: entry.harnesses });
+      recommended.push({ name: entry.name, reason: entry.selection, dependencies: entry.dependencies, instructionRequirements: entry.instructionRequirements, harnesses: entry.harnesses });
     } else if (["detected", "wrapper"].includes(entry.selection) && reasons.length > 0) {
-      recommended.push({ name: entry.name, reason: reasons.join(", "), dependencies: entry.dependencies, require: entry.instructionRequirements, harnesses: entry.harnesses });
+      recommended.push({ name: entry.name, reason: reasons.join(", "), dependencies: entry.dependencies, instructionRequirements: entry.instructionRequirements, harnesses: entry.harnesses });
     } else if (["optional", "initializer"].includes(entry.selection) && (reasons.length > 0 || entry.signals?.askWithoutSignals)) {
-      ambiguous.push({ name: entry.name, reason: reasons.join(", ") || "optional", safety: entry.safety, dependencies: entry.dependencies, require: entry.instructionRequirements, harnesses: entry.harnesses });
+      ambiguous.push({ name: entry.name, reason: reasons.join(", ") || "optional", safety: entry.safety, dependencies: entry.dependencies, instructionRequirements: entry.instructionRequirements, harnesses: entry.harnesses });
     } else {
       skipped.push({ name: entry.name, reason: "no applicability signal" });
     }
@@ -657,7 +660,7 @@ function catalogCommand(options) {
       category,
       selection,
       dependencies,
-      require: instructionRequirements,
+      instructionRequirements,
       safety,
       harnesses,
       requires,
