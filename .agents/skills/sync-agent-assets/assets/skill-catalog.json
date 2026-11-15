@@ -239,6 +239,16 @@
       "safety": "read-only-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "signals": { "askWithoutSignals": true }
+    },
+    {
+      "name": "writing-for-agents",
+      "category": "instruction-authoring",
+      "selection": "optional",
+      "dependencies": [],
+      "safety": "project-write-guidance",
+      "harnesses": ["pi", "opencode", "claude-code"],
+      "provenance": "vendored",
+      "signals": { "askWithoutSignals": true }
     }
   ]
 }
