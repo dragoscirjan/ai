@@ -391,13 +391,25 @@ test("documentation routes resolve to core skills with independent instructions 
   const root = join(repositoryRoot, ".agents", "skills", "document-project");
   const instructions = readFileSync(join(root, "SKILL.md"), "utf8");
   assert.doesNotMatch(instructions, /^requires:/m);
-  for (const reference of ["vitepress", "examples"]) {
+  for (const reference of ["vitepress", "mkdocs", "examples"]) {
     assert.ok(instructions.includes(`references/${reference}.md`), reference);
     assert.equal(lstatSync(join(root, "references", `${reference}.md`)).isFile(), true);
   }
   const contributing = readFileSync(join(repositoryRoot, "CONTRIBUTING.md"), "utf8");
   assert.match(contributing, /Update affected documentation in the same change before marking the work complete/);
   assert.match(contributing, /Required documentation is part of completing the change/);
+});
+
+test("documentation guidance supports existing MkDocs sites without requiring migration", () => {
+  const root = join(repositoryRoot, ".agents", "skills", "document-project");
+  const instructions = readFileSync(join(root, "SKILL.md"), "utf8");
+  assert.match(instructions, /^description: .*VitePress or MkDocs documentation/m);
+  assert.match(instructions, /Keep existing MkDocs sites on MkDocs; improving documentation does not require migration/);
+  assert.match(instructions, /Any platform change still needs explicit approval/);
+  const reference = readFileSync(join(root, "references", "mkdocs.md"), "utf8");
+  assert.match(reference, /mkdocs\.yml/);
+  assert.match(reference, /mkdocs build --strict/);
+  assert.match(reference, /https:\/\/www\.mkdocs\.org\/user-guide\/configuration\//);
 });
 
 test("initializer references declare local foundation prerequisites inside one complete skill", () => {

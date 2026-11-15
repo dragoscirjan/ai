@@ -1,6 +1,6 @@
 ---
 name: document-project
-description: Create, improve, or maintain task-based VitePress documentation from verified code and project information. Use during implementation to keep affected documentation current and understandable to a nontechnical first-time user, or for an approved documentation baseline, refactor, or migration.
+description: Create, improve, or maintain task-based VitePress or MkDocs documentation from verified code and project information. Use during implementation to keep affected documentation current and understandable to a nontechnical first-time user, or for an approved documentation baseline, refactor, or migration.
 ---
 
 # Document a project
@@ -57,7 +57,7 @@ Give each page a clear purpose:
 
 Separate purposes when mixing them interrupts the task. Use reader questions and action-based titles for navigation, not source directories or a mandatory page template. Keep maintenance, architecture, and release procedures out of the first-use path. Link supporting information instead of repeating it.
 
-For approved site setup, migration, configuration, or build work, read the [VitePress reference](references/vitepress.md). VitePress is the target for new and approved migrated sites, not permission to replace an existing system during feature work.
+For approved site setup, migration, configuration, or build work, read the reference for the project's platform: [VitePress](references/vitepress.md) or [MkDocs](references/mkdocs.md). Use VitePress by default for a new site. Keep existing MkDocs sites on MkDocs; improving documentation does not require migration. Any platform change still needs explicit approval.
 
 ## Verify before reporting completion
 

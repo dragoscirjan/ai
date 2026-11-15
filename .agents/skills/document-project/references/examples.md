@@ -61,7 +61,8 @@ Use these as walkthrough scenarios, not claims that tests have passed:
 | The relevant page is dense or repeats itself. | Rewrite, split, or move the affected material to make the task followable. Do not append another summary or expand unrelated cleanup. |
 | An internal refactor changes no reader task or public behavior. | Give a concrete no-change explanation. Do not make cosmetic documentation edits merely to show activity. |
 | A new repository has no documentation site. | Propose a minimal VitePress baseline and wait for approval before creating it or installing dependencies. |
-| An old repository has poor documentation or uses another site generator. | Maintain affected pages in the current site. Propose broader cleanup or VitePress migration separately and preserve useful content and links. |
+| An existing repository uses MkDocs. | Keep MkDocs and its approved environment, theme, plugins, navigation, and build workflow. Improve affected pages without requiring migration to VitePress. |
+| An old repository has poor documentation or uses another site generator. | Maintain affected pages in the current site. Propose broader cleanup or any platform migration separately and preserve useful content and links. |
 | A guide needs credentials, paid actions, destructive operations, or unfamiliar code. | Explain the prerequisites and risks before the action. Obtain required authorization and use safe sample data. Never expose secrets. |
 | The build or example environment is unavailable. | Report the missing check and obtain an explicit owner decision before treating blocked required work as complete. Do not report a pass. |
 | A site builds but instructions omit the starting files or required knowledge. | The documentation is not ready. Repair the guide; rendering is not evidence of task completion. |
