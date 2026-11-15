@@ -43,13 +43,23 @@ Declare instruction dependencies only for thin, intentional compositions or the 
 requires: ["grilling"]
 ```
 
-Omit the field when no skills are required. When present, use exactly one unquoted top-level `requires` key with a nonempty, single-line JSON-compatible array of unique skill names. Multiline lists, unquoted items, anchors, and trailing comments are unsupported for this property. Names must exist; self-references and cycles are invalid. The former `require` spelling is rejected. Rename it to `requires` and do not declare both.
+Omit the field when no skills are required. When present, use exactly one unquoted top-level `requires` key with a nonempty, single-line JSON-compatible array of unique skill names. Multiline lists, unquoted items, anchors, and trailing comments are unsupported for this property. Names must resolve to local or installed external skills identified by the YAML catalog; self-references and cycles are invalid. A catalogued but uninstalled requirement is a setup stop, not permission to fetch it. The former `require` spelling is rejected. Rename it to `requires` and do not declare both.
 
 The declaration is the sole source of mandatory skill-to-skill instruction dependencies. Resolve requirements recursively in array order, loading each skill once before its caller. The composition body defines execution sequence, handoffs, and stops; do not repeat loading procedures or component instructions. A skill may conditionally load its own supporting documents, such as language reference files. Those documents are not separately discoverable skills or `requires` targets, and must not hide undeclared skill dependencies. An optional reference is not a requirement.
 
-Keep shared-code installation dependencies in catalog `dependencies`; capability `requires` is separate. The synchronization planner includes both code dependencies and frontmatter requirements in the approval-bound installation closure. Managed project profiles may add the policy bundle required by imported instructions.
+Keep catalog `prerequisites` (installation closure), `capabilities` (harness features), and `runtime` (tools/runtime requirements) distinct. Local frontmatter instruction requirements must be represented in the catalog's prerequisite closure; catalog validation checks this when a complete source checkout is supplied. Upstream skills may omit the project-specific frontmatter field. Do not interpret a harness capability as a skill name or duplicate source inventories.
 
 Top-level `requires` is not part of the Agent Skills standard and fails its strict reference validator. It acquires model-driven semantics through project routing, not a custom harness loader. External Skills CLI commands do not automatically install these requirements. Outside a managed project, install the declared skills and supply this routing convention explicitly. Report tested harness behavior separately from source inspection or unverified compatibility.
+
+## Skills-only synchronization and source ownership
+
+`.agents/skills/sync-my-skills/assets/skill-catalog.yaml` is the single authored inventory for locally authored skills, unchanged upstream sources, and maintained adaptations. Record source/version information, installation argument arrays, legal files, filtering, prerequisites, and adaptation intent there. Small patches may help, but semantic LLM adaptation is allowed when inputs change and requires a reviewed result. Do not force substantial maintained variants into brittle replacement recipes.
+
+Every `npx` invocation must include `-y` immediately after `npx`. Catalog commands are acquisition instructions, not authority to execute. Keep unwanted OpenAI metadata such as `agents/openai.yaml` out of installed outputs while preserving required supporting and legal files. Missing runtime/parser dependencies require approved setup; read-only detection never installs them.
+
+`sync-my-skills` is one personal manager, converted from `sync-agent-assets`; do not retain a second compatibility skill. It investigates target purpose, asks about every remaining active catalog skill, confirms harnesses, and separately asks for exact deprecated removals. Unknown/custom installations remain intact. Installed skill content and lock data may change only under an approved, current plan in an isolated workspace.
+
+Do not force this repository's coding policy, manager, or bootstrap bundle into every target. Root instruction documents remain untouched by skill synchronization, including during legacy-lock migration. Instruction templates are a separate future workflow under issue #68. Existing target instructions, source isolation/validation gates, security boundaries, and owner authority remain in force.
 
 ## Human-approved instruction adaptation
 

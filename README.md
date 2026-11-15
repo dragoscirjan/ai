@@ -1,6 +1,6 @@
 # AI agent assets
 
-This repository contains reusable skills, instructions, configuration assets, and references for AI coding agents. The assets target Pi, OpenCode, and Claude Code, while portable skills follow the Agent Skills format.
+This repository contains reusable skills, instructions, configuration assets, and references for AI agents in coding and non-coding projects. The assets target Pi, OpenCode, and Claude Code, while portable skills follow the Agent Skills format.
 
 ## Skills
 
@@ -14,8 +14,6 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`coding-with-rules`](.agents/skills/coding-with-rules/SKILL.md) | Combine the `coding` workflow with on-demand language and extension reference files. |
 | [`init-project`](.agents/skills/init-project/SKILL.md) | Initialize the shared foundation or TypeScript/Godot GDScript tooling through on-demand setup references. |
 | [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
-| [`grilling`](.agents/skills/grilling/SKILL.md) | Interview a user until a plan or decision has no unresolved branches. |
-| [`wait-what`](.agents/skills/wait-what/SKILL.md) | Ask the agent to re-pitch its last response with missing context and simpler language. |
 | [`isolated-workspace`](.agents/skills/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
 | [`instruction-maintenance`](.agents/skills/instruction-maintenance/SKILL.md) | Diagnose instruction drift, propose an exact adaptation, and wait for human approval before mutation. |
 | [`initiative`](.agents/skills/initiative/SKILL.md) | Turn an idea and evidence into an outcome-level brief, using the required grilling interview. |
@@ -26,13 +24,14 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`scaffold`](.agents/skills/scaffold/SKILL.md) | Create reviewable source skeleton files with fail-fast placeholders and stop before implementing behavior. |
 | [`subagent-orchestration`](.agents/skills/subagent-orchestration/SKILL.md) | Bound child-agent workers and reviewers, coordinate isolated write lanes, and clean integrated temporary lanes. |
 | [`systematic-debugging`](.agents/skills/systematic-debugging/SKILL.md) | Diagnose failures through evidence, root-cause tracing, controlled experiments, and project-owned verification. |
-| [`sync-agent-assets`](.agents/skills/sync-agent-assets/SKILL.md) | Initialize or update project instructions and skills with project detection, grilling, dependency closure, and conflict-safe managed state. |
+| [`sync-my-skills`](.agents/skills/sync-my-skills/SKILL.md) | Investigate a project, ask about catalog skills and deprecated removals, then apply only an approved skills-only plan. |
 | [`tdd`](.agents/skills/tdd/SKILL.md) | Build features and fix bugs test-first through agreed public interfaces, one red → green slice at a time. |
-| [`unslop`](.agents/skills/unslop/SKILL.md) | Remove common AI writing patterns from an existing draft. |
+
+The [YAML catalog](.agents/skills/sync-my-skills/assets/skill-catalog.yaml) is the single inventory for authored, upstream, and adapted skills. Upstream-only `grilling`, `wait-what`, and `unslop` are recommended there without vendored copies. It records sources, pinned revisions, installation commands, exclusions, legal files, prerequisites, and semantic adaptation intent.
 
 ## Independent skills and compositions
 
-Skills load other instructions only through declared requirements. Leaves normally omit them; `cleanup-workspaces` explicitly requires `isolated-workspace` as an owner-approved exception. Select combinations explicitly, or use a thin composition such as `grill-me`, which declares `requires: ["grilling"]`. For code work, `coding-with-rules` declares `requires: ["coding"]` and selects its own language and extension reference files on demand. The former language and extension skills are replaced by those plain documents; see the [migration guide](.agents/skills/coding-with-rules/README.md#migrate-existing-installations). Project instructions resolve requirements before applying the composition; its body defines the workflow.
+Skills load other instructions only through declared requirements. Leaves normally omit them; `cleanup-workspaces` explicitly requires `isolated-workspace` as an owner-approved exception. Select combinations explicitly, or use a thin composition such as `grill-me`, which declares `requires: ["grilling"]`. For code work, `coding-with-rules` declares `requires: ["coding"]` and selects its own language and extension reference files on demand. The former language and extension skills are replaced by those plain documents; see the [migration guide](.agents/skills/coding-with-rules/README.md#migrate-existing-installations). Project instructions resolve requirements before applying the composition; its body defines the workflow. A requirement may resolve to an installed upstream skill identified by the YAML catalog. Stop and request approved setup when it is unavailable; do not download it implicitly.
 
 `requires` is a project extension, not a native harness loader or standard Agent Skills field. External Skills CLI commands do not automatically install its requirements. See [the declaration and compatibility contract](CONTRIBUTING.md#independent-skills-and-explicit-composition). Shared helper-code dependencies remain distinct.
 
@@ -119,49 +118,27 @@ Agreeing on a document does not automatically authorize the next stage, delegati
 
 ## Use the skills
 
-Pi and OpenCode discover project skills from `.agents/skills/`. Claude Code discovers the same canonical skills through relative links under `.claude/skills/` and loads the shared instruction graph through [`CLAUDE.md`](CLAUDE.md). Claude Code support requires a Git checkout that preserves symbolic links.
+Pi and OpenCode discover canonical skills from `.agents/skills/`. Claude Code uses relative links under `.claude/skills/`; this repository's [`CLAUDE.md`](CLAUDE.md) imports its own instruction graph. Synchronizing another project's skills does **not** copy that graph or change its root documents.
 
-Install one skill into another project with the Skills CLI:
-
-```sh
-npx skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace
-```
-
-Replace `isolated-workspace` with the required skill name. Review a skill and its supporting files before installing or trusting it.
-
-Bootstrap or update a project without dirtying its primary checkout by generating a temporary `sync-agent-assets` prompt:
+Install a local skill with an explicit command after reviewing it:
 
 ```sh
-SYNC_AGENT_PROMPT="$(
-  npx --yes skills@1.7.4 use dragoscirjan/ai@sync-agent-assets
-)"
+npx -y skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace
 ```
 
-Skills CLI 1.7.4 cannot launch Pi or OpenCode with `skills use --agent`. Start the required harness from the target repository.
+Upstream-only skills are obtained from their catalogued sources, not from nonexistent directories in this repository. Raw Skills CLI installation alone does not guarantee prerequisite closure or OpenAI-metadata filtering.
 
-For Pi:
+For cross-project synchronization, install the personal manager once for your chosen harness, for example:
 
 ```sh
-pi "$SYNC_AGENT_PROMPT
-
-User request: Initialize or update agent assets in this repository."
+npx -y skills@1.7.4 add dragoscirjan/ai --skill sync-my-skills --global --agent pi --yes
 ```
 
-For OpenCode:
+Then follow the manager's [approved parser and command setup](.agents/skills/sync-my-skills/README.md). This provides the literal `/sync-my-skills` command; it does not force the manager or all three harnesses into each project.
 
-```sh
-opencode --prompt "$SYNC_AGENT_PROMPT
+The LLM investigates the project's purpose, explains recommendations, asks about every remaining active catalog skill, and separately asks which exact deprecated installations to remove. It stages sources and semantic adaptations, presents one plan, and writes only after approval in an isolated Git worktree. Unrelated custom skills and local edits remain protected. Root instruction templates are reserved for [#68](https://github.com/dragoscirjan/ai/issues/68).
 
-User request: Initialize or update agent assets in this repository."
-```
-
-Skills CLI 1.7.4 supports Claude Code directly:
-
-```sh
-npx --yes skills@1.7.4 use dragoscirjan/ai@sync-agent-assets --agent claude-code
-```
-
-The generated prompt names a temporary supporting-files directory. Keep it until the session exits, then remove it. The workflow creates an approved isolated workspace, installs complete selected assets under `.agents/skills/`, exposes them to Claude Code with relative `.claude/skills/` symlinks, and records reproducible synchronization state.
+`sync-agent-assets` has been converted, not retained as a second compatibility skill. Existing lock data can migrate through an approved plan. The new command offers removal of old project installations; it never removes them automatically.
 
 ## Releases
 
@@ -212,7 +189,7 @@ python3 -B -m unittest discover -s .github/scripts -p 'test_*.py' -v
 ## Repository map
 
 - [`.agents/skills/`](.agents/skills/) contains portable Agent Skills.
-- [`AGENTS.md`](AGENTS.md) contains the small startup routing and safety contract for coding agents.
+- [`AGENTS.md`](AGENTS.md) contains the small startup routing and safety contract for agents.
 - [`CLAUDE.md`](CLAUDE.md) imports `AGENTS.md` for Claude Code.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) contains contribution policy loaded before actionable change planning.
 - [`VALIDATION.md`](VALIDATION.md) contains checks loaded before validation or publication.

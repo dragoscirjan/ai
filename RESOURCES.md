@@ -12,8 +12,10 @@ AI tools that I have encountered and find useful.
 
 ## Skills
 
-- https://github.com/mattpocock/skills (especially the `grill-me` skill)
-- https://github.com/vercel-labs/skills (especially the `unslop` skill)
+- [Curated YAML catalog](.agents/skills/sync-my-skills/assets/skill-catalog.yaml): sources, commands, adaptations, and deprecations for local and upstream skills.
+- https://github.com/mattpocock/skills (including the upstream `grilling` and `wait-what` skills)
+- https://github.com/cursor/plugins/tree/main/pstack/skills/unslop
+- https://github.com/vercel-labs/skills (Skills CLI)
 
 ## MCP servers
 

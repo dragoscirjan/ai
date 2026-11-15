@@ -20,7 +20,7 @@ A project can select it through agent instructions. Keep the directory name and 
 
 ## Sources and related work
 
-The original skill grew from [issue #1](https://github.com/dragoscirjan/ai/issues/1), [ASD-STE100](https://www.asd-ste100.org/), and Pi response guidance. The local [`unslop`](../unslop/SKILL.md) skill inspired its direct format; it remains an optional companion, not a dependency. This skill is original work, not a copy of the vendored `unslop` source.
+The original skill grew from [issue #1](https://github.com/dragoscirjan/ai/issues/1), [ASD-STE100](https://www.asd-ste100.org/), and Pi response guidance. The upstream `unslop` skill, recorded in the [YAML catalog](../sync-my-skills/assets/skill-catalog.yaml), inspired its direct format; it remains an optional companion, not a dependency. This skill is original work, not a copy of `unslop`.
 
 The shorter version addresses [issue #55](https://github.com/dragoscirjan/ai/issues/55), informed by:
 
