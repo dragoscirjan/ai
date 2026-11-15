@@ -123,6 +123,8 @@ Manage the root closure `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`, and `VALIDA
 
 Require an approved instruction-graph proposal through the target's workflow before writing these files. Preserve target rules and owner authority; merge rather than overwrite. Derive VCS, base, prefixes, quality commands, identity, and publication policy from the target. Remove source-specific identity and personal paths. Include only routes whose requirements will exist after installation; stop on missing instructions, unresolved conflicts, or ambiguous ownership.
 
+Include documentation-impact routing and the same-change completion requirement in the approved instruction adaptation. Keep `document-project`, `asd-ste100-technical`, and `unslop` in the managed core selection so every route has an installed target. Creating a documentation baseline or migrating a site needs separate approval. Synchronization installs guidance; it does not initialize documentation sites.
+
 Keep `CLAUDE.md` as `@AGENTS.md` when no Claude-specific rules exist. Otherwise preserve those rules and place the import first so the shared graph is loaded.
 
 Show complete proposed contents or precise diffs for each root file and wait for explicit approval. Neither skill selection nor a general synchronization request approves instruction changes.

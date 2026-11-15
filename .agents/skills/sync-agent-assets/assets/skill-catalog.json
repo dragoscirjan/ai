@@ -5,17 +5,17 @@
   "profiles": {
     "manager": ["sync-agent-assets"],
     "bootstrap": ["grilling", "grill-me", "isolated-workspace"],
-    "coreInstructions": ["coding-with-rules", "isolated-workspace", "cleanup-workspaces", "subagent-orchestration", "instruction-maintenance"]
+    "coreInstructions": ["coding-with-rules", "isolated-workspace", "cleanup-workspaces", "subagent-orchestration", "instruction-maintenance", "document-project", "asd-ste100-technical", "unslop"]
   },
   "skills": [
     {
       "name": "asd-ste100-technical",
       "category": "communication",
-      "selection": "optional",
+      "selection": "core",
       "dependencies": [],
       "safety": "read-only-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
-      "signals": { "askWithoutSignals": true }
+      "signals": {}
     },
     {
       "name": "caveman",
@@ -82,6 +82,15 @@
       "safety": "read-only-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "provenance": "vendored",
+      "signals": {}
+    },
+    {
+      "name": "document-project",
+      "category": "documentation",
+      "selection": "core",
+      "dependencies": [],
+      "safety": "project-write-with-confirmation",
+      "harnesses": ["pi", "opencode", "claude-code"],
       "signals": {}
     },
     {
@@ -215,12 +224,12 @@
     {
       "name": "unslop",
       "category": "communication",
-      "selection": "optional",
+      "selection": "core",
       "dependencies": [],
       "safety": "read-only-guidance",
       "harnesses": ["pi", "opencode", "claude-code"],
       "provenance": "vendored",
-      "signals": { "askWithoutSignals": true }
+      "signals": {}
     },
     {
       "name": "wait-what",

@@ -11,6 +11,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`code-review`](.agents/skills/code-review/SKILL.md) | Review a diff against repository standards and its originating issue or specification with separate read-only subagents. |
 | [`coding`](.agents/skills/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
 | [`debloat`](.agents/skills/debloat/SKILL.md) | Prevent overengineering and simplify existing mechanisms with evidence while preserving required behavior and boundaries. |
+| [`document-project`](.agents/skills/document-project/SKILL.md) | Create or improve task-based documentation that a developer new to the project can follow, and keep it current during implementation. |
 | [`coding-with-rules`](.agents/skills/coding-with-rules/SKILL.md) | Combine the `coding` workflow with on-demand language and extension reference files. |
 | [`init-project`](.agents/skills/init-project/SKILL.md) | Initialize the shared foundation or TypeScript/Godot GDScript tooling through on-demand setup references. |
 | [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
@@ -39,6 +40,8 @@ Skills load other instructions only through declared requirements. Leaves normal
 ## Development flow
 
 Start where you need help. If the goal is unclear, work through an initiative. If facts are missing, research them. If the work is already understood, go straight to a specification, task, or implementation. You do not need to run every skill.
+
+During implementation, `document-project`, `asd-ste100-technical`, and `unslop` guide documentation updates in the same change. Improve unclear affected pages rather than append repetitive sections. Required documentation is part of completing the work; a new site, broad cleanup, migration, or deployment still needs its applicable approval.
 
 `research` also works on its own for general questions and new ideas. It does not require a repository, an initiative, or an implementation decision. It clarifies the request when needed and delivers findings where the user chooses.
 
