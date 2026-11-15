@@ -25,7 +25,7 @@ Each skill has:
 | `upstream` | Optional original-source provenance for a maintained adaptation. |
 | `scope` | Project skill by default; the personal manager is not a compulsory project install. |
 | `description`, `category`, `safety` | Human selection/review context. |
-| `selection`, `signals` | Initial evidence hints, never authorization or a filter that hides remaining entries. |
+| `selection`, `signals` | Initial recommendations and evidence hints, never authorization or a filter that hides remaining entries. `recommended` means always suggest and ask, not install automatically. |
 | `prerequisites` | Skill installation closure; no mandatory provider-specific frontmatter is imposed upstream. |
 | `capabilities`, `runtime`, `harnesses` | Distinct feature, tool, and destination constraints. |
 | `install.argv` | Documented reviewed acquisition mechanism, never automatically executed during inspection. |
@@ -39,11 +39,21 @@ Every `npx` argument array must put `-y` second. Duplicate ordinary arguments/fl
 
 Catalog `prerequisites` and optional local `SKILL.md` `requires` describe different contracts: installation closure and instruction loading. The catalog must cover declared local instruction requirements; complete-checkout validation checks that. Upstream skills can omit the nonstandard field. Installation does not create a native harness loader for it; target instructions or explicit skill usage must supply the loading convention. A missing requirement stops for approved setup.
 
+## Fresh catalog snapshots
+
+Normal CLI `inspect` resolves the trusted owner's tracking ref to a full commit and downloads the YAML at `.agents/skills/sync-my-skills/assets/skill-catalog.yaml` into fresh external temporary storage. `refresh` performs that data-only operation without a target. It validates the installed schema and the expected owner/ref. Unsupported data stops; no manager code is updated and no older catalog is chosen silently. Temporary storage is checked against target/source locations using canonical parent paths, so a custom `TMPDIR` or symlink cannot authorize a download into a repository or the manager package.
+
+`inspect --bundled` explicitly selects the installed snapshot. `--source-root` without `--catalog` selects the complete checkout's catalog. `--catalog` selects an explicit snapshot. These modes skip the normal refresh, so they may omit newer entries. Bundled mode cannot be combined with those other selectors.
+
+The returned `catalogSnapshot.path` must be carried with `--catalog` to preparation, read-only workspace reinspection, planning, and apply. A generated `.source.json` sidecar binds downloaded bytes to the owner/ref/commit and repository-relative catalog path. It is machine-owned provenance, not a second authored inventory. Edited snapshot bytes stop loading. A changed source pin invalidates a stage even if parsed YAML definitions are identical.
+
+Authored acquisition uses that same owner commit. A local checkout override must be clean and match it. Explicit bundled/local review mode may instead use a different reviewed or dirty checkout, whose actual source bytes and dirty state are recorded. `catalogSource` in the lock stores the portable resolved catalog provenance, or `null` for bundled/local input without download provenance. It never contains the temporary machine path.
+
 ## Investigation and decisions
 
 `inspect` returns project facts, current root-instruction paths, shallow canonical/harness-specific installation locations, harness evidence, recommendations, **every** remaining active project entry, personal tooling, explicit deprecations, and earlier declines. It does not execute target code or install anything. Git fsmonitor and repository hook discovery are disabled for helper Git reads. Complete directory fingerprints are collected only for explicit removal plans, not for every unrelated installed package.
 
-The agent must investigate actual purpose rather than equate file extensions with a coding project. Every remaining project entry requires a decision. Incompatible entries remain visible with limitations. Personal tooling is visible separately; it is not part of the project selection.
+The agent must investigate actual purpose rather than equate file extensions with a coding project. The catalog always recommends `document-project`, `asd-ste100-technical`, and `unslop` as documentation guidance. Each can be declined, and the helper does not add them to installation closure unless selected or genuinely required. Every remaining project entry requires a decision. Incompatible entries remain visible with limitations. Personal tooling is visible separately; it is not part of the project selection.
 
 The [selection schema](../assets/selection.schema.json) describes the outside-target decision file. For an illustrative two-entry catalog containing `alpha` and `beta`:
 
@@ -72,9 +82,9 @@ Root instruction files are read-only. A nonempty legacy `rootFiles` selection is
 
 - `raw/<name>/`: filtered source plus legal files; immutable during adaptation.
 - `skills/<name>/`: candidate output for LLM edits.
-- `manifest.json`: original/resolved sources, source file digests and normalized executable modes, recipe fingerprints, target context, and review records.
+- `manifest.json`: the pinned catalog provenance, original/resolved skill sources, source file digests and normalized executable modes, recipe fingerprints, target context, and review records.
 
-Network source acquisition requires explicit `--fetch`. It reads data only; it never executes downloaded scripts or catalog argv. A source checkout with uncommitted changes is recorded as dirty rather than falsely claiming the commit alone identifies that content.
+Selected-skill network acquisition requires explicit `--fetch`, independently of the normal catalog-only refresh. It reads data only; it never executes downloaded scripts or catalog argv. A source checkout with uncommitted changes is recorded as dirty rather than falsely claiming the commit alone identifies that content.
 
 The LLM edits candidates according to intent and preserves substantive behavior, prerequisites, safety, and legal notices. `review` records a nonempty explanation and output digest. Adapted or otherwise modified candidates require a matching review. Changed output content or executable modes invalidate the review; review cannot waive excluded-file, metadata, or legal checks. Regular-file executable bits are preserved as normalized 0644/0755 modes; special permission bits are not imported. Conventional LICENSE/NOTICE/COPYING/OFL files and explicit legal targets must match raw bytes.
 
@@ -123,6 +133,6 @@ Pi gets a personal prompt template, OpenCode gets a personal command Markdown fi
 
 The design reuses source/filter/lock patterns from [vendir](https://github.com/carvel-dev/vendir), explicit external selection from [chezmoi](https://www.chezmoi.io/reference/special-files/chezmoiexternal-format/), and conflict visibility from [Copier](https://copier.readthedocs.io/en/stable/updating/). None is an implementation dependency.
 
-Skills CLI installation is useful but does not inherently enforce this catalog's filtering or semantic adaptations. Native command behavior follows Pi's installed `docs/prompt-templates.md`, [OpenCode commands](https://opencode.ai/docs/commands/), and [Claude skills](https://code.claude.com/docs/en/skills). Static checks are not proof of live harness discovery or successful semantic LLM behavior.
+Skills CLI installation is useful but does not inherently enforce this catalog's filtering or semantic adaptations. Native command behavior follows Pi's installed `docs/prompt-templates.md`, [OpenCode commands](https://opencode.ai/docs/commands/), and [Claude skills](https://code.claude.com/docs/en/skills). Static checks are not proof of live harness discovery or successful semantic LLM behavior. Check project discovery from the installed worktree, not the untouched primary checkout. Pi gates project `.agents/skills` on native project trust; non-interactive/RPC ask mode skips unapproved resources. The manager never saves a trust decision or grants that approval automatically.
 
 Track implementation in [#69](https://github.com/dragoscirjan/ai/issues/69). Root instruction templates remain reserved for [#68](https://github.com/dragoscirjan/ai/issues/68).

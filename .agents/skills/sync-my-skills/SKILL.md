@@ -34,7 +34,11 @@ Confirm the target repository root, then run:
 node <skill-directory>/scripts/sync-my-skills.mjs inspect --root <project-root>
 ```
 
-For development against a complete source checkout, add `--source-root <checkout>` and use that checkout's catalog. Otherwise authored entries resolve from the catalog's owner repository, without requiring a full clone. Upstream entries use their immutable revisions.
+Normal inspection downloads compatible YAML from the trusted catalog owner and pins its immutable commit in an external temporary snapshot. Carry the returned `catalogSnapshot.path` to **every** prepare/plan/apply command with `--catalog`. Manager code never updates automatically. Unavailable or incompatible catalogs stop; do not silently fall back.
+
+Honor an explicit `--bundled` request by passing it to inspection. Explain that this installed snapshot may omit later entries. For a reviewed complete checkout, use `--source-root <checkout>` instead; without `--catalog`, that checkout supplies the catalog. These are explicit review/offline choices, not automatic failure recovery. Before this implementation is published upstream, request one of these modes rather than claiming the new remote YAML is available.
+
+Refreshed catalogs pin authored acquisition to the same catalog commit without a full clone. Any local override must be a clean checkout of that commit. Use explicit bundled/local review mode for a different reviewed snapshot. Upstream entries use their declared revisions.
 
 Read the target instructions, README, relevant manifests, and enough actual content to understand its primary purpose. Helper extension counts are evidence, not a decision: a documentation, research, or asset repository is not a coding project merely because it contains helper scripts. Never execute target code, installers, or builds to classify it. Do not read credentials or unrelated private material.
 
@@ -44,7 +48,7 @@ Inventory canonical and harness-specific skill locations. Distinguish managed, u
 
 Present all of these sets without hiding entries:
 
-- **Recommended:** explain project evidence and any previously managed skill proposed for update.
+- **Recommended:** explain project evidence, any previously managed skill proposed for update, and catalog baseline guidance. `document-project`, `asd-ste100-technical`, and `unslop` are always recommendations, not mandatory installations. The user may decline them all.
 - **Every remaining active project catalog skill:** show its purpose, existing installation, earlier decline, prerequisites, and relevant limitations. Ask which to install/update; allow none. Use readable groups or batches when the harness limits question size. Do not omit a skill because it lacks detection signals or is incompatible; explain why it cannot currently be selected.
 - **Deprecated installations:** show exact names, replacements, locations, local-change uncertainty, and retain/remove choices. Default to retaining. Ask which exact skills to remove, including none. An old `sync-agent-assets` installation is deprecated; it is not a second supported manager.
 - **Unrelated custom skills:** report that they remain untouched.
@@ -56,7 +60,7 @@ Record a decision for every active project entry: selected (including explained 
 
 ## 3. Establish the isolated workspace
 
-Before the first project mutation, follow the target's approved isolated-workspace workflow and re-inspect the resulting workspace. Do not mutate the primary checkout, stash/reset local work, or silently move untracked files into the workspace. If the inventories differ, explain and obtain a new decision.
+Before the first project mutation, follow the target's approved isolated-workspace workflow and re-inspect the resulting workspace with `--catalog <catalogSnapshot.path>`. Reuse this run's snapshot, not a new moving-branch refresh; a deliberate new refresh restarts selection and planning. Do not mutate the primary checkout, stash/reset local work, or silently move untracked files into the workspace. If the inventories differ, explain and obtain a new decision.
 
 If an isolation procedure is unavailable, ask to acquire/load the catalogued `isolated-workspace` skill as temporary tooling, or stop. Do not install a policy bundle into the target merely to get a workspace. Source-specific workspace commands belong in that skill and are not duplicated here. The sync helper enforces an isolated **Git worktree** for apply; other target VCS backends are not supported by this version.
 
@@ -67,7 +71,7 @@ Choose a fresh temporary stage outside both target and source repositories. Prep
 ```sh
 node <skill-directory>/scripts/sync-my-skills.mjs prepare \
   --root <workspace-root> --skills <comma-separated-selected-names> \
-  --stage <new-external-stage> --fetch
+  --stage <new-external-stage> --catalog <catalogSnapshot.path> --fetch
 ```
 
 For local authored/adapted sources, optionally pass `--source-root <checkout>`. Omit `--fetch` for fully local preparation; it is required for network acquisition. If target-specific adaptation requirements were agreed, pass the same `--target-requirements <text>` later used in selection.
@@ -99,7 +103,8 @@ Write the complete selection JSON outside the target; see the example in the dat
 
 ```sh
 node <skill-directory>/scripts/sync-my-skills.mjs plan \
-  --root <workspace-root> --stage <stage> --selection <selection.json>
+  --root <workspace-root> --stage <stage> --selection <selection.json> \
+  --catalog <catalogSnapshot.path>
 ```
 
 Present the actual content diffs as well as the helper action summary. Include dependencies, incompatibilities, source revisions, adaptation decisions, legal/metadata filtering, every write/projection/removal, local/unmanaged conflicts, lock migration, validation, and the `planId`. Explain untracked or unverifiable removal content; never imply it is known clean.
@@ -113,13 +118,13 @@ Wait for approval. Source, catalog, rules, staged content, target requirements, 
 ```sh
 node <skill-directory>/scripts/sync-my-skills.mjs apply \
   --root <workspace-root> --stage <stage> --selection <selection.json> \
-  --apply --confirm --plan-id <approved-plan-id>
+  --catalog <catalogSnapshot.path> --apply --confirm --plan-id <approved-plan-id>
 ```
 
 Apply revalidates the plan and workspace before writing; the lock is written last. Multi-file apply is not an atomic filesystem transaction. If interrupted, preserve the workspace and stage, inspect actual state, and obtain a revised plan. Never reset local work, retry a stale plan blindly, or report a partial apply as success.
 
-Validate installed metadata/supporting files, requested harness discovery/projections, approved deletions, source/installed fingerprints, and unchanged root documents. Run `status --root <workspace-root>`. Do not run target builds or install target dependencies merely for synchronization validation. Follow target validation policy when it requires additional checks, asking before executing target code.
+Validate installed metadata/supporting files, requested harness discovery/projections, approved deletions, source/installed fingerprints, and unchanged root documents. Installing documentation guidance does not authorize site initialization. When changing this manager itself, follow the source project's documentation-impact route and update affected guides, examples, and reference in the same change before reporting completion. Run `status --root <workspace-root>`. Do not run target builds or install target dependencies merely for synchronization validation. Follow target validation policy when it requires additional checks, asking before executing target code.
 
-Report installed/updated/retained/removed skills, selected harnesses, origin revisions, adaptation notes, actual checks and limits, conflicts, stage/workspace paths, and any required reload. Distinguish static adapter/discovery checks from live harness behavior. Keep `.agents/ai-assets.lock.json` manager-owned; never write Skills CLI-owned `skills-lock.json`.
+Report installed/updated/retained/removed skills, selected harnesses, origin revisions, adaptation notes, actual checks and limits, conflicts, stage/workspace paths, and any required reload. Distinguish static adapter/discovery checks from live harness behavior. Start discovery checks in the actual reported worktree. Pi project skills require its native project-trust decision; report that requirement without granting trust, saving decisions, or adding blanket approval flags for the user. Keep `.agents/ai-assets.lock.json` manager-owned; never write Skills CLI-owned `skills-lock.json`.
 
 Personal `/sync-my-skills` adapters are configured by a separate approved `setup` plan, not by project synchronization. Root instruction/template work remains separate. Leave the workspace for review; do not commit or publish automatically.

@@ -11,6 +11,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`code-review`](.agents/skills/code-review/SKILL.md) | Review a diff against repository standards and its originating issue or specification with separate read-only subagents. |
 | [`coding`](.agents/skills/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
 | [`debloat`](.agents/skills/debloat/SKILL.md) | Prevent overengineering and simplify existing mechanisms with evidence while preserving required behavior and boundaries. |
+| [`document-project`](.agents/skills/document-project/SKILL.md) | Create or improve task-based documentation that a developer new to the project can follow, and keep it current during implementation. |
 | [`coding-with-rules`](.agents/skills/coding-with-rules/SKILL.md) | Combine the `coding` workflow with on-demand language and extension reference files. |
 | [`init-project`](.agents/skills/init-project/SKILL.md) | Initialize the shared foundation or TypeScript/Godot GDScript tooling through on-demand setup references. |
 | [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
@@ -38,6 +39,8 @@ Skills load other instructions only through declared requirements. Leaves normal
 ## Development flow
 
 Start where you need help. If the goal is unclear, work through an initiative. If facts are missing, research them. If the work is already understood, go straight to a specification, task, or implementation. You do not need to run every skill.
+
+During implementation, `document-project`, `asd-ste100-technical`, and `unslop` guide documentation updates in the same change. Improve unclear affected pages rather than append repetitive sections. Required documentation is part of completing the work; a new site, broad cleanup, migration, or deployment still needs its applicable approval.
 
 `research` also works on its own for general questions and new ideas. It does not require a repository, an initiative, or an implementation decision. It clarifies the request when needed and delivers findings where the user chooses.
 
@@ -128,13 +131,7 @@ npx -y skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace
 
 Upstream-only skills are obtained from their catalogued sources, not from nonexistent directories in this repository. Raw Skills CLI installation alone does not guarantee prerequisite closure or OpenAI-metadata filtering.
 
-For cross-project synchronization, install the personal manager once for your chosen harness, for example:
-
-```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill sync-my-skills --global --agent pi --yes
-```
-
-Then follow the manager's [approved parser and command setup](.agents/skills/sync-my-skills/README.md). This provides the literal `/sync-my-skills` command; it does not force the manager or all three harnesses into each project.
+For cross-project synchronization, follow [Sync skills in a project](.agents/skills/sync-my-skills/README.md). It starts with a clean export from a reviewed committed checkout, installs the personal manager and pinned parser, and registers the literal `/sync-my-skills` command. It also explains the repository-source alternative once this implementation is available upstream. The manager and all three harnesses are not forced into every project. Normal runs refresh compatible catalog data into a commit-pinned snapshot; offline/review use of the installed catalog is an explicit choice, not a silent fallback.
 
 The LLM investigates the project's purpose, explains recommendations, asks about every remaining active catalog skill, and separately asks which exact deprecated installations to remove. It stages sources and semantic adaptations, presents one plan, and writes only after approval in an isolated Git worktree. Unrelated custom skills and local edits remain protected. Root instruction templates are reserved for [#68](https://github.com/dragoscirjan/ai/issues/68).
 

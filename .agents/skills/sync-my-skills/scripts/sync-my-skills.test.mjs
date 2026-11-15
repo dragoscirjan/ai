@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 import { stringify } from "yaml";
 import {
-  PACKAGE_ROOT, LOCK_PATH, digest, parseYaml, safeRelative, loadCatalog, closure,
+  PACKAGE_ROOT, LOCK_PATH, digest, parseYaml, safeRelative, loadCatalog, refreshCatalog, closure,
   inspectProject, prepareSkills, reviewSkill, planSync, applySync, projectStatus,
   planSetup, applySetup,
 } from "./sync-core.mjs";
@@ -137,6 +137,190 @@ test("non-coding inspection offers every remaining skill and does not force codi
   assert.deepEqual(result.detectedHarnesses, []);
   assert.equal(git(f.root, "status", "--porcelain"), before);
   assert.equal(existsSync(join(f.root, LOCK_PATH)), false);
+});
+
+test("catalog refresh resolves an immutable revision and rejects edited snapshot bytes", async (t) => {
+  const f = fixture(t);
+  const revision = git(f.source, "rev-parse", "HEAD");
+  const calls = [];
+  const fetcher = async (url) => { calls.push(url); return new Response(url.includes("/commits/") ? JSON.stringify({ sha: revision }) : readFileSync(f.catalogPath, "utf8")); };
+  const before = git(f.root, "status", "--porcelain");
+  const snapshot = await refreshCatalog({ catalog: f.catalog, directory: join(f.base, "download"), fetcher });
+  assert.equal(snapshot.source.revision, revision);
+  assert.equal(loadCatalog(snapshot.path).hash, f.catalog.hash);
+  assert.ok(calls[1].includes("/" + revision + "/.agents/skills/sync-my-skills/assets/skill-catalog.yaml"));
+  assert.equal(git(f.root, "status", "--porcelain"), before);
+  writeFileSync(snapshot.path, readFileSync(snapshot.path, "utf8") + "\n# Changed after acquisition\n");
+  assert.throws(() => loadCatalog(snapshot.path), /snapshot content changed/);
+  await assert.rejects(() => refreshCatalog({ catalog: f.catalog, directory: f.root, fetcher }), /fresh catalog snapshot directory/);
+  assert.ok(existsSync(join(f.root, "README.md")));
+  const unsafe = join(f.root, "catalog-download");
+  await assert.rejects(() => refreshCatalog({ catalog: f.catalog, root: f.root, directory: unsafe, fetcher: async () => { throw new Error("Must reject storage before networking"); } }), /outside target and source/);
+  assert.equal(existsSync(unsafe), false);
+  const redirect = join(f.base, "temporary-redirect"); symlinkSync(f.root, redirect);
+  await assert.rejects(() => refreshCatalog({ catalog: f.catalog, root: f.root, directory: join(redirect, "catalog-download"), fetcher: async () => { throw new Error("Must reject redirected storage first"); } }), /outside target and source/);
+  assert.equal(existsSync(unsafe), false);
+});
+
+test("fresh catalog provenance is bound to the stage and lock even when definitions match", async (t) => {
+  const f = fixture(t);
+  const revision = git(f.source, "rev-parse", "HEAD");
+  const download = async (name, sha) => refreshCatalog({ catalog: f.catalog, directory: join(f.base, name), fetcher: async (url) => new Response(url.includes("/commits/") ? JSON.stringify({ sha }) : readFileSync(f.catalogPath, "utf8")) });
+  const first = loadCatalog((await download("first", revision)).path);
+  await f.prepare(["alpha"], { catalog: first });
+  const plan = f.plan(f.selection(), { catalog: first });
+  assert.equal(plan.lock.catalogSource.revision, revision);
+  const second = loadCatalog((await download("second", "b".repeat(40))).path);
+  assert.equal(first.hash, second.hash);
+  assert.throws(() => f.plan(f.selection(), { catalog: second }), /snapshot changed/);
+  f.apply(f.selection(), { catalog: first });
+  assert.equal(JSON.parse(readFileSync(join(f.root, LOCK_PATH), "utf8")).catalogSource.revision, revision);
+  put(f.source, ".agents/skills/alpha/reference.md", "Uncommitted source edit.\n");
+  await assert.rejects(() => f.prepare(["alpha"], { catalog: first, stage: join(f.base, "dirty-source-stage") }), /does not match the refreshed snapshot/);
+});
+
+test("authored acquisition uses the catalog commit rather than resolving a moving branch again", async (t) => {
+  const f = fixture(t);
+  const revision = "c".repeat(40); const calls = [];
+  const files = [".agents/skills/alpha/SKILL.md", ".agents/skills/alpha/reference.md", "LICENSE"];
+  const fetcher = async (url) => {
+    calls.push(url);
+    if (url.includes("/commits/")) return new Response(JSON.stringify({ sha: revision }));
+    if (url.endsWith("/assets/skill-catalog.yaml")) return new Response(readFileSync(f.catalogPath, "utf8"));
+    if (url.includes("/git/trees/")) return new Response(JSON.stringify({ tree: files.map((path) => ({ path, type: "blob", mode: "100644" })) }));
+    const path = files.find((file) => url.endsWith("/" + file));
+    assert.ok(path, url);
+    assert.ok(url.includes("/" + revision + "/"), url);
+    return new Response(readFileSync(join(f.source, path)));
+  };
+  const snapshot = await refreshCatalog({ catalog: f.catalog, directory: join(f.base, "catalog-pin"), fetcher });
+  await prepareSkills({ catalog: loadCatalog(snapshot.path), root: f.root, stage: f.stage, names: ["alpha"], allowFetch: true, fetcher });
+  assert.equal(calls.filter((url) => url.includes("/commits/")).length, 1);
+  assert.ok(existsSync(join(f.stage, "skills/alpha/reference.md")));
+});
+
+test("catalog data cannot restore the retired manager or make the personal manager a project skill", (t) => {
+  const f = fixture(t);
+  for (const [name, message] of [["sync-my-skills", /must remain personal/], ["sync-agent-assets", /retired manager/]]) {
+    const data = structuredClone(f.data); data.skills[name] = structuredClone(data.skills.alpha);
+    const path = join(f.base, name + ".yaml"); writeFileSync(path, stringify(data));
+    assert.throws(() => loadCatalog(path), message);
+  }
+});
+
+test("incompatible or redirected catalogs stop without replacing code or retaining invalid downloads", async (t) => {
+  const f = fixture(t);
+  const before = digest(readFileSync(script));
+  for (const [name, mutate] of [["version", (data) => { data.schemaVersion = 999; }], ["owner", (data) => { data.repository = "https://github.com/elsewhere/skills"; }], ["ref", (data) => { data.ref = "different-branch"; }]]) {
+    const data = structuredClone(f.data); mutate(data);
+    const directory = join(f.base, name);
+    await assert.rejects(() => refreshCatalog({ catalog: f.catalog, directory, fetcher: async (url) => new Response(url.includes("/commits/") ? JSON.stringify({ sha: "a".repeat(40) }) : stringify(data)) }));
+    assert.equal(existsSync(directory), false);
+  }
+  assert.equal(digest(readFileSync(script)), before);
+  assert.equal(existsSync(join(f.root, ".agents")), false);
+});
+
+test("CLI inspect refreshes by default and exposes new catalog entries; bundled mode does not fetch", (t) => {
+  const f = fixture(t);
+  const data = parseYaml(readFileSync(join(PACKAGE_ROOT, "assets/skill-catalog.yaml"), "utf8"));
+  data.skills["new-doc-guidance"] = { ...structuredClone(data.skills["document-project"]), source: { type: "local", path: ".agents/skills/new-doc-guidance" } };
+  const stub = join(f.base, "fetch-stub.mjs");
+  writeFileSync(stub, `globalThis.fetch = async (url) => new Response(url.includes('/commits/') ? JSON.stringify({sha: '${"d".repeat(40)}'}) : ${JSON.stringify(stringify(data))});\n`);
+  const fresh = spawnSync(process.execPath, ["--import", stub, script, "inspect", "--root", f.root], { encoding: "utf8" });
+  assert.equal(fresh.status, 0, fresh.stderr);
+  const output = JSON.parse(fresh.stdout);
+  const directory = dirname(output.catalogSnapshot.path);
+  assert.ok(directory.startsWith(join(tmpdir(), "sync-my-skills-catalog-")));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  assert.equal(output.catalogSnapshot.mode, "refreshed");
+  assert.equal(output.catalogSnapshot.source.revision, "d".repeat(40));
+  assert.ok(output.recommendedSkills.some((entry) => entry.name === "new-doc-guidance"));
+  writeFileSync(stub, "globalThis.fetch = async () => { throw new Error('Unexpected network call'); };\n");
+  const offline = spawnSync(process.execPath, ["--import", stub, script, "inspect", "--root", f.root, "--bundled"], { encoding: "utf8" });
+  assert.equal(offline.status, 0, offline.stderr);
+  assert.equal(JSON.parse(offline.stdout).catalogSnapshot.mode, "bundled");
+  const local = spawnSync(process.execPath, ["--import", stub, script, "inspect", "--root", f.root, "--source-root", repository], { encoding: "utf8" });
+  assert.equal(local.status, 0, local.stderr);
+  assert.equal(JSON.parse(local.stdout).catalogSnapshot.mode, "local-source");
+  assert.equal(existsSync(join(f.root, ".agents")), false);
+});
+
+test("CLI refresh failures never silently fall back or self-update", (t) => {
+  const f = fixture(t); const stub = join(f.base, "unavailable.mjs");
+  put(f.base, "unavailable.mjs", "globalThis.fetch = async () => new Response('Unavailable', {status: 503});\n");
+  const failed = spawnSync(process.execPath, ["--import", stub, script, "inspect", "--root", f.root], { encoding: "utf8" });
+  assert.notEqual(failed.status, 0);
+  assert.equal(failed.stdout, "");
+  assert.match(failed.stderr, /Manager code was not updated/);
+  assert.match(failed.stderr, /no automatic fallback/);
+  assert.equal(existsSync(join(f.root, ".agents")), false);
+});
+
+test("baseline recommendations remain explicit choices and can all be declined", async (t) => {
+  const f = fixture(t, ({ data }) => { data.skills.alpha.selection = "recommended"; });
+  const before = git(f.root, "status", "--porcelain");
+  const inspection = inspectProject({ root: f.root, catalog: f.catalog });
+  assert.deepEqual(inspection.recommendedSkills.map((s) => s.name), ["alpha"]);
+  assert.ok(inspection.recommendedSkills[0].reasons.includes("catalog baseline recommendation"));
+  assert.deepEqual(inspection.remainingSkills.map((s) => s.name), ["beta"]);
+  await f.prepare([]);
+  const plan = f.plan(f.selection([]));
+  assert.deepEqual(plan.selection.selectedSkills, []);
+  assert.equal(plan.actions.some((a) => a.path.startsWith(".agents/skills/")), false);
+  assert.equal(git(f.root, "status", "--porcelain"), before);
+});
+
+test("documentation guidance is recommended without language signals or site initialization", (t) => {
+  const f = fixture(t);
+  const catalog = loadCatalog(join(PACKAGE_ROOT, "assets/skill-catalog.yaml"), repository);
+  const before = git(f.root, "status", "--porcelain");
+  const result = inspectProject({ root: f.root, catalog });
+  for (const name of ["document-project", "asd-ste100-technical", "unslop"]) {
+    const item = result.recommendedSkills.find((entry) => entry.name === name);
+    assert.ok(item, name);
+    assert.ok(item.reasons.includes("catalog baseline recommendation"), name);
+    assert.equal(catalog.byName.get(name).selection, "recommended");
+  }
+  assert.ok(!result.recommendedSkills.some((entry) => entry.name === "coding" || entry.name === "coding-with-rules"));
+  assert.equal(existsSync(join(f.root, "docs")), false);
+  assert.equal(existsSync(join(f.root, ".agents")), false);
+  assert.equal(git(f.root, "status", "--porcelain"), before);
+});
+
+test("documentation routing resolves local and upstream sources without forced project prerequisites", () => {
+  const catalog = loadCatalog(join(PACKAGE_ROOT, "assets/skill-catalog.yaml"), repository);
+  const route = readFileSync(join(repository, "AGENTS.md"), "utf8").split("\n").find((line) => line.startsWith("| During implementation,"));
+  assert.ok(route);
+  for (const name of ["document-project", "asd-ste100-technical", "unslop"]) {
+    assert.ok(route.includes("`" + name + "`"), name);
+    assert.deepEqual(catalog.byName.get(name).prerequisites, []);
+    assert.equal(catalog.byName.get(name).scope, "project");
+  }
+  assert.equal(catalog.byName.get("unslop").kind, "upstream");
+  assert.equal(readlinkSync(join(repository, ".claude/skills/document-project")), "../../.agents/skills/document-project");
+  const dir = join(repository, ".agents/skills/document-project");
+  const instructions = readFileSync(join(dir, "SKILL.md"), "utf8");
+  assert.doesNotMatch(instructions, /^requires:/m);
+  for (const name of ["vitepress", "mkdocs", "examples"]) assert.ok(statSync(join(dir, "references", name + ".md")).isFile());
+  const contributing = readFileSync(join(repository, "CONTRIBUTING.md"), "utf8");
+  assert.match(contributing, /Update affected documentation in the same change before marking the work complete/);
+  assert.match(contributing, /Required documentation is part of completing the change/);
+});
+
+test("documentation remains task-based and supports existing MkDocs sites", () => {
+  const dir = join(repository, ".agents/skills/document-project");
+  const instructions = readFileSync(join(dir, "SKILL.md"), "utf8");
+  assert.match(instructions, /Assume familiarity with terminals, editors, files, and standard development tools/);
+  assert.match(instructions, /Do not skip project-specific steps merely because the reader is a developer/);
+  assert.match(instructions, /Keep existing MkDocs sites on MkDocs; improving documentation does not require migration/);
+  assert.match(instructions, /Any platform change still needs explicit approval/);
+  const examples = readFileSync(join(dir, "references/examples.md"), "utf8");
+  assert.match(examples, /scripts\/sync-my-skills\.mjs catalog --source-root \./);
+  assert.doesNotMatch(examples, /scripts\/sync-agent-assets\.mjs|prints JSON containing `profiles`/);
+  const mkdocs = readFileSync(join(dir, "references/mkdocs.md"), "utf8");
+  assert.match(mkdocs, /mkdocs build --strict/);
+  assert.match(mkdocs, /mkdocs\.yml/);
 });
 
 test("inventory skips unrelated project links, reports known deprecations, and preserves custom names", (t) => {

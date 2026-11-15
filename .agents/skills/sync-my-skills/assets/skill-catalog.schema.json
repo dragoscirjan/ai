@@ -58,7 +58,7 @@
         "upstream": { "$ref": "#/$defs/source" },
         "scope": { "enum": ["personal", "project"] },
         "category": { "type": "string" },
-        "selection": { "enum": ["optional", "detected", "wrapper", "initializer"] },
+        "selection": { "enum": ["optional", "recommended", "detected", "wrapper", "initializer"] },
         "safety": { "type": "string" },
         "signals": {
           "type": "object", "additionalProperties": false,

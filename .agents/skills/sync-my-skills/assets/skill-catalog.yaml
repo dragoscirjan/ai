@@ -16,7 +16,7 @@ skills:
       type: local
       path: .agents/skills/asd-ste100-technical
     category: communication
-    selection: optional
+    selection: recommended
     safety: read-only-guidance
     harnesses: [ pi, opencode, claude-code ]
     prerequisites: []
@@ -208,6 +208,26 @@ skills:
           --skill,
           grilling
         ]
+    legal:
+      - path: LICENSE
+        target: LICENSE
+        spdx: MIT
+  document-project:
+    kind: authored
+    description: Create, improve, or maintain task-based VitePress or MkDocs documentation from verified code and project
+      information. Use during implementation to keep affected documentation current and understandable to a developer
+      new to the project, or for an approved documentation baseline, refactor, or migration.
+    source:
+      type: local
+      path: .agents/skills/document-project
+    category: documentation
+    selection: recommended
+    safety: project-write-with-confirmation
+    harnesses: [ pi, opencode, claude-code ]
+    prerequisites: []
+    signals: {}
+    install:
+      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, document-project ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -536,7 +556,7 @@ skills:
       revision: bc697d0a5a163cec979e362b601e36f5616083fd
       path: pstack/skills/unslop
     category: communication
-    selection: optional
+    selection: recommended
     safety: read-only-guidance
     harnesses: [ pi, opencode, claude-code ]
     prerequisites: []

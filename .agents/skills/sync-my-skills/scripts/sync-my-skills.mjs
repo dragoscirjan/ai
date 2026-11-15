@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 import { readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 import {
-  SyncError, loadCatalog, inspectProject, prepareSkills, reviewSkill, planSync,
+  SyncError, loadCatalog, refreshCatalog, inspectProject, prepareSkills, reviewSkill, planSync,
   applySync, projectStatus, planSetup, applySetup,
 } from "./sync-core.mjs";
 
-const HELP = `sync-my-skills — approved, skills-only synchronization
+const HELP = `sync-my-skills. Approved, skills-only synchronization
 
 Commands:
   catalog [--source-root REPO] [--catalog YAML]
-  inspect --root PROJECT [--source-root REPO] [--catalog YAML]
+  refresh [--catalog YAML]
+  inspect --root PROJECT [--bundled | --source-root REPO | --catalog YAML]
   prepare --root PROJECT [--skills a,b] --stage NEW_DIR [--source-root REPO]
           [--catalog YAML] [--fetch] [--target-requirements TEXT]
   review --stage DIR --name SKILL --note TEXT
@@ -20,12 +22,16 @@ Commands:
   setup --harnesses pi,opencode,claude-code [--home DIR] [--manager-root DIR]
         [--apply --confirm --plan-id ID]
 
+Inspect refreshes and pins the curated YAML in external temporary storage by default.
+--bundled explicitly uses the installed snapshot; --source-root uses that checkout.
+Carry inspect's catalogSnapshot.path to prepare/plan/apply with --catalog.
+Manager code is never automatically updated. Unsupported catalogs stop.
 Plan/inspect never mutate the target. Preparation and review write only their
 external stage. Apply requires an isolated Git worktree and a matching plan.
 Setup is a separate personal-configuration plan; it does not install packages.
 Root instruction documents and Skills CLI-owned skills-lock.json are never written.
 `;
-const FLAGS = new Set(["apply", "confirm", "fetch", "help"]);
+const FLAGS = new Set(["apply", "confirm", "fetch", "help", "bundled"]);
 const VALUES = new Set(["root", "stage", "skills", "source-root", "catalog", "selection", "name", "note", "plan-id", "harnesses", "home", "manager-root", "target-requirements"]);
 function argumentsFor(argv) {
   const [command, ...args] = argv;
@@ -61,10 +67,24 @@ async function main() {
     const input = { ...common, home: o.home, managerRoot: o["manager-root"], harnesses: o.harnesses.split(",") };
     result = o.apply ? applySetup(input) : planSetup(input);
   } else {
-    if (!["catalog", "inspect", "prepare", "plan", "apply"].includes(command)) throw new SyncError("Unknown command; use --help", 2);
-    const catalog = loadCatalog(o.catalog, o["source-root"]);
+    if (!["catalog", "refresh", "inspect", "prepare", "plan", "apply"].includes(command)) throw new SyncError("Unknown command; use --help", 2);
+    if (!["catalog", "refresh"].includes(command)) need(o, "root");
+    if (o.bundled && (command === "refresh" || o.catalog || o["source-root"])) throw new SyncError("--bundled cannot be combined with refresh, --catalog, or --source-root", 2);
+    const localPath = o.catalog ?? (o["source-root"] ? join(resolve(o["source-root"]), ".agents/skills/sync-my-skills/assets/skill-catalog.yaml") : undefined);
+    let catalog = loadCatalog(localPath, o["source-root"]);
+    let snapshotMode = o.catalog ? "explicit" : o["source-root"] ? "local-source" : "bundled";
+    if (command === "refresh" || (command === "inspect" && !o.bundled && !o.catalog && !o["source-root"])) {
+      try {
+        const snapshot = await refreshCatalog({ catalog, root: o.root });
+        catalog = loadCatalog(snapshot.path);
+        snapshotMode = "refreshed";
+      } catch (error) {
+        throw new SyncError(`Catalog refresh stopped: ${error.message}. Manager code was not updated. Resolve the source/version or explicitly choose --bundled; no automatic fallback is used.`, error instanceof SyncError ? error.exitCode : 5);
+      }
+    }
     if (command === "catalog") result = { schemaVersion: 2, catalogHash: catalog.hash, skills: catalog.skills, deprecations: catalog.deprecations ?? {}, instructionTemplates: catalog.instructionTemplates ?? null };
-    else if (command === "inspect") { need(o, "root"); result = inspectProject({ ...common, catalog }); }
+    else if (command === "refresh") result = { mode: "catalog-refreshed", path: catalog.path, hash: catalog.hash, source: catalog.catalogSource };
+    else if (command === "inspect") result = { ...inspectProject({ ...common, catalog }), catalogSnapshot: { mode: snapshotMode, path: catalog.path, hash: catalog.hash, source: catalog.catalogSource } };
     else if (command === "prepare") {
       need(o, "root", "stage");
       result = await prepareSkills({ ...common, catalog, names: o.skills ? o.skills.split(",") : [], sourceRoot: o["source-root"], allowFetch: o.fetch, targetRequirements: o["target-requirements"] ?? "" });

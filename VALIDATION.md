@@ -32,14 +32,15 @@ When a change modifies `sync-my-skills` or its catalog:
 - Run `node --test .agents/skills/sync-my-skills/scripts/sync-my-skills.test.mjs` and syntax checks for its `.mjs` helpers.
 - Run `catalog --source-root <repository-root>` and confirm every local skill is represented exactly once, alongside valid catalog-only upstream entries.
 - Test strict YAML parsing, duplicate keys, unsafe paths/tags/aliases, source revisions, unknown entries, missing requirements, and cycles. Every `npx` argument array must start with `npx, -y`.
-- Test context evidence, non-coding projects, every-remaining-skill decision coverage, previously declined entries, unknown/custom installations, and explicit harness subsets.
+- Test default catalog refresh, newly added entries, explicit bundled/local modes, unsupported-schema/owner stops, byte-bound catalog provenance, shared authored-source commits, and stage invalidation when only the catalog source pin changes. Never claim a manager self-update or silent offline fallback.
+- Test context evidence, non-coding projects, every-remaining-skill decision coverage, previously declined entries, unknown/custom installations, and explicit harness subsets. Verify the documentation trio is recommended without language signals, may be declined entirely, and never initializes a site or installs automatically.
 - Test authored/upstream/adapted preparation, complete supporting/legal files, OpenAI-metadata exclusion, output-bound adaptation review, unchanged-result reuse, and changed-source/rule/target stops.
 - Test local/unmanaged conflicts, missing files, upstream removals, exact deprecated choices, complete removal snapshots, stale plans, path/symlink escapes, and primary-checkout protection.
 - Confirm plan mode does not mutate the target and apply requires an isolated Git worktree plus `--apply --confirm --plan-id <approved-id>`.
 - Test legacy lock migration and ensure root instruction files remain byte-identical, not newly managed or deleted. Template work stays separate under #68.
 - Confirm the lock contains no absolute machine paths, credentials, temporary paths, or secrets. Preserve its provenance, approved decisions, and local-change baseline.
 - Confirm `skills-lock.json` remains Skills CLI-owned and `.agents/ai-assets.lock.json` remains synchronization-owned.
-- Test personal command setup in disposable home directories, including collisions and stale approvals. Do not mutate live personal configuration during tests.
+- Test personal command setup in disposable home directories, including collisions and stale approvals. Do not mutate live personal configuration during tests. For Pi runtime discovery, distinguish global command loading from project skills and document the native project-trust requirement; any test-only approval must remain confined to the reviewed disposable fixture.
 - Verify Pi/OpenCode canonical discovery and only the selected Claude relative projections. Distinguish static adapter checks from live harness validation; do not claim either supplies target instruction templates.
 - Confirm there is only one manager skill, no old-name compatibility package, and no automatic commit, push, publication, merge, or release.
 
@@ -95,6 +96,15 @@ When a change modifies Markdown:
 - Check local and external links.
 - Review code fences, commands, paths, and examples manually.
 - Use sentence-case headings and clear, concrete language.
+
+## Documentation changes
+
+- Verify the documentation impact assessment. User-visible changes need affected documentation updated in the same change; a no-change decision needs a concrete reason.
+- Walk through the first-use instructions from the stated starting point. Check prerequisites, working directory, file names, commands or UI actions, expected results, likely failures, and recovery. Assume standard development skills, but check for missing project-specific knowledge or steps.
+- Check affected navigation, links, examples, and obsolete instructions. Preserve correct content and keep unrelated cleanup out of scope.
+- Run the approved site's build and available link checks. For VitePress, verify navigation and the configured base path. Do not install tools, create a site, migrate a site, or weaken checks without approval.
+- Report site checks, executed examples, documentation walkthroughs, and actual user testing separately. Do not claim that a successful build proves usability or that an unexecuted walkthrough passed.
+- Report blocked required documentation or checks and obtain an explicit owner decision before treating the change as complete.
 
 ## Policy and instruction changes
 

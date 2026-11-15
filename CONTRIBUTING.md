@@ -10,12 +10,20 @@ Read this document before planning or performing a repository architecture, desi
 2. Create or link a GitHub issue before architecture, design, implementation, or policy changes. Typo and broken-link fixes do not require an issue.
 3. Keep each change focused on one issue or task.
 4. Follow the isolated-workspace gate and configuration in `AGENTS.md` before changing repository state.
-5. Update documentation when behavior, policy, or usage changes.
+5. Assess documentation impact during implementation with `document-project`, `asd-ste100-technical`, and `unslop`. Update affected documentation in the same change before marking the work complete. Explain when no documentation change is needed.
 6. Read and follow [`VALIDATION.md`](VALIDATION.md) before validating or publishing the change.
 7. Commit with [Conventional Commits](https://www.conventionalcommits.org/).
 8. Open a pull request linked to the issue when an issue is required.
 
 Do not merge or release without explicit owner instruction. Approval, completed checks, or a mergeable pull request is not permission to merge or release.
+
+## Documentation during development
+
+For new features, behavior-changing fixes, configuration, and public interfaces, create or improve the affected reader instructions, examples, reference, and navigation. Write task-based instructions for developers who are new to the project. Assume standard development skills, but explain project-specific setup, terminology, commands, and expected results. Refactor unclear affected pages instead of appending repetitive sections. Keep unrelated cleanup separately approved.
+
+Propose and obtain approval for a new documentation baseline or migration to VitePress before creating or replacing a site. Preserve correct existing content and address existing links. Documentation work does not authorize deployment.
+
+Required documentation is part of completing the change. If documentation or required checks are blocked, report the gap and obtain an explicit owner decision rather than silently declaring the work complete.
 
 ## Repository identity for automated contributors
 
@@ -57,7 +65,7 @@ Top-level `requires` is not part of the Agent Skills standard and fails its stri
 
 Every `npx` invocation must include `-y` immediately after `npx`. Catalog commands are acquisition instructions, not authority to execute. Keep unwanted OpenAI metadata such as `agents/openai.yaml` out of installed outputs while preserving required supporting and legal files. Missing runtime/parser dependencies require approved setup; read-only detection never installs them.
 
-`sync-my-skills` is one personal manager, converted from `sync-agent-assets`; do not retain a second compatibility skill. It investigates target purpose, asks about every remaining active catalog skill, confirms harnesses, and separately asks for exact deprecated removals. Unknown/custom installations remain intact. Installed skill content and lock data may change only under an approved, current plan in an isolated workspace.
+`sync-my-skills` is one personal manager, converted from `sync-agent-assets`; do not retain a second compatibility skill. It investigates target purpose, recommends the documentation trio for user confirmation, asks about every remaining active catalog skill, confirms harnesses, and separately asks for exact deprecated removals. Baseline recommendations can all be declined; they do not restore a mandatory project bundle. Normal runs refresh compatible YAML into a commit-pinned external snapshot without updating manager code. Bundled/offline input is an explicit choice, never an automatic fallback. Unknown/custom installations remain intact. Installed skill content and lock data may change only under an approved, current plan in an isolated workspace.
 
 Do not force this repository's coding policy, manager, or bootstrap bundle into every target. Root instruction documents remain untouched by skill synchronization, including during legacy-lock migration. Instruction templates are a separate future workflow under issue #68. Existing target instructions, source isolation/validation gates, security boundaries, and owner authority remain in force.
 

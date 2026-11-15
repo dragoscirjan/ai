@@ -1,10 +1,10 @@
 import { spawnSync } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import {
-  chmodSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, readlinkSync,
+  chmodSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, readlinkSync,
   realpathSync, renameSync, rmSync, symlinkSync, writeFileSync,
 } from "node:fs";
-import { homedir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseDocument } from "yaml";
@@ -13,6 +13,7 @@ export const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..
 export const LOCK_PATH = ".agents/ai-assets.lock.json";
 export const HARNESSES = ["pi", "opencode", "claude-code"];
 const SKILLS = ".agents/skills";
+const OWNER_CATALOG_PATH = ".agents/skills/sync-my-skills/assets/skill-catalog.yaml";
 const MARKER = "sync-my-skills/stage-v2";
 const INSTRUCTIONS = ["AGENTS.md", "CLAUDE.md", "CONTRIBUTING.md", "VALIDATION.md"];
 const SKIP = new Set([".git", "node_modules"]);
@@ -196,6 +197,18 @@ function installation(install, scope) {
   if (scope !== "personal") check(!argv.some((arg) => arg === "--global" || arg.startsWith("--global=") || arg === "-g" || arg.startsWith("-g=") || arg === "--location=global"), "Project recipes must not install globally");
   portable(install);
 }
+function catalogOrigin(path, text, repository, ref) {
+  const metadata = `${resolve(path)}.source.json`;
+  if (!existsSync(metadata)) return null;
+  noLinks(dirname(metadata), metadata);
+  const record = jsonFile(metadata);
+  check(object(record), "Invalid catalog snapshot metadata");
+  knownKeys(record, ["schemaVersion", "repository", "ref", "revision", "path", "sha256"], "catalog snapshot");
+  check(record.schemaVersion === 1 && github(record.repository).url.toLowerCase() === github(repository).url.toLowerCase() && record.ref === ref, "Catalog snapshot source does not match its definition");
+  check(/^[a-f0-9]{40}$/.test(record.revision ?? "") && record.path === OWNER_CATALOG_PATH, "Invalid catalog snapshot revision/path");
+  check(record.sha256 === digest(text), "Catalog snapshot content changed; refresh it instead of editing the snapshot");
+  return { repository: record.repository, ref: record.ref, revision: record.revision, path: record.path, sha256: record.sha256 };
+}
 export function loadCatalog(path = join(PACKAGE_ROOT, "assets/skill-catalog.yaml"), sourceRoot) {
   const text = readFileSync(path, "utf8");
   const data = parseYaml(text, "skill catalog");
@@ -216,8 +229,10 @@ export function loadCatalog(path = join(PACKAGE_ROOT, "assets/skill-catalog.yaml
     if (definition.upstream) sourceDescriptor(definition.upstream, true);
     check(definition.kind !== "upstream" || definition.source.type === "github", `Upstream source required: ${name}`);
     check(definition.scope === undefined || ["personal", "project"].includes(definition.scope), "Invalid skill scope");
+    check(name !== "sync-my-skills" || definition.scope === "personal", "The manager must remain personal tooling");
+    check(name !== "sync-agent-assets", "The retired manager cannot be an active catalog entry");
     check(typeof definition.description === "string" && definition.description.length > 0, `Missing description: ${name}`);
-    check(definition.selection === undefined || ["optional", "detected", "wrapper", "initializer"].includes(definition.selection), `Invalid selection mode: ${name}`);
+    check(definition.selection === undefined || ["optional", "recommended", "detected", "wrapper", "initializer"].includes(definition.selection), `Invalid selection mode: ${name}`);
     for (const field of ["category", "safety"]) check(definition[field] === undefined || typeof definition[field] === "string", `Invalid ${field}: ${name}`);
     if (definition.signals !== undefined) {
       check(object(definition.signals), `Invalid signals: ${name}`);
@@ -254,7 +269,7 @@ export function loadCatalog(path = join(PACKAGE_ROOT, "assets/skill-catalog.yaml
   });
   const byName = new Map(skills.map((entry) => [entry.name, entry]));
   for (const entry of skills) for (const name of entry.prerequisites) check(byName.has(name), `Unknown prerequisite ${name} for ${entry.name}`);
-  const result = { ...data, skills, byName, hash: digest(data), path: resolve(path) };
+  const result = { ...data, skills, byName, hash: digest(data), path: resolve(path), catalogSource: catalogOrigin(path, text, data.repository, data.ref) };
   for (const entry of skills) closure([entry.name], result);
   check(data.deprecations === undefined || object(data.deprecations), "Deprecations must be a mapping");
   for (const [name, record] of Object.entries(data.deprecations ?? {})) {
@@ -307,6 +322,7 @@ function readLock(root) {
   const lock = jsonFile(path);
   check([1, 2].includes(lock.schemaVersion) && object(lock.files), "Unsupported or malformed skill lock");
   for (const field of ["skills", "selection", "projections", "legacyInstructions"]) check(lock[field] === undefined || object(lock[field]), `Invalid lock ${field} container`);
+  check(lock.catalogSource === undefined || lock.catalogSource === null || object(lock.catalogSource), "Invalid lock catalog source");
   for (const [path, record] of Object.entries(lock.files)) {
     safeRelative(path);
     check(object(record) && /^[a-f0-9]{64}$/.test(record.installedSha256 ?? ""), "Invalid locked file record");
@@ -363,9 +379,10 @@ export function inspectProject({ root, catalog }) {
     for (const file of entry.signals?.files ?? []) if (names.has(file) || signalFiles.includes(file)) reasons.push(`file:${file}`);
     for (const ext of entry.signals?.extensions ?? []) if (signalExtensions[ext]) reasons.push(`extension:${ext}(${signalExtensions[ext]})`);
     if (Object.values(lock?.files ?? {}).some((record) => record.skill === entry.name)) reasons.push("previously managed");
+    if (entry.selection === "recommended") reasons.push("catalog baseline recommendation");
     const item = { name: entry.name, description: entry.description, kind: entry.kind, reasons, installed: found.has(entry.name), prerequisites: entry.prerequisites, harnesses: entry.harnesses, runtime: entry.runtime ?? [], capabilities: entry.capabilities ?? [], install: entry.install };
     if (entry.scope === "personal") personal.push(item);
-    else if (reasons.includes("previously managed") || (reasons.length && ["detected", "wrapper"].includes(entry.selection))) recommended.push(item);
+    else if (entry.selection === "recommended" || reasons.includes("previously managed") || (reasons.length && ["detected", "wrapper"].includes(entry.selection))) recommended.push(item);
     else remaining.push(item);
   }
   const deprecated = [...found].filter(([name]) => Object.hasOwn(catalog.deprecations ?? {}, name)).map(([name, locations]) => ({ name, ...catalog.deprecations[name], locations, changedFiles: changedFiles(root, lock, name) }));
@@ -407,6 +424,47 @@ async function response(url, fetcher) {
   check(bytes.length <= 32 * 1024 * 1024, "Source response exceeds the size limit");
   return bytes;
 }
+export async function refreshCatalog({ catalog = loadCatalog(), root, directory, fetcher = globalThis.fetch } = {}) {
+  if (directory) check(!existsSync(resolve(directory)), "Use a fresh catalog snapshot directory");
+  const protectedRoots = new Set([PACKAGE_ROOT, dirname(catalog.path), ...(root ? [gitRoot(root)] : [])]);
+  for (const candidate of [process.cwd(), dirname(catalog.path)]) {
+    try { protectedRoots.add(gitRoot(candidate)); } catch { /* An installed package need not be in Git. */ }
+  }
+  const destination = resolve(directory ?? tmpdir());
+  const parent = directory ? dirname(destination) : destination;
+  check(existsSync(parent), "Catalog temporary parent must already exist");
+  const effective = directory ? join(realpathSync(parent), basename(destination)) : realpathSync(parent);
+  for (const repository of protectedRoots) check(!inside(realpathSync(repository), effective), "Catalog snapshots must remain outside target and source repositories; select external temporary storage");
+  const repo = github(catalog.repository);
+  let revision = catalog.ref;
+  if (!/^[a-f0-9]{40}$/.test(revision)) {
+    const commit = JSON.parse((await response(`https://api.github.com/repos/${repo.owner}/${repo.repo}/commits/${encodeURIComponent(revision)}`, fetcher)).toString());
+    check(/^[a-f0-9]{40}$/.test(commit.sha ?? ""), "Cannot resolve catalog revision");
+    revision = commit.sha;
+  }
+  const bytes = await response(`https://raw.githubusercontent.com/${repo.owner}/${repo.repo}/${revision}/${OWNER_CATALOG_PATH}`, fetcher);
+  check(bytes.length <= 1024 * 1024, "Catalog exceeds the size limit");
+  try { new TextDecoder("utf-8", { fatal: true }).decode(bytes); } catch { throw new SyncError("Catalog is not valid UTF-8"); }
+  if (directory) {
+    directory = resolve(directory);
+    check(!existsSync(directory), "Use a fresh catalog snapshot directory");
+    noLinks(dirname(directory), dirname(directory));
+    mkdirSync(directory);
+  } else directory = mkdtempSync(join(tmpdir(), "sync-my-skills-catalog-"));
+  try {
+    writeBytes(directory, "skill-catalog.yaml", bytes);
+    const path = join(directory, "skill-catalog.yaml");
+    const candidate = loadCatalog(path);
+    check(github(candidate.repository).url.toLowerCase() === repo.url.toLowerCase() && candidate.ref === catalog.ref, "Refreshed catalog changed its owner/ref; review a manager update instead");
+    writeJson(directory, "skill-catalog.yaml.source.json", { schemaVersion: 1, repository: repo.url, ref: catalog.ref, revision, path: OWNER_CATALOG_PATH, sha256: digest(bytes) });
+    const snapshot = loadCatalog(path);
+    return { path, hash: snapshot.hash, source: snapshot.catalogSource };
+  } catch (error) {
+    // Only the fresh, manager-created download directory is removed on failure.
+    rmSync(directory, { recursive: true, force: true });
+    throw error;
+  }
+}
 async function remoteTree(source, fetcher, cache) {
   const repo = github(source.repository);
   let revision = source.revision;
@@ -436,7 +494,7 @@ async function acquire(entry, catalog, sourceRoot, fetcher, cache) {
     getFile = async (path, legal = false) => readBytes(legal ? sourceRoot : folder, path);
     origin = { repository: catalog.repository, revision: runGit(sourceRoot, ["rev-parse", "HEAD"]), path: entry.source.path, dirty: Boolean(runGit(sourceRoot, ["status", "--porcelain=v1", "--untracked-files=all"])) };
   } else {
-    const source = entry.source.type === "github" ? entry.source : { type: "github", repository: catalog.repository, revision: catalog.ref, path: entry.source.path };
+    const source = entry.source.type === "github" ? entry.source : { type: "github", repository: catalog.repository, revision: catalog.catalogSource?.revision ?? catalog.ref, path: entry.source.path };
     const resolved = await remoteTree(source, fetcher, cache);
     const prefix = source.path === "." ? "" : `${source.path}/`;
     const blobs = resolved.tree.filter((item) => item.path.startsWith(prefix) && item.type === "blob");
@@ -490,6 +548,7 @@ export async function prepareSkills({ catalog, names, stage, sourceRoot, root, t
   if (sourceRoot && selected.some((name) => catalog.byName.get(name).source.type === "local")) {
     const remote = runGit(sourceRoot, ["remote", "get-url", "origin"]).replace(/^git@github\.com:/, "https://github.com/");
     check(github(remote).url.toLowerCase() === github(catalog.repository).url.toLowerCase(), "Local source origin does not match the catalog owner");
+    if (catalog.catalogSource) check(runGit(sourceRoot, ["rev-parse", "HEAD"]) === catalog.catalogSource.revision && !runGit(sourceRoot, ["status", "--porcelain=v1", "--untracked-files=all"]), "Local source does not match the refreshed snapshot; use its clean revision or explicit bundled review mode");
   }
   for (const name of selected) {
     const entry = catalog.byName.get(name);
@@ -497,7 +556,7 @@ export async function prepareSkills({ catalog, names, stage, sourceRoot, root, t
     check(allowFetch || (sourceRoot && entry.source.type === "local"), "Source fetch requires explicit --fetch permission", 4);
   }
   mkdirSync(stage, { recursive: true });
-  const manifest = { marker: MARKER, catalogHash: catalog.hash, contextHash: root ? contextHash(root, targetRequirements) : digest(targetRequirements), targetRequirements, skills: {} };
+  const manifest = { marker: MARKER, catalogHash: catalog.hash, catalogSource: catalog.catalogSource, contextHash: root ? contextHash(root, targetRequirements) : digest(targetRequirements), targetRequirements, skills: {} };
   const previous = root ? readLock(root) : null;
   const cache = new Map();
   for (const name of selected) {
@@ -587,6 +646,7 @@ export function planSync({ root, stage, selection, catalog }) {
   check(!inside(root, stage), "Stage must be outside the target");
   const manifest = stageData(stage);
   check(manifest.catalogHash === catalog.hash, "Catalog changed; prepare a new stage");
+  check(equal(manifest.catalogSource ?? null, catalog.catalogSource ?? null), "Catalog snapshot changed; prepare a new stage with the pinned catalog");
   selection = normalizeSelection(selection, catalog);
   check(manifest.contextHash === contextHash(root, selection.targetRequirements), "Target requirements changed; prepare/review again");
   check(equal(Object.keys(manifest.skills).sort(), selection.selectedSkills), "Prepared skills differ from the approved selection closure");
@@ -651,7 +711,7 @@ export function planSync({ root, stage, selection, catalog }) {
   const legacyInstructions = { ...(previous?.legacyInstructions ?? {}) };
   for (const [path, record] of Object.entries(previous?.files ?? {})) if (record.kind === "instruction") legacyInstructions[path] = record;
   const lock = {
-    schemaVersion: 2, managerVersion: "2.0.0", catalogHash: catalog.hash,
+    schemaVersion: 2, managerVersion: "2.0.0", catalogHash: catalog.hash, catalogSource: catalog.catalogSource,
     source: { repository: catalog.repository, ref: catalog.ref },
     selection, skills: { ...(previous?.skills ?? {}), ...skills }, files, projections, legacyInstructions,
   };

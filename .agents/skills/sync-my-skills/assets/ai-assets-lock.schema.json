@@ -8,6 +8,16 @@
     "schemaVersion": { "const": 2 },
     "managerVersion": { "type": "string" },
     "catalogHash": { "$ref": "#/$defs/digest" },
+    "catalogSource": {
+      "type": ["object", "null"], "additionalProperties": false,
+      "required": ["repository", "ref", "revision", "path", "sha256"],
+      "properties": {
+        "repository": { "type": "string" }, "ref": { "type": "string" },
+        "revision": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "path": { "const": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml" },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
     "source": {
       "type": "object", "additionalProperties": false, "required": ["repository", "ref"],
       "properties": { "repository": { "type": "string" }, "ref": { "type": "string" } }
