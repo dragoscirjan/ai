@@ -19,7 +19,7 @@ Do not merge or release without explicit owner instruction. Approval, completed 
 
 ## Documentation during development
 
-For new features, behavior-changing fixes, configuration, and public interfaces, create or improve the affected reader instructions, examples, reference, and navigation. Write task-based instructions that a nontechnical first-time user can follow. Refactor unclear affected pages instead of appending repetitive sections. Keep unrelated cleanup separately approved.
+For new features, behavior-changing fixes, configuration, and public interfaces, create or improve the affected reader instructions, examples, reference, and navigation. Write task-based instructions for developers who are new to the project. Assume standard development skills, but explain project-specific setup, terminology, commands, and expected results. Refactor unclear affected pages instead of appending repetitive sections. Keep unrelated cleanup separately approved.
 
 Propose and obtain approval for a new documentation baseline or migration to VitePress before creating or replacing a site. Preserve correct existing content and address existing links. Documentation work does not authorize deployment.
 

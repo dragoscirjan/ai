@@ -1,11 +1,11 @@
 ---
 name: document-project
-description: Create, improve, or maintain task-based VitePress or MkDocs documentation from verified code and project information. Use during implementation to keep affected documentation current and understandable to a nontechnical first-time user, or for an approved documentation baseline, refactor, or migration.
+description: Create, improve, or maintain task-based VitePress or MkDocs documentation from verified code and project information. Use during implementation to keep affected documentation current and understandable to a developer new to the project, or for an approved documentation baseline, refactor, or migration.
 ---
 
 # Document a project
 
-Help a first-time user complete a useful task without the author's help. Assume no terminal, programming, or project knowledge unless the agreed audience says otherwise. Use code to verify facts, not to choose the reading order.
+Help a developer new to the project complete a useful task without the author's help. Assume familiarity with terminals, editors, files, and standard development tools, but no knowledge of this project's setup or conventions. Use code to verify facts, not to choose the reading order.
 
 ## Establish the task and boundaries
 
@@ -38,13 +38,13 @@ For each necessary step:
 - Use exact labels, commands, paths, and option names. Explain unfamiliar terms at first use and use one name for each thing.
 - Show what the reader should see next and how to recover from likely failures. Link deeper troubleshooting rather than putting every rare failure in the main path.
 
-Do not assume that the reader knows what a terminal is, how to open it, which directory it uses, or how to run a command. Explain the necessary actions for the supported platform, or link directly to a complete prerequisite guide. Give copyable commands without shell prompts. Explain every placeholder and its replacement before use. Tell readers where to obtain required accounts or permissions without exposing credentials.
+State the required tool versions, environment, working directory, input files, and credentials or permissions. Give copyable commands without shell prompts and explain project-specific placeholders before use. Do not teach basic terminal, editor, or file-manager operations unless the agreed audience or task needs them. Do not skip project-specific steps merely because the reader is a developer.
 
 Prefer a supported download, installer, or UI route when it fits the task. If the tool requires a terminal or technical prerequisite, teach that prerequisite honestly. Never invent a GUI or claim a technical task needs no setup.
 
 Use common words, active voice, and one main idea per sentence. Keep articles and verbs; do not turn instructions into shorthand. Remove filler, marketing claims, decorative formatting, vague benefits, and repeated summaries. Preserve precise identifiers, warnings, uncertainty, and technical meaning. Shorter text is useful only when the reader can still follow it.
 
-See [writing examples and scenario checks](references/examples.md) when reviewing missing steps or unclear prose. The examples are illustrative, not evidence about a real product.
+See [writing examples and scenario checks](references/examples.md) when reviewing missing steps or unclear prose. Adapt its repository-specific example to the actual project; do not copy its commands into unrelated tools.
 
 ## Organize only what is needed
 

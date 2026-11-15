@@ -1,32 +1,28 @@
 # Writing examples and scenario checks
 
-These examples illustrate completeness and review technique. Receipt Maker is a fictional application. Its UI labels, files, and results are invented for this example, not inspected or tested product behavior. Do not copy them as factual instructions for a real tool.
+Assume the reader can use standard development tools. Supply the project-specific facts needed to complete the task. The catalog example below uses this repository's real read-only helper; adapt it rather than copying it into another project's documentation.
 
 ## Replace shorthand with a complete task
 
 An unclear instruction:
 
-> Configure the output path and execute export.
+> Run the catalog helper and check the output.
 
-An illustrative how-to for a nontechnical reader:
+A developer-focused how-to:
 
-### Save your receipt as a PDF
+### Check the skill catalog
 
-This example uses Windows with a PDF reader already installed. Start with Receipt Maker open and a completed receipt visible. You need permission to save a file in your Documents folder.
+Prerequisites: a trusted checkout of this repository and Node.js 22.20 or newer. Run this command from the repository root:
 
-1. Select **Export** above the receipt. A window named **Save receipt** opens.
-2. In that window, select **PDF** from the **File type** list.
-3. Select your **Documents** folder as the save location.
-4. Enter `receipt.pdf` in the **File name** box.
-5. Select **Save**. The application displays **Receipt saved**.
-6. Press the Windows key and E together. File Explorer opens so you can find files on your computer.
-7. Select **Documents** on the left side of File Explorer.
-8. Double-click `receipt.pdf`. Your PDF reader opens the saved receipt.
-9. Check that the receipt details are correct.
+```sh
+node .agents/skills/sync-agent-assets/scripts/sync-agent-assets.mjs catalog --source-root .
+```
 
-If the file name already exists, choose another name to keep the old receipt. If the application reports that it cannot save the file, choose a folder where your account can save files. Do not change system permissions to work around the error.
+The command exits with code 0 and prints JSON containing `profiles` and `skills`. Check that `skills` includes an entry named `document-project`. This command reads the catalog and skill metadata; it does not install assets or modify the checkout.
 
-This is a how-to with an explicit starting state, not a complete installation guide. A first-use guide must also explain how to obtain and open the real application, enter or load sample input, and reach that state. Verify those steps and labels against the actual product.
+If the helper rejects the Node.js version, select a supported runtime. If it reports a catalog coverage mismatch, compare the catalog entries with directories under `.agents/skills/` and correct the mismatch. Do not bypass validation to make the command succeed.
+
+This guide supplies the runtime, working directory, exact command, expected result, and relevant recovery. It does not explain how to open a terminal.
 
 ## Do not hide technical prerequisites
 
@@ -36,19 +32,17 @@ An unclear command example:
 $ tool run --input <file>
 ```
 
-A reader cannot know whether to copy the dollar sign, where to run the command, which program provides `tool`, or how to replace `<file>`.
+A developer can read the command but cannot infer the required tool version, working directory, input format, credentials, or expected result.
 
 For a real CLI guide:
 
-- Explain what the terminal is and how to open it on the supported platform, or link directly to a complete prerequisite guide.
-- Explain how to reach the intended working directory. Do not use an unexplained `<project-root>` placeholder.
-- State how the tool is installed and how the reader can check that it is available.
-- Provide safe sample input and explain how to obtain or create the file.
-- Show the verified command without the prompt. Explain placeholders before the command, or use concrete non-sensitive sample values.
-- Show the expected result and where to find any output file. Explain a likely error and its recovery.
-- If the reader needs technical knowledge the guide cannot provide, name the limitation. Do not invent a simpler interface.
+- State project-specific installation, runtime, environment, and permission requirements.
+- Identify the working directory and provide safe sample input or its exact format.
+- Show a copyable command. Explain project-specific placeholders or use concrete non-sensitive sample values.
+- Show the expected result, output location, and recovery for likely failures.
+- Link prerequisite knowledge outside the agreed audience's standard skills. Do not re-teach basic terminal, editor, or file operations by default.
 
-Do not claim an illustrative command or output was executed.
+Distinguish expected results from observed execution. Mark illustrative commands and output clearly.
 
 ## Review the workflow against these situations
 

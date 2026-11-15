@@ -400,6 +400,20 @@ test("documentation routes resolve to core skills with independent instructions 
   assert.match(contributing, /Required documentation is part of completing the change/);
 });
 
+test("documentation assumes developers new to the project without omitting project-specific steps", () => {
+  const root = join(repositoryRoot, ".agents", "skills", "document-project");
+  const instructions = readFileSync(join(root, "SKILL.md"), "utf8");
+  assert.match(instructions, /understandable to a developer new to the project/);
+  assert.match(instructions, /Assume familiarity with terminals, editors, files, and standard development tools/);
+  assert.match(instructions, /Do not skip project-specific steps merely because the reader is a developer/);
+  for (const name of ["CONTRIBUTING.md", "VALIDATION.md"]) {
+    assert.match(readFileSync(join(repositoryRoot, name), "utf8"), /Assume standard development skills/, name);
+  }
+  const examples = readFileSync(join(root, "references", "examples.md"), "utf8");
+  assert.ok(examples.includes("catalog --source-root ."));
+  assert.doesNotMatch(examples, /Receipt Maker/);
+});
+
 test("documentation guidance supports existing MkDocs sites without requiring migration", () => {
   const root = join(repositoryRoot, ".agents", "skills", "document-project");
   const instructions = readFileSync(join(root, "SKILL.md"), "utf8");

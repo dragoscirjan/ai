@@ -20,7 +20,7 @@ Preserve the project's environment and commands. Do not replace its dependency m
 
 ## Improve the existing reader path
 
-Read affected pages before editing. Keep their correct content and apply the main skill's task-based writing and nontechnical prerequisites.
+Read affected pages before editing. Keep their correct content and apply the main skill's task-based writing and project-specific prerequisites.
 
 Update `nav` when affected pages are added, moved, renamed, or removed. Navigation paths refer to documentation source files relative to `docs_dir`. If the site uses automatic navigation or a navigation plugin, follow that approach instead of replacing it.
 
