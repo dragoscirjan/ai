@@ -12,9 +12,9 @@ Load only the instructions needed for the current phase. Follow every matching r
 |---|---|
 | Read-only inspection or research | {{READ_ONLY_ROUTE}} |
 | Before planning or performing a repository change | Read and follow `CONTRIBUTING.md`. |
-| Before any repository mutation | {{MUTATION_ROUTE}} |
+| Before any repository mutation | Read and follow `.agents/skills/isolated-workspace/SKILL.md`. Create or reuse a dedicated isolated workspace before changing repository files. |
 | Before designing, changing, testing, or reviewing source code | Read the implementation and test rules in `CONTRIBUTING.md`. {{CODING_ROUTE}} |
-| During implementation, or before creating or revising documentation | Read the documentation rules in `CONTRIBUTING.md`. {{DOCUMENTATION_ROUTE}} |
+| During implementation, or before creating or revising documentation | Read and follow `DOCUMENTATION.md`. |
 | Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
 {{ADDITIONAL_PHASE_ROUTES}}
 
@@ -25,6 +25,8 @@ If a required document, skill, or tool for the current phase is unavailable, sto
 {{SKILL_REQUIREMENT_POLICY}}
 
 ## Workflow settings
+
+Never mutate the primary checkout. Use the VCS and workspace settings below with the required isolation procedure.
 
 {{WORKFLOW_SETTINGS}}
 

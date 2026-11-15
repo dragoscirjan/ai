@@ -2,20 +2,31 @@
 
 Reusable Markdown starting points for project-specific instruction bundles. These are templates, not active instructions for this repository.
 
-This work belongs to issue #68. Investigation, population, approval, installation, and rollout belong to the separately developed consuming skill. This directory supplies its content contract, not a renderer or that skill's execution workflow.
-
 ## Bundle
 
 | Source | Target | Purpose |
 |---|---|---|
 | [AGENTS.template.md](AGENTS.template.md) | `AGENTS.md` | Project context, explicit phase routing, settings, safety, and owner authority. |
-| [CONTRIBUTING.template.md](CONTRIBUTING.template.md) | `CONTRIBUTING.md` | Project-specific setup, development, configuration, documentation, and release procedures. |
+| [CONTRIBUTING.template.md](CONTRIBUTING.template.md) | `CONTRIBUTING.md` | Project-specific setup, development, configuration, and release procedures. |
+| [DOCUMENTATION.template.md](DOCUMENTATION.template.md) | `DOCUMENTATION.md` | Documentation audience, engine selection, locations, ownership, commands, and maintenance rules. |
 | [VALIDATION.template.md](VALIDATION.template.md) | `VALIDATION.md` | Actual checks, change-specific gates, evidence, and completion requirements. |
 | [CLAUDE.template.md](CLAUDE.template.md) | `CLAUDE.md`, optional | Explicit Claude import of the shared `AGENTS.md`. |
 
-The first three targets form one bundle. Keep them at the same target scope so their relative references resolve. The Claude adapter is optional; it is not a prerequisite for using the other files.
+The first four targets form one bundle. Keep them at the same target scope so their relative references resolve. The Claude adapter is optional; it is not a prerequisite for using the other files.
 
 Source filenames end in `.template.md` instead of the normal active instruction filenames. Do not register unfinished sources as harness instructions. Target paths inside the templates refer to the populated bundle, not to files beside these inactive sources.
+
+## Required policy skills
+
+These obligations are fixed, not optional population fields:
+
+| Phase | Required target-relative skill path |
+|---|---|
+| Before repository mutation | `.agents/skills/isolated-workspace/SKILL.md` |
+| During implementation to assess documentation impact | `.agents/skills/document-project/SKILL.md` |
+| Before drafting or revising documentation | `.agents/skills/asd-ste100-technical/SKILL.md` and `.agents/skills/unslop/SKILL.md` |
+
+Check these paths relative to the populated bundle's scope. Their complete skills and prerequisites must be available before the affected phase can proceed. If not, stop and obtain an approved resolution; do not weaken the fixed route or fabricate replacement instructions. This prerequisite does not authorize installation or changes to a synchronization workflow.
 
 ## Population contract
 
@@ -39,9 +50,7 @@ Record consequential policy choices, evidence limits, and uncertain facts in the
 | `{{PROJECT_NAME}}` | Yes | Evidence | The target project's actual name, consistent across files. |
 | `{{PROJECT_PURPOSE}}` | Yes | Evidence | A short statement of the product, intended users, and stable supported scope. Do not present roadmap items as shipped behavior. |
 | `{{READ_ONLY_ROUTE}}` | Yes | Policy | Instructions required for read-only research or inspection, including any distinct code-inspection gate. A no-deferred-document rule must also be explicit. |
-| `{{MUTATION_ROUTE}}` | Yes | Policy | The approved isolation or mutation prerequisite and its available instruction target. Do not prescribe an absent workspace skill or duplicate its commands. |
 | `{{CODING_ROUTE}}` | No | Policy | Additional selected coding instructions, only when applicable and available. Select languages and extensions from project evidence. |
-| `{{DOCUMENTATION_ROUTE}}` | No | Policy | Additional selected writing or documentation instructions, only when applicable and available. |
 | `{{ADDITIONAL_PHASE_ROUTES}}` | No | Policy | Target-specific routes such as review, editorial work, delegation, workspace cleanup, or approved instruction maintenance. A route does not authorize the operation. |
 | `{{SKILL_REQUIREMENT_POLICY}}` | No | Policy | The target's actual skill-selection and requirement-loading convention, if needed. Do not advertise project extensions as native harness features. |
 | `{{WORKFLOW_SETTINGS}}` | Yes | Policy | Explicit VCS and the settings accepted by the approved workflow, such as base and branch policy. Keep these compatible with the selected workspace procedure; do not restate a different path algorithm. |
@@ -53,7 +62,11 @@ Record consequential policy choices, evidence limits, and uncertain facts in the
 | `{{IMPLEMENTATION_RULES}}` | Yes | Policy | Applicable coding or content conventions and project invariants. Refer to selected reusable guidance instead of copying whole procedures. |
 | `{{TEST_CONVENTIONS}}` | Yes | Evidence | Existing test locations, naming, isolation, frameworks, and relevant boundaries. State verified absence rather than inventing a test system. |
 | `{{CONFIGURATION_CONTRACT}}` | Yes | Evidence | Actual configuration sources, public variable names, defaults, required groups, precedence, and secret-handling expectations, or a link to their canonical documentation. State non-applicability only when verified; never include credentials. |
-| `{{DOCUMENTATION_POLICY}}` | Yes | Policy | Intended audience, existing documentation engine and source locations, maintenance expectations, generated-output ownership, and required approvals for a baseline or migration. Do not assume a developer audience for editorial content. |
+| `{{DOCUMENTATION_AUDIENCE_AND_TASKS}}` | Yes | Policy | Approved audience, assumed knowledge, and supported reader tasks grounded in project evidence. Do not assume a developer audience for editorial content. |
+| `{{DOCUMENTATION_LAYOUT}}` | Yes | Evidence | Actual documentation entry points, source and configuration paths, generated-output locations, and ownership. State when the project only receives built documentation. |
+| `{{DOCUMENTATION_ENGINE}}` | Yes | Policy | Existing approved engine or an explicitly approved new choice, with its configuration or decision reference. Record Markdown-only, no-site-approved, or built-output-only status explicitly where applicable. Follow the fixed selection rules; do not infer the engine from the programming language. |
+| `{{DOCUMENTATION_COMMANDS}}` | Yes | Evidence | Actual documentation development, build, preview, and check commands with working directory, environment, and version requirements. State verified absence if no site is approved; do not invent commands. |
+| `{{DOCUMENTATION_POLICY}}` | Yes | Policy | Project-specific documentation maintenance conventions, canonical references, content boundaries, and approval requirements, consistent with the fixed rules in `DOCUMENTATION.md`. |
 | `{{VERSION_AND_RELEASE_POLICY}}` | Yes | Policy | Versioned units, version source, release mechanism, artifacts, and approval rules. Keep process separate from authority; do not invent a release pipeline. |
 | `{{COMMIT_AND_PR_RULES}}` | Yes | Policy | Existing commit conventions, branch/PR expectations, issue linkage, and review requirements, consistent with publication authority in `AGENTS.md`. |
 | `{{REVIEW_COMMANDS}}` | Yes | Evidence | Applicable VCS status/diff checks or an explicitly approved manual equivalent. Do not assume Git commands for another VCS. |
@@ -67,7 +80,7 @@ Record consequential policy choices, evidence limits, and uncertain facts in the
 
 - Every enabled route must have an available target. A skill name alone does not establish compatibility with its installed version, prerequisites, or helper interface.
 - Keep one authoritative publication policy in `AGENTS.md`. Contribution mechanics and validation evidence must agree with it, not grant competing authority.
-- Keep runtime commands and project conventions in `CONTRIBUTING.md`; keep the checks required for each change in `VALIDATION.md`. Use cross-references rather than duplicate lists that can drift.
+- Keep general setup commands and project conventions in `CONTRIBUTING.md`, and canonical documentation commands in `DOCUMENTATION.md`. Describe required checks by change type in `VALIDATION.md`, referring to canonical commands rather than maintaining competing lists.
 - Preserve established documentation platforms. The bundle must not silently migrate MkDocs to VitePress or treat a publishing repository's generated output as its source site.
 - Do not copy this skills repository's catalog tests, bootstrap selection, namespace, release tooling, or lack of application configuration into a different kind of project.
 - Preserve existing Claude-specific rules if an adapter is selected. An import is not permission to replace local policy or modify harness settings.

@@ -35,9 +35,7 @@ This guide applies to human contributors and coding agents. Read it before plann
 
 ## Documentation
 
-Document supported behavior and distinguish planned or deferred behavior. Explain project-specific prerequisites, actions, results, and limitations without re-teaching the agreed audience's standard skills.
-
-{{DOCUMENTATION_POLICY}}
+Read and follow `DOCUMENTATION.md` during implementation and documentation work. It defines the audience, engine, source locations, ownership, maintenance rules, and required writing skills.
 
 ## Versions and releases
 

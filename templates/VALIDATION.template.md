@@ -17,6 +17,8 @@ Read this document before validating, committing, pushing, or publishing a repos
 
 ## Documentation checks
 
+Use the approved engine, configuration, source locations, and canonical commands in `DOCUMENTATION.md`. Check the affected documentation without duplicating or changing that contract here.
+
 {{DOCUMENTATION_CHECKS}}
 
 ## Instruction and skill changes
