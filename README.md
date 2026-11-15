@@ -215,6 +215,7 @@ python3 -B -m unittest discover -s .github/scripts -p 'test_*.py' -v
 ## Repository map
 
 - [`.agents/skills/`](.agents/skills/) contains portable Agent Skills.
+- [`templates/`](templates/README.md) contains reusable project instruction templates and their population contract.
 - [`AGENTS.md`](AGENTS.md) contains the small startup routing and safety contract for coding agents.
 - [`CLAUDE.md`](CLAUDE.md) imports `AGENTS.md` for Claude Code.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) contains contribution policy loaded before actionable change planning.
