@@ -30,6 +30,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`sync-agent-assets`](.agents/skills/sync-agent-assets/SKILL.md) | Initialize or update project instructions and skills with project detection, grilling, dependency closure, and conflict-safe managed state. |
 | [`tdd`](.agents/skills/tdd/SKILL.md) | Build features and fix bugs test-first through agreed public interfaces, one red → green slice at a time. |
 | [`unslop`](.agents/skills/unslop/SKILL.md) | Remove common AI writing patterns from an existing draft. |
+| [`writing-for-agents`](.agents/skills/writing-for-agents/SKILL.md) | Write and refine instructions for agents, skills, prompts, and other agent-facing documents. |
 
 ## Independent skills and compositions
 
@@ -215,6 +216,7 @@ python3 -B -m unittest discover -s .github/scripts -p 'test_*.py' -v
 ## Repository map
 
 - [`.agents/skills/`](.agents/skills/) contains portable Agent Skills.
+- [`templates/`](templates/README.md) contains reusable project instruction templates and their population contract.
 - [`AGENTS.md`](AGENTS.md) contains the small startup routing and safety contract for coding agents.
 - [`CLAUDE.md`](CLAUDE.md) imports `AGENTS.md` for Claude Code.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) contains contribution policy loaded before actionable change planning.

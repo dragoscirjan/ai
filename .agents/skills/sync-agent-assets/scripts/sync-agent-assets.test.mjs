@@ -426,6 +426,34 @@ test("documentation guidance supports existing MkDocs sites without requiring mi
   assert.match(reference, /https:\/\/www\.mkdocs\.org\/user-guide\/configuration\//);
 });
 
+test("writing-for-agents is an optional vendored skill without OpenAI-specific files", () => {
+  const result = run(["catalog", "--source-root", repositoryRoot]);
+  assert.equal(result.status, 0, result.stderr);
+  const output = JSON.parse(result.stdout);
+  const entry = output.skills.find((skill) => skill.name === "writing-for-agents");
+  assert.ok(entry);
+  assert.equal(entry.selection, "optional");
+  assert.equal(entry.provenance, "vendored");
+  assert.deepEqual(entry.instructionRequirements, []);
+  assert.equal(output.profiles.coreInstructions.includes(entry.name), false);
+  const root = join(repositoryRoot, ".agents", "skills", entry.name);
+  const instructions = readFileSync(join(root, "SKILL.md"), "utf8");
+  assert.match(instructions, /^license: MIT$/m);
+  assert.match(instructions, /upstream-commit: "5863806dd4e15c63174bee4e7515a4256792ecfa"/);
+  assert.match(instructions, /excluded-files: agents\/openai\.yaml/);
+  const body = instructions.replace(/^---\n[\s\S]*?\n---\n/, "");
+  assert.match(body, /SKILL-MECHANICS\.md/);
+  assert.doesNotMatch(body, /\b(?:openai|codex|chatgpt)\b/i);
+  const mechanics = readFileSync(join(root, "SKILL-MECHANICS.md"), "utf8");
+  assert.doesNotMatch(mechanics, /\b(?:openai|codex|chatgpt)\b/i);
+  const attribution = readFileSync(join(root, "README.md"), "utf8");
+  assert.match(attribution, /Matt Pocock/);
+  assert.match(attribution, /Adapted for this repository/);
+  assert.match(attribution, /https:\/\/github\.com\/mattpocock\/skills\/tree\//);
+  assert.equal(existsSync(join(root, "LICENSE")), false);
+  assert.equal(existsSync(join(root, "agents", "openai.yaml")), false);
+});
+
 test("initializer references declare local foundation prerequisites inside one complete skill", () => {
   const root = join(repositoryRoot, ".agents", "skills", "init-project");
   const instructions = readFileSync(join(root, "SKILL.md"), "utf8");
