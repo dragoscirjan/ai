@@ -1,30 +1,32 @@
 ---
 name: retro
-description: Examine a bounded work period and propose evidence-backed process improvements. Use to learn from clarification, research, planning, implementation, checks, review, tools, or handoffs.
+description: Review a bounded work period for evidence-backed process improvements, including workflow, instructions, tools, and handoffs.
 ---
 
 # Retro
 
-Find changes to the working process or agent environment that would prevent problems seen in the work.
+Find evidence-backed changes that would prevent observed process or agent-environment problems. Recommend changes; let the user choose which to adopt.
 
-First, check the target project's `AGENTS.md` and `CONTRIBUTING.md` for the retrospective's destination and format. If they leave either unclear, ask the user before drafting. Do not choose chat, a file, or an issue tracker for them.
+## 1. Bound and inspect the evidence
 
-## Read the evidence
+Resolve destination and format from the target project's `AGENTS.md` and `CONTRIBUTING.md`. Ask before drafting if either is unclear; let the user choose chat, a file, or a tracker.
 
-Use the current session unless the user names another period. Read its transcript or available session record, relevant diffs, review comments, and check results. Cite the evidence. If a record is unavailable, say what you could not verify. Stay within the requested project and period; do not search unrelated private conversations.
+Use the current session unless the user names another period. Read the available transcript or session record, relevant diffs, review comments, and check results. Cite evidence and state what unavailable records prevent you from verifying. Stay within the requested project and period, without searching unrelated private conversations.
 
-## Look for specific problems
+## 2. Identify specific problems
 
-- Inspect the project's lint, type-check, and test commands, plus CI and hooks. Distinguish a missing check from one that exists but never runs or silently fails. A project with no automated enforcement is a finding even if this session caught no violation.
-- Check whether the agent struggled to find code, decisions, logs, or other needed information. Look for a missing or stale reference before proposing another document.
-- Identify instructions that repeat, conflict, or have no effect. Keep implementation guidance in force; do not move standards exclusively to reviewers.
-- Look for repeated searches, costly tool output, poor task boundaries, unnecessary clarification, and handoffs that lost decisions or verification state.
-- Separate lasting lessons from one-off friction. Use explicit user corrections and repeated failures as evidence, not the agent's preference for a different workflow.
+- Inspect lint, type-check, and test commands, CI, and hooks. Distinguish missing checks from checks that never run or silently fail. Missing automated enforcement is a finding even when this session caught no violation.
+- Inspect difficulty finding code, decisions, logs, or other context. Look for missing or stale references before proposing another document.
+- Identify duplicate, conflicting, or ineffective instructions. Keep implementation guidance in force rather than moving standards exclusively to reviewers.
+- Check repeated searches, costly tool output, poor task boundaries, unnecessary clarification, and handoffs that lost decisions or verification state.
+- Separate lasting lessons from one-off friction. Use explicit user corrections and repeated failures as evidence rather than personal workflow preferences.
 
-## Propose the smallest fix
+Continue when each candidate has an observation that the available record supports.
 
-For each candidate, cite the observation, explain the likely cause, name the smallest change and its destination, and say how to verify it. Separate facts from hypotheses and order candidates by impact.
+## 3. Propose and stop
 
-Recommend a deterministic check for a mechanical rule. Use an existing standard or skill for a judgment call. Do not add prose where a check would enforce the requirement, or copy guidance that already has a suitable home.
+For each candidate, cite the observation, explain the likely cause, name the smallest change and its destination, and state how to verify it. Separate facts from hypotheses and order candidates by impact.
 
-Stop at recommendations and let the user choose. Do not edit instructions, install tools, or file backlog items automatically. Route instruction-graph changes through the project's human-approved maintenance process; other improvements follow normal contribution rules. Report when the evidence supports no change.
+Recommend deterministic checks for mechanical rules and reuse existing standards or skills for judgment calls. Keep guidance in its suitable existing location instead of adding duplicate prose.
+
+Stop at recommendations. Instruction-graph changes require the project's human-approved maintenance process; other changes follow normal contribution rules. Edits, tool installation, and backlog publication require authorization. Report when the evidence supports no change.

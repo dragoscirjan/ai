@@ -9,9 +9,7 @@ defaults:
 skills:
   asd-ste100-technical:
     kind: authored
-    description: Write or revise technical responses, coding explanations, plans, reviews, documentation, error reports, and
-      instructions with ASD-STE100-inspired plain language adapted for software work. Use for developer-facing prose
-      that must be easy to read without losing technical precision.
+    description: "Technical writing: use ASD-STE100-inspired plain language for software responses and documentation."
     source:
       type: local
       path: .agents/skills/asd-ste100-technical
@@ -49,9 +47,7 @@ skills:
         spdx: MIT
   cleanup-workspaces:
     kind: authored
-    description: Plan and safely remove clean integrated Git worktrees or Jujutsu workspaces, including one exact temporary
-      orchestration lane, and prune safe stale registrations. Use for owner-authorized cleanup or current-task lane
-      cleanup authorized by the orchestration workflow.
+    description: "Audit integrated Git/Jujutsu workspaces, stale registrations, or authorized temporary lanes; apply only an approved exact cleanup plan."
     source:
       type: local
       path: .agents/skills/cleanup-workspaces
@@ -105,9 +101,7 @@ skills:
         - Keep required legal notices unchanged; omit agents/openai.yaml.
   coding:
     kind: authored
-    description: Design, implement, refactor, review, or test code with project-first conventions, contextual engineering
-      principles, risk-based security, behavior-focused tests, and applicable quality gates. Use for code work in any
-      language; project instructions or the user select complementary language guidance.
+    description: "Design, implement, refactor, review, or test code under project conventions, risk-based security, and behavior-focused checks."
     source:
       type: local
       path: .agents/skills/coding
@@ -144,8 +138,7 @@ skills:
         spdx: MIT
   coding-with-rules:
     kind: authored
-    description: Design, implement, refactor, review, or test code using the coding workflow plus on-demand language and
-      file-extension rules. Use for source code and related toolchain, build, or test work in any language.
+    description: "Language-aware coding: resolve the base workflow, then select rules for the languages and file extensions being changed."
     source:
       type: local
       path: .agents/skills/coding-with-rules
@@ -163,10 +156,7 @@ skills:
         spdx: MIT
   debloat:
     kind: authored
-    description: Prevent overengineering during code design and implementation, or simplify existing code, configuration,
-      dependencies, and abstractions through evidence-backed refactoring. Use when a direct solution may replace
-      unnecessary mechanisms without weakening behavior, public contracts, security, or operational needs. Not for prose
-      compression.
+    description: "Prevent overengineering during design; simplify existing code, configuration, or dependencies while preserving required behavior, contracts, security, and operational needs."
     source:
       type: local
       path: .agents/skills/debloat
@@ -214,9 +204,7 @@ skills:
         spdx: MIT
   document-project:
     kind: authored
-    description: Create, improve, or maintain task-based VitePress or MkDocs documentation from verified code and project
-      information. Use during implementation to keep affected documentation current and understandable to a developer
-      new to the project, or for an approved documentation baseline, refactor, or migration.
+    description: "Maintain task-based developer documentation during implementation; create or refactor VitePress/MkDocs documentation within approved scope."
     source:
       type: local
       path: .agents/skills/document-project
@@ -260,9 +248,7 @@ skills:
         - Keep required legal notices unchanged; omit agents/openai.yaml.
   init-project:
     kind: authored
-    description: Initialize or adopt the shared project foundation, TypeScript tooling, or Godot GDScript tooling through
-      on-demand setup references and bundled helpers. Use for explicitly requested initialization, not ordinary coding
-      or automatic setup during installation.
+    description: "Initialize or adopt project foundations, TypeScript tooling, or Godot GDScript tooling only when explicitly requested."
     source:
       type: local
       path: .agents/skills/init-project
@@ -294,8 +280,7 @@ skills:
         spdx: MIT
   initiative:
     kind: authored
-    description: Turn an idea and evidence into an agreed outcome-level brief. Use to establish why work matters, its scope,
-      and success measures before detailed specifications or execution.
+    description: "Turn an idea or research into an agreed brief covering the problem, outcomes, scope, constraints, and success measures."
     source:
       type: local
       path: .agents/skills/initiative
@@ -310,10 +295,7 @@ skills:
       argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, initiative ]
   instruction-maintenance:
     kind: authored
-    description: Diagnose and propose human-approved updates when agent instructions, deferred-document relationships, or
-      skill routing metadata are missing, stale, conflicting, duplicated, or unsuitable for the observed workflow. Use
-      when repository instructions no longer fit the work. Loading this skill authorizes a read-only audit and exact
-      proposal, not mutation.
+    description: "Audit instruction drift, routing, and skill metadata; propose exact changes for human approval before mutation."
     source:
       type: local
       path: .agents/skills/instruction-maintenance
@@ -331,9 +313,7 @@ skills:
         spdx: MIT
   isolated-workspace:
     kind: authored
-    description: Plan, create, or reuse one isolated Git worktree or Jujutsu workspace before repository mutation. Use
-      before architecture, code, documentation, configuration, or policy changes. Requires an explicit VCS and branch or
-      bookmark name while detecting repository and workspace paths automatically.
+    description: "Create or reuse an isolated Git worktree or Jujutsu workspace before mutation, using an explicit VCS and branch or bookmark."
     source:
       type: local
       path: .agents/skills/isolated-workspace
@@ -353,8 +333,7 @@ skills:
         spdx: MIT
   plan-tasks:
     kind: authored
-    description: Divide a specification or clear scope into bounded, verifiable tasks. Use when work needs sequencing,
-      dependencies, or execution across multiple sessions or workers.
+    description: "Divide an agreed specification or clear scope into bounded, verifiable tasks with explicit dependencies and completion evidence."
     source:
       type: local
       path: .agents/skills/plan-tasks
@@ -369,8 +348,7 @@ skills:
       argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, plan-tasks ]
   research:
     kind: authored
-    description: Research a user's question or idea, with or without an existing project. Use when the user asks for sourced
-      findings, comparisons, feasibility checks, or an investigation of a topic.
+    description: "Research a question, compare alternatives, or investigate feasibility; report verified evidence, uncertainty, and limits."
     source:
       type: local
       path: .agents/skills/research
@@ -385,8 +363,7 @@ skills:
       argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, research ]
   retro:
     kind: authored
-    description: Examine a bounded work period and propose evidence-backed process improvements. Use to learn from
-      clarification, research, planning, implementation, checks, review, tools, or handoffs.
+    description: "Review a bounded work period for evidence-backed process improvements, including workflow, instructions, tools, and handoffs."
     source:
       type: local
       path: .agents/skills/retro
@@ -401,9 +378,7 @@ skills:
       argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, retro ]
   scaffold:
     kind: authored
-    description: Create real source skeleton files for an approved feature without implementing its behavior. Use to
-      establish minimal files, types, signatures, and contracts in an isolated workspace, then stop at a scaffold-only
-      handoff or authorized pull request.
+    description: "Create source skeletons for an approved feature, validate their structure, and stop before implementing behavior."
     source:
       type: local
       path: .agents/skills/scaffold
@@ -422,8 +397,7 @@ skills:
         spdx: MIT
   specify:
     kind: authored
-    description: Record agreed behavior as a compact specification for implementation and review. Use when requirements need
-      durable acceptance criteria, constraints, and test boundaries.
+    description: "Turn agreed decisions into a compact specification with observable behavior, acceptance criteria, constraints, and test boundaries."
     source:
       type: local
       path: .agents/skills/specify
@@ -438,8 +412,7 @@ skills:
       argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, specify ]
   subagent-orchestration:
     kind: authored
-    description: Bound and coordinate child-agent workers, read-only reviewers, isolated temporary lanes, integration,
-      validation, and lane cleanup. Use before delegating any task to child agents.
+    description: "Before delegating, bound child-agent work, assign read/write lanes, integrate results, review, validate, and clean temporary lanes."
     source:
       type: local
       path: .agents/skills/subagent-orchestration

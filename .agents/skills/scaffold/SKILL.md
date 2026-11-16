@@ -1,6 +1,6 @@
 ---
 name: scaffold
-description: Create real source skeleton files for an approved feature without implementing its behavior. Use to establish minimal files, types, signatures, and contracts in an isolated workspace, then stop at a scaffold-only handoff or authorized pull request.
+description: "Create source skeletons for an approved feature, validate their structure, and stop before implementing behavior."
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,56 +9,47 @@ metadata:
 
 # Scaffold
 
-Produce actual source skeletons, not a chat-only plan. Keep them structural and explicitly unfinished, regardless of feature size. Introduce no business behavior, DSL, parser, generator, runtime, or agent extension.
+Create real source skeletons, not a chat-only plan. Keep them structural and explicitly unfinished at every feature size. Introduce no business behavior, DSL, parser, generator, runtime, or agent extension.
 
-## Phase 1: inspect and agree on scope
+## 1. Agree on the exact structure
 
-Read the project's instructions and contribution policy. Inspect existing behavior, nearby source, tests, public contracts, build configuration, and CI before proposing structure.
+Read project instructions and contribution policy. Inspect existing behavior, source, tests, public contracts, build configuration, and CI. Use project source conventions and its evidenced language/framework. Missing instructions block their phase; installation needs approval.
 
-Use the project's source conventions and the language established by repository evidence, not a preferred framework. Missing instructions block the affected phase; never auto-install them. Engineering guidance does not authorize business logic within a scaffold-only task.
+Establish the feature boundary and observable contracts, working implementations and entrypoints to preserve, minimal justified files/declarations/signatures/dependencies, unresolved requirements, and evidence for each structural choice.
 
-Establish:
+Ask about unresolved data models, authorization, external contracts, or product behavior before choosing types, defaults, or comments. If language/framework evidence is absent, ask rather than select one.
 
-- the approved feature boundary and observable contracts
-- existing implementations and entrypoints that must remain unchanged
-- the minimal files, declarations, signatures, and dependencies justified by that boundary
-- unresolved requirements and the evidence for each structural choice
+Continue only with approval for the exact file-level scope. Earlier approval counts only when it covers that scope. Engineering guidance does not authorize business logic, speculative skeletons, or replacing requested source files with Markdown.
 
-Ask for clarification before choosing unresolved data models, authorization rules, external-system contracts, or other product behavior. Do not turn guesses into types, defaults, or comments. If the project provides no language or framework evidence, request that decision instead of selecting one.
+## 2. Verify the workspace and authority
 
-Obtain approval for the exact file-level scope before writing. Existing approval counts only if it covers that scope. Feature size does not justify a Markdown substitute; unresolved scope or authority blocks speculative skeletons.
+Satisfy project workspace and approval gates. Verify the isolated path, branch/bookmark, base, status, and write ownership. Leave the primary checkout untouched.
 
-## Phase 2: establish the workspace
+Loading this skill grants no commit, push, pull-request, merge, or release permission. Follow the current request and project workflow; stop on a missing permission or conflicting gate.
 
-Before mutation, satisfy project workspace and approval gates. Verify the approved isolated workspace, branch or bookmark, base, status, and write ownership. Do not modify the primary checkout.
+## 3. Write the skeleton
 
-Loading this skill grants no commit, push, pull-request, merge, or release authority. Follow the current request and project workflow. Stop at a missing permission or conflicting gate; do not bypass it to produce files or publish a PR.
+- Write only the smallest justified files using existing names, layout, and type conventions. Use classes, interfaces, frameworks, or dependencies only when required by the approved structure.
+- Add necessary types, declarations, signatures, and contracts. Abstract/interface declarations need no body.
+- In an unimplemented callable body, leave a brief comment naming its agreed responsibility and a language-native fail-fast placeholder such as a not-implemented exception or panic. Exclude fake success values, fabricated data, empty no-op bodies, and module-load failures that break unrelated imports.
+- Keep algorithms, external calls, side effects, and business logic unfinished. Placeholder failure must be explicit rather than masquerade as working behavior.
+- Preserve existing working bodies and production entrypoints. If the structure cannot coexist safely, stop for revised scope rather than stub implementations or wire production to unfinished code.
+- Keep comments about behavior or constraints, not hidden implementation, boilerplate footers, or invented requirements.
 
-## Phase 3: write only the structure
+Keep separately requested simplification scope and approvals distinct. Simplification grants no permission to stub working behavior.
 
-Apply the existing source conventions within these limits:
+## 4. Validate the structural contract
 
-- Write the smallest justified source files in the approved workspace using existing naming, layout, and type conventions. Do not force classes, interfaces, frameworks, or new dependencies.
-- Add only necessary types, declarations, signatures, and contracts. Abstract or interface declarations need no body.
-- Inside each unimplemented function body, leave a brief high-level comment describing its agreed responsibility and a language-native fail-fast placeholder, such as a not-implemented exception or panic. Do not use a fake success value, empty no-op body, or fabricated data. Avoid module-load placeholders that break unrelated imports.
-- Do not implement business logic, algorithms, external calls, or side effects. The explicit placeholder failure is allowed; it must not masquerade as completed behavior.
-- Preserve existing working function bodies. Do not replace implementations with stubs, or route production entrypoints to unfinished code. If an agreed structure cannot coexist safely, stop and seek a revised scope.
-- Keep comments brief and about behavior or constraints. Do not hide implementation in prose, add boilerplate footers, or invent requirements to fill a file.
+Use project validation instructions and existing tools. Run state-writing checks only within the approved workspace and scope. Aim for syntax/type validity where feasible; tool installation or toolchain changes need approval.
 
-Keep any separately requested simplification scope and approvals distinct. Simplification never authorizes stubbing working behavior.
+Inspect the full diff for structural scope and preserved behavior. Verify every unimplemented callable body fails explicitly and no new production wiring reaches it. Use existing test conventions for justified contract checks, without asserting unfinished functionality works.
 
-## Phase 4: validate the scaffold
+Report actual results, separating pre-existing, placeholder-related, and other new failures. Explain unrun checks. Preserve tests and failures instead of weakening or skipping checks, suppressing errors, or fabricating passes. Compilation is not feature completion.
 
-Use project validation instructions and existing toolchains. Run state-writing checks only within the approved workspace and scope. Aim for syntactically and type-valid skeletons where feasible; do not install tools or change the toolchain to make them pass.
+## 5. Hand off and stop
 
-Review the complete diff for structural scope and preserved behavior. Verify that unimplemented callable bodies fail explicitly and no production route reaches them through new wiring. Follow existing test conventions for any contract checks justified by this scope; do not assert that unfinished functionality works.
+Retain the real files in the approved workspace. Publish a clearly labeled scaffold-only PR only when authorized. Include the issue or approved scope, changed files, unfinished behavior, checks and gaps, and decisions still required.
 
-Report each check actually run and its result. Separate pre-existing failures, placeholder-related failures, and other new failures. List checks not run and why. Never weaken or skip tests, suppress errors, fabricate passing results, or claim feature completion because the scaffold compiles.
+Report files, any PR, branch/bookmark, workspace, and gaps without repeating source in chat. If publication is unauthorized, report that boundary without pushing.
 
-## Phase 5: publish only as authorized, then stop
-
-The default deliverable is real source files and, when authorized under the project workflow, a clearly labeled scaffold-only PR. Include the issue or approved scope, changed files, unfinished behavior, validation results and gaps, and decisions still required. If publishing is not authorized, retain the files in the approved workspace and report that boundary without pushing or opening a PR.
-
-Summarize files, any PR, active branch/bookmark, workspace, and remaining gaps; do not repeat source in chat.
-
-Stop after the scaffold handoff. Implementing the unfinished behavior requires a separate explicit instruction. Approval of the scaffold or merging its PR is not that instruction and never authorizes a merge or release by itself.
+Stop at the scaffold handoff. Implementing behavior requires a separate explicit instruction; scaffold approval or merging its PR is not that instruction and grants no merge or release authority.

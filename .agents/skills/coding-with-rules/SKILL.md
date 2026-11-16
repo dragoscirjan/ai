@@ -1,6 +1,6 @@
 ---
 name: coding-with-rules
-description: Design, implement, refactor, review, or test code using the coding workflow plus on-demand language and file-extension rules. Use for source code and related toolchain, build, or test work in any language.
+description: "Language-aware coding: resolve the base workflow, then select rules for the languages and file extensions being changed."
 requires: ["coding"]
 metadata:
   author: dragoscirjan
@@ -10,11 +10,17 @@ metadata:
 
 # Coding with rules
 
-Select languages from task files and project, runtime, build, and interpreter evidence—not filenames alone. For toolchain or configuration work, use the associated language's rules. Do not load every reference in a mixed-language repository.
+Use this composition for language-aware code and toolchain work. The declared `coding` requirement owns project inspection, shared security, tests, quality-gate order, duplicate detection, installation approval, and reporting.
 
-Before designing, changing, reviewing, or testing code, read the applicable references below in listed order, including each document's linked prerequisites first. Read each document only once per task. Stop if a prerequisite is missing or cyclic. For multiple affected languages, apply each relevant set.
+## 1. Select the relevant contexts
 
-References add only language/extension rules and tool defaults. The required `coding` skill owns project inspection, shared security controls, testing workflow, quality-gate ordering, duplicate detection, installation approval, and reporting. Project-configured tools override reference defaults.
+Identify affected languages from files and project/runtime/build/interpreter evidence rather than filenames alone. Toolchain and configuration work uses the associated language's rules. Select every affected language, not every language present in the repository.
+
+Resolve ambiguous headers and shell dialects from evidence; ask when unresolved. Choose Bash or POSIX guidance to match the interpreter, not contradictory dialect rules together. Conflicting interpreter evidence blocks the work.
+
+## 2. Read the selected references
+
+Before designing, changing, reviewing, or testing code, read each selected row in order. Resolve each document's linked prerequisites first and read each document once per task. Stop on a missing prerequisite, cycle, or missing mapped reference rather than substituting another language.
 
 | Language or file context | References, in order |
 |---|---|
@@ -40,6 +46,8 @@ References add only language/extension rules and tool defaults. The required `co
 | `.swift`, Swift | [swift](references/swift.md) |
 | `.zig`, Zig | [zig](references/zig.md) |
 
-Resolve ambiguous headers and shell dialects from project evidence; ask if unresolved. Use Bash or POSIX guidance as appropriate, not contradictory dialect rules together. Stop on conflicting interpreter evidence or if a mapped reference is missing; do not substitute another language.
+## 3. Apply and check coverage
 
-For an unsupported language, continue with the base coding workflow and project conventions. State that no language-specific reference exists; do not invent rules.
+References add language/extension rules and tool defaults; project configuration takes precedence. For an unsupported language, use the base workflow and project conventions and state that no language-specific reference exists. Invent no substitute rules.
+
+Continue with code work only when every affected context has its applicable references loaded in order, or its unsupported-language fallback explicitly identified.
