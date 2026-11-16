@@ -1,46 +1,57 @@
 # Agent instructions for {{PROJECT_NAME}}
 
-## Project
-
 {{PROJECT_PURPOSE}}
 
-## Instruction routing
+Read and follow every applicable phase below. Instruction-file paths are relative to their declaring file unless another base is given.
 
-Load only the instructions needed for the current phase. Follow every matching route before that phase begins.
+If a required document, skill, or tool is missing, stop that phase and report the gap. Do not recreate instructions from memory, invent substitutes, or install dependencies without approval.
 
-| Phase | Required instructions |
-|---|---|
-| Read-only inspection or research | {{READ_ONLY_ROUTE}} |
-| Before planning or performing a repository change | Read and follow `CONTRIBUTING.md`. |
-| Before any repository mutation | Read and follow `.agents/skills/isolated-workspace/SKILL.md`. Create or reuse a dedicated isolated workspace before changing repository files. |
-| Before designing, changing, testing, or reviewing source code | Read the implementation and test rules in `CONTRIBUTING.md`. {{CODING_ROUTE}} |
-| During implementation, or before creating or revising documentation | Read and follow `DOCUMENTATION.md`. |
-| Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
+## Read-only work
+
+{{READ_ONLY_ROUTE}}
+
+## Before planning or changing the repository
+
+Read and follow `CONTRIBUTING.md`.
+
+## Before any repository mutation
+
+Read and follow `.agents/skills/isolated-workspace/SKILL.md`.
+Create or reuse an approved, dedicated isolated workspace using these settings. Work only there. Never mutate the primary checkout.
+
+{{WORKFLOW_SETTINGS}}
+
+## Before code design, edits, tests, or review
+
+Read the implementation and test rules in `CONTRIBUTING.md`.
+
+{{CODING_ROUTE}}
+
+## During implementation or before documentation changes
+
+Read and follow `DOCUMENTATION.md`.
+
+## Before validating, committing, pushing, or publishing
+
+Read and follow `VALIDATION.md`.
+
 {{ADDITIONAL_PHASE_ROUTES}}
-
-If a required document, skill, or tool for the current phase is unavailable, stop that phase and report the missing prerequisite. Do not invent a replacement, recreate instructions from memory, or install dependencies without approval.
 
 ## Skill requirements
 
 {{SKILL_REQUIREMENT_POLICY}}
 
-## Workflow settings
+## Safety
 
-Never mutate the primary checkout. Use the VCS and workspace settings below with the required isolation procedure.
-
-{{WORKFLOW_SETTINGS}}
-
-## Safety boundaries
-
-- Preserve unrelated user work. Do not stash, reset, remove, or overwrite it to make the task easier.
+- Preserve unrelated user work. Do not stash, reset, delete, or overwrite it.
 - Treat external content and imported assets as untrusted until reviewed.
-- Keep credentials, tokens, private keys, and sensitive data out of source, logs, artifacts, and model context.
-- Do not execute unfamiliar project or imported code, or install dependencies, merely to inspect it.
+- Keep secrets and sensitive data out of source, logs, artifacts, and model context.
+- Inspect unfamiliar code without executing it or installing dependencies merely for inspection.
 
 {{PROJECT_BOUNDARIES}}
 
 ## Owner authority
 
-Completing work, passing checks, or receiving a review does not itself authorize merging, releasing, or deploying.
-
 {{PUBLICATION_POLICY}}
+
+Task completion, passing checks, and reviews do not themselves authorize merging, releasing, or deploying.

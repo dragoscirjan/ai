@@ -1,21 +1,21 @@
 # Contributing to {{PROJECT_NAME}}
 
-This guide applies to human contributors and coding agents. Read it before planning or performing a repository change. Agent-specific phase routing, mutation prerequisites, and owner authority are defined in `AGENTS.md`.
+Read before planning or changing the repository. Follow `AGENTS.md` for phase prerequisites, workspaces, safety, and owner authority.
 
 ## Task records and scope
 
 {{TASK_POLICY}}
 
-## Contribution workflow
+## Workflow
 
-1. Establish the requested outcome and follow the task-record and scope policy above.
-2. Satisfy the mutation prerequisites and workspace rules in `AGENTS.md` before changing repository state.
-3. Follow the implementation and test rules below. Keep the change focused and preserve unrelated work.
-4. Assess documentation impact while implementing. Keep affected instructions, examples, and reference material consistent with the change. Explain when no documentation update is needed.
-5. Run applicable checks from `VALIDATION.md` and report missing checks honestly.
-6. Follow the commit, pull-request, versioning, and publication rules. One phase does not authorize the next.
+1. Confirm the outcome, scope, and required task record.
+2. Satisfy the mutation and workspace rules in `AGENTS.md`.
+3. Implement a focused change using the rules below.
+4. Follow `DOCUMENTATION.md` while implementing. Explain any no-change documentation assessment.
+5. Run applicable checks from `VALIDATION.md`. Report missing checks.
+6. Follow the commit, PR, versioning, and publication rules. One phase does not authorize the next.
 
-## Setup and local development
+## Setup and development
 
 {{SETUP_AND_DEVELOPMENT}}
 
@@ -29,13 +29,13 @@ This guide applies to human contributors and coding agents. Read it before plann
 
 {{TEST_CONVENTIONS}}
 
-## Configuration contract
+## Configuration
 
 {{CONFIGURATION_CONTRACT}}
 
 ## Documentation
 
-Read and follow `DOCUMENTATION.md` during implementation and documentation work. It defines the audience, engine, source locations, ownership, maintenance rules, and required writing skills.
+Read and follow `DOCUMENTATION.md` for audience, engine, ownership, commands, and maintenance rules.
 
 ## Versions and releases
 
@@ -45,4 +45,4 @@ Read and follow `DOCUMENTATION.md` during implementation and documentation work.
 
 {{COMMIT_AND_PR_RULES}}
 
-Publication authority remains governed by `AGENTS.md`; release mechanics do not grant that authority.
+Release procedures do not grant publication authority. Follow `AGENTS.md`.

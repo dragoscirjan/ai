@@ -1,18 +1,18 @@
 # Documentation
 
-Read this document during implementation and before creating or revising documentation. Keep affected documentation current in the same change; assess the impact even when no documentation edit is needed.
+Assess documentation impact during implementation. Update affected documentation in the same change, or give a concrete reason no update is needed.
 
 ## Required guidance
 
-During implementation, read and follow `.agents/skills/document-project/SKILL.md` to assess documentation impact. Before drafting or revising documentation, also read and follow `.agents/skills/asd-ste100-technical/SKILL.md` and `.agents/skills/unslop/SKILL.md`.
-
-If required guidance or its prerequisites are unavailable, stop the affected phase and report the gap. Do not silently skip it, recreate missing instructions, or install dependencies without approval. Keep the general authoring procedure in the skills rather than duplicating it here.
+- For implementation and documentation work, read and follow `.agents/skills/document-project/SKILL.md`.
+- Before drafting or revising documentation, also read and follow `.agents/skills/asd-ste100-technical/SKILL.md` and `.agents/skills/unslop/SKILL.md`.
+- If required guidance or prerequisites are missing, stop the affected phase and report the gap. Do not skip, recreate, or install them without approval.
 
 ## Audience and reader tasks
 
 {{DOCUMENTATION_AUDIENCE_AND_TASKS}}
 
-## Locations and ownership
+## Sources and ownership
 
 {{DOCUMENTATION_LAYOUT}}
 
@@ -20,23 +20,20 @@ If required guidance or its prerequisites are unavailable, stop the affected pha
 
 {{DOCUMENTATION_ENGINE}}
 
-Use these rules to establish or preserve the project's documentation engine:
-
-| Project state | Required decision |
-|---|---|
-| An approved MkDocs or VitePress site exists | Keep that engine and its established configuration, theme, plugins, and commands. Improving prose is not a reason to migrate. |
-| Both engines exist or the canonical source is unclear | Obtain an owner decision before choosing a source, creating a competing site, or changing engine configuration. |
-| No site is approved | Maintain existing Markdown documentation. If a site is needed, propose VitePress as the default; the owner may choose MkDocs. Obtain approval for the baseline before setup. |
-| Another documentation system already exists | Preserve it unless an explicit migration is approved. Do not treat this template as permission to replace it. |
-| This repository only receives built documentation | Keep source generation in the owning repository. Do not initialize a source site or hand-edit generated output here. |
-
-Do not select an engine solely from the project's programming language. An existing approved choice takes precedence over a new-site default. Site initialization, dependencies, theme changes, migration, and deployment need their applicable approval; the engine field does not grant it.
+- Keep an existing approved MkDocs or VitePress site, including its configuration, theme, plugins, and commands.
+- Preserve any other existing documentation system unless an explicit migration is approved.
+- If MkDocs and VitePress both exist, or the canonical source is unclear, ask the owner before choosing a source, creating a competing site, or changing engine configuration.
+- If no site is approved, maintain existing Markdown. When a site is needed, propose VitePress by default. The owner may choose MkDocs. Obtain baseline approval before setup.
+- For received built documentation, generate in the owning repository. Leave generated files unedited and do not initialize a source site here.
+- Choose from approved configuration or an owner decision, never solely from programming language.
+- Site setup, dependencies, theme changes, migrations, and deployment require their applicable approval.
 
 ## Writing and maintenance
 
-Document supported behavior and distinguish planned or deferred behavior. Explain project-specific prerequisites, actions, results, and limitations without re-teaching the agreed audience's standard skills.
-
-Update affected guides, examples, reference pages, and navigation while implementing user-visible changes. Refactor unclear affected material instead of appending repeated explanations. Keep unrelated cleanup separately scoped, and do not turn a feature task into an unapproved site rewrite.
+- Document supported behavior. Label planned and deferred work.
+- Explain project-specific prerequisites, actions, results, and limits. Assume the agreed audience's standard skills.
+- Update affected guides, examples, reference pages, and navigation with user-visible changes.
+- Refactor unclear affected material instead of appending repetition. Keep unrelated cleanup and site rewrites separately approved.
 
 {{DOCUMENTATION_POLICY}}
 
@@ -44,10 +41,10 @@ Update affected guides, examples, reference pages, and navigation while implemen
 
 {{DOCUMENTATION_COMMANDS}}
 
-Use the existing approved toolchain and the selected engine's applicable guidance. Do not replace the package manager, Python environment, theme, or plugins merely to write documentation. Do not run deployment commands as local validation.
+Keep the approved toolchain. Do not replace the package manager, Python environment, theme, or plugins merely to write documentation. Deployment is not local validation.
 
-## Checks and completion
+## Completion
 
-Run the applicable documentation checks in `VALIDATION.md`. Report builds, executed examples, agent walkthroughs, and actual user testing separately; rendering alone does not prove that a reader can complete the task.
+Run documentation checks from `VALIDATION.md`. Report builds, executed examples, agent walkthroughs, and actual user testing separately. Rendering does not prove task usability.
 
-Required documentation is part of completing the change. Explain a concrete no-change assessment when applicable. If required documentation or checks are blocked, report the gap and obtain an explicit owner decision before treating the work as complete.
+Required documentation is part of completion. If required documentation or checks are blocked, report the gap and obtain an explicit owner decision before calling the work complete.
