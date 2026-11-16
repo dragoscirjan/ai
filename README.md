@@ -12,6 +12,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`coding`](.agents/skills/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
 | [`debloat`](.agents/skills/debloat/SKILL.md) | Prevent overengineering and simplify existing mechanisms with evidence while preserving required behavior and boundaries. |
 | [`document-project`](.agents/skills/document-project/SKILL.md) | Create or improve task-based documentation that a developer new to the project can follow, and keep it current during implementation. |
+| [`excalidraw`](.agents/skills/excalidraw/SKILL.md) | Generate PNG/SVG diagrams locally with the official CLI and retain scene JSON for revisions. See the [first-use guide](.agents/skills/excalidraw/README.md). |
 | [`coding-with-rules`](.agents/skills/coding-with-rules/SKILL.md) | Combine the `coding` workflow with on-demand language and extension reference files. |
 | [`init-project`](.agents/skills/init-project/SKILL.md) | Initialize the shared foundation or TypeScript/Godot GDScript tooling through on-demand setup references. |
 | [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
@@ -25,8 +26,9 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`scaffold`](.agents/skills/scaffold/SKILL.md) | Create reviewable source skeleton files with fail-fast placeholders and stop before implementing behavior. |
 | [`subagent-orchestration`](.agents/skills/subagent-orchestration/SKILL.md) | Bound child-agent workers and reviewers, coordinate isolated write lanes, and clean integrated temporary lanes. |
 | [`systematic-debugging`](.agents/skills/systematic-debugging/SKILL.md) | Diagnose failures through evidence, root-cause tracing, controlled experiments, and project-owned verification. |
-| [`sync-my-skills`](.agents/skills/sync-my-skills/SKILL.md) | Investigate a project, ask about catalog skills and deprecated removals, then apply only an approved skills-only plan. |
+| [`sync-my-skills`](.agents/skills/sync-my-skills/SKILL.md) | Investigate a project, choose skills and an optional instruction bundle, grill unresolved decisions, and apply one approved plan. |
 | [`tdd`](.agents/skills/tdd/SKILL.md) | Build features and fix bugs test-first through agreed public interfaces, one red → green slice at a time. |
+| [`writing-for-agents`](.agents/skills/writing-for-agents/SKILL.md) | Write and refine instructions for agents, skills, prompts, and other agent-facing documents. |
 
 The [YAML catalog](.agents/skills/sync-my-skills/assets/skill-catalog.yaml) is the single inventory for authored, upstream, and adapted skills. Upstream-only `grilling`, `wait-what`, and `unslop` are recommended there without vendored copies. It records sources, pinned revisions, installation commands, exclusions, legal files, prerequisites, and semantic adaptation intent.
 
@@ -133,7 +135,7 @@ Upstream-only skills are obtained from their catalogued sources, not from nonexi
 
 For cross-project synchronization, follow [Sync skills in a project](.agents/skills/sync-my-skills/README.md). It starts with a clean export from a reviewed committed checkout, installs the personal manager and pinned parser, and registers the literal `/sync-my-skills` command. It also explains the repository-source alternative once this implementation is available upstream. The manager and all three harnesses are not forced into every project. Normal runs refresh compatible catalog data into a commit-pinned snapshot; offline/review use of the installed catalog is an explicit choice, not a silent fallback.
 
-The LLM investigates the project's purpose, explains recommendations, asks about every remaining active catalog skill, and separately asks which exact deprecated installations to remove. It stages sources and semantic adaptations, presents one plan, and writes only after approval in an isolated Git worktree. Unrelated custom skills and local edits remain protected. Root instruction templates are reserved for [#68](https://github.com/dragoscirjan/ai/issues/68).
+The LLM investigates the project's purpose and existing instructions, explains recommendations, asks about every remaining active catalog skill and exact deprecated removals, and offers instruction changes separately. For a selected bundle, it grills unresolved implementation/policy choices, drafts against the canonical templates, preserves existing rules, and obtains explicit policy and file-plan approval. It stages sources and semantic adaptations, presents one plan, and writes only after approval in an isolated Git worktree. Unrelated custom skills and local edits remain protected. Root instruction templates are reserved for [#68](https://github.com/dragoscirjan/ai/issues/68).
 
 `sync-agent-assets` has been converted, not retained as a second compatibility skill. Existing lock data can migrate through an approved plan. The new command offers removal of old project installations; it never removes them automatically.
 
@@ -186,6 +188,7 @@ python3 -B -m unittest discover -s .github/scripts -p 'test_*.py' -v
 ## Repository map
 
 - [`.agents/skills/`](.agents/skills/) contains portable Agent Skills.
+- [`templates/`](templates/README.md) contains reusable project instruction templates and their population contract.
 - [`AGENTS.md`](AGENTS.md) contains the small startup routing and safety contract for agents.
 - [`CLAUDE.md`](CLAUDE.md) imports `AGENTS.md` for Claude Code.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) contains contribution policy loaded before actionable change planning.
