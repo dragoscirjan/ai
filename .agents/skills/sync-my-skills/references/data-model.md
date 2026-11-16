@@ -82,7 +82,7 @@ See [Project instructions](project-instructions.md) before drafting. Required gu
 
 ## External stage and semantic review
 
-`prepare` requires a fresh stage outside source and target. A manager marker guards later operations:
+`prepare` requires a fresh stage outside source and target, both lexically and after resolving its nearest existing ancestor. Missing external parent directories are supported. Symlinked ancestors that would place the stage inside either repository are rejected before directory creation. Use the canonical stage path returned by preparation for later commands. A manager marker guards later operations:
 
 - `raw/<name>/`: filtered source plus legal files; immutable during adaptation.
 - `skills/<name>/`: candidate output for LLM edits.
@@ -115,9 +115,9 @@ Only canonical `.agents/skills/<name>/...`, selected Claude projections, explici
 
 A local/unmanaged differing file or projection collision requires an exact reviewed resolution. Existing unmanaged OpenAI metadata under a selected skill receives an explicit policy-removal action. Obsolete managed source files are removed only when unchanged or explicitly resolved. Other extra/custom content stays intact.
 
-`apply` requires `--apply --confirm --plan-id` and an isolated Git worktree. It rebuilds the plan and rechecks affected snapshots before the first write and during execution. Deprecated removal fingerprints include the complete directory/link state, including untracked extras; a new file invalidates approval.
+`apply` requires `--apply --confirm --plan-id` and an isolated Git worktree. It rebuilds the plan and rechecks affected snapshots before the first write and during execution. Deprecated removal fingerprints include the complete directory/link state, including untracked extras; a new file invalidates approval. Snapshot traversal rechecks directory identity and file types instead of trusting cached directory entries. Regular-file reads use an opened descriptor with no-follow support and identity checks.
 
-Guidance/skill actions precede instruction writes; deferred documents precede `AGENTS.md` and the optional Claude import. The lock is written last. This is not a multi-file atomic transaction: an interrupted operation may leave partial files but must not claim successful lock recording. Preserve the worktree/stage, inspect, and obtain a new plan; never reset or blindly retry.
+Each candidate write reads one buffer, verifies it against the approved action digest, and writes that same buffer. Changed bytes stop before that file is installed. Guidance/skill actions precede instruction writes; deferred documents precede `AGENTS.md` and the optional Claude import. The lock is written last. This is not a multi-file atomic transaction: an interrupted operation may leave partial files but must not claim successful lock recording. Preserve the worktree/stage, inspect, and obtain a new plan; never reset or blindly retry.
 
 With no selected skills, omit `--skills` during preparation. An empty staged set still supports explicit retain/decline decisions or a deprecated-removal-only plan. No default removal occurs.
 

@@ -1,8 +1,8 @@
 import { spawnSync } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import {
-  chmodSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, readlinkSync,
-  realpathSync, renameSync, rmSync, symlinkSync, writeFileSync,
+  chmodSync, closeSync, constants, existsSync, fstatSync, lstatSync, mkdirSync, mkdtempSync, openSync,
+  readFileSync, readdirSync, readlinkSync, realpathSync, renameSync, rmSync, symlinkSync, writeFileSync,
 } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path";
@@ -85,8 +85,16 @@ function noLinks(root, path) {
 function readBytes(root, rel) {
   const path = safePath(root, rel);
   noLinks(root, path);
-  check(lstatSync(path).isFile(), `Not a regular file: ${rel}`);
-  return readFileSync(path);
+  const before = lstatSync(path);
+  check(before.isFile(), `Not a regular file: ${rel}`);
+  const fd = openSync(path, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0) | (constants.O_NONBLOCK ?? 0));
+  try {
+    noLinks(root, path);
+    const opened = fstatSync(fd); const current = lstatSync(path);
+    check(opened.isFile() && current.isFile() && opened.dev === before.dev && opened.ino === before.ino
+      && opened.dev === current.dev && opened.ino === current.ino, `File changed while opening: ${rel}`);
+    return readFileSync(fd);
+  } finally { closeSync(fd); }
 }
 function writeBytes(root, rel, value, mode = 0o644) {
   const path = safePath(root, rel);
@@ -154,17 +162,25 @@ function snapshot(path) {
   let stat;
   try { stat = lstatSync(path); } catch (error) { if (error.code === "ENOENT") return { type: "missing" }; throw error; }
   if (stat.isSymbolicLink()) return { type: "link", target: readlinkSync(path) };
-  if (stat.isFile()) return { type: "file", sha256: digest(readFileSync(path)), mode: stat.mode & 0o111 ? 0o755 : 0o644 };
+  if (stat.isFile()) return { type: "file", sha256: digest(readBytes(dirname(path), basename(path))), mode: stat.mode & 0o111 ? 0o755 : 0o644 };
   check(stat.isDirectory(), "Unsupported destination type");
   const entries = [];
   function visit(dir, prefix) {
-    for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    noLinks(path, dir);
+    const before = lstatSync(dir);
+    check(before.isDirectory(), "Removal directory changed");
+    const children = readdirSync(dir, { withFileTypes: true });
+    noLinks(path, dir);
+    const current = lstatSync(dir);
+    check(current.isDirectory() && current.dev === before.dev && current.ino === before.ino, "Removal directory changed");
+    for (const entry of children.sort((a, b) => a.name.localeCompare(b.name))) {
       const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
       safeRelative(rel);
       const child = join(dir, entry.name);
-      if (entry.isSymbolicLink()) entries.push([rel, "link", readlinkSync(child)]);
-      else if (entry.isDirectory()) { entries.push([rel, "directory"]); visit(child, rel); }
-      else { check(entry.isFile(), "Unsupported removal content"); entries.push([rel, "file", digest(readFileSync(child)), lstatSync(child).mode & 0o111 ? 0o755 : 0o644]); }
+      const state = lstatSync(child);
+      if (state.isSymbolicLink()) entries.push([rel, "link", readlinkSync(child)]);
+      else if (state.isDirectory()) { entries.push([rel, "directory"]); visit(child, rel); }
+      else { check(state.isFile(), "Unsupported removal content"); entries.push([rel, "file", digest(readBytes(path, rel)), state.mode & 0o111 ? 0o755 : 0o644]); }
       check(entries.length <= MAX_FILES, "Removal inventory exceeds the safety limit");
     }
   }
@@ -680,6 +696,18 @@ export async function prepareSkills({ catalog, names, stage, sourceRoot, root, t
   if (root) root = gitRoot(root);
   check(!root || !inside(root, stage), "Stage must be outside the target repository");
   check(!sourceRoot || !inside(sourceRoot, stage), "Stage must be outside the source repository");
+  let ancestor = dirname(stage); const suffix = [basename(stage)];
+  for (;;) {
+    try { lstatSync(ancestor); break; }
+    catch (error) { if (error.code !== "ENOENT") throw error; }
+    const parent = dirname(ancestor);
+    check(parent !== ancestor, "Cannot resolve stage ancestor");
+    suffix.unshift(basename(ancestor)); ancestor = parent;
+  }
+  const effectiveStage = join(realpathSync(ancestor), ...suffix);
+  check(!root || !inside(realpathSync(root), effectiveStage), "Stage must be outside the target repository");
+  check(!sourceRoot || !inside(realpathSync(sourceRoot), effectiveStage), "Stage must be outside the source repository");
+  stage = effectiveStage;
   check(!existsSync(stage), "Use a fresh stage directory; existing content is never cleared");
   noLinks(dirname(stage), dirname(stage));
   const selected = closure(names, catalog);
@@ -911,8 +939,11 @@ export function applySync(options) {
   for (const action of plan.actions) {
     const path = actionPath(plan.root, action.path, plan.selection.instructionFiles);
     check(equal(snapshot(path), action.before), `Interrupted apply: destination changed: ${action.path}`);
-    if (action.op === "write") writeBytes(plan.root, action.path, readBytes(plan.stage, action.from), action.mode);
-    else if (action.op === "lock") writeJson(plan.root, LOCK_PATH, plan.lock);
+    if (action.op === "write") {
+      const bytes = readBytes(plan.stage, action.from);
+      check(digest(bytes) === action.sha256, `Candidate changed: ${action.path}`);
+      writeBytes(plan.root, action.path, bytes, action.mode);
+    } else if (action.op === "lock") writeJson(plan.root, LOCK_PATH, plan.lock);
     else if (action.op === "link") {
       rmSync(path, { recursive: true, force: true }); mkdirSync(dirname(path), { recursive: true }); symlinkSync(action.target, path);
     } else { rmSync(path, { recursive: action.op === "remove-skill", force: true }); }

@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import { syncBuiltinESMExports } from "node:module";
 import { execFileSync, spawnSync } from "node:child_process";
 import {
   chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readlinkSync, rmSync,
@@ -504,6 +506,140 @@ test("known deprecated removals bind full trees; custom similarly named skills r
   assert.equal(existsSync(join(f.root, ".agents/skills/coding-ts")), false);
   assert.equal(existsSync(join(f.root, ".claude/skills/coding-ts")), false);
   assert.ok(existsSync(join(f.root, ".agents/skills/coding-custom/SKILL.md")));
+});
+
+for (const entryType of ["directory", "file"]) {
+  test(`removal snapshots do not follow a ${entryType} replaced after directory listing`, async (t) => {
+    const f = fixture(t, ({ primary, base }) => {
+      put(primary, ".agents/skills/coding-ts/SKILL.md", skill("coding-ts"));
+      put(primary, entryType === "directory" ? ".agents/skills/coding-ts/docs/note.md" : ".agents/skills/coding-ts/note.md", "Local notes.\n");
+      put(base, "outside/secret.md", "Outside the installation.\n");
+    });
+    await f.prepare();
+    const legacy = join(f.root, ".agents/skills/coding-ts");
+    const victim = join(legacy, entryType === "directory" ? "docs" : "note.md");
+    const outside = join(f.base, "outside", ...(entryType === "file" ? ["secret.md"] : []));
+    const readdir = fs.readdirSync; const read = fs.readFileSync;
+    let swapped = false; let outsideRead = false;
+    t.mock.method(fs, "readdirSync", (...args) => {
+      const entries = readdir(...args);
+      if (args[0] === legacy && !swapped) {
+        swapped = true; fs.renameSync(victim, `${victim}-saved`); symlinkSync(outside, victim);
+      }
+      return entries;
+    });
+    t.mock.method(fs, "readFileSync", (...args) => {
+      if (args[0] === victim || typeof args[0] === "string" && args[0].startsWith(`${victim}/`)) outsideRead = true;
+      return read(...args);
+    });
+    syncBuiltinESMExports();
+    try {
+      f.plan(f.selection(["alpha"], { removeSkills: ["coding-ts"] }));
+      assert.equal(swapped, true);
+      assert.equal(outsideRead, false, "Fingerprinting must not read through the substituted link");
+    } finally { t.mock.restoreAll(); syncBuiltinESMExports(); }
+  });
+}
+
+test("removal snapshots stop when a directory changes during its own listing", async (t) => {
+  const f = fixture(t, ({ primary, base }) => {
+    put(primary, ".agents/skills/coding-ts/SKILL.md", skill("coding-ts"));
+    put(primary, ".agents/skills/coding-ts/docs/note.md", "Local notes.\n");
+    put(base, "outside/secret.md", "Outside the installation.\n");
+  });
+  await f.prepare();
+  const dir = join(f.root, ".agents/skills/coding-ts/docs");
+  const readdir = fs.readdirSync; let changed = false;
+  t.mock.method(fs, "readdirSync", (...args) => {
+    const entries = readdir(...args);
+    if (args[0] === dir && !changed) {
+      changed = true; fs.renameSync(dir, `${dir}-saved`); symlinkSync(join(f.base, "outside"), dir);
+    }
+    return entries;
+  });
+  syncBuiltinESMExports();
+  try {
+    assert.throws(() => f.plan(f.selection(["alpha"], { removeSkills: ["coding-ts"] })), /Symlink traversal|Removal directory changed/);
+    assert.equal(changed, true);
+  } finally { t.mock.restoreAll(); syncBuiltinESMExports(); }
+});
+
+test("regular-file snapshots reject a link substituted at open time", async (t) => {
+  const f = fixture(t, ({ primary, base }) => {
+    put(primary, ".agents/skills/coding-ts/SKILL.md", skill("coding-ts"));
+    put(primary, ".agents/skills/coding-ts/note.md", "Local notes.\n");
+    put(base, "outside.md", "Outside the installation.\n");
+  });
+  await f.prepare();
+  const victim = join(f.root, ".agents/skills/coding-ts/note.md");
+  const open = fs.openSync; let changed = false;
+  t.mock.method(fs, "openSync", (...args) => {
+    if (args[0] === victim && !changed) {
+      changed = true; fs.renameSync(victim, `${victim}-saved`); symlinkSync(join(f.base, "outside.md"), victim);
+    }
+    return open(...args);
+  });
+  syncBuiltinESMExports();
+  try {
+    assert.throws(() => f.plan(f.selection(["alpha"], { removeSkills: ["coding-ts"] })), /ELOOP|Symlink traversal|File changed while opening/);
+    assert.equal(changed, true);
+  } finally { t.mock.restoreAll(); syncBuiltinESMExports(); }
+});
+
+for (const scope of ["target", "source"]) {
+  test(`preparation rejects a stage whose symlinked ancestor enters the ${scope}`, async (t) => {
+    const f = fixture(t);
+    const repositoryRoot = scope === "target" ? f.root : f.source;
+    const alias = join(f.base, "repository-alias"); symlinkSync(repositoryRoot, alias);
+    const stage = join(alias, "missing-parent", "stage");
+    await assert.rejects(() => f.prepare(["alpha"], { stage }), /Stage must be outside/);
+    assert.equal(existsSync(join(repositoryRoot, "missing-parent")), false);
+  });
+}
+
+test("preparation permits fresh external stages beneath missing parent directories", async (t) => {
+  const f = fixture(t); const stage = join(f.base, "new-parent", "nested", "stage");
+  const result = await f.prepare(["alpha"], { stage });
+  assert.equal(result.stage, stage);
+  assert.equal(existsSync(join(stage, "skills/alpha/SKILL.md")), true);
+});
+
+test("incoming Excalidraw registration stages its complete package without executing tools", async (t) => {
+  const f = fixture(t); const catalog = loadCatalog(undefined, repository); const entry = catalog.byName.get("excalidraw");
+  assert.equal(entry.kind, "authored"); assert.equal(entry.selection, "optional");
+  assert.deepEqual(entry.prerequisites, []); assert.equal(entry.signals.askWithoutSignals, true);
+  assert.ok(entry.runtime.some((rule) => rule.includes("@excalidraw/cli 0.3.0")));
+  const stage = join(f.base, "excalidraw-stage");
+  await prepareSkills({ catalog, names: ["excalidraw"], stage, sourceRoot: repository, root: f.root });
+  for (const file of ["README.md", "SKILL.md", "examples/project-structure.mmd", "LICENSE"]) {
+    assert.equal(existsSync(join(stage, "skills/excalidraw", file)), true);
+  }
+  assert.equal(existsSync(join(f.root, ".agents/skills/excalidraw")), false);
+});
+
+test("apply rejects candidate bytes changed after the first target write", async (t) => {
+  const f = fixture(t); await f.prepare();
+  const plan = f.plan(); const writes = plan.actions.filter((action) => action.op === "write");
+  assert.ok(writes.length >= 2);
+  const first = join(f.root, writes[0].path); const later = writes[1];
+  const rename = fs.renameSync; let changed = false;
+  t.mock.method(fs, "renameSync", (...args) => {
+    const result = rename(...args);
+    if (args[1] === first && !changed) {
+      changed = true; writeFileSync(join(f.stage, later.from), "Changed after approval.\n");
+    }
+    return result;
+  });
+  syncBuiltinESMExports();
+  try {
+    let failure;
+    try { applySync({ root: f.root, stage: f.stage, catalog: f.catalog, selection: f.selection(), apply: true, confirm: true, planId: plan.planId }); }
+    catch (error) { failure = error; }
+    assert.equal(changed, true, "The race injection must run after the first target rename");
+    assert.match(failure?.message ?? "", /Candidate changed/);
+    assert.equal(existsSync(join(f.root, later.path)), false);
+    assert.equal(existsSync(join(f.root, LOCK_PATH)), false);
+  } finally { t.mock.restoreAll(); syncBuiltinESMExports(); }
 });
 
 test("legacy instruction records migrate without managing or changing their documents", async (t) => {
