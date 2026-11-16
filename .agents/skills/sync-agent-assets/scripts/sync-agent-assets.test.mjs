@@ -449,8 +449,7 @@ test("writing-for-agents is an optional vendored skill without OpenAI-specific f
   const attribution = readFileSync(join(root, "README.md"), "utf8");
   assert.match(attribution, /Matt Pocock/);
   assert.match(attribution, /Adapted for this repository/);
-  assert.match(attribution, /Copyright \(c\) 2026 Matt Pocock/);
-  assert.match(attribution, /The above copyright notice and this permission notice/);
+  assert.match(attribution, /https:\/\/github\.com\/mattpocock\/skills\/tree\//);
   assert.equal(existsSync(join(root, "LICENSE")), false);
   assert.equal(existsSync(join(root, "agents", "openai.yaml")), false);
 });
