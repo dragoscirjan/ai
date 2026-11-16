@@ -220,6 +220,27 @@ skills:
       - path: LICENSE
         target: LICENSE
         spdx: MIT
+  excalidraw:
+    kind: authored
+    description: "Generate PNG or SVG diagrams with local Excalidraw rendering. Use for project structure, component relationships, workflows, or revisions to an existing diagram. Retain scene JSON as editable source and deliver images first."
+    source:
+      type: local
+      path: .agents/skills/excalidraw
+    category: diagramming
+    selection: optional
+    safety: project-write-with-confirmation
+    harnesses: [pi, opencode, claude-code]
+    prerequisites: []
+    signals:
+      askWithoutSignals: true
+    install:
+      argv: [npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, excalidraw]
+    runtime:
+      - "Requires Node.js 22 or newer, the official @excalidraw/cli 0.3.0 package, and an installed Chrome, Chromium, Edge, or Firefox."
+    legal:
+      - path: LICENSE
+        target: LICENSE
+        spdx: MIT
   grill-me:
     kind: adapted
     description: A relentless interview to sharpen a plan or design.
@@ -433,9 +454,7 @@ skills:
         spdx: MIT
   sync-my-skills:
     kind: authored
-    description: Inspect a project's purpose and installed skills, recommend from the curated YAML catalog, ask about every
-      remaining skill and exact deprecated removals, then stage, adapt, and synchronize only an approved plan. Use
-      /sync-my-skills across projects; leave root instruction documents unchanged.
+    description: Synchronize project skills and agent instructions through a guided, approved plan.
     source:
       type: local
       path: .agents/skills/sync-my-skills
@@ -580,6 +599,35 @@ skills:
       - path: LICENSE
         target: LICENSE
         spdx: MIT
+  writing-for-agents:
+    kind: adapted
+    description: Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.
+    source:
+      type: local
+      path: .agents/skills/writing-for-agents
+    upstream:
+      type: github
+      repository: https://github.com/mattpocock/skills
+      revision: 5863806dd4e15c63174bee4e7515a4256792ecfa
+      path: skills/productivity/writing-for-agents
+    category: agent-writing
+    selection: optional
+    safety: read-only-guidance
+    harnesses: [ pi, opencode, claude-code ]
+    prerequisites: []
+    signals: {}
+    install:
+      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, writing-for-agents ]
+    legal:
+      - path: .agents/skills/writing-for-agents/LICENSE
+        target: LICENSE
+        spdx: MIT
+    adaptation:
+      instructions: Preserve the maintained writing guidance, context pointers, progressive disclosure, completion criteria,
+        and skill mechanics. Keep source attribution and the upstream legal notice. Omit provider configuration.
+      review:
+        - Keep all meaningful writing guidance and the linked skill mechanics.
+        - Explain consequential adaptations; preserve the original legal notice.
 deprecations:
   coding-bash:
     replacements: [ coding-with-rules ]
@@ -670,5 +718,7 @@ deprecations:
     reason: Converted to the single personal sync-my-skills manager. Do not keep a second compatibility skill; ask before
       removing an existing project installation.
 instructionTemplates:
-  enabled: false
+  enabled: true
   issue: 68
+  path: templates
+  prerequisites: [ isolated-workspace, document-project, asd-ste100-technical, unslop ]

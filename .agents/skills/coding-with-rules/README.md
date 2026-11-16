@@ -38,6 +38,6 @@ The former `coding-<language>` and `coding-<extension>` skills are removed upstr
 1. Run `/sync-my-skills` and review the explicit deprecated-name list. Select `coding-with-rules` when appropriate, with its `coding` prerequisite. Unknown custom names are not automatically remapped or classified as deprecated.
 2. Choose the exact legacy skills to retain or remove, including none. Review their locations, local changes, and replacement before approving the plan. A decline or missing catalog entry does not authorize deletion.
 3. Install the complete router and applicable harness projections only under the current approved plan in an isolated workspace. Existing local edits remain protected; do not hand-edit either lockfile.
-4. Verify only the approved legacy directories/projections were removed and reload the harness. Root instruction documents stay untouched; any instruction-routing/template change requires its own separate workflow and approval.
+4. Verify only the approved legacy directories/projections were removed and reload the harness. Migration alone leaves root instructions untouched. Instruction-routing/template changes require selecting the separate bundle, reviewing project-specific drafts and policy changes, and approving the resulting plan.
 
 The original consolidation is recorded in [#56](https://github.com/dragoscirjan/ai/issues/56). Explicit, snapshot-bound deprecated removal and reviewed lock migration are provided by [#69](https://github.com/dragoscirjan/ai/issues/69); there is no automatic prefix-based deletion.

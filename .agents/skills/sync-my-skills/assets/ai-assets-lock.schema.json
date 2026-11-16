@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Machine-owned skill synchronization state",
-  "description": "Version 1 is read for reviewed migration; new writes use version 2. Root instructions are historical metadata only.",
+  "description": "Versions 1 and 2 are read for reviewed migration. Version 3 manages only explicitly adopted instruction bundles; other legacy instructions remain historical.",
   "type": "object", "additionalProperties": false,
-  "required": ["schemaVersion", "managerVersion", "catalogHash", "source", "selection", "skills", "files", "projections", "legacyInstructions"],
+  "required": ["schemaVersion", "managerVersion", "catalogHash", "source", "selection", "skills", "files", "projections", "legacyInstructions", "instructions"],
   "properties": {
-    "schemaVersion": { "const": 2 },
+    "schemaVersion": { "const": 3 },
     "managerVersion": { "type": "string" },
     "catalogHash": { "$ref": "#/$defs/digest" },
     "catalogSource": {
@@ -24,6 +24,7 @@
     },
     "selection": { "$ref": "./selection.schema.json" },
     "skills": { "type": "object", "additionalProperties": { "$ref": "#/$defs/skill" } },
+    "instructions": { "anyOf": [{ "$ref": "#/$defs/instructions" }, { "type": "null" }] },
     "files": { "type": "object", "additionalProperties": { "$ref": "#/$defs/file" } },
     "legacyInstructions": { "type": "object", "additionalProperties": { "$ref": "#/$defs/legacyFile" } },
     "projections": {
@@ -42,16 +43,45 @@
     "digests": { "type": "object", "additionalProperties": { "$ref": "#/$defs/digest" } },
     "file": {
       "type": "object", "additionalProperties": false,
-      "required": ["kind", "skill", "sourcePath", "installedSha256"],
+      "required": ["kind", "sourcePath", "installedSha256"],
       "properties": {
-        "kind": { "const": "skill" }, "skill": { "type": "string" },
+        "kind": { "enum": ["skill", "instruction"] }, "skill": { "type": "string" },
+        "origin": { "$ref": "#/$defs/skill/properties/origin" },
         "sourcePath": { "type": "string" },
         "sourceSha256": { "anyOf": [{ "$ref": "#/$defs/digest" }, { "type": "null" }] },
         "installedSha256": { "$ref": "#/$defs/digest" },
         "mode": { "enum": [420, 493] },
         "retained": { "type": "boolean" }, "retentionReason": { "type": "string" },
         "retainedFromCommit": { "type": "string" }
+      },
+      "allOf": [{ "if": { "properties": { "kind": { "const": "skill" } } }, "then": { "required": ["skill"] } }]
+    },
+    "instructions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["origin", "files", "sourceFiles", "recipeHash", "inputHash", "prerequisites", "selectedPrerequisites", "review", "contextHash", "outputHash"],
+      "properties": {
+        "origin": { "$ref": "#/$defs/skill/properties/origin" },
+        "files": { "$ref": "./selection.schema.json#/properties/instructionFiles" },
+        "sourceFiles": { "$ref": "#/$defs/digests" },
+        "recipeHash": { "$ref": "#/$defs/digest" }, "inputHash": { "$ref": "#/$defs/digest" },
+        "prerequisites": { "$ref": "#/$defs/digests" },
+        "selectedPrerequisites": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "contextHash": { "$ref": "#/$defs/digest" }, "outputHash": { "$ref": "#/$defs/digest" },
+        "review": {
+          "type": "object", "additionalProperties": false, "required": ["note", "outputHash", "evidence", "extraEvidence", "selectedGuidance"],
+          "properties": {
+            "note": { "type": "string", "minLength": 1 }, "outputHash": { "$ref": "#/$defs/digest" },
+            "selectedGuidance": { "$ref": "#/$defs/digests" },
+            "extraEvidence": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+            "evidence": { "type": "object", "additionalProperties": { "$ref": "#/$defs/evidenceState" } }
+          }
+        }
       }
+    },
+    "evidenceState": {
+      "type": "object", "additionalProperties": false, "required": ["type"],
+      "properties": { "type": { "enum": ["file", "missing"] }, "sha256": { "$ref": "#/$defs/digest" }, "mode": { "enum": [420, 493] } },
+      "allOf": [{ "if": { "properties": { "type": { "const": "file" } } }, "then": { "required": ["sha256", "mode"] } }]
     },
     "legacyFile": {
       "type": "object", "required": ["kind", "installedSha256"],

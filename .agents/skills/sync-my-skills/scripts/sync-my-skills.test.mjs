@@ -2,12 +2,13 @@ import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import {
   chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readlinkSync, rmSync,
-  statSync, symlinkSync, writeFileSync,
+  statSync, symlinkSync, utimesSync, writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
+import * as sync from "./sync-core.mjs";
 import { stringify } from "yaml";
 import {
   PACKAGE_ROOT, LOCK_PATH, digest, parseYaml, safeRelative, loadCatalog, refreshCatalog, closure,
@@ -137,6 +138,18 @@ test("non-coding inspection offers every remaining skill and does not force codi
   assert.deepEqual(result.detectedHarnesses, []);
   assert.equal(git(f.root, "status", "--porcelain"), before);
   assert.equal(existsSync(join(f.root, LOCK_PATH)), false);
+});
+
+test("read-only inspection never executes a configured Git clean filter", (t) => {
+  const f = fixture(t); const marker = join(f.base, "filter-ran"); const scriptPath = join(f.root, "filter.mjs");
+  put(f.root, ".gitattributes", "target.txt filter=probe\n"); put(f.root, "target.txt", "before\n");
+  writeFileSync(scriptPath, "import fs from 'node:fs';fs.writeFileSync(process.env.SYNC_FILTER_MARKER,'ran');process.stdout.write(fs.readFileSync(0));\n"); commit(f.root);
+  git(f.root, "config", "filter.probe.clean", JSON.stringify(process.execPath) + " " + JSON.stringify(scriptPath));
+  const old = process.env.SYNC_FILTER_MARKER; process.env.SYNC_FILTER_MARKER = marker;
+  t.after(() => { if (old === undefined) delete process.env.SYNC_FILTER_MARKER; else process.env.SYNC_FILTER_MARKER = old; });
+  put(f.root, "target.txt", "foobar\n"); const future = new Date(Date.now() + 2000); utimesSync(join(f.root, "target.txt"), future, future);
+  inspectProject({ root: f.root, catalog: f.catalog });
+  assert.equal(existsSync(marker), false);
 });
 
 test("catalog refresh resolves an immutable revision and rejects edited snapshot bytes", async (t) => {
@@ -363,7 +376,7 @@ test("selection requires a decision for every remaining entry and confirms harne
   assert.throws(() => f.plan({ selectedSkills: ["alpha"], declinedSkills: [], harnesses: ["pi"] }), /remaining catalog skills: beta/);
   assert.throws(() => f.plan(f.selection(["alpha"], { harnesses: [] })), /at least one/);
   assert.throws(() => f.plan(f.selection(["alpha"], { harnesses: ["unknown"] })), /supported harness/);
-  assert.throws(() => f.plan(f.selection(["alpha"], { rootFiles: ["AGENTS.md"] })), /outside skill synchronization/);
+  assert.throws(() => f.plan(f.selection(["alpha"], { rootFiles: ["AGENTS.md"] })), /Legacy rootFiles does not authorize/);
   assert.throws(() => f.plan(f.selection(["alpha"], { removeSkills: ["alpha"] })), /not a catalogued deprecation/);
 });
 
@@ -397,7 +410,7 @@ test("a valid plan is read-only and apply needs flags, an exact plan, and a work
   assert.ok(projectStatus(f.root).files.every((file) => file.state === "clean"));
   const lock = readFileSync(join(f.root, LOCK_PATH), "utf8");
   assert.equal(lock.includes(f.base), false);
-  assert.equal(JSON.parse(lock).schemaVersion, 2);
+  assert.equal(JSON.parse(lock).schemaVersion, 3);
   assert.equal(existsSync(join(f.root, "skills-lock.json")), false);
 });
 
@@ -675,9 +688,228 @@ test("review notes cannot leak credentials or absolute machine paths into locks"
   assert.throws(() => f.plan(), /credential material/);
 });
 
+const ROOT_BUNDLE = ["AGENTS.md", "CONTRIBUTING.md", "DOCUMENTATION.md", "VALIDATION.md"];
+const ROOT_GUIDANCE = ["isolated-workspace", "document-project", "asd-ste100-technical", "unslop"];
+function instructionFixture(t) {
+  const f = fixture(t, ({ source, data }) => {
+    for (const name of ROOT_GUIDANCE) {
+      data.skills[name] = { ...structuredClone(data.skills.alpha), description: `Fixture ${name}.`, source: { type: "local", path: `.agents/skills/${name}` } };
+      put(source, `.agents/skills/${name}/SKILL.md`, skill(name));
+    }
+    for (const file of ["README.md", ...[...ROOT_BUNDLE, "CLAUDE.md"].map((name) => name.replace(".md", ".template.md"))]) put(source, "templates/" + file, readFileSync(join(repository, "templates", file), "utf8"));
+    data.instructionTemplates = { enabled: true, issue: 68, path: "templates", prerequisites: ROOT_GUIDANCE };
+  });
+  const choice = (files = ROOT_BUNDLE) => f.selection(ROOT_GUIDANCE, {
+    instructionFiles: files,
+    instructionApproval: "Owner explicitly approved the displayed instruction-policy changes.",
+    resolutions: Object.fromEntries(files.filter((name) => existsSync(join(f.root, name))).map((name) => [name, "Preserve existing project rules while adopting the reviewed bundle."])),
+  });
+  function draft(files = ROOT_BUNDLE, stage = f.stage) {
+    for (const name of files) {
+      const template = readFileSync(join(stage, "templates", name.replace(".md", ".template.md")), "utf8");
+      const values = { PROJECT_NAME: "Fixture project", PROJECT_PURPOSE: "A documentation-only fixture.", WORKFLOW_SETTINGS: "Use Git and change/ branches; the base is main.", PUBLICATION_POLICY: "Only the owner authorizes publication, merging, releases, and deployment.", DOCUMENTATION_ENGINE: "Markdown only. No site is approved." };
+      const populated = template.replace(/\{\{([A-Z_]+)\}\}/g, (_, key) => values[key] ?? "Verified fixture decision: no additional tool or policy is configured.");
+      const old = existsSync(join(f.root, name)) ? readFileSync(join(f.root, name), "utf8") : "";
+      put(stage, "instructions/" + name, populated + "\n" + old);
+    }
+  }
+  return { ...f, choice, draft };
+}
+
+test("selected instruction bundles are reviewed, approval-bound, and managed with skill changes", async (t) => {
+  const f = instructionFixture(t);
+  await f.prepare(ROOT_GUIDANCE, { instructionFiles: ROOT_BUNDLE });
+  assert.equal(existsSync(join(f.root, "DOCUMENTATION.md")), false);
+  assert.throws(() => f.plan(f.choice()), /instruction.*review|unresolved|template/i);
+  f.draft(); sync.reviewInstructions({ stage: f.stage, note: "Verified target facts, decisions, fixed gates, references, and preserved custom rules." });
+  const plan = f.plan(f.choice());
+  assert.ok(plan.actions.some((a) => a.path === "AGENTS.md"));
+  f.apply(f.choice());
+  assert.match(readFileSync(join(f.root, "AGENTS.md"), "utf8"), /Respect existing project authority/);
+  assert.equal(readFileSync(join(f.root, "CLAUDE.md"), "utf8"), "Existing Claude instructions.\n");
+  assert.ok(sync.projectStatus(f.root).files.filter((r) => ROOT_BUNDLE.includes(r.path)).every((r) => r.state === "clean"));
+  const lock = JSON.parse(readFileSync(join(f.root, LOCK_PATH), "utf8"));
+  assert.equal(lock.schemaVersion, 3); assert.ok(lock.instructions.origin.revision);
+  assert.equal(lock.files["AGENTS.md"].kind, "instruction");
+});
+
+test("declining the instruction bundle keeps root documents unchanged and does not force guidance", async (t) => {
+  const f = instructionFixture(t); const before = Object.fromEntries([...ROOT_BUNDLE, "CLAUDE.md"].map((p) => [p, existsSync(join(f.root, p)) ? readFileSync(join(f.root, p), "utf8") : null]));
+  await f.prepare(["alpha"]); f.apply(f.selection(["alpha"]));
+  for (const [p, text] of Object.entries(before)) assert.equal(existsSync(join(f.root, p)) ? readFileSync(join(f.root, p), "utf8") : null, text);
+  assert.equal(existsSync(join(f.root, ".agents/skills/document-project")), false);
+});
+
+test("instruction prerequisites must be explicitly selected or valid installed guidance", async (t) => {
+  const f = instructionFixture(t);
+  await assert.rejects(() => f.prepare([], { instructionFiles: ROOT_BUNDLE }), /instruction prerequisite/i);
+  assert.equal(existsSync(f.stage), false);
+  for (const name of ROOT_GUIDANCE) put(f.root, `.agents/skills/${name}/SKILL.md`, skill(name));
+  await f.prepare([], { instructionFiles: ROOT_BUNDLE }); f.draft();
+  sync.reviewInstructions({ stage: f.stage, note: "Existing guidance was reviewed; no skill installation is requested." });
+  const choice = f.selection([], { ...f.choice(), selectedSkills: [], declinedSkills: f.selection([]).declinedSkills });
+  f.plan(choice);
+  put(f.root, ".agents/skills/document-project/SKILL.md", skill("document-project", "Changed guidance after review."));
+  assert.throws(() => f.plan(choice), /instruction prerequisite.*changed/i);
+});
+
+test("instruction review rejects unresolved fields, dropped fixed rules, and edited raw templates", async (t) => {
+  const f = instructionFixture(t); await f.prepare(ROOT_GUIDANCE, { instructionFiles: ROOT_BUNDLE });
+  assert.throws(() => sync.reviewInstructions({ stage: f.stage, note: "Not resolved yet." }), /unresolved|template/i);
+  f.draft(); const path = join(f.stage, "instructions/AGENTS.md"); const valid = readFileSync(path, "utf8");
+  writeFileSync(path, valid.replace("Never mutate the primary checkout.", ""));
+  assert.throws(() => sync.reviewInstructions({ stage: f.stage, note: "Dropped a fixed rule." }), /template rule/i);
+  writeFileSync(path, valid);
+  put(f.stage, "templates/AGENTS.template.md", "Changed source template.\n");
+  assert.throws(() => sync.reviewInstructions({ stage: f.stage, note: "Raw template changed." }), /template source.*changed/i);
+});
+
+test("instruction scope cannot expand through arbitrary paths, incomplete bundles, or missing policy approval", async (t) => {
+  const f = instructionFixture(t); await f.prepare(ROOT_GUIDANCE, { instructionFiles: ROOT_BUNDLE }); f.draft();
+  sync.reviewInstructions({ stage: f.stage, note: "Reviewed all candidates." });
+  assert.throws(() => f.plan({ ...f.choice(), instructionFiles: ["README.md"] }), /instruction.*scope|bundle/i);
+  assert.throws(() => f.plan({ ...f.choice(), instructionFiles: ["AGENTS.md"] }), /complete.*bundle|bundle.*complete/i);
+  assert.throws(() => f.plan({ ...f.choice(), instructionApproval: "" }), /instruction.*approval/i);
+  assert.throws(() => f.plan({ ...f.choice(), resolutions: {} }), /exact resolution/);
+});
+
+test("instruction edits invalidate output reviews, target snapshots, and old plan approvals", async (t) => {
+  const f = instructionFixture(t); await f.prepare(ROOT_GUIDANCE, { instructionFiles: ROOT_BUNDLE }); f.draft();
+  sync.reviewInstructions({ stage: f.stage, note: "Reviewed all target facts and gates." });
+  const plan = f.plan(f.choice()); put(f.stage, "instructions/DOCUMENTATION.md", readFileSync(join(f.stage, "instructions/DOCUMENTATION.md"), "utf8") + "\nNew draft wording.\n");
+  assert.throws(() => f.plan(f.choice()), /instruction.*review/i);
+  sync.reviewInstructions({ stage: f.stage, note: "Reviewed the additional wording." });
+  assert.throws(() => applySync({ root: f.root, stage: f.stage, catalog: f.catalog, selection: f.choice(), apply: true, confirm: true, planId: plan.planId }), /stale/);
+  put(f.root, "DOCUMENTATION.md", "New local policy after preparation.\n");
+  assert.throws(() => f.plan(f.choice()), /Target requirements changed/);
+});
+
+test("optional Claude imports preserve existing rules and unselected managed instructions are retained", async (t) => {
+  const f = instructionFixture(t); const files = [...ROOT_BUNDLE, "CLAUDE.md"];
+  await f.prepare(ROOT_GUIDANCE, { instructionFiles: files }); f.draft(files);
+  sync.reviewInstructions({ stage: f.stage, note: "Reviewed optional Claude bridge and preserved custom instructions." }); f.apply(f.choice(files));
+  assert.match(readFileSync(join(f.root, "CLAUDE.md"), "utf8"), /^@AGENTS.md\n/);
+  assert.match(readFileSync(join(f.root, "CLAUDE.md"), "utf8"), /Existing Claude instructions/);
+  const old = readFileSync(join(f.root, "AGENTS.md"), "utf8");
+  await f.prepare([], { stage: join(f.base, "skills-only-stage") });
+  f.apply(f.selection([]), { stage: join(f.base, "skills-only-stage") });
+  assert.equal(readFileSync(join(f.root, "AGENTS.md"), "utf8"), old);
+  assert.equal(sync.projectStatus(f.root).files.find((p) => p.path === "AGENTS.md").state, "clean");
+});
+
+test("instruction evidence changes stop a plan without reading credential files", async (t) => {
+  const f = instructionFixture(t); await f.prepare(ROOT_GUIDANCE, { instructionFiles: ROOT_BUNDLE }); f.draft();
+  sync.reviewInstructions({ stage: f.stage, note: "Reviewed current project evidence." });
+  put(f.root, "package.json", JSON.stringify({ scripts: { check: "a new project check" } }));
+  assert.throws(() => f.plan(f.choice()), /Instruction evidence changed/);
+  assert.throws(() => sync.reviewInstructions({ stage: f.stage, note: "Attempted credential evidence.", evidence: [".env"] }), /credential files/);
+  assert.throws(() => sync.reviewInstructions({ stage: f.stage, note: "Unsafe evidence key.", evidence: ["__proto__"] }), /Unsafe instruction evidence key/);
+  put(f.root, "policy/commands.md", "An approved custom check.\n");
+  sync.reviewInstructions({ stage: f.stage, note: "Reviewed the new manifest and explicit command evidence.", evidence: ["policy/commands.md"] });
+  f.plan(f.choice());
+  put(f.root, "policy/commands.md", "Changed the custom check.\n");
+  assert.throws(() => f.plan(f.choice()), /Instruction evidence changed/);
+});
+
+test("instruction drafts identify one project and are bound to their actual target", async (t) => {
+  const f = instructionFixture(t); await f.prepare(ROOT_GUIDANCE, { instructionFiles: ROOT_BUNDLE }); f.draft();
+  const path = join(f.stage, "instructions/CONTRIBUTING.md"); const valid = readFileSync(path, "utf8");
+  writeFileSync(path, valid.replace("Fixture project", "Another project"));
+  assert.throws(() => sync.reviewInstructions({ stage: f.stage, note: "Conflicting project identities." }), /project name/i);
+  writeFileSync(path, valid); sync.reviewInstructions({ stage: f.stage, note: "Reviewed one project identity." });
+  assert.throws(() => f.plan(f.choice(), { root: f.primary }), /instruction stage.*target/i);
+});
+
+test("legacy version-2 root records remain historical until explicit bundle adoption", async (t) => {
+  const f = instructionFixture(t); const before = readFileSync(join(f.root, "AGENTS.md"), "utf8");
+  put(f.root, LOCK_PATH, JSON.stringify({ schemaVersion: 2, skills: {}, selection: {}, files: { "AGENTS.md": { kind: "instruction", sourcePath: "AGENTS.md", sourceSha256: digest(before), installedSha256: digest(before) } } }));
+  await f.prepare(["alpha"]); f.apply(f.selection(["alpha"]));
+  let lock = JSON.parse(readFileSync(join(f.root, LOCK_PATH), "utf8"));
+  assert.equal(lock.schemaVersion, 3); assert.ok(lock.legacyInstructions["AGENTS.md"]); assert.equal(lock.files["AGENTS.md"], undefined);
+  assert.equal(readFileSync(join(f.root, "AGENTS.md"), "utf8"), before);
+  const stage = join(f.base, "adopt-instructions"); await f.prepare(ROOT_GUIDANCE, { stage, instructionFiles: ROOT_BUNDLE }); f.draft(ROOT_BUNDLE, stage);
+  sync.reviewInstructions({ stage, note: "Owner selected and reviewed explicit adoption after migration." }); f.apply(f.choice(), { stage });
+  lock = JSON.parse(readFileSync(join(f.root, LOCK_PATH), "utf8")); assert.equal(lock.files["AGENTS.md"].kind, "instruction"); assert.equal(lock.legacyInstructions["AGENTS.md"], undefined);
+});
+
+test("fixed instruction rules cannot be hidden inside code fences", async (t) => {
+  const f = instructionFixture(t); await f.prepare(ROOT_GUIDANCE, { instructionFiles: ROOT_BUNDLE }); f.draft();
+  const path = join(f.stage, "instructions/AGENTS.md"); writeFileSync(path, "```markdown\n" + readFileSync(path, "utf8") + "\n```\n");
+  assert.throws(() => sync.reviewInstructions({ stage: f.stage, note: "Rules hidden as example text." }), /template rule/);
+});
+
+test("changing selected guidance invalidates the instruction review even after a skill review", async (t) => {
+  const f = instructionFixture(t); await f.prepare(ROOT_GUIDANCE, { instructionFiles: ROOT_BUNDLE }); f.draft();
+  sync.reviewInstructions({ stage: f.stage, note: "Reviewed instructions against the chosen guidance." });
+  put(f.stage, "skills/document-project/SKILL.md", skill("document-project", "Revised guidance after the instruction review."));
+  reviewSkill({ stage: f.stage, name: "document-project", note: "Reviewed the changed skill package." });
+  assert.throws(() => f.plan(f.choice()), /instruction.*guidance.*review/i);
+  sync.reviewInstructions({ stage: f.stage, note: "Rechecked all instructions against the updated guidance." });
+  f.plan(f.choice());
+});
+
+test("instruction source acquisition uses the catalog commit and rejects unsafe template entries", async (t) => {
+  const f = instructionFixture(t); const revision = "e".repeat(40); const calls = [];
+  for (const name of ROOT_GUIDANCE) put(f.root, `.agents/skills/${name}/SKILL.md`, skill(name));
+  const paths = ["README.md", ...ROOT_BUNDLE.map((p) => p.replace(".md", ".template.md"))];
+  let unsafe = false;
+  const fetcher = async (url) => {
+    calls.push(url);
+    if (url.includes("/commits/")) return new Response(JSON.stringify({ sha: revision }));
+    if (url.endsWith("/assets/skill-catalog.yaml")) return new Response(readFileSync(f.catalogPath, "utf8"));
+    if (url.includes("/git/trees/")) return new Response(JSON.stringify({ tree: paths.map((name) => ({ path: "templates/" + name, type: "blob", mode: unsafe && name === "AGENTS.template.md" ? "120000" : "100644" })) }));
+    assert.ok(url.includes("/" + revision + "/templates/"));
+    return new Response(readFileSync(join(f.source, "templates", url.split("/").at(-1))));
+  };
+  const snapshot = await refreshCatalog({ catalog: f.catalog, directory: join(f.base, "pinned-instruction-catalog"), fetcher });
+  const catalog = loadCatalog(snapshot.path);
+  await prepareSkills({ root: f.root, catalog, names: [], stage: f.stage, instructionFiles: ROOT_BUNDLE, allowFetch: true, fetcher });
+  assert.equal(calls.filter((url) => url.includes("/commits/")).length, 1);
+  assert.equal(JSON.parse(readFileSync(join(f.stage, "manifest.json"), "utf8")).instructions.origin.revision, revision);
+  unsafe = true;
+  await assert.rejects(() => prepareSkills({ root: f.root, catalog, names: [], stage: join(f.base, "unsafe-template-stage"), instructionFiles: ROOT_BUNDLE, allowFetch: true, fetcher }), /unsafe instruction template/);
+});
+
+test("instruction writes still reject primary checkouts and unsafe destinations", async (t) => {
+  const f = instructionFixture(t);
+  await f.prepare(ROOT_GUIDANCE, { root: f.primary, instructionFiles: ROOT_BUNDLE }); f.draft();
+  sync.reviewInstructions({ stage: f.stage, note: "Reviewed a primary-checkout plan without authorizing mutation." });
+  const plan = f.plan(f.choice(), { root: f.primary });
+  assert.throws(() => applySync({ root: f.primary, stage: f.stage, catalog: f.catalog, selection: f.choice(), apply: true, confirm: true, planId: plan.planId }), /primary checkout/);
+  assert.equal(existsSync(join(f.primary, "DOCUMENTATION.md")), false);
+});
+
+test("optional retained instructions keep their original template provenance", async (t) => {
+  const f = instructionFixture(t); const files = [...ROOT_BUNDLE, "CLAUDE.md"];
+  await f.prepare(ROOT_GUIDANCE, { instructionFiles: files }); f.draft(files); sync.reviewInstructions({ stage: f.stage, note: "Reviewed the complete optional bridge." }); f.apply(f.choice(files));
+  const old = JSON.parse(readFileSync(join(f.root, LOCK_PATH), "utf8")).files["CLAUDE.md"].origin.revision;
+  put(f.source, "templates/README.md", readFileSync(join(f.source, "templates/README.md"), "utf8") + "\nReviewed next source revision.\n"); commit(f.source);
+  const stage = join(f.base, "next-instruction-source"); await f.prepare(ROOT_GUIDANCE, { stage, instructionFiles: ROOT_BUNDLE }); f.draft(ROOT_BUNDLE, stage);
+  sync.reviewInstructions({ stage, note: "Reviewed the next source while retaining the Claude bridge." }); f.apply(f.choice(), { stage });
+  const lock = JSON.parse(readFileSync(join(f.root, LOCK_PATH), "utf8"));
+  assert.equal(lock.files["CLAUDE.md"].origin.revision, old); assert.notEqual(lock.instructions.origin.revision, old);
+  assert.equal(lock.files["CLAUDE.md"].retained, true);
+});
+
+test("CLI prepares, reviews, plans, and applies a selected instruction bundle", (t) => {
+  const f = instructionFixture(t);
+  const cli = (args) => spawnSync(process.execPath, [script, ...args], { encoding: "utf8" });
+  let result = cli(["prepare", "--root", f.root, "--source-root", f.source, "--catalog", f.catalogPath, "--skills", ROOT_GUIDANCE.join(","), "--stage", f.stage, "--instructions"]);
+  assert.equal(result.status, 0, result.stderr); assert.equal(JSON.parse(result.stdout).instructionReviewRequired, true);
+  f.draft(); const evidence = join(f.base, "evidence.json"); writeFileSync(evidence, JSON.stringify(["README.md"]));
+  result = cli(["review-instructions", "--stage", f.stage, "--note", "Reviewed evidence, decisions, fixed policy, and custom rules.", "--evidence", evidence]); assert.equal(result.status, 0, result.stderr);
+  const choice = join(f.base, "instruction-selection.json"); writeFileSync(choice, JSON.stringify(f.choice()));
+  const args = ["--root", f.root, "--stage", f.stage, "--catalog", f.catalogPath, "--selection", choice];
+  result = cli(["plan", ...args]); assert.equal(result.status, 0, result.stderr); const plan = JSON.parse(result.stdout);
+  const rootWrites = plan.actions.filter((a) => ROOT_BUNDLE.includes(a.path));
+  assert.equal(rootWrites.at(-1).path, "AGENTS.md"); assert.equal(plan.actions.at(-1).op, "lock");
+  result = cli(["apply", ...args, "--apply", "--confirm", "--plan-id", plan.planId]); assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(JSON.parse(result.stdout).instructionFiles, [...ROOT_BUNDLE].sort());
+});
+
 test("CLI reports usage failures and real catalog includes every local skill exactly once", () => {
   const help = spawnSync(process.execPath, [script, "--help"], { encoding: "utf8" });
-  assert.equal(help.status, 0); assert.match(help.stdout, /skills-only/);
+  assert.equal(help.status, 0); assert.match(help.stdout, /project skills and instruction bundles/);
   for (const args of [["unknown"], ["inspect"], ["catalog", "--wat"], ["catalog", "--catalog", "a", "--catalog", "b"]]) {
     const result = spawnSync(process.execPath, [script, ...args], { encoding: "utf8" }); assert.notEqual(result.status, 0);
   }

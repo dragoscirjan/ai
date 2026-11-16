@@ -15,7 +15,8 @@ export const HARNESSES = ["pi", "opencode", "claude-code"];
 const SKILLS = ".agents/skills";
 const OWNER_CATALOG_PATH = ".agents/skills/sync-my-skills/assets/skill-catalog.yaml";
 const MARKER = "sync-my-skills/stage-v2";
-const INSTRUCTIONS = ["AGENTS.md", "CLAUDE.md", "CONTRIBUTING.md", "VALIDATION.md"];
+export const INSTRUCTION_FILES = Object.freeze(["AGENTS.md", "CONTRIBUTING.md", "DOCUMENTATION.md", "VALIDATION.md", "CLAUDE.md"]);
+const INSTRUCTION_PREREQUISITES = ["isolated-workspace", "document-project", "asd-ste100-technical", "unslop"];
 const SKIP = new Set([".git", "node_modules"]);
 const PROJECT_SKIP = new Set([
   ...SKIP, ".agents", ".claude", ".pi", ".opencode", ".venv", "venv", "__pycache__",
@@ -98,9 +99,19 @@ function writeBytes(root, rel, value, mode = 0o644) {
 }
 function writeJson(root, rel, value) { writeBytes(root, rel, `${JSON.stringify(value, null, 2)}\n`); }
 function runGit(root, args) {
-  // Even `git status` can execute a repository fsmonitor hook. A regular executable
-  // cannot contain hook files, so hooksPath is disabled without a shared temp dir.
-  const result = spawnSync("git", ["-c", "core.fsmonitor=false", "-c", `core.hooksPath=${process.execPath}`, "-C", root, ...args], { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
+  // Status refresh can run fsmonitor hooks and clean/process filters. Disable
+  // those commands for helper reads, not for the owner's publication commands.
+  const base = ["-c", "core.fsmonitor=false", "-c", `core.hooksPath=${process.execPath}`, "-C", root];
+  const options = { encoding: "utf8", maxBuffer: 4 * 1024 * 1024, timeout: 30000 };
+  const config = spawnSync("git", [...base, "config", "--null", "--name-only", "--get-regexp", "^filter\\..*\\.(clean|smudge|process|required)$"], options);
+  check([0, 1].includes(config.status), "Cannot inspect Git filter configuration", 4);
+  const filters = new Set();
+  for (const key of config.stdout.split("\0").filter(Boolean)) {
+    check(/^filter\.[\w.-]+\.(?:clean|smudge|process|required)$/i.test(key), "Unsupported Git filter configuration; inspect it before continuing", 4);
+    filters.add(key.slice(0, key.lastIndexOf(".")));
+  }
+  const overrides = [...filters].flatMap((name) => ["-c", `${name}.clean=`, "-c", `${name}.smudge=`, "-c", `${name}.process=`, "-c", `${name}.required=false`]);
+  const result = spawnSync("git", [...base, ...overrides, ...args], options);
   check(result.status === 0, `Git command failed: ${args[0]}`, 4);
   return result.stdout.trim();
 }
@@ -280,9 +291,17 @@ export function loadCatalog(path = join(PACKAGE_ROOT, "assets/skill-catalog.yaml
     check(typeof record.reason === "string" && record.reason, `Missing deprecation reason: ${name}`);
   }
   if (data.instructionTemplates !== undefined) {
-    check(object(data.instructionTemplates), "Invalid instruction template reservation");
-    knownKeys(data.instructionTemplates, ["enabled", "issue"], "instructionTemplates");
-    check(data.instructionTemplates.enabled === false && data.instructionTemplates.issue === 68, "Instruction templates are reserved for issue #68 and cannot be enabled here");
+    const templates = data.instructionTemplates;
+    check(object(templates), "Invalid instruction template configuration");
+    knownKeys(templates, ["enabled", "issue", "path", "prerequisites"], "instructionTemplates");
+    check(typeof templates.enabled === "boolean", "Instruction templates need an explicit enabled choice");
+    check(templates.issue === undefined || (Number.isSafeInteger(templates.issue) && templates.issue > 0), "Invalid template issue reference");
+    if (templates.enabled) {
+      safeRelative(templates.path);
+      strings(templates.prerequisites, "instruction template prerequisites", { names: true });
+      check(equal([...templates.prerequisites].sort(), [...INSTRUCTION_PREREQUISITES].sort()), "Preserve the template's fixed instruction prerequisites");
+      check(templates.prerequisites.every((name) => byName.get(name)?.scope === "project"), "Unknown instruction prerequisite");
+    }
   }
   if (sourceRoot) {
     const directories = readdirSync(join(sourceRoot, SKILLS), { withFileTypes: true })
@@ -320,13 +339,15 @@ function readLock(root) {
   noLinks(root, path);
   if (!existsSync(path)) return null;
   const lock = jsonFile(path);
-  check([1, 2].includes(lock.schemaVersion) && object(lock.files), "Unsupported or malformed skill lock");
+  check([1, 2, 3].includes(lock.schemaVersion) && object(lock.files), "Unsupported or malformed skill lock");
   for (const field of ["skills", "selection", "projections", "legacyInstructions"]) check(lock[field] === undefined || object(lock[field]), `Invalid lock ${field} container`);
   check(lock.catalogSource === undefined || lock.catalogSource === null || object(lock.catalogSource), "Invalid lock catalog source");
+  check(lock.instructions === undefined || lock.instructions === null || object(lock.instructions), "Invalid locked instruction bundle");
   for (const [path, record] of Object.entries(lock.files)) {
     safeRelative(path);
     check(object(record) && /^[a-f0-9]{64}$/.test(record.installedSha256 ?? ""), "Invalid locked file record");
     check(["skill", "instruction"].includes(record.kind), "Invalid locked file kind");
+    if (record.kind === "instruction" && lock.schemaVersion === 3) check(INSTRUCTION_FILES.includes(path), "Invalid managed instruction path");
     check(record.mode === undefined || [0o644, 0o755].includes(record.mode), "Invalid locked file mode");
     check(record.kind === "instruction" || (NAME.test(record.skill ?? "") && path.startsWith(`${SKILLS}/${record.skill}/`)), "Invalid managed skill ownership/path");
     noLinks(root, dirname(safePath(root, path)));
@@ -355,7 +376,7 @@ function installed(root) {
   return found;
 }
 function contextHash(root, requirements = "") {
-  const paths = [...INSTRUCTIONS, "README.md", "README.rst", "README.txt"];
+  const paths = [...INSTRUCTION_FILES, "AGENTS.override.md", "README.md", "README.rst", "README.txt"];
   return digest({ files: Object.fromEntries(paths.map((path) => [path, snapshot(safePath(root, path))])), requirements });
 }
 function changedFiles(root, lock, name) {
@@ -388,16 +409,17 @@ export function inspectProject({ root, catalog }) {
   const deprecated = [...found].filter(([name]) => Object.hasOwn(catalog.deprecations ?? {}, name)).map(([name, locations]) => ({ name, ...catalog.deprecations[name], locations, changedFiles: changedFiles(root, lock, name) }));
   return {
     mode: lock ? "update" : "init", root,
-    git: { branch: runGit(root, ["branch", "--show-current"]), head: runGit(root, ["rev-parse", "HEAD"]), status: runGit(root, ["status", "--porcelain=v1", "--untracked-files=all"]).split("\n").filter(Boolean) },
-    projectFacts: { files: files.length, extensionCounts: extensions, signalExtensionCounts: signalExtensions, supportingMetadata: files.filter((path) => path.startsWith(".github/")), manifests: files.filter((path) => /(^|\/)(package\.json|pyproject\.toml|Cargo\.toml|go\.mod|composer\.json|project\.godot)$/.test(path)), documents: files.filter((path) => /(^|\/)(README[^/]*|AGENTS\.md|CONTRIBUTING\.md|VALIDATION\.md|CLAUDE\.md)$/.test(path)) },
-    instructions: INSTRUCTIONS.filter((path) => existsSync(safePath(root, path))),
+    git: { branch: runGit(root, ["branch", "--show-current"]), head: runGit(root, ["rev-parse", "HEAD"]), statusNote: "Read-only raw-file hint; hooks, fsmonitor, and configured filters are disabled.", status: runGit(root, ["status", "--porcelain=v1", "--untracked-files=all"]).split("\n").filter(Boolean) },
+    projectFacts: { files: files.length, extensionCounts: extensions, signalExtensionCounts: signalExtensions, supportingMetadata: files.filter((path) => path.startsWith(".github/")), manifests: files.filter((path) => /(^|\/)(package\.json|pyproject\.toml|Cargo\.toml|go\.mod|composer\.json|project\.godot)$/.test(path)), documents: files.filter((path) => /(^|\/)(README[^/]*|AGENTS(?:\.override)?\.md|CONTRIBUTING\.md|DOCUMENTATION\.md|VALIDATION\.md|CLAUDE\.md)$/.test(path)) },
+    instructions: INSTRUCTION_FILES.filter((path) => existsSync(safePath(root, path))),
+    instructionBundle: { available: catalog.instructionTemplates?.enabled === true, files: INSTRUCTION_FILES.map((path) => ({ path, state: snapshot(safePath(root, path)) })), prerequisites: catalog.instructionTemplates?.enabled ? [...catalog.instructionTemplates.prerequisites] : [] },
     detectedHarnesses: HARNESSES.filter((h) => (h === "pi" && existsSync(join(root, ".pi"))) || (h === "opencode" && [".opencode", "opencode.json", "opencode.jsonc"].some((path) => existsSync(join(root, path)))) || (h === "claude-code" && existsSync(join(root, ".claude")))),
     recommendedSkills: recommended, remainingSkills: remaining, personalSkills: personal,
     installedSkills: [...found].map(([name, locations]) => ({ name, locations, catalogued: catalog.byName.has(name), deprecated: Object.hasOwn(catalog.deprecations ?? {}, name) })),
     deprecatedSkills: deprecated,
     previousDecisions: lock?.selection?.declinedSkills ?? [],
     contextHash: contextHash(root), catalogHash: catalog.hash,
-    note: "Evidence is not an installation decision. Ask about every remaining active project skill; confirm harnesses and exact removals. Root documents are read-only.",
+    note: "Assess skills and instructions separately. Ask about every remaining active project skill, the selectable instruction bundle, harnesses, and exact removals. Existing target rules still govern the operation.",
   };
 }
 function glob(pattern, path) {
@@ -536,7 +558,123 @@ function stageData(stage) {
   check(Object.keys(manifest.skills).every((name) => NAME.test(name)), "Invalid staged skill name");
   return manifest;
 }
-export async function prepareSkills({ catalog, names, stage, sourceRoot, root, targetRequirements = "", fetcher = globalThis.fetch, allowFetch = false }) {
+function instructionFiles(files, catalog) {
+  strings(files, "instructionFiles");
+  check(files.every((path) => INSTRUCTION_FILES.includes(path)), "Instruction scope is limited to the approved root bundle");
+  if (files.length) {
+    check(catalog.instructionTemplates?.enabled === true, "Instruction bundle is unavailable in this catalog");
+    check(INSTRUCTION_FILES.slice(0, 4).every((path) => files.includes(path)), "Select the complete required instruction bundle");
+  }
+  return [...files].sort();
+}
+function instructionPrerequisites(root, selected, catalog) {
+  const installed = {};
+  for (const name of closure(catalog.instructionTemplates.prerequisites, catalog)) {
+    if (selected.includes(name)) continue;
+    const dir = safePath(root, `${SKILLS}/${name}`); noLinks(root, dir);
+    check(existsSync(join(dir, "SKILL.md")), `Missing instruction prerequisite: ${name}; select it explicitly, resolve approved setup, or decline instruction changes`);
+    const meta = frontmatter(readBytes(dir, "SKILL.md").toString(), name);
+    check((meta.requires ?? []).every((requirement) => catalog.byName.get(name).prerequisites.includes(requirement)), `Review changed instruction prerequisite requirements: ${name}`);
+    installed[name] = fingerprint(dir);
+  }
+  return installed;
+}
+async function prepareInstructions({ root, stage, files, catalog, selected, sourceRoot, fetcher, cache }) {
+  const config = catalog.instructionTemplates;
+  const names = ["README.md", ...files.map((path) => path.replace(".md", ".template.md"))];
+  const sourceFiles = {}; let origin; let get;
+  if (sourceRoot) {
+    origin = { repository: catalog.repository, revision: runGit(sourceRoot, ["rev-parse", "HEAD"]), path: config.path, dirty: Boolean(runGit(sourceRoot, ["status", "--porcelain=v1", "--untracked-files=all"])) };
+    get = async (name) => readBytes(sourceRoot, `${config.path}/${name}`);
+  } else {
+    const source = await remoteTree({ repository: catalog.repository, revision: catalog.catalogSource?.revision ?? catalog.ref }, fetcher, cache);
+    origin = { repository: source.repo.url, revision: source.revision, path: config.path };
+    get = async (name) => {
+      const path = `${config.path}/${name}`;
+      check(source.tree.some((entry) => entry.path === path && entry.type === "blob" && ["100644", "100755"].includes(entry.mode)), `Missing or unsafe instruction template: ${name}`);
+      return response(`https://raw.githubusercontent.com/${source.repo.owner}/${source.repo.repo}/${source.revision}/${path.split("/").map(encodeURIComponent).join("/")}`, fetcher);
+    };
+  }
+  for (const name of names) {
+    const bytes = await get(name); check(bytes.length <= 1024 * 1024, "Instruction template exceeds the size limit");
+    writeBytes(stage, `templates/${name}`, bytes); sourceFiles[name] = digest(bytes);
+  }
+  for (const path of files) {
+    const before = snapshot(safePath(root, path));
+    check(["missing", "file"].includes(before.type), `Instruction destination conflict: ${path}`);
+    const bytes = before.type === "file" ? readBytes(root, path) : readBytes(stage, `templates/${path.replace(".md", ".template.md")}`);
+    writeBytes(stage, `instructions/${path}`, bytes);
+  }
+  return { origin, files, sourceFiles, recipeHash: digest(config), inputHash: fingerprint(join(stage, "templates")), prerequisites: instructionPrerequisites(root, selected, catalog), selectedPrerequisites: closure(config.prerequisites, catalog).filter((name) => selected.includes(name)) };
+}
+function instructionProse(text) {
+  const lines = []; let fence;
+  for (const line of text.replace(/<!--[\s\S]*?-->/g, "").split(/\r?\n/)) {
+    const mark = line.trimStart().match(/^(`{3,}|~{3,})/);
+    if (mark) { if (!fence) fence = mark[1]; else if (mark[1][0] === fence[0] && mark[1].length >= fence.length) fence = null; continue; }
+    if (!fence) lines.push(line.replace(/^\s*[-*]\s+/, ""));
+  }
+  return lines.join(" ").replace(/\s+/g, " ").trim();
+}
+function checkInstructionDraft(stage, record) {
+  check(equal(hashes(join(stage, "templates")), record.sourceFiles) && fingerprint(join(stage, "templates")) === record.inputHash, "Instruction template source changed; prepare again");
+  check(equal(walk(join(stage, "instructions")), [...record.files].sort()), "Instruction output scope differs from the prepared bundle");
+  const projectNames = new Set();
+  for (const path of record.files) {
+    const bytes = readBytes(stage, `instructions/${path}`);
+    check(bytes.length <= 1024 * 1024, `Instruction output exceeds the size limit: ${path}`);
+    const text = bytes.toString();
+    check(!/\{\{[A-Z][A-Z0-9_]*\}\}/.test(text), `Unresolved instruction field: ${path}`);
+    check(!/(?:\/home\/|\/Users\/|[A-Za-z]:\\Users\\)/.test(text), `Remove personal machine paths from ${path}`);
+    portable({ text });
+    const prose = instructionProse(text);
+    const template = readBytes(stage, `templates/${path.replace(".md", ".template.md")}`).toString();
+    const title = template.split(/\r?\n/).find((line) => line.includes("{{PROJECT_NAME}}"));
+    if (title) {
+      const [prefix, suffix] = title.split("{{PROJECT_NAME}}");
+      const heading = text.split(/\r?\n/).find((line) => line.startsWith(prefix) && line.endsWith(suffix));
+      const name = heading?.slice(prefix.length, suffix ? -suffix.length : undefined).trim();
+      check(name, `Unresolved instruction project name in ${path}`); projectNames.add(name);
+    }
+    for (const line of template.split(/\r?\n/).filter((line) => line.trim() && !/^\s*#/.test(line) && !line.includes("{{"))) {
+      check(prose.includes(instructionProse(line)), `Missing fixed template rule in ${path}`);
+    }
+  }
+  check(projectNames.size === 1, "Use one consistent project name throughout the instruction bundle");
+  return fingerprint(join(stage, "instructions"));
+}
+function instructionEvidence(root, extra = []) {
+  strings(extra, "instruction evidence");
+  const automatic = walk(root, PROJECT_SKIP, true).filter((path) => /(^|\/)(README[^/]*|AGENTS(?:\.override)?\.md|CLAUDE\.md|CONTRIBUTING\.md|DOCUMENTATION\.md|VALIDATION\.md|package\.json|pyproject\.toml|Cargo\.toml|go\.mod|composer\.json|project\.godot|Makefile|justfile|Taskfile\.ya?ml|mkdocs\.ya?ml|(?:eslint|vite|vitest|playwright|next|nuxt|astro)\.config\.[\w.]+|tsconfig[^/]*\.json|\.gitignore)$/.test(path) || path.startsWith(".github/workflows/") || /(^|\/)\.vitepress\/config\./.test(path));
+  const paths = [...new Set([...INSTRUCTION_FILES, "AGENTS.override.md", "README.md", ...automatic, ...extra])].sort();
+  const result = {};
+  for (const path of paths) {
+    safeRelative(path);
+    check(!["__proto__", "constructor", "prototype"].includes(path), "Unsafe instruction evidence key");
+    check(!/(^|\/)(?:\.env(?!\.example$)(?:\.|$)|auth\.json$|credentials(?:\.|$)|id_(?:rsa|ed25519)(?:\.|$))|\.(?:pem|key)$/.test(path), "Do not read credential files as instruction evidence");
+    noLinks(root, safePath(root, path)); const state = snapshot(safePath(root, path));
+    check(["file", "missing"].includes(state.type), "Instruction evidence must name regular files or verified absences");
+    result[path] = state;
+  }
+  return result;
+}
+function selectedInstructionGuidance(stage, record, manifest) {
+  strings(record.selectedPrerequisites, "selected instruction prerequisites", { names: true });
+  return Object.fromEntries(record.selectedPrerequisites.map((name) => {
+    check(Object.hasOwn(manifest.skills, name), "Missing selected instruction guidance");
+    return [name, fingerprint(join(stage, "skills", name))];
+  }));
+}
+export function reviewInstructions({ stage, note, evidence = [] }) {
+  const manifest = stageData(stage); check(manifest.instructions, "No instruction bundle in this stage");
+  check(typeof note === "string" && note.trim(), "Record instruction facts, decisions, preserved rules, and review results");
+  const outputHash = checkInstructionDraft(stage, manifest.instructions);
+  const inputs = instructionEvidence(manifest.targetRoot, evidence);
+  manifest.instructions.review = { note, evidence: inputs, extraEvidence: evidence, outputHash, selectedGuidance: selectedInstructionGuidance(stage, manifest.instructions, manifest) };
+  writeJson(stage, "manifest.json", manifest);
+  return { reviewed: true, files: manifest.instructions.files, outputHash };
+}
+export async function prepareSkills({ catalog, names, stage, sourceRoot, root, targetRequirements = "", instructionFiles: requestedInstructions = [], fetcher = globalThis.fetch, allowFetch = false }) {
   stage = resolve(stage);
   if (sourceRoot) sourceRoot = gitRoot(sourceRoot);
   if (root) root = gitRoot(root);
@@ -545,7 +683,13 @@ export async function prepareSkills({ catalog, names, stage, sourceRoot, root, t
   check(!existsSync(stage), "Use a fresh stage directory; existing content is never cleared");
   noLinks(dirname(stage), dirname(stage));
   const selected = closure(names, catalog);
-  if (sourceRoot && selected.some((name) => catalog.byName.get(name).source.type === "local")) {
+  const requestedFiles = instructionFiles(requestedInstructions, catalog);
+  if (requestedFiles.length) {
+    check(root, "Instruction preparation requires a target root");
+    instructionPrerequisites(root, selected, catalog);
+    check(sourceRoot || allowFetch, "Instruction template fetch requires explicit --fetch permission", 4);
+  }
+  if (sourceRoot && (requestedFiles.length || selected.some((name) => catalog.byName.get(name).source.type === "local"))) {
     const remote = runGit(sourceRoot, ["remote", "get-url", "origin"]).replace(/^git@github\.com:/, "https://github.com/");
     check(github(remote).url.toLowerCase() === github(catalog.repository).url.toLowerCase(), "Local source origin does not match the catalog owner");
     if (catalog.catalogSource) check(runGit(sourceRoot, ["rev-parse", "HEAD"]) === catalog.catalogSource.revision && !runGit(sourceRoot, ["status", "--porcelain=v1", "--untracked-files=all"]), "Local source does not match the refreshed snapshot; use its clean revision or explicit bundled review mode");
@@ -556,7 +700,7 @@ export async function prepareSkills({ catalog, names, stage, sourceRoot, root, t
     check(allowFetch || (sourceRoot && entry.source.type === "local"), "Source fetch requires explicit --fetch permission", 4);
   }
   mkdirSync(stage, { recursive: true });
-  const manifest = { marker: MARKER, catalogHash: catalog.hash, catalogSource: catalog.catalogSource, contextHash: root ? contextHash(root, targetRequirements) : digest(targetRequirements), targetRequirements, skills: {} };
+  const manifest = { marker: MARKER, catalogHash: catalog.hash, catalogSource: catalog.catalogSource, contextHash: root ? contextHash(root, targetRequirements) : digest(targetRequirements), targetRoot: root ?? null, targetRequirements, skills: {} };
   const previous = root ? readLock(root) : null;
   const cache = new Map();
   for (const name of selected) {
@@ -579,8 +723,9 @@ export async function prepareSkills({ catalog, names, stage, sourceRoot, root, t
     }
     manifest.skills[name] = record;
   }
+  if (requestedFiles.length) manifest.instructions = await prepareInstructions({ root, stage, files: requestedFiles, catalog, selected, sourceRoot, fetcher, cache });
   writeJson(stage, "manifest.json", manifest);
-  return { stage, skills: selected, needsReview: selected.filter((name) => catalog.byName.get(name).kind === "adapted" && !manifest.skills[name].review), note: "Review/edit staged instructions only. Nothing has been installed in the target." };
+  return { stage, skills: selected, instructionFiles: requestedFiles, needsReview: selected.filter((name) => catalog.byName.get(name).kind === "adapted" && !manifest.skills[name].review), instructionReviewRequired: requestedFiles.length > 0, note: "Review the external candidates. Nothing has been installed in the target." };
 }
 export function reviewSkill({ stage, name, note }) {
   const manifest = stageData(stage);
@@ -603,8 +748,10 @@ function portable(value) {
 function normalizeSelection(selection, catalog) {
   plain(selection);
   check(object(selection), "Selection must be an object");
-  knownKeys(selection, ["selectedSkills", "declinedSkills", "harnesses", "removeSkills", "resolutions", "targetRequirements", "rootFiles"], "selection");
-  check(!selection.rootFiles?.length, "Root instruction documents are outside skill synchronization; see #68");
+  knownKeys(selection, ["selectedSkills", "declinedSkills", "harnesses", "removeSkills", "resolutions", "targetRequirements", "rootFiles", "instructionFiles", "instructionApproval"], "selection");
+  check(selection.rootFiles === undefined || (Array.isArray(selection.rootFiles) && selection.rootFiles.length === 0), "Legacy rootFiles does not authorize instruction adoption; use the reviewed instruction bundle");
+  const roots = instructionFiles(selection.instructionFiles ?? [], catalog);
+  check(typeof (selection.instructionApproval ?? "") === "string" && (!roots.length || (selection.instructionApproval ?? "").trim()), "Record explicit instruction-policy approval for the displayed changes");
   const selected = closure(selection.selectedSkills, catalog);
   const harnesses = strings(selection.harnesses, "harnesses");
   check(harnesses.length > 0 && harnesses.every((name) => HARNESSES.includes(name)), "Confirm at least one supported harness");
@@ -627,16 +774,16 @@ function normalizeSelection(selection, catalog) {
   check(object(selection.resolutions ?? {}), "resolutions must map exact paths to review notes");
   for (const [path, note] of Object.entries(selection.resolutions ?? {})) {
     safeRelative(path);
-    check(selected.some((name) => path.startsWith(`${SKILLS}/${name}/`) || path === `.claude/skills/${name}`) && typeof note === "string" && note.trim(), "Invalid conflict resolution");
+    check((roots.includes(path) || selected.some((name) => path.startsWith(`${SKILLS}/${name}/`) || path === `.claude/skills/${name}`)) && typeof note === "string" && note.trim(), "Invalid conflict resolution");
   }
   check(typeof (selection.targetRequirements ?? "") === "string", "targetRequirements must be text");
-  const result = { selectedSkills: selected, declinedSkills: [...selection.declinedSkills].sort((a, b) => a.name.localeCompare(b.name)), harnesses: [...harnesses].sort(), removeSkills: [...removals].sort(), resolutions: selection.resolutions ?? {}, targetRequirements: selection.targetRequirements ?? "" };
+  const result = { selectedSkills: selected, declinedSkills: [...selection.declinedSkills].sort((a, b) => a.name.localeCompare(b.name)), harnesses: [...harnesses].sort(), removeSkills: [...removals].sort(), resolutions: selection.resolutions ?? {}, targetRequirements: selection.targetRequirements ?? "", instructionFiles: roots, instructionApproval: selection.instructionApproval ?? "" };
   portable(result);
   return result;
 }
-function actionPath(root, path) {
+function actionPath(root, path, instructionFiles = []) {
   safeRelative(path);
-  check(path === LOCK_PATH || /^\.agents\/skills\/[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[^\0]+)?$/.test(path) || /^\.(?:claude|opencode|pi)\/skills\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path), "Action is outside skill installation scope");
+  check((INSTRUCTION_FILES.includes(path) && instructionFiles.includes(path)) || path === LOCK_PATH || /^\.agents\/skills\/[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[^\0]+)?$/.test(path) || /^\.(?:claude|opencode|pi)\/skills\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path), "Action is outside the selected synchronization scope");
   const full = safePath(root, path);
   noLinks(root, dirname(full));
   return full;
@@ -653,6 +800,29 @@ export function planSync({ root, stage, selection, catalog }) {
   const previous = readLock(root);
   const files = {}; const skills = {}; const projections = {};
   const actions = [];
+  let instructions = previous?.schemaVersion === 3 ? previous.instructions ?? null : null;
+  check(equal(manifest.instructions?.files ?? [], selection.instructionFiles), "Prepared instruction scope differs from the selected bundle");
+  if (selection.instructionFiles.length) {
+    check(typeof manifest.targetRoot === "string" && existsSync(manifest.targetRoot) && realpathSync(manifest.targetRoot) === realpathSync(root), "Instruction stage belongs to another target; prepare for this worktree");
+    const prepared = manifest.instructions;
+    check(prepared.recipeHash === digest(catalog.instructionTemplates), "Instruction template recipe changed; prepare again");
+    check(equal(prepared.prerequisites, instructionPrerequisites(root, selection.selectedSkills, catalog)), "Instruction prerequisite content changed; review again");
+    check(equal(prepared.selectedPrerequisites, closure(catalog.instructionTemplates.prerequisites, catalog).filter((name) => selection.selectedSkills.includes(name))), "Selected instruction prerequisites changed; prepare again");
+    check(equal(prepared.review?.selectedGuidance, selectedInstructionGuidance(stage, prepared, manifest)), "Instruction guidance changed; review the instruction bundle again");
+    const outputHash = checkInstructionDraft(stage, prepared);
+    check(prepared.review?.outputHash === outputHash && prepared.review.note?.trim(), "Instruction output review required");
+    check(equal(prepared.review.evidence, instructionEvidence(root, prepared.review.extraEvidence)), "Instruction evidence changed; inspect, grill, and review again");
+    for (const path of selection.instructionFiles) {
+      const hash = digest(readBytes(stage, `instructions/${path}`)); const before = snapshot(actionPath(root, path, selection.instructionFiles));
+      check(["missing", "file"].includes(before.type), `Instruction destination conflict: ${path}`);
+      const old = previous?.schemaVersion === 3 ? previous.files[path] : null;
+      if (before.type === "file" && !matchesFile(before, hash, 0o644) && (!old || !matchesFile(before, old.installedSha256, old.mode))) check(selection.resolutions[path], `Local/unmanaged instruction needs an exact resolution: ${path}`);
+      const sourcePath = path.replace(".md", ".template.md");
+      files[path] = { kind: "instruction", origin: prepared.origin, sourcePath, sourceSha256: prepared.sourceFiles[sourcePath], installedSha256: hash, mode: 0o644 };
+      if (!matchesFile(before, hash, 0o644)) actions.push({ op: "write", path, from: `instructions/${path}`, before, sha256: hash, mode: 0o644, resolution: selection.resolutions[path] ?? null });
+    }
+    instructions = { ...prepared, contextHash: manifest.contextHash, outputHash };
+  }
   const existing = installed(root);
   for (const name of selection.selectedSkills) {
     const entry = catalog.byName.get(name); const prepared = manifest.skills[name];
@@ -693,7 +863,11 @@ export function planSync({ root, stage, selection, catalog }) {
     }
   }
   for (const [path, record] of Object.entries(previous?.files ?? {})) {
-    if (record.kind === "instruction" || !path.startsWith(`${SKILLS}/`) || selection.removeSkills.includes(record.skill)) continue;
+    if (record.kind === "instruction") {
+      if (previous.schemaVersion === 3 && !files[path]) files[path] = { ...record, retained: true };
+      continue;
+    }
+    if (!path.startsWith(`${SKILLS}/`) || selection.removeSkills.includes(record.skill)) continue;
     if (files[path] || actions.some((action) => action.path === path)) continue;
     if (!selection.selectedSkills.includes(record.skill)) { files[path] = { ...record, retained: true }; continue; }
     const before = snapshot(actionPath(root, path));
@@ -709,14 +883,18 @@ export function planSync({ root, stage, selection, catalog }) {
     if (!projections[path] && !selection.removeSkills.includes(record.skill)) projections[path] = { ...record, retained: true };
   }
   const legacyInstructions = { ...(previous?.legacyInstructions ?? {}) };
-  for (const [path, record] of Object.entries(previous?.files ?? {})) if (record.kind === "instruction") legacyInstructions[path] = record;
+  for (const [path, record] of Object.entries(previous?.files ?? {})) if (record.kind === "instruction" && previous.schemaVersion !== 3) legacyInstructions[path] = record;
+  for (const path of selection.instructionFiles) delete legacyInstructions[path];
   const lock = {
-    schemaVersion: 2, managerVersion: "2.0.0", catalogHash: catalog.hash, catalogSource: catalog.catalogSource,
+    schemaVersion: 3, managerVersion: "2.0.0", catalogHash: catalog.hash, catalogSource: catalog.catalogSource, instructions,
     source: { repository: catalog.repository, ref: catalog.ref },
     selection, skills: { ...(previous?.skills ?? {}), ...skills }, files, projections, legacyInstructions,
   };
   for (const name of selection.removeSkills) delete lock.skills[name];
   portable(lock);
+  // Populate guidance and deferred documents before activating the startup imports.
+  const activation = ["DOCUMENTATION.md", "VALIDATION.md", "CONTRIBUTING.md", "AGENTS.md", "CLAUDE.md"];
+  actions.sort((a, b) => (activation.indexOf(a.path) + 1) - (activation.indexOf(b.path) + 1));
   const lockBefore = snapshot(actionPath(root, LOCK_PATH));
   const lockBytes = `${JSON.stringify(lock, null, 2)}\n`;
   if (lockBefore.type !== "file" || lockBefore.sha256 !== digest(lockBytes)) actions.push({ op: "lock", path: LOCK_PATH, before: lockBefore, sha256: digest(lockBytes) });
@@ -728,10 +906,10 @@ export function applySync(options) {
   const plan = planSync(options);
   check(plan.planId === options.planId, "Plan is stale; inspect and approve a new plan");
   isolated(plan.root);
-  for (const action of plan.actions) check(equal(snapshot(actionPath(plan.root, action.path)), action.before), `Destination changed: ${action.path}`);
+  for (const action of plan.actions) check(equal(snapshot(actionPath(plan.root, action.path, plan.selection.instructionFiles)), action.before), `Destination changed: ${action.path}`);
   // All inputs are checked before the first target mutation. The lock is always last.
   for (const action of plan.actions) {
-    const path = actionPath(plan.root, action.path);
+    const path = actionPath(plan.root, action.path, plan.selection.instructionFiles);
     check(equal(snapshot(path), action.before), `Interrupted apply: destination changed: ${action.path}`);
     if (action.op === "write") writeBytes(plan.root, action.path, readBytes(plan.stage, action.from), action.mode);
     else if (action.op === "lock") writeJson(plan.root, LOCK_PATH, plan.lock);
@@ -739,11 +917,11 @@ export function applySync(options) {
       rmSync(path, { recursive: true, force: true }); mkdirSync(dirname(path), { recursive: true }); symlinkSync(action.target, path);
     } else { rmSync(path, { recursive: action.op === "remove-skill", force: true }); }
   }
-  return { mode: "applied", planId: plan.planId, actionCount: plan.actions.length, installedSkills: plan.selection.selectedSkills, removedSkills: plan.selection.removeSkills, harnesses: plan.selection.harnesses, lock: LOCK_PATH };
+  return { mode: "applied", planId: plan.planId, actionCount: plan.actions.length, installedSkills: plan.selection.selectedSkills, removedSkills: plan.selection.removeSkills, harnesses: plan.selection.harnesses, instructionFiles: plan.selection.instructionFiles, lock: LOCK_PATH };
 }
 export function projectStatus(root) {
   root = gitRoot(root); const lock = readLock(root);
-  return { root, schemaVersion: lock?.schemaVersion ?? null, files: Object.entries(lock?.files ?? {}).filter(([, r]) => r.kind !== "instruction").map(([path, record]) => ({ path, state: matchesFile(snapshot(safePath(root, path)), record.installedSha256, record.mode) ? "clean" : "modified-or-missing" })), projections: Object.entries(lock?.projections ?? {}).map(([path, record]) => ({ path, state: equal(snapshot(safePath(root, path)), { type: "link", target: record.target }) ? "clean" : "conflict-or-missing" })) };
+  return { root, schemaVersion: lock?.schemaVersion ?? null, files: Object.entries(lock?.files ?? {}).filter(([, r]) => r.kind !== "instruction" || lock.schemaVersion === 3).map(([path, record]) => ({ path, state: matchesFile(snapshot(safePath(root, path)), record.installedSha256, record.mode) ? "clean" : "modified-or-missing" })), projections: Object.entries(lock?.projections ?? {}).map(([path, record]) => ({ path, state: equal(snapshot(safePath(root, path)), { type: "link", target: record.target }) ? "clean" : "conflict-or-missing" })) };
 }
 export function planSetup({ home = homedir(), managerRoot, harnesses }) {
   home = resolve(home); managerRoot = resolve(managerRoot ?? join(home, SKILLS, "sync-my-skills"));

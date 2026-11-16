@@ -3,10 +3,10 @@ import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import {
   SyncError, loadCatalog, refreshCatalog, inspectProject, prepareSkills, reviewSkill, planSync,
-  applySync, projectStatus, planSetup, applySetup,
+  applySync, projectStatus, planSetup, applySetup, INSTRUCTION_FILES, reviewInstructions,
 } from "./sync-core.mjs";
 
-const HELP = `sync-my-skills. Approved, skills-only synchronization
+const HELP = `sync-my-skills. Approved project skills and instruction bundles
 
 Commands:
   catalog [--source-root REPO] [--catalog YAML]
@@ -14,7 +14,9 @@ Commands:
   inspect --root PROJECT [--bundled | --source-root REPO | --catalog YAML]
   prepare --root PROJECT [--skills a,b] --stage NEW_DIR [--source-root REPO]
           [--catalog YAML] [--fetch] [--target-requirements TEXT]
+          [--instructions [--claude-import]]
   review --stage DIR --name SKILL --note TEXT
+  review-instructions --stage DIR --note TEXT [--evidence JSON]
   plan --root PROJECT --stage DIR --selection JSON [--catalog YAML]
   apply --root WORKTREE --stage DIR --selection JSON [--catalog YAML]
         --apply --confirm --plan-id ID
@@ -29,10 +31,11 @@ Manager code is never automatically updated. Unsupported catalogs stop.
 Plan/inspect never mutate the target. Preparation and review write only their
 external stage. Apply requires an isolated Git worktree and a matching plan.
 Setup is a separate personal-configuration plan; it does not install packages.
-Root instruction documents and Skills CLI-owned skills-lock.json are never written.
+Instruction changes require the complete bundle, its guidance, output review,
+explicit policy approval, and a selected plan. Skills CLI-owned locks are untouched.
 `;
-const FLAGS = new Set(["apply", "confirm", "fetch", "help", "bundled"]);
-const VALUES = new Set(["root", "stage", "skills", "source-root", "catalog", "selection", "name", "note", "plan-id", "harnesses", "home", "manager-root", "target-requirements"]);
+const FLAGS = new Set(["apply", "confirm", "fetch", "help", "bundled", "instructions", "claude-import"]);
+const VALUES = new Set(["root", "stage", "skills", "source-root", "catalog", "selection", "name", "note", "plan-id", "harnesses", "home", "manager-root", "target-requirements", "evidence"]);
 function argumentsFor(argv) {
   const [command, ...args] = argv;
   const options = {};
@@ -49,9 +52,9 @@ function argumentsFor(argv) {
 function need(options, ...keys) {
   for (const key of keys) if (!options[key]) throw new SyncError(`--${key} is required`, 2);
 }
-function selection(path) {
+function selection(path, label = "selection") {
   try { return JSON.parse(readFileSync(path, "utf8")); }
-  catch { throw new SyncError("Cannot read selection JSON", 2); }
+  catch { throw new SyncError(`Cannot read ${label} JSON`, 2); }
 }
 async function main() {
   const [major, minor] = process.versions.node.split(".").map(Number);
@@ -62,6 +65,7 @@ async function main() {
   let result;
   if (command === "status") { need(o, "root"); result = projectStatus(o.root); }
   else if (command === "review") { need(o, "stage", "name", "note"); result = reviewSkill({ ...common, name: o.name, note: o.note }); }
+  else if (command === "review-instructions") { need(o, "stage", "note"); result = reviewInstructions({ ...common, note: o.note, evidence: o.evidence ? selection(o.evidence, "evidence") : [] }); }
   else if (command === "setup") {
     need(o, "harnesses");
     const input = { ...common, home: o.home, managerRoot: o["manager-root"], harnesses: o.harnesses.split(",") };
@@ -87,7 +91,9 @@ async function main() {
     else if (command === "inspect") result = { ...inspectProject({ ...common, catalog }), catalogSnapshot: { mode: snapshotMode, path: catalog.path, hash: catalog.hash, source: catalog.catalogSource } };
     else if (command === "prepare") {
       need(o, "root", "stage");
-      result = await prepareSkills({ ...common, catalog, names: o.skills ? o.skills.split(",") : [], sourceRoot: o["source-root"], allowFetch: o.fetch, targetRequirements: o["target-requirements"] ?? "" });
+      if (o["claude-import"] && !o.instructions) throw new SyncError("--claude-import requires --instructions", 2);
+      const instructionFiles = o.instructions ? [...INSTRUCTION_FILES.slice(0, 4), ...(o["claude-import"] ? ["CLAUDE.md"] : [])] : [];
+      result = await prepareSkills({ ...common, catalog, names: o.skills ? o.skills.split(",") : [], sourceRoot: o["source-root"], allowFetch: o.fetch, targetRequirements: o["target-requirements"] ?? "", instructionFiles });
     } else {
       need(o, "root", "stage", "selection");
       const input = { ...common, catalog, selection: selection(o.selection) };

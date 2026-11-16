@@ -1,4 +1,4 @@
-# Skill source and synchronization contracts
+# Synchronization data contracts
 
 ## One authored YAML catalog
 
@@ -14,7 +14,7 @@ Top-level fields:
 - `defaults.exclude`: source-relative exclusion patterns.
 - `skills`: mapping from stable skill name to its definition.
 - `deprecations`: exact old names, active replacements, and reasons.
-- `instructionTemplates`: disabled reservation for #68, not an executable feature.
+- `instructionTemplates`: an explicit `enabled` choice, owner-relative template `path`, fixed guidance `prerequisites`, and optional issue reference. Enabled bundles require `isolated-workspace`, `document-project`, `asd-ste100-technical`, and `unslop`; this does not add them to every skills-only selection.
 
 Each skill has:
 
@@ -51,7 +51,7 @@ Authored acquisition uses that same owner commit. A local checkout override must
 
 ## Investigation and decisions
 
-`inspect` returns project facts, current root-instruction paths, shallow canonical/harness-specific installation locations, harness evidence, recommendations, **every** remaining active project entry, personal tooling, explicit deprecations, and earlier declines. It does not execute target code or install anything. Git fsmonitor and repository hook discovery are disabled for helper Git reads. Complete directory fingerprints are collected only for explicit removal plans, not for every unrelated installed package.
+`inspect` returns project facts, current root-instruction paths/states, selectable bundle availability/prerequisites, shallow canonical/harness-specific installation locations, harness evidence, recommendations, **every** remaining active project entry, personal tooling, explicit deprecations, and earlier declines. It does not execute target code or install anything. Helper Git reads disable fsmonitor, hooks, and configured clean/smudge/process filters, with bounded command timeouts. Git status is a raw-file hint under those overrides, not proof of normal filter-aware cleanliness. Owner publication commands keep their normal configuration. Complete directory fingerprints are collected only for explicit removal plans, not for every unrelated installed package.
 
 The agent must investigate actual purpose rather than equate file extensions with a coding project. The catalog always recommends `document-project`, `asd-ste100-technical`, and `unslop` as documentation guidance. Each can be declined, and the helper does not add them to installation closure unless selected or genuinely required. Every remaining project entry requires a decision. Incompatible entries remain visible with limitations. Personal tooling is visible separately; it is not part of the project selection.
 
@@ -66,15 +66,19 @@ The [selection schema](../assets/selection.schema.json) describes the outside-ta
   "harnesses": ["pi"],
   "removeSkills": [],
   "resolutions": {},
-  "targetRequirements": ""
+  "targetRequirements": "",
+  "instructionFiles": [],
+  "instructionApproval": ""
 }
 ```
 
 Use real catalog names for real projects. Closure adds prerequisites and explains them in the approval plan. Every other active project entry must appear in `declinedSkills`; a declined installed skill is retained, not deleted. Runtime/tool setup and capability limitations require decisions, not automatic installation.
 
-`removeSkills` accepts only installed names in the explicit deprecation mapping. Unknown custom names and broad prefix matches cannot become removals. Exact-path `resolutions` are substantive notes for user-chosen conflicts under selected skill/projection paths; they do not authorize writes outside that scope. The agent must show the actual diff and obtain approval of the resulting plan.
+`removeSkills` accepts only installed names in the explicit deprecation mapping. Unknown custom names and broad prefix matches cannot become removals. Exact-path `resolutions` are substantive notes for user-chosen conflicts under selected skill/projection paths or selected instruction files; they do not authorize writes outside that scope. The agent must show the actual diff and obtain approval of the resulting plan.
 
-Root instruction files are read-only. A nonempty legacy `rootFiles` selection is rejected. No manager/bootstrap/core profile silently expands into a coding-policy bundle.
+An empty `instructionFiles` selection preserves root documents. A nonempty selection must include `AGENTS.md`, `CONTRIBUTING.md`, `DOCUMENTATION.md`, and `VALIDATION.md`; only `CLAUDE.md` may be added. `instructionApproval` records the owner's separate approval of the displayed policy changes. Existing differing/unmanaged instructions also require exact-path resolutions. A legacy nonempty `rootFiles` value never authorizes adoption. No manager/bootstrap/core profile silently expands into a policy bundle.
+
+See [Project instructions](project-instructions.md) before drafting. Required guidance must be explicitly selected or already installed and reviewed; installed versions and declared requirements are fingerprinted. Canonical template fields guide the LLM, not a substitution engine.
 
 ## External stage and semantic review
 
@@ -82,7 +86,9 @@ Root instruction files are read-only. A nonempty legacy `rootFiles` selection is
 
 - `raw/<name>/`: filtered source plus legal files; immutable during adaptation.
 - `skills/<name>/`: candidate output for LLM edits.
-- `manifest.json`: the pinned catalog provenance, original/resolved skill sources, source file digests and normalized executable modes, recipe fingerprints, target context, and review records.
+- `templates/`: immutable source contract and selected canonical templates, when requested.
+- `instructions/`: LLM-authored root candidates, when requested.
+- `manifest.json`: the pinned catalog provenance, original/resolved sources, source digests/modes, recipes, target context, optional instruction target/prerequisite receipts, and reviews.
 
 Selected-skill network acquisition requires explicit `--fetch`, independently of the normal catalog-only refresh. It reads data only; it never executes downloaded scripts or catalog argv. A source checkout with uncommitted changes is recorded as dirty rather than falsely claiming the commit alone identifies that content.
 
@@ -90,7 +96,9 @@ The LLM edits candidates according to intent and preserves substantive behavior,
 
 Unchanged approved adapted results can be reused when source input, recipe, target instruction/README context, explicit target requirements, and recorded installed files still match. Otherwise reassess and review. New upstream revisions are proposed/recorded deliberately; pinned upstream entries do not silently track a moving branch.
 
-Do not put credentials or unrelated private paths into requirements or review notes. Target documents are fingerprinted, not embedded in portable state.
+For instruction candidates, `review-instructions` checks source integrity, exact bundle scope, unresolved fields, visible fixed rules, consistent project names, output size, and private-path/credential constraints. It records technical review notes and evidence snapshots. Root instructions, README files, common manifests/configuration, and workflows are included automatically; `--evidence` supplies an array of additional relative files or verified absences. Custom command/configuration sources must be named explicitly. Changed evidence, installed guidance, or output invalidates the review/plan. A stage is bound to its actual instruction target.
+
+Do not put credentials or unrelated private paths into requirements or review notes. Target documents and evidence are fingerprinted, not embedded in portable state. Static checks do not replace semantic review of required fields, preserved target policy, command truth, or owner decisions.
 
 ## Plan and apply
 
@@ -100,26 +108,26 @@ Do not put credentials or unrelated private paths into requirements or review no
 - immutable staged inputs, reviewed output, catalog/recipe identity, target context;
 - current target Git branch/HEAD and before/after states;
 - each write, obsolete-file removal, metadata removal, selected Claude projection, deprecated directory/link removal, and final lock write;
-- whether an existing version-1 lock will migrate;
+- whether legacy instruction records remain historical or selected files are explicitly adopted;
 - a `planId` binding the complete result.
 
-Only canonical `.agents/skills/<name>/...`, selected Claude projections, explicitly deprecated project skill locations, and the manager lock can change. Existing shared canonical directories may be discoverable by an unselected harness; harness selection controls configuration/projections, not artificial visibility guarantees.
+Only canonical `.agents/skills/<name>/...`, selected Claude projections, explicitly deprecated project skill locations, the manager lock, and the selected five-name instruction allowlist can change. Instruction actions are writes, never arbitrary root deletions. Nested instructions and unselected root files remain outside mutation scope. Existing shared canonical directories may be discoverable by an unselected harness; harness selection controls configuration/projections, not artificial visibility guarantees.
 
 A local/unmanaged differing file or projection collision requires an exact reviewed resolution. Existing unmanaged OpenAI metadata under a selected skill receives an explicit policy-removal action. Obsolete managed source files are removed only when unchanged or explicitly resolved. Other extra/custom content stays intact.
 
 `apply` requires `--apply --confirm --plan-id` and an isolated Git worktree. It rebuilds the plan and rechecks affected snapshots before the first write and during execution. Deprecated removal fingerprints include the complete directory/link state, including untracked extras; a new file invalidates approval.
 
-The lock is written last. This is not a multi-file atomic transaction: an interrupted operation may leave partial files but must not claim successful lock recording. Preserve the worktree/stage, inspect, and obtain a new plan; never reset or blindly retry.
+Guidance/skill actions precede instruction writes; deferred documents precede `AGENTS.md` and the optional Claude import. The lock is written last. This is not a multi-file atomic transaction: an interrupted operation may leave partial files but must not claim successful lock recording. Preserve the worktree/stage, inspect, and obtain a new plan; never reset or blindly retry.
 
 With no selected skills, omit `--skills` during preparation. An empty staged set still supports explicit retain/decline decisions or a deprecated-removal-only plan. No default removal occurs.
 
 ## Machine-owned lock and migration
 
-[`../assets/ai-assets-lock.schema.json`](../assets/ai-assets-lock.schema.json) documents new version-2 `.agents/ai-assets.lock.json` writes. Skills CLI owns `skills-lock.json`; this helper never modifies it.
+[`../assets/ai-assets-lock.schema.json`](../assets/ai-assets-lock.schema.json) documents new version-3 `.agents/ai-assets.lock.json` writes. Skills CLI owns `skills-lock.json`; this helper never modifies it.
 
 The lock records catalog/recipe fingerprints, normalized decisions, resolved source and original upstream provenance, legal mappings, per-file raw/installed digests, adaptation notes/output fingerprints, target-context hashes, and actual Claude projections. Absolute machine paths and credential material are rejected.
 
-Version-1 locks can be read for an approved migration. Their root instruction records move to `legacyInstructions`, not active file management. Documents remain unchanged. Declined old skill records retain their prior installed digest so local edits are not silently adopted as clean. Removed deprecated skills lose their records only under an approved removal plan.
+Version-1/2 locks can be read for an approved migration. Their root instruction records move to `legacyInstructions`, not active file management. Documents remain unchanged until explicit bundle adoption. Version-3 `files` may contain selected `instruction` records, and `instructions` stores template provenance, reviews, evidence, and guidance receipts. Each managed instruction file retains its own template origin so a retained optional Claude bridge is not attributed to a newer bundle. Unselected previously managed instruction records are retained, never automatically removed. Explicit adoption replaces the corresponding historical record. Declined old skill records retain their prior installed digest so local edits are not silently adopted as clean. Removed deprecated skills lose their records only under an approved removal plan.
 
 Malformed or unsupported future locks stop. No implicit cleanup of unlisted skills, live personal commands, source branches, or workspaces is allowed.
 
@@ -133,4 +141,4 @@ Pi gets a personal prompt template, OpenCode gets a personal command Markdown fi
 
 Skills CLI installation is useful but does not inherently enforce this catalog's filtering or semantic adaptations. Native command behavior follows Pi's installed `docs/prompt-templates.md`, [OpenCode commands](https://opencode.ai/docs/commands/), and [Claude skills](https://code.claude.com/docs/en/skills). Static checks are not proof of live harness discovery or successful semantic LLM behavior. Check project discovery from the installed worktree, not the untouched primary checkout. Pi gates project `.agents/skills` on native project trust; non-interactive/RPC ask mode skips unapproved resources. The manager never saves a trust decision or grants that approval automatically.
 
-Track implementation in [#69](https://github.com/dragoscirjan/ai/issues/69). Root instruction templates remain reserved for [#68](https://github.com/dragoscirjan/ai/issues/68).
+Track implementation in [#69](https://github.com/dragoscirjan/ai/issues/69). Instruction adoption uses the canonical template bundle introduced for [#68](https://github.com/dragoscirjan/ai/issues/68), with separate user selection and policy approval.

@@ -37,11 +37,13 @@ When a change modifies `sync-my-skills` or its catalog:
 - Test authored/upstream/adapted preparation, complete supporting/legal files, OpenAI-metadata exclusion, output-bound adaptation review, unchanged-result reuse, and changed-source/rule/target stops.
 - Test local/unmanaged conflicts, missing files, upstream removals, exact deprecated choices, complete removal snapshots, stale plans, path/symlink escapes, and primary-checkout protection.
 - Confirm plan mode does not mutate the target and apply requires an isolated Git worktree plus `--apply --confirm --plan-id <approved-id>`.
-- Test legacy lock migration and ensure root instruction files remain byte-identical, not newly managed or deleted. Template work stays separate under #68.
+- Test version-1/2 lock migration: legacy instruction records stay historical and files remain byte-identical until explicit bundle adoption. Test version-3 ownership and retention when later instruction changes are declined.
+- Test selectable instruction scope: the complete four-file bundle and optional Claude import; existing/custom rules, fixed template prose, required guidance, resolved fields, consistent project names, exact-path resolutions, and separate policy approval. Reject arbitrary root paths, partial bundles, hidden fixed rules, and unsupported destinations.
+- Test unchanged template inputs, pinned source acquisition, target binding, evidence/prerequisite changes, edited outputs, and stale plans. Verify skill/deferred-document actions precede startup imports and the lock is last. Static checks do not prove semantic preservation or command execution.
 - Confirm the lock contains no absolute machine paths, credentials, temporary paths, or secrets. Preserve its provenance, approved decisions, and local-change baseline.
 - Confirm `skills-lock.json` remains Skills CLI-owned and `.agents/ai-assets.lock.json` remains synchronization-owned.
 - Test personal command setup in disposable home directories, including collisions and stale approvals. Do not mutate live personal configuration during tests. For Pi runtime discovery, distinguish global command loading from project skills and document the native project-trust requirement; any test-only approval must remain confined to the reviewed disposable fixture.
-- Verify Pi/OpenCode canonical discovery and only the selected Claude relative projections. Distinguish static adapter checks from live harness validation; do not claim either supplies target instruction templates.
+- Verify Pi/OpenCode canonical discovery and only the selected Claude relative projections. Distinguish static adapter/reference checks from live harness validation and model compliance. For populated instructions, verify active imports and the complete reference graph separately.
 - Confirm there is only one manager skill, no old-name compatibility package, and no automatic commit, push, publication, merge, or release.
 
 ## Coding-family changes

@@ -1,8 +1,8 @@
-# Sync skills in a project
+# Sync project skills and instructions
 
-Use `/sync-my-skills` to inspect a project, choose skills, and approve their installation or update. Install the manager once in your personal agent configuration. The projects you work on receive only the skills you select.
+Use `/sync-my-skills` to inspect a project, choose skills, and review its agent instructions. Install the manager once in your personal agent configuration. Approve skill changes and an optional instruction bundle separately.
 
-The command leaves project root documents unchanged. It does not create a documentation site, run an initializer, commit project changes, or delete deprecated skills without your choice.
+Each run assesses both scopes. Declining instruction changes keeps those files unchanged. Selecting them starts a project-specific interview and reviewed draft, not a blind template copy. Sites, initializers, trust changes, commits, and deprecated removals require their own applicable approval.
 
 ## Before you start
 
@@ -38,7 +38,7 @@ npm ci --ignore-scripts --prefix "$MANAGER"
 node "$MANAGER/scripts/sync-my-skills.mjs" --help
 ```
 
-The help should list `inspect`, `prepare`, `review`, `plan`, `apply`, `status`, and `setup`. If the package is missing, stop and check the source checkout and installation destination. If the helper cannot import `yaml`, complete the approved parser setup rather than installing dependencies during project inspection.
+The help should list `inspect`, `prepare`, `review`, `review-instructions`, `plan`, `apply`, `status`, and `setup`. If the package is missing, stop and check the source checkout and installation destination. If the helper cannot import `yaml`, complete the approved parser setup rather than installing dependencies during project inspection.
 
 Once this implementation is available on the upstream default branch, you can use the repository source instead of the clean export:
 
@@ -90,24 +90,25 @@ Answer the selection questions:
 
 1. Choose which recommended skills to install or update. You may decline them all.
 2. Review every remaining active project catalog entry. Choose additional skills or none. Earlier declines stay visible, and missing requirements or incompatible destinations must be explained.
-3. Choose the desired harnesses. Pi is a suggestion for this example, not permission to configure every harness.
-4. If deprecated installations exist, choose the exact skills to retain or remove. The default is retention. An unknown custom name is not deprecated merely because it begins with `coding-`.
+3. Choose whether to adopt or revise the instruction bundle. You can retain skills-only scope. Instruction adoption requires its four guidance skills to be selected or already installed and reviewed.
+4. Choose the desired harnesses. Pi is a suggestion for this example, not permission to configure every harness.
+5. If deprecated installations exist, choose the exact skills to retain or remove. The default is retention. An unknown custom name is not deprecated merely because it begins with `coding-`.
 
-For the first installation, you can accept the three documentation recommendations, decline other entries, and retain any deprecated skills. The agent should then prepare sources and an isolated workspace, show the actual file changes and source revisions, and ask you to approve one plan. It must stop for unavailable requirements or unresolved local edits rather than bypassing them.
+For a skills-only first installation, accept the three documentation recommendations, decline instruction changes and other entries, and retain any deprecated skills. The agent should then prepare sources and an isolated workspace, show the actual file changes and source revisions, and ask you to approve one plan. It must stop for unavailable requirements or unresolved local edits rather than bypassing them.
 
 Check the plan before approving it:
 
 - The selected skills and any prerequisites match your choices.
 - Source notices and required supporting files remain present; OpenAI metadata is excluded.
 - The manager is not being installed into the project.
-- No root instruction document or documentation site is being created or replaced.
+- Root instruction changes appear only if you selected the complete bundle and approved the displayed policy changes. Otherwise those files stay unchanged. No site is being initialized.
 - Every removal is one you explicitly selected.
 
 After an approved apply, the worktree should contain the selected skill directories under `.agents/skills/` and `.agents/ai-assets.lock.json`. Claude projections are created only when selected. The agent should report the workspace path and actual checks. Start the chosen harness in that reported worktree, then reload its resources before using the installed skills. Reloading the untouched primary checkout does not expose changes that remain only in a separate worktree.
 
 Pi also requires a project-trust decision before loading project `.agents/skills`. Review unfamiliar skills, supporting files, and other project resources before approving the native trust prompt. The helper does not grant trust or edit trust settings. In non-interactive/RPC mode, the normal ask policy skips unapproved project resources; a reviewed one-process `--approve` decision or an existing native decision is required. Do not add blanket approval merely to make discovery pass.
 
-The changes remain in that isolated worktree for review. They are not automatically committed or merged into the project's primary checkout. Installing guidance does not itself install the project's documentation toolchain or create instruction-template routes. That separate work remains under issue #68.
+The changes remain in that isolated worktree for review. They are not automatically committed or merged into the project's primary checkout. Installing guidance alone does not create instruction routes or a documentation toolchain. The optional instruction workflow below populates the existing templates without initializing a site.
 
 ### Check a reported installation
 
@@ -119,17 +120,41 @@ node "$MANAGER/scripts/sync-my-skills.mjs" status --root "$WORKTREE"
 
 Recorded installed files should report `state: clean`. A modified or missing result needs investigation; do not reset local files to obtain a clean report. The status covers recorded files, not a claim that unrelated project content was tested.
 
+## Adopt or revise project instructions
+
+Run the same command and tell the agent you want the instruction bundle reviewed too. For example:
+
+```text
+Review this project's skills and agent instructions. Use existing project evidence,
+grill me on unresolved implementation and policy choices, and preserve our rules.
+Show the instruction diff and policy changes before applying anything.
+```
+
+The required bundle is `AGENTS.md`, `CONTRIBUTING.md`, `DOCUMENTATION.md`, and `VALIDATION.md` at the repository root. The Claude import is optional. Existing content is the draft baseline; scoped instructions outside this bundle stay untouched. You can approve unchanged files alongside changed ones so the complete bundle remains consistent.
+
+The templates require `isolated-workspace`, `document-project`, `asd-ste100-technical`, and `unslop` at their canonical `.agents/skills/` paths. Select their installation/update explicitly, or review the existing versions. Missing prerequisites block instruction adoption; declining it can preserve skills-only work where current policy permits. Installing the skills does not authorize running their tools or initializers.
+
+The agent should find setup commands, test configuration, documentation sources, and approved automation from actual files. It should ask you only for unresolved choices, such as audience, desired policy changes, publication authority, or how to handle a missing gate. It must distinguish an inspected command from an executed check. Unknowns cannot be filled with guessed tools, thresholds, releases, or a new website.
+
+For this documentation-only example, an appropriate result describes the existing Markdown workflow and verified absence of an application runtime. If it proposes a code/tooling bundle or site merely to fill a field, ask it to correct the draft.
+
+Before upstream integration, provide the complete reviewed source checkout for template and maintained-package acquisition. `--bundled` selects a catalog snapshot, not an offline copy of every source package or the root templates.
+
+Review the four drafted files together. Check one project name, resolved references, preserved custom rules, fixed template gates, real commands, and explicit limitations. Approve consequential instruction-policy changes separately, then approve the combined file plan. Technical review notes do not grant this permission.
+
+After apply, `status` should report selected instruction files and skills as clean. Version-3 locks record that explicit adoption. Start the harness in the reported worktree and check its actual instruction loading; static links alone are not proof of live behavior. Instruction updates, like skill updates, remain uncommitted until separately authorized.
+
 ## Update or remove an old skill
 
 Run `/sync-my-skills` again in the project. Normal runs refresh the curated catalog first, then compare source and installed state, show earlier choices, and ask about the remaining entries again. A compatible new catalog does not replace manager code. If its schema or source-owner policy is unsupported, approve a separate manager update rather than bypassing the stop.
 
-To update the personal manager itself, repeat the reviewed installation, parser setup, and command setup with the new version. Project synchronization never performs that personal code update. A local export is not a remote update channel; use a new export or the integrated repository source.
+To update the personal manager itself, repeat the reviewed installation, parser setup, and command setup with the new version. If an older registered command differs from the new adapter, setup preserves it and stops. Review that exact diff and obtain approval for manual replacement; package installation alone does not migrate the registered prompt. Reload afterward. Project synchronization never performs that personal code update. A local export is not a remote update channel; use a new export or the integrated repository source.
 
 An unchanged approved adaptation can be reused. Changed source, adaptation instructions, or target requirements require a new review. The LLM may apply a different edit when upstream wording changes, but it must explain consequential changes and obtain approval before replacement.
 
 For a known old installation such as `coding-ts`, review its replacement and local contents. Retain it unless you want that exact installation removed. Selecting a replacement alone does not authorize removal. A changed removal directory or stale plan must cause a stop and a new approval.
 
-Unknown custom skills remain untouched. The old `sync-agent-assets` installation is an explicit deprecation, not a second supported manager. Existing version-1 manager locks can migrate under a reviewed plan; previously managed root documents stay unchanged.
+Unknown custom skills remain untouched. The old `sync-agent-assets` installation is an explicit deprecation, not a second supported manager. Version-1/2 locks migrate under a reviewed plan. Their instruction records remain historical and files unchanged until you explicitly select and approve instruction adoption.
 
 ## Other harnesses and setup limits
 
@@ -157,7 +182,9 @@ No model or provider is selected by these command files. The normal project work
 | The helper cannot load `yaml`. | Request or complete the manager's approved `npm ci --ignore-scripts` setup. Do not install target dependencies merely for detection. |
 | Setup or apply reports a stale plan. | Inspect current content and generate a new plan. Do not reuse the old identifier. |
 | A personal command already exists with different content. | Keep it and review the conflict before any replacement. |
-| A target skill contains local edits. | Review the diff and choose an exact resolution, or leave it unchanged. |
+| A target skill or instruction contains local edits. | Review the diff and choose an exact-path resolution, or leave it unchanged. |
+| Instruction fields, evidence, guidance, or policy choices are incomplete. | Resolve them before adopting the bundle, or decline that scope without bypassing current target rules. |
+| A template rule or project name fails review. | Correct the candidate against the pinned contract and actual project. Never hide required rules in examples or comments. |
 | Source acquisition or a prerequisite is unavailable. | Resolve that requirement or decline the skill. Do not silently substitute another source or version. |
 | Apply was interrupted. | Preserve the worktree and stage, inspect what changed, and obtain a new plan. Multi-file apply is not an atomic transaction. |
 | Installed project skills are absent from Pi. | Start Pi in the reported worktree and review its project-trust decision. RPC cannot show the native trust prompt; do not treat skipped unapproved resources as a failed file installation. |
