@@ -94,6 +94,15 @@
       "signals": {}
     },
     {
+      "name": "excalidraw",
+      "category": "diagramming",
+      "selection": "optional",
+      "dependencies": [],
+      "safety": "project-write-with-confirmation",
+      "harnesses": ["pi", "opencode", "claude-code"],
+      "signals": { "askWithoutSignals": true }
+    },
+    {
       "name": "grill-me",
       "category": "interview-wrapper",
       "selection": "bootstrap",

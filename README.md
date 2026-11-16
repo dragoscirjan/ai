@@ -12,6 +12,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`coding`](.agents/skills/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
 | [`debloat`](.agents/skills/debloat/SKILL.md) | Prevent overengineering and simplify existing mechanisms with evidence while preserving required behavior and boundaries. |
 | [`document-project`](.agents/skills/document-project/SKILL.md) | Create or improve task-based documentation that a developer new to the project can follow, and keep it current during implementation. |
+| [`excalidraw`](.agents/skills/excalidraw/SKILL.md) | Generate PNG/SVG diagrams locally with the official CLI and retain scene JSON for revisions. See the [first-use guide](.agents/skills/excalidraw/README.md). |
 | [`coding-with-rules`](.agents/skills/coding-with-rules/SKILL.md) | Combine the `coding` workflow with on-demand language and extension reference files. |
 | [`init-project`](.agents/skills/init-project/SKILL.md) | Initialize the shared foundation or TypeScript/Godot GDScript tooling through on-demand setup references. |
 | [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
