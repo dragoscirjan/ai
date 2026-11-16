@@ -131,8 +131,6 @@ Pi gets a personal prompt template, OpenCode gets a personal command Markdown fi
 
 ## Evidence and limits
 
-The design reuses source/filter/lock patterns from [vendir](https://github.com/carvel-dev/vendir), explicit external selection from [chezmoi](https://www.chezmoi.io/reference/special-files/chezmoiexternal-format/), and conflict visibility from [Copier](https://copier.readthedocs.io/en/stable/updating/). None is an implementation dependency.
-
 Skills CLI installation is useful but does not inherently enforce this catalog's filtering or semantic adaptations. Native command behavior follows Pi's installed `docs/prompt-templates.md`, [OpenCode commands](https://opencode.ai/docs/commands/), and [Claude skills](https://code.claude.com/docs/en/skills). Static checks are not proof of live harness discovery or successful semantic LLM behavior. Check project discovery from the installed worktree, not the untouched primary checkout. Pi gates project `.agents/skills` on native project trust; non-interactive/RPC ask mode skips unapproved resources. The manager never saves a trust decision or grants that approval automatically.
 
 Track implementation in [#69](https://github.com/dragoscirjan/ai/issues/69). Root instruction templates remain reserved for [#68](https://github.com/dragoscirjan/ai/issues/68).
