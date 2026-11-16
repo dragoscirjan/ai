@@ -446,7 +446,12 @@ test("writing-for-agents is an optional vendored skill without OpenAI-specific f
   assert.doesNotMatch(body, /\b(?:openai|codex|chatgpt)\b/i);
   const mechanics = readFileSync(join(root, "SKILL-MECHANICS.md"), "utf8");
   assert.doesNotMatch(mechanics, /\b(?:openai|codex|chatgpt)\b/i);
-  assert.match(readFileSync(join(root, "LICENSE"), "utf8"), /Copyright \(c\) 2026 Matt Pocock/);
+  const attribution = readFileSync(join(root, "README.md"), "utf8");
+  assert.match(attribution, /Matt Pocock/);
+  assert.match(attribution, /Adapted for this repository/);
+  assert.match(attribution, /Copyright \(c\) 2026 Matt Pocock/);
+  assert.match(attribution, /The above copyright notice and this permission notice/);
+  assert.equal(existsSync(join(root, "LICENSE")), false);
   assert.equal(existsSync(join(root, "agents", "openai.yaml")), false);
 });
 
