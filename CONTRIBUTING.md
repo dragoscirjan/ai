@@ -61,7 +61,7 @@ Top-level `requires` is not part of the Agent Skills standard and fails its stri
 
 ## Skills, instructions, and source ownership
 
-`.agents/skills/sync-my-skills/assets/skill-catalog.yaml` is the single authored inventory for locally authored skills, unchanged upstream sources, and maintained adaptations. Record source/version information, installation argument arrays, legal files, filtering, prerequisites, and adaptation intent there. Small patches may help, but semantic LLM adaptation is allowed when inputs change and requires a reviewed result. Do not force substantial maintained variants into brittle replacement recipes.
+`.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml` is the single authored inventory for locally authored skills, unchanged upstream sources, and maintained adaptations. Record source/version information, installation argument arrays, legal files, filtering, prerequisites, and adaptation intent there. Small patches may help, but semantic LLM adaptation is allowed when inputs change and requires a reviewed result. Do not force substantial maintained variants into brittle replacement recipes.
 
 Every `npx` invocation must include `-y` immediately after `npx`. Catalog commands are acquisition instructions, not authority to execute. Keep unwanted OpenAI metadata such as `agents/openai.yaml` out of installed outputs while preserving required supporting and legal files. Missing runtime/parser dependencies require approved setup; read-only detection never installs them.
 
