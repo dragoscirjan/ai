@@ -30,7 +30,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 | [`tdd`](.agents/skills/tdd/SKILL.md) | Build features and fix bugs test-first through agreed public interfaces, one red → green slice at a time. |
 | [`writing-for-agents`](.agents/skills/writing-for-agents/SKILL.md) | Write and refine instructions for agents, skills, prompts, and other agent-facing documents. |
 
-The [YAML catalog](.agents/skills/sync-my-skills/assets/skill-catalog.yaml) is the single inventory for authored, upstream, and adapted skills. Upstream-only `grilling`, `wait-what`, and `unslop` are recommended there without vendored copies. It records sources, pinned revisions, installation commands, exclusions, legal files, prerequisites, and semantic adaptation intent.
+The [YAML catalog](.agents/skills/sync-my-skills/assets/skill-catalog.yaml) is the single inventory for authored, upstream, and adapted skills. Upstream-only `archify`, `grilling`, `wait-what`, and `unslop` are listed there without vendored copies. It records sources, pinned revisions, installation commands, exclusions, legal files, prerequisites, and semantic adaptation intent.
 
 ## Independent skills and compositions
 

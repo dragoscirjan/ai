@@ -604,6 +604,59 @@ test("preparation permits fresh external stages beneath missing parent directori
   assert.equal(existsSync(join(stage, "skills/alpha/SKILL.md")), true);
 });
 
+test("Archify remains an optional pinned external reference with protected legal notices", () => {
+  const catalog = loadCatalog(undefined, repository); const entry = catalog.byName.get("archify");
+  assert.equal(entry.kind, "upstream"); assert.equal(entry.selection, "optional");
+  assert.deepEqual(entry.source, { type: "github", repository: "https://github.com/tt-a1i/archify", revision: "a7ed6fd6657da90414831d1d42cf95987188750c", path: "archify" });
+  assert.deepEqual(entry.prerequisites, []); assert.equal(entry.signals.askWithoutSignals, true);
+  assert.deepEqual(entry.install.argv.slice(0, 4), ["npx", "-y", "skills@1.7.4", "add"]);
+  assert.ok(entry.install.argv[4].includes(`/tree/${entry.source.revision}/archify`));
+  assert.deepEqual(entry.legal.map(({ path, target, spdx }) => [path, target, spdx]), [
+    ["archify/LICENSE", "LICENSE", "Apache-2.0"],
+    ["archify/LICENSE-MIT", "LICENSE-MIT", "MIT"],
+    ["archify/NOTICE", "NOTICE", "NOASSERTION"],
+    ["archify/THIRD_PARTY_NOTICES.md", "THIRD_PARTY_NOTICES.md", "NOASSERTION"],
+    ["archify/assets/JetBrainsMono-OFL.txt", "assets/JetBrainsMono-OFL.txt", "OFL-1.1"],
+    ["archify/explainer/vendor/pele/LICENSE", "explainer/vendor/pele/LICENSE", "MIT"],
+  ]);
+  assert.equal(existsSync(join(repository, ".agents/skills/archify")), false);
+  assert.equal(existsSync(join(repository, ".claude/skills/archify")), false);
+});
+
+test("Archify acquisition keeps supporting and legal files while excluding provider metadata", async (t) => {
+  const f = fixture(t); const catalog = loadCatalog(undefined, repository); const entry = catalog.byName.get("archify");
+  const files = new Map([
+    ["archify/SKILL.md", skill("archify")],
+    ["archify/bin/archify.mjs", "// Unexecuted fixture data.\n"],
+    ["archify/references/delivery-contract.md", "# Delivery verification\n"],
+    ["archify/agents/openai.yaml", "Unwanted provider metadata.\n"],
+    ["archify/nested/agents/openai.yaml", "Unwanted nested metadata.\n"],
+  ]);
+  for (const legal of entry.legal) files.set(legal.path, `Fixture notice ${legal.path}\n`);
+  const raw = `https://raw.githubusercontent.com/tt-a1i/archify/${entry.source.revision}/`;
+  const fetcher = async (url) => {
+    if (url === `https://api.github.com/repos/tt-a1i/archify/git/trees/${entry.source.revision}?recursive=1`) {
+      return new Response(JSON.stringify({ truncated: false, tree: [...files.keys()].map((path) => ({ path, type: "blob", mode: "100644" })) }));
+    }
+    assert.ok(url.startsWith(raw), `Unexpected acquisition URL: ${url}`);
+    const path = decodeURIComponent(url.slice(raw.length));
+    assert.ok(!path.endsWith("agents/openai.yaml"), "Excluded metadata must not be fetched");
+    return files.has(path) ? new Response(files.get(path)) : new Response("Missing", { status: 404 });
+  };
+  const stage = join(f.base, "archify-stage");
+  await prepareSkills({ catalog, names: ["archify"], stage, root: f.root, allowFetch: true, fetcher });
+  const manifest = JSON.parse(readFileSync(join(stage, "manifest.json"), "utf8"));
+  assert.equal(manifest.skills.archify.kind, "upstream");
+  assert.equal(manifest.skills.archify.origin.revision, entry.source.revision);
+  for (const legal of entry.legal) {
+    assert.equal(readFileSync(join(stage, "skills/archify", legal.target), "utf8"), files.get(legal.path));
+  }
+  assert.equal(readFileSync(join(stage, "skills/archify/bin/archify.mjs"), "utf8"), files.get("archify/bin/archify.mjs"));
+  assert.equal(existsSync(join(stage, "skills/archify/agents/openai.yaml")), false);
+  assert.equal(existsSync(join(stage, "skills/archify/nested/agents/openai.yaml")), false);
+  assert.equal(existsSync(join(f.root, ".agents/skills/archify")), false);
+});
+
 test("incoming Excalidraw registration stages its complete package without executing tools", async (t) => {
   const f = fixture(t); const catalog = loadCatalog(undefined, repository); const entry = catalog.byName.get("excalidraw");
   assert.equal(entry.kind, "authored"); assert.equal(entry.selection, "optional");

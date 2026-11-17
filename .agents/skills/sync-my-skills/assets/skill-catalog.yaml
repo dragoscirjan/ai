@@ -7,6 +7,44 @@ ref: main
 defaults:
   exclude: [ agents/openai.yaml, "**/agents/openai.yaml", node_modules/**, .git/** ]
 skills:
+  archify:
+    kind: upstream
+    description: "Generate validated interactive HTML diagrams or one-page explainers with Archify, including architecture, workflows, Mermaid input, and image/SVG/WebM exports."
+    source:
+      type: github
+      repository: https://github.com/tt-a1i/archify
+      revision: a7ed6fd6657da90414831d1d42cf95987188750c
+      path: archify
+    category: diagramming
+    selection: optional
+    safety: project-write-with-confirmation
+    harnesses: [pi, opencode, claude-code]
+    prerequisites: []
+    signals:
+      askWithoutSignals: true
+    install:
+      argv: [npx, -y, skills@1.7.4, add, https://github.com/tt-a1i/archify/tree/a7ed6fd6657da90414831d1d42cf95987188750c/archify, --skill, archify]
+    runtime:
+      - "Node.js 18 or newer; Chrome/Chromium or Microsoft Edge for required browser verification. The package is self-contained; missing tools require separately approved setup."
+    legal:
+      - path: archify/LICENSE
+        target: LICENSE
+        spdx: Apache-2.0
+      - path: archify/LICENSE-MIT
+        target: LICENSE-MIT
+        spdx: MIT
+      - path: archify/NOTICE
+        target: NOTICE
+        spdx: NOASSERTION
+      - path: archify/THIRD_PARTY_NOTICES.md
+        target: THIRD_PARTY_NOTICES.md
+        spdx: NOASSERTION
+      - path: archify/assets/JetBrainsMono-OFL.txt
+        target: assets/JetBrainsMono-OFL.txt
+        spdx: OFL-1.1
+      - path: archify/explainer/vendor/pele/LICENSE
+        target: explainer/vendor/pele/LICENSE
+        spdx: MIT
   asd-ste100-technical:
     kind: authored
     description: "Technical writing: use ASD-STE100-inspired plain language for software responses and documentation."
