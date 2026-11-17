@@ -1,0 +1,39 @@
+---
+title: "Install a reviewed skill selection"
+---
+
+# Install a reviewed skill selection
+
+An existing project needs useful skills, not an automatic copy of the entire collection.
+
+**Finish with:** A verified installation of only the approved skills and separately selected instructions.
+
+## Read the diagram
+
+![Install a reviewed skill selection: suggested skill handoffs with approval stops where applicable.](/diagrams/install-selected-skills.svg)
+
+[Open interactive diagram](/diagrams/install-selected-skills.html) · [Download SVG](/diagrams/install-selected-skills.svg) · [Editable candidate](/diagram-sources/install-selected-skills.json)
+
+Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
+
+## Before you start
+
+Use a trusted project and follow its instructions. Confirm the requested scope, installed skills, runtime tools, and any required workspace or approval. No additional instruction requirement is recorded for these selected steps.
+
+## Steps
+
+1. **Inspect the project.** [`sync-my-skills`](/skills/sync-my-skills) provides the guidance for this step.
+2. **Choose each scope.** [`sync-my-skills`](/skills/sync-my-skills) owns this approval boundary; continue only when the applicable approval or existing approved setup is established.
+3. **Prepare approved isolation.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+4. **Approve exact apply plan.** [`sync-my-skills`](/skills/sync-my-skills) owns this approval boundary; continue only when the applicable approval or existing approved setup is established.
+5. **Apply and verify status.** [`sync-my-skills`](/skills/sync-my-skills) provides the guidance for this step.
+
+## Where to stop
+
+Keep personal manager setup separate. Declined entries and unknown custom skills remain unchanged; a stale plan requires a new review.
+
+## Optional branches
+
+- Choose [`instruction-maintenance`](/skills/instruction-maintenance) when instruction routing, dependencies, metadata, or policy documents appear missing, stale, conflicting, or unsuitable.
+
+Optional branches are not prerequisites or permission to launch another phase. You can omit them or stop at the stated result. See [relationship types](/reference/relationships) for the distinction.

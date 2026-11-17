@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Choose a skill by the task",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/skill-groups.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "832abe73e8f0cfa2d52c9565ce2b516f2b776da2",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Reader-oriented group"
+        },
+        "external": {
+          "label": "Reader decision"
+        }
+      }
+    }
+  },
+  "components": [
+    {
+      "id": "choose",
+      "type": "external",
+      "label": "What do you need next?",
+      "sublabel": "Start with the actual task",
+      "icon": "person",
+      "pos": [
+        410,
+        270
+      ],
+      "size": [
+        230,
+        90
+      ],
+      "sources": [
+        {
+          "path": "README.md",
+          "line": 1,
+          "end_line": 4,
+          "label": "Collection purpose and audience"
+        }
+      ]
+    },
+    {
+      "id": "setup",
+      "type": "backend",
+      "label": "Setup",
+      "sublabel": "3 catalogued skills",
+      "icon": "none",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Skill purposes and categories"
+        }
+      ]
+    },
+    {
+      "id": "discovery",
+      "type": "backend",
+      "label": "Discovery and planning",
+      "sublabel": "7 catalogued skills",
+      "icon": "none",
+      "pos": [
+        40,
+        270
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Skill purposes and categories"
+        }
+      ]
+    },
+    {
+      "id": "coding",
+      "type": "backend",
+      "label": "Coding and quality",
+      "sublabel": "7 catalogued skills",
+      "icon": "none",
+      "pos": [
+        40,
+        500
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Skill purposes and categories"
+        }
+      ]
+    },
+    {
+      "id": "writing",
+      "type": "backend",
+      "label": "Documentation and communication",
+      "sublabel": "5 catalogued skills",
+      "icon": "none",
+      "pos": [
+        780,
+        40
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Skill purposes and categories"
+        }
+      ]
+    },
+    {
+      "id": "diagrams",
+      "type": "backend",
+      "label": "Diagrams",
+      "sublabel": "2 catalogued skills",
+      "icon": "none",
+      "pos": [
+        780,
+        270
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Skill purposes and categories"
+        }
+      ]
+    },
+    {
+      "id": "maintenance",
+      "type": "backend",
+      "label": "Coordination and maintenance",
+      "sublabel": "4 catalogued skills",
+      "icon": "none",
+      "pos": [
+        780,
+        500
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Skill purposes and categories"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "choose-setup",
+      "from": "choose",
+      "to": "setup",
+      "label": "set up"
+    },
+    {
+      "id": "choose-discovery",
+      "from": "choose",
+      "to": "discovery",
+      "label": "clarify"
+    },
+    {
+      "id": "choose-coding",
+      "from": "choose",
+      "to": "coding",
+      "label": "build"
+    },
+    {
+      "id": "choose-writing",
+      "from": "choose",
+      "to": "writing",
+      "label": "explain"
+    },
+    {
+      "id": "choose-diagrams",
+      "from": "choose",
+      "to": "diagrams",
+      "label": "visualize"
+    },
+    {
+      "id": "choose-maintenance",
+      "from": "choose",
+      "to": "maintenance",
+      "label": "coordinate"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Discovery, not execution",
+      "items": [
+        "These presentation groups help readers choose; arrows are navigation choices.",
+        "They are not runtime architecture, required dependencies, or a fixed project lifecycle."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Choose less",
+      "items": [
+        "Use the smallest useful combination for the current task.",
+        "Instructions, runtime setup, and owner approval remain separate requirements."
+      ]
+    }
+  ]
+}

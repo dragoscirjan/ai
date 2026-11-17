@@ -1,0 +1,52 @@
+---
+title: "init-project"
+---
+
+# init-project
+
+Initialize or adopt project foundations, TypeScript tooling, or Godot GDScript tooling only when explicitly requested.
+
+**Group:** [Setup](/groups/setup) · **Availability:** Authored here · **Scope:** project
+
+## When to choose it
+
+You explicitly want a new project foundation or to adopt the supported TypeScript or Godot GDScript tooling.
+
+**Expected result:** An approved, project-specific foundation and the checks appropriate to that selected baseline.
+
+## Try it
+
+Load the installed skill in your harness, then adapt this request to your project. This is a prompt, not a shell command.
+
+```text
+Use init-project to propose the smallest foundation for this project. Show the tools, files, and installation effects before making changes.
+```
+
+## Requirements and boundaries
+
+**Catalogued instruction requirements:** None recorded in the catalog.
+
+Resolve required instructions in their declared order before applying the skill. The project-specific `requires` extension is not a native harness installation guarantee. A missing requirement stops the affected phase; it does not authorize a download.
+
+**Runtime and setup:**
+
+- Requires Git, mise, and Bun with Bun.TOML.parse. Initialized targets require an approved Node 24-or-newer/pnpm control plane; GDScript also needs an explicitly selected compatible Godot toolchain. Installation and lockfile updates require approval.
+
+An inspection or coding request does not authorize initialization. Stop for baseline and installation approval; do not turn a documentation-only project into an application.
+
+## Useful combinations
+
+- [`isolated-workspace`](/skills/isolated-workspace) — A repository change needs a separate Git worktree or Jujutsu workspace instead of writes in the primary checkout.
+- [`document-project`](/skills/document-project) — Implementation changes how readers use the project, or existing documentation blocks a real developer task.
+
+These are optional companions, not extra declared requirements. Choose only what the task needs.
+
+- [Initialize only the foundation you need](/workflows/initialize-a-project)
+
+## Install or inspect
+
+Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **initializer**, not as automatically selected for every project.
+
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/init-project/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+
+Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

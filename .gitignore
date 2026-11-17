@@ -1,2 +1,9 @@
 .web_stash.db
 node_modules/
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+.docs-artifacts/
+docs/public/diagram-sources/
+docs/public/diagrams/manifest.json
+docs/public/notices/site-dependencies.txt
+docs/public/notices/collection-LICENSE.txt

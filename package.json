@@ -1,0 +1,32 @@
+{
+  "name": "ai-skills-docs",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "docs": "node scripts/docs/generate.mjs && node scripts/docs/check.mjs && vitepress build docs",
+    "serve": "node scripts/docs/generate.mjs && vitepress dev docs --host 127.0.0.1",
+    "docs:preview": "vitepress preview docs --host 127.0.0.1",
+    "docs:check": "node --test scripts/docs/*.test.mjs && node scripts/docs/check.mjs",
+    "docs:diagrams:setup": "node scripts/docs/archify.mjs setup",
+    "docs:diagrams": "node scripts/docs/archify.mjs render",
+    "format:check": "prettier --check docs scripts/docs package.json eslint.config.mjs .prettierrc.json .github/workflows/docs.publish.yml",
+    "lint": "eslint scripts/docs docs/.vitepress eslint.config.mjs",
+    "test": "node --test .agents/skills/sync-my-skills/scripts/sync-my-skills.test.mjs && bun test ./.agents/skills/isolated-workspace/scripts/create.test.ts ./.agents/skills/cleanup-workspaces/scripts/cleanup.test.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.15.0",
+    "prettier": "3.10.1",
+    "vitepress": "1.6.4",
+    "vue": "3.5.45",
+    "yaml": "2.9.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "vitepress>vite": "6.4.5"
+    }
+  }
+}

@@ -1,0 +1,79 @@
+name: Documentation artifact and destination PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Open a destination PR after building; never merge or deploy
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-publish-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  MISE_STATE_DIR: ${{ github.workspace }}/.docs-artifacts/mise-state
+  MISE_TRUSTED_CONFIG_PATHS: ${{ github.workspace }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DOCS_BASE: /projects/ai-skills/
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
+      - name: Install frozen dependencies
+        run: mise run deps:sync
+      - name: Check documentation and source
+        run: |
+          mise run format:check
+          mise run lint:check
+          mise run docs:check
+          mise exec -- pnpm audit
+      - name: Build the hosted-path site
+        run: mise run docs
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: docs-site
+          path: docs/.vitepress/dist
+          if-no-files-found: error
+
+  publication-pr:
+    needs: build
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Check out the trusted source helper
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
+      - name: Check out the destination only for its generated output
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: dragoscirjan/dragoscirjan.github.io
+          ref: main
+          path: destination
+          token: ${{ secrets.GH_TOKEN }}
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: docs-site
+          path: ${{ runner.temp }}/docs-site
+      - name: Verify output and open a destination PR without merging
+        env:
+          DOCS_PUBLISH: "true"
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: mise exec -- node scripts/docs/publish.mjs "$RUNNER_TEMP/docs-site" "$GITHUB_WORKSPACE/destination"
