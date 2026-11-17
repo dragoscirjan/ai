@@ -19,8 +19,8 @@ When a change adds or modifies a skill:
 - Verify core `name` and `description` frontmatter and the approved project/harness extensions. Do not claim raw strict Agent Skills compliance for files using nonstandard fields.
 - Validate optional `requires` as one nonempty inline JSON-compatible array: unique valid names, local or catalogued external targets, and no self-reference or cycles. A catalog entry does not prove installation: missing external requirements must stop invocation for approved setup. Check declared load order and independence of unmarked leaves.
 - Verify that each skill directory name matches its declared `name`.
-- Verify that Pi and OpenCode discover the changed skill from `.agents/skills/`.
-- Verify that Claude Code discovers it through an exact relative `.claude/skills/` symlink to the canonical `.agents/skills/` directory.
+- Verify that Pi discovers the changed source skill recursively from `.agents/skills/<category>/<name>/`.
+- Verify that synchronized installations remain flat under `.agents/skills/<name>/` and are discoverable in each selected harness. For Claude Code, check exact relative destination-project `.claude/skills/<name>` projections. This source repository has no Claude skill projections.
 - Check relative references, supporting files, and command examples.
 - Confirm that harness-specific behavior is explicit and does not masquerade as portable Agent Skills behavior.
 
@@ -29,7 +29,7 @@ When a change adds or modifies a skill:
 When a change modifies `sync-my-skills` or its catalog:
 
 - Use the approved pinned parser setup (`npm ci --ignore-scripts` in the manager package); never install dependencies merely for target detection.
-- Run `node --test .agents/skills/sync-my-skills/scripts/sync-my-skills.test.mjs` and syntax checks for its `.mjs` helpers.
+- Run `node --test .agents/skills/agentic-work/sync-my-skills/scripts/sync-my-skills.test.mjs` and syntax checks for its `.mjs` helpers.
 - Run `catalog --source-root <repository-root>` and confirm every local skill is represented exactly once, alongside valid catalog-only upstream entries.
 - Test strict YAML parsing, duplicate keys, unsafe paths/tags/aliases, source revisions, unknown entries, missing requirements, and cycles. Every `npx` argument array must start with `npx, -y`.
 - Test default catalog refresh, newly added entries, explicit bundled/local modes, unsupported-schema/owner stops, byte-bound catalog provenance, shared authored-source commits, and stage invalidation when only the catalog source pin changes. Never claim a manager self-update or silent offline fallback.
@@ -43,14 +43,14 @@ When a change modifies `sync-my-skills` or its catalog:
 - Confirm the lock contains no absolute machine paths, credentials, temporary paths, or secrets. Preserve its provenance, approved decisions, and local-change baseline.
 - Confirm `skills-lock.json` remains Skills CLI-owned and `.agents/ai-assets.lock.json` remains synchronization-owned.
 - Test personal command setup in disposable home directories, including collisions and stale approvals. Do not mutate live personal configuration during tests. For Pi runtime discovery, distinguish global command loading from project skills and document the native project-trust requirement; any test-only approval must remain confined to the reviewed disposable fixture.
-- Verify Pi/OpenCode canonical discovery and only the selected Claude relative projections. Distinguish static adapter/reference checks from live harness validation and model compliance. For populated instructions, verify active imports and the complete reference graph separately.
+- Verify recursive source inventory, exact catalog source-path coverage, duplicate-name rejection, category symlink rejection, and flat destination paths with complete supporting/legal files. Verify Pi/OpenCode destination discovery and only the selected destination-project Claude relative projections. Distinguish static adapter/reference checks from live harness validation and model compliance. For populated instructions, verify active imports and the complete reference graph separately.
 - Confirm there is only one manager skill, no old-name compatibility package, and no automatic commit, push, publication, merge, or release.
 
 ## Coding-family changes
 
 When a change adds or modifies `coding`, `coding-with-rules`, or its references:
 
-- Confirm that `coding` and `coding-with-rules` are sibling skills directly under `.agents/skills/`.
+- Confirm that source `coding` and `coding-with-rules` are sibling skills under `.agents/skills/coding/`; synchronized installations remain siblings directly under `.agents/skills/`.
 - Confirm that `coding` remains independent and `coding-with-rules` declares exactly `requires: ["coding"]`.
 - Confirm that language and extension documents are plain Markdown under `coding-with-rules/references/`, not separately discoverable skills or `requires` targets.
 - Confirm project routing selects `coding-with-rules`, resolves `coding` first, and reads only task-relevant language references before extension references. Check ambiguous headers, Bash versus POSIX selection, unsupported-language fallback, and missing-mapped-reference stops. Test declared requirement order, missing-requirement stops, and cycle rejection without a harness-specific Skill tool.
@@ -61,7 +61,7 @@ When a change adds or modifies `coding`, `coding-with-rules`, or its references:
 - Confirm that every language reference uses jscpd as the fallback duplicate detector while honoring project-configured alternatives.
 - Confirm that numeric thresholds come only from project configuration.
 - Check source links and maintenance-status notes for external guidance.
-- Verify discovery of `coding` and `coding-with-rules` in Pi, OpenCode, and Claude Code, including exact relative Claude projections. Do not advertise reference files as skills; distinguish source/static checks from live discovery.
+- Verify source discovery of `coding` and `coding-with-rules` in Pi and synchronized destination discovery in Pi, OpenCode, and Claude Code, including exact relative destination-project Claude projections. Do not advertise reference files as skills; distinguish source/static checks from live discovery.
 
 ## Workspace-skill changes
 

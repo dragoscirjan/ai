@@ -126,13 +126,16 @@ class GitIntegrationTests(unittest.TestCase):
 
     @mock.patch.object(Path, "symlink_to", side_effect=OSError("Symlinks unavailable"))
     def test_archive_preserves_skills_without_native_symlink_support(self, _symlink):
-        skill = self.root / ".agents" / "skills" / "example" / "SKILL.md"
+        skill = self.root / ".agents" / "skills" / "coding" / "example" / "SKILL.md"
         skill.parent.mkdir(parents=True)
         skill.write_text("example skill\n", encoding="utf-8")
         self.git("add", ".agents")
         # Git archives the committed link mode without requiring OS symlink privileges.
         link_blob = self.git(
-            "hash-object", "-w", "--stdin", input_text="../../.agents/skills/example"
+            "hash-object",
+            "-w",
+            "--stdin",
+            input_text="../../.agents/skills/coding/example",
         ).strip()
         self.git(
             "update-index",
@@ -160,10 +163,12 @@ class GitIntegrationTests(unittest.TestCase):
         )
         with zipfile.ZipFile(archive) as bundle:
             names = bundle.namelist()
-            self.assertIn("ai-v0.0.1/.agents/skills/example/SKILL.md", names)
+            self.assertIn("ai-v0.0.1/.agents/skills/coding/example/SKILL.md", names)
             link_name = "ai-v0.0.1/.claude/skills/example"
             self.assertTrue(stat.S_ISLNK(bundle.getinfo(link_name).external_attr >> 16))
-            self.assertEqual(bundle.read(link_name), b"../../.agents/skills/example")
+            self.assertEqual(
+                bundle.read(link_name), b"../../.agents/skills/coding/example"
+            )
             self.assertFalse(
                 any(".git/" in name or "untracked.txt" in name for name in names)
             )

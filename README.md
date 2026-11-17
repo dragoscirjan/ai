@@ -6,35 +6,35 @@ This repository contains reusable skills, instructions, configuration assets, an
 
 | Skill | Purpose |
 |---|---|
-| [`cleanup-workspaces`](.agents/skills/cleanup-workspaces/SKILL.md) | Plan and safely remove integrated Git/Jujutsu workspaces and stale registrations. |
-| [`asd-ste100-technical`](.agents/skills/asd-ste100-technical/SKILL.md) | Apply ASD-STE100-inspired plain language to developer-facing prose without losing technical precision. |
-| [`code-review`](.agents/skills/code-review/SKILL.md) | Review a diff against repository standards and its originating issue or specification with separate read-only subagents. |
-| [`coding`](.agents/skills/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
-| [`debloat`](.agents/skills/debloat/SKILL.md) | Prevent overengineering and simplify existing mechanisms with evidence while preserving required behavior and boundaries. |
-| [`document-project`](.agents/skills/document-project/SKILL.md) | Create or improve task-based documentation that a developer new to the project can follow, and keep it current during implementation. |
-| [`excalidraw`](.agents/skills/excalidraw/SKILL.md) | Generate PNG/SVG diagrams locally with the official CLI and retain scene JSON for revisions. See the [first-use guide](.agents/skills/excalidraw/README.md). |
-| [`coding-with-rules`](.agents/skills/coding-with-rules/SKILL.md) | Combine the `coding` workflow with on-demand language and extension reference files. |
-| [`init-project`](.agents/skills/init-project/SKILL.md) | Initialize the shared foundation or TypeScript/Godot GDScript tooling through on-demand setup references. |
-| [`grill-me`](.agents/skills/grill-me/SKILL.md) | Start an explicit grilling interview. |
-| [`isolated-workspace`](.agents/skills/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
-| [`instruction-maintenance`](.agents/skills/instruction-maintenance/SKILL.md) | Diagnose instruction drift, propose an exact adaptation, and wait for human approval before mutation. |
-| [`initiative`](.agents/skills/initiative/SKILL.md) | Turn an idea and evidence into an outcome-level brief, using the required grilling interview. |
-| [`plan-tasks`](.agents/skills/plan-tasks/SKILL.md) | Divide agreed scope into bounded tasks with completion evidence and genuine dependencies. |
-| [`research`](.agents/skills/research/SKILL.md) | Research a question or idea using relevant sources, with or without an existing project. |
-| [`retro`](.agents/skills/retro/SKILL.md) | Propose small process improvements from evidence about a work period. |
-| [`specify`](.agents/skills/specify/SKILL.md) | Record agreed behavior, acceptance criteria, constraints, and test boundaries. |
-| [`scaffold`](.agents/skills/scaffold/SKILL.md) | Create reviewable source skeleton files with fail-fast placeholders and stop before implementing behavior. |
-| [`subagent-orchestration`](.agents/skills/subagent-orchestration/SKILL.md) | Bound child-agent workers and reviewers, coordinate isolated write lanes, and clean integrated temporary lanes. |
-| [`systematic-debugging`](.agents/skills/systematic-debugging/SKILL.md) | Diagnose failures through evidence, root-cause tracing, controlled experiments, and project-owned verification. |
-| [`sync-my-skills`](.agents/skills/sync-my-skills/SKILL.md) | Investigate a project, choose skills and an optional instruction bundle, grill unresolved decisions, and apply one approved plan. |
-| [`tdd`](.agents/skills/tdd/SKILL.md) | Build features and fix bugs test-first through agreed public interfaces, one red → green slice at a time. |
-| [`writing-for-agents`](.agents/skills/writing-for-agents/SKILL.md) | Write and refine instructions for agents, skills, prompts, and other agent-facing documents. |
+| [`cleanup-workspaces`](.agents/skills/utility/cleanup-workspaces/SKILL.md) | Plan and safely remove integrated Git/Jujutsu workspaces and stale registrations. |
+| [`asd-ste100-technical`](.agents/skills/documentation/asd-ste100-technical/SKILL.md) | Apply ASD-STE100-inspired plain language to developer-facing prose without losing technical precision. |
+| [`code-review`](.agents/skills/coding/code-review/SKILL.md) | Review a diff against repository standards and its originating issue or specification with separate read-only subagents. |
+| [`coding`](.agents/skills/coding/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
+| [`debloat`](.agents/skills/coding/debloat/SKILL.md) | Prevent overengineering and simplify existing mechanisms with evidence while preserving required behavior and boundaries. |
+| [`document-project`](.agents/skills/documentation/document-project/SKILL.md) | Create or improve task-based documentation that a developer new to the project can follow, and keep it current during implementation. |
+| [`excalidraw`](.agents/skills/documentation/excalidraw/SKILL.md) | Generate PNG/SVG diagrams locally with the official CLI and retain scene JSON for revisions. See the [first-use guide](.agents/skills/documentation/excalidraw/README.md). |
+| [`coding-with-rules`](.agents/skills/coding/coding-with-rules/SKILL.md) | Combine the `coding` workflow with on-demand language and extension reference files. |
+| [`init-project`](.agents/skills/coding/init-project/SKILL.md) | Initialize the shared foundation or TypeScript/Godot GDScript tooling through on-demand setup references. |
+| [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) | Start an explicit grilling interview. |
+| [`isolated-workspace`](.agents/skills/utility/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
+| [`instruction-maintenance`](.agents/skills/unpolished/instruction-maintenance/SKILL.md) | Diagnose instruction drift, propose an exact adaptation, and wait for human approval before mutation. |
+| [`initiative`](.agents/skills/productivity/initiative/SKILL.md) | Turn an idea and evidence into an outcome-level brief, using the required grilling interview. |
+| [`plan-tasks`](.agents/skills/productivity/plan-tasks/SKILL.md) | Divide agreed scope into bounded tasks with completion evidence and genuine dependencies. |
+| [`research`](.agents/skills/productivity/research/SKILL.md) | Research a question or idea using relevant sources, with or without an existing project. |
+| [`retro`](.agents/skills/productivity/retro/SKILL.md) | Propose small process improvements from evidence about a work period. |
+| [`specify`](.agents/skills/productivity/specify/SKILL.md) | Record agreed behavior, acceptance criteria, constraints, and test boundaries. |
+| [`scaffold`](.agents/skills/coding/scaffold/SKILL.md) | Create reviewable source skeleton files with fail-fast placeholders and stop before implementing behavior. |
+| [`subagent-orchestration`](.agents/skills/unpolished/subagent-orchestration/SKILL.md) | Bound child-agent workers and reviewers, coordinate isolated write lanes, and clean integrated temporary lanes. |
+| [`systematic-debugging`](.agents/skills/coding/systematic-debugging/SKILL.md) | Diagnose failures through evidence, root-cause tracing, controlled experiments, and project-owned verification. |
+| [`sync-my-skills`](.agents/skills/agentic-work/sync-my-skills/SKILL.md) | Investigate a project, choose skills and an optional instruction bundle, grill unresolved decisions, and apply one approved plan. |
+| [`tdd`](.agents/skills/coding/tdd/SKILL.md) | Build features and fix bugs test-first through agreed public interfaces, one red → green slice at a time. |
+| [`writing-for-agents`](.agents/skills/agentic-work/writing-for-agents/SKILL.md) | Write and refine instructions for agents, skills, prompts, and other agent-facing documents. |
 
-The [YAML catalog](.agents/skills/sync-my-skills/assets/skill-catalog.yaml) is the single inventory for authored, upstream, and adapted skills. Upstream-only `archify`, `grilling`, `wait-what`, and `unslop` are listed there without vendored copies. It records sources, pinned revisions, installation commands, exclusions, legal files, prerequisites, and semantic adaptation intent.
+The [YAML catalog](.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml) is the single inventory for authored, upstream, and adapted skills. Upstream-only `archify`, `grilling`, `wait-what`, and `unslop` are listed there without vendored copies. It records sources, pinned revisions, installation commands, exclusions, legal files, prerequisites, and semantic adaptation intent.
 
 ## Independent skills and compositions
 
-Skills load other instructions only through declared requirements. Leaves normally omit them; `cleanup-workspaces` explicitly requires `isolated-workspace` as an owner-approved exception. Select combinations explicitly, or use a thin composition such as `grill-me`, which declares `requires: ["grilling"]`. For code work, `coding-with-rules` declares `requires: ["coding"]` and selects its own language and extension reference files on demand. The former language and extension skills are replaced by those plain documents; see the [migration guide](.agents/skills/coding-with-rules/README.md#migrate-existing-installations). Project instructions resolve requirements before applying the composition; its body defines the workflow. A requirement may resolve to an installed upstream skill identified by the YAML catalog. Stop and request approved setup when it is unavailable; do not download it implicitly.
+Skills load other instructions only through declared requirements. Leaves normally omit them; `cleanup-workspaces` explicitly requires `isolated-workspace` as an owner-approved exception. Select combinations explicitly, or use a thin composition such as `grill-me`, which declares `requires: ["grilling"]`. For code work, `coding-with-rules` declares `requires: ["coding"]` and selects its own language and extension reference files on demand. The former language and extension skills are replaced by those plain documents; see the [migration guide](.agents/skills/coding/coding-with-rules/README.md#migrate-existing-installations). Project instructions resolve requirements before applying the composition; its body defines the workflow. A requirement may resolve to an installed upstream skill identified by the YAML catalog. Stop and request approved setup when it is unavailable; do not download it implicitly.
 
 `requires` is a project extension, not a native harness loader or standard Agent Skills field. External Skills CLI commands do not automatically install its requirements. See [the declaration and compatibility contract](CONTRIBUTING.md#independent-skills-and-explicit-composition). Shared helper-code dependencies remain distinct.
 
@@ -123,7 +123,9 @@ Agreeing on a document does not automatically authorize the next stage, delegati
 
 ## Use the skills
 
-Pi and OpenCode discover canonical skills from `.agents/skills/`. Claude Code uses relative links under `.claude/skills/`; this repository's [`CLAUDE.md`](CLAUDE.md) imports its own instruction graph. Synchronizing another project's skills does **not** copy that graph or change its root documents.
+This repository groups source skills by purpose under `.agents/skills/<category>/<name>/`. Pi discovers those directories recursively. The categories are `productivity`, `coding`, `documentation`, `agentic-work`, `utility`, and `unpolished`; they do not create skill-name namespaces. Skill names remain globally unique.
+
+`sync-my-skills` installs selected skills flat under a destination project's `.agents/skills/<name>/`, without category folders. Pi and OpenCode use those canonical installations. When Claude Code is selected, the manager creates relative `.claude/skills/<name>` projections there. This source repository has no Claude skill symlinks; its [`CLAUDE.md`](CLAUDE.md) still imports its own instruction graph. Synchronizing another project's skills does **not** copy that graph or change its root documents.
 
 Install a local skill with an explicit command after reviewing it:
 
@@ -133,7 +135,7 @@ npx -y skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace
 
 Upstream-only skills are obtained from their catalogued sources, not from nonexistent directories in this repository. Raw Skills CLI installation alone does not guarantee prerequisite closure or OpenAI-metadata filtering.
 
-For cross-project synchronization, follow [Sync skills in a project](.agents/skills/sync-my-skills/README.md). It starts with a clean export from a reviewed committed checkout, installs the personal manager and pinned parser, and registers the literal `/sync-my-skills` command. It also explains the repository-source alternative once this implementation is available upstream. The manager and all three harnesses are not forced into every project. Normal runs refresh compatible catalog data into a commit-pinned snapshot; offline/review use of the installed catalog is an explicit choice, not a silent fallback.
+For cross-project synchronization, follow [Sync skills in a project](.agents/skills/agentic-work/sync-my-skills/README.md). It starts with a clean export from a reviewed committed checkout, installs the personal manager and pinned parser, and registers the literal `/sync-my-skills` command. It also explains the repository-source alternative once this implementation is available upstream. The manager and all three harnesses are not forced into every project. Normal runs refresh compatible catalog data into a commit-pinned snapshot; offline/review use of the installed catalog is an explicit choice, not a silent fallback.
 
 The LLM investigates the project's purpose and existing instructions, explains recommendations, asks about every remaining active catalog skill and exact deprecated removals, and offers instruction changes separately. For a selected bundle, it grills unresolved implementation/policy choices, drafts against the canonical templates, preserves existing rules, and obtains explicit policy and file-plan approval. It stages sources and semantic adaptations, presents one plan, and writes only after approval in an isolated Git worktree. Unrelated custom skills and local edits remain protected. Root instruction templates are reserved for [#68](https://github.com/dragoscirjan/ai/issues/68).
 

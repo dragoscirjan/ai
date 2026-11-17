@@ -12,7 +12,7 @@ AI tools that I have encountered and find useful.
 
 ## Skills
 
-- [Curated YAML catalog](.agents/skills/sync-my-skills/assets/skill-catalog.yaml): sources, commands, adaptations, and deprecations for local and upstream skills.
+- [Curated YAML catalog](.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml): sources, commands, adaptations, and deprecations for local and upstream skills.
 - https://github.com/mattpocock/skills (including the upstream `grilling` and `wait-what` skills)
 - https://github.com/cursor/plugins/tree/main/pstack/skills/unslop
 - https://github.com/vercel-labs/skills (Skills CLI)
