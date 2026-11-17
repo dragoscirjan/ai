@@ -3,6 +3,7 @@ node_modules/
 docs/.vitepress/cache/
 docs/.vitepress/dist/
 .docs-artifacts/
+/.local-skills/
 docs/public/diagram-sources/
 docs/public/diagrams/manifest.json
 docs/public/notices/site-dependencies.txt
