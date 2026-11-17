@@ -56,15 +56,15 @@ DOCS_BASE=/projects/ai-skills/ mise run docs:preview
 
 ## Change content at its source
 
-| Content                                                                         | Edit here                                                                                               |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Names, sources, selection defaults, prerequisites, runtime notes, legal records | `.agents/skills/sync-my-skills/assets/skill-catalog.yaml`, through its applicable skill-change process. |
-| Reader-oriented groups                                                          | `scripts/docs/data.mjs`                                                                                 |
-| Per-skill guidance and sample prompts                                           | `scripts/docs/skill-notes.mjs`                                                                          |
-| Supported recipes, steps, optional branches, stopping points                    | `scripts/docs/workflows.mjs`                                                                            |
-| Diagram layout and source citations                                             | `scripts/docs/diagram-specs.mjs`                                                                        |
-| Start, installation, first-use, and maintenance procedures                      | Their Markdown files under `docs/`                                                                      |
-| Navigation and theme                                                            | `docs/.vitepress/`                                                                                      |
+| Content                                                                         | Edit here                                                                                                            |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Names, sources, selection defaults, prerequisites, runtime notes, legal records | `.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml`, through its applicable skill-change process. |
+| Reader-oriented groups                                                          | `scripts/docs/data.mjs`                                                                                              |
+| Per-skill guidance and sample prompts                                           | `scripts/docs/skill-notes.mjs`                                                                                       |
+| Supported recipes, steps, optional branches, stopping points                    | `scripts/docs/workflows.mjs`                                                                                         |
+| Diagram layout and source citations                                             | `scripts/docs/diagram-specs.mjs`                                                                                     |
+| Start, installation, first-use, and maintenance procedures                      | Their Markdown files under `docs/`                                                                                   |
+| Navigation and theme                                                            | `docs/.vitepress/`                                                                                                   |
 
 The generator owns `docs/skills/`, `docs/groups/`, `docs/workflows/`, and the catalog/relationship reference pages. Do not hand-edit those generated pages or treat them as another inventory. After changing their sources:
 

@@ -6,13 +6,25 @@ title: "isolated-workspace"
 
 Create or reuse an isolated Git worktree or Jujutsu workspace before mutation, using an explicit VCS and branch or bookmark.
 
-**Group:** [Setup](/groups/setup) · **Availability:** Authored here · **Scope:** project
+**Group:** [Utility](/groups/utility) · **Availability:** Authored here · **Scope:** project
 
 ## When to choose it
 
 A repository change needs a separate Git worktree or Jujutsu workspace instead of writes in the primary checkout.
 
 **Expected result:** An explicit VCS, branch or bookmark, base revision, absolute workspace path, and reviewed creation or reuse plan.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace
+```
+
+This command selects only `isolated-workspace`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -51,10 +63,10 @@ These are optional companions, not extra declared requirements. Choose only what
 - [Delegate only the work that was authorized](/workflows/delegate-bounded-work)
 - [Repair instruction drift through exact approval](/workflows/repair-instruction-routes)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/isolated-workspace/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/utility/isolated-workspace/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

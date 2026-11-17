@@ -6,13 +6,25 @@ title: "grilling"
 
 Stress-test a plan or decision through an explicit interview.
 
-**Group:** [Discovery and planning](/groups/discovery) · **Availability:** Upstream-only; approved external setup · **Scope:** project
+**Group:** [Productivity](/groups/productivity) · **Availability:** Upstream-only; approved external setup · **Scope:** project
 
 ## When to choose it
 
 A plan or design needs a focused interview rather than another polished document built on assumptions.
 
 **Expected result:** Sharper decisions and surfaced gaps from the upstream interview workflow.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/95249b0b49782349740fd9b8c6ce32b4e59e497a/skills/productivity/grilling --skill grilling
+```
+
+This command selects only `grilling`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -46,9 +58,9 @@ These are optional companions, not extra declared requirements. Choose only what
 - [Agree on behavior before task execution](/workflows/specify-observable-behavior)
 - [Challenge a plan without implementing it](/workflows/challenge-a-design)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
 [Read the authoritative skill instructions](https://raw.githubusercontent.com/mattpocock/skills/95249b0b49782349740fd9b8c6ce32b4e59e497a/skills/productivity/grilling/SKILL.md). This link uses the immutable upstream revision `95249b0b49782349740fd9b8c6ce32b4e59e497a`; there is no vendored copy here.
 

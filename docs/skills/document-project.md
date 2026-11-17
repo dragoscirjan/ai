@@ -6,13 +6,25 @@ title: "document-project"
 
 Maintain task-based developer documentation during implementation; create or refactor VitePress/MkDocs documentation within approved scope.
 
-**Group:** [Documentation and communication](/groups/writing) · **Availability:** Authored here · **Scope:** project
+**Group:** [Documentation](/groups/documentation) · **Availability:** Authored here · **Scope:** project
 
 ## When to choose it
 
 Implementation changes how readers use the project, or existing documentation blocks a real developer task.
 
 **Expected result:** Task-first documentation with prerequisites, executable steps, expected results, and an appropriate maintenance path.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill document-project
+```
+
+This command selects only `document-project`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -53,10 +65,10 @@ These are optional companions, not extra declared requirements. Choose only what
 - [Deliver an editable image diagram](/workflows/draw-with-excalidraw)
 - [Turn a completed issue into a small improvement](/workflows/learn-from-completed-work)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **recommended**, not as automatically selected for every project.
+The catalog records this entry as **recommended**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/document-project/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/documentation/document-project/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

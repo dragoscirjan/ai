@@ -8,13 +8,13 @@
     "output": ".docs-artifacts/archify/skill-groups.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "832abe73e8f0cfa2d52c9565ce2b516f2b776da2",
+      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
       "link_mode": "local-only"
     },
     "legend": {
       "entries": {
         "backend": {
-          "label": "Reader-oriented group"
+          "label": "Collection group"
         },
         "external": {
           "label": "Reader decision"
@@ -47,10 +47,10 @@
       ]
     },
     {
-      "id": "setup",
+      "id": "productivity",
       "type": "backend",
-      "label": "Setup",
-      "sublabel": "3 catalogued skills",
+      "label": "Productivity",
+      "sublabel": "8 catalogued skills",
       "icon": "none",
       "pos": [
         40,
@@ -62,37 +62,37 @@
       ],
       "sources": [
         {
-          "path": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
-          "label": "Skill purposes and categories"
-        }
-      ]
-    },
-    {
-      "id": "discovery",
-      "type": "backend",
-      "label": "Discovery and planning",
-      "sublabel": "7 catalogued skills",
-      "icon": "none",
-      "pos": [
-        40,
-        270
-      ],
-      "size": [
-        240,
-        90
-      ],
-      "sources": [
-        {
-          "path": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
-          "label": "Skill purposes and categories"
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Catalogued skill names, sources, and purposes"
         }
       ]
     },
     {
       "id": "coding",
       "type": "backend",
-      "label": "Coding and quality",
+      "label": "Coding",
       "sublabel": "7 catalogued skills",
+      "icon": "none",
+      "pos": [
+        40,
+        270
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Catalogued skill names, sources, and purposes"
+        }
+      ]
+    },
+    {
+      "id": "documentation",
+      "type": "backend",
+      "label": "Documentation",
+      "sublabel": "6 catalogued skills",
       "icon": "none",
       "pos": [
         40,
@@ -104,16 +104,16 @@
       ],
       "sources": [
         {
-          "path": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
-          "label": "Skill purposes and categories"
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Catalogued skill names, sources, and purposes"
         }
       ]
     },
     {
-      "id": "writing",
+      "id": "agentic-work",
       "type": "backend",
-      "label": "Documentation and communication",
-      "sublabel": "5 catalogued skills",
+      "label": "Agentic work",
+      "sublabel": "2 catalogued skills",
       "icon": "none",
       "pos": [
         780,
@@ -125,16 +125,16 @@
       ],
       "sources": [
         {
-          "path": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
-          "label": "Skill purposes and categories"
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Catalogued skill names, sources, and purposes"
         }
       ]
     },
     {
-      "id": "diagrams",
+      "id": "utility",
       "type": "backend",
-      "label": "Diagrams",
-      "sublabel": "2 catalogued skills",
+      "label": "Utility",
+      "sublabel": "3 catalogued skills",
       "icon": "none",
       "pos": [
         780,
@@ -146,16 +146,16 @@
       ],
       "sources": [
         {
-          "path": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
-          "label": "Skill purposes and categories"
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Catalogued skill names, sources, and purposes"
         }
       ]
     },
     {
-      "id": "maintenance",
+      "id": "unpolished",
       "type": "backend",
-      "label": "Coordination and maintenance",
-      "sublabel": "4 catalogued skills",
+      "label": "Unpolished",
+      "sublabel": "2 catalogued skills",
       "icon": "none",
       "pos": [
         780,
@@ -167,23 +167,17 @@
       ],
       "sources": [
         {
-          "path": ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
-          "label": "Skill purposes and categories"
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Catalogued skill names, sources, and purposes"
         }
       ]
     }
   ],
   "connections": [
     {
-      "id": "choose-setup",
+      "id": "choose-productivity",
       "from": "choose",
-      "to": "setup",
-      "label": "set up"
-    },
-    {
-      "id": "choose-discovery",
-      "from": "choose",
-      "to": "discovery",
+      "to": "productivity",
       "label": "clarify"
     },
     {
@@ -193,21 +187,27 @@
       "label": "build"
     },
     {
-      "id": "choose-writing",
+      "id": "choose-documentation",
       "from": "choose",
-      "to": "writing",
+      "to": "documentation",
       "label": "explain"
     },
     {
-      "id": "choose-diagrams",
+      "id": "choose-agentic-work",
       "from": "choose",
-      "to": "diagrams",
-      "label": "visualize"
+      "to": "agentic-work",
+      "label": "configure"
     },
     {
-      "id": "choose-maintenance",
+      "id": "choose-utility",
       "from": "choose",
-      "to": "maintenance",
+      "to": "utility",
+      "label": "prepare"
+    },
+    {
+      "id": "choose-unpolished",
+      "from": "choose",
+      "to": "unpolished",
       "label": "coordinate"
     }
   ],

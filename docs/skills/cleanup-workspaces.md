@@ -6,13 +6,27 @@ title: "cleanup-workspaces"
 
 Audit integrated Git/Jujutsu workspaces, stale registrations, or authorized temporary lanes; apply only an approved exact cleanup plan.
 
-**Group:** [Coordination and maintenance](/groups/maintenance) · **Availability:** Authored here · **Scope:** project
+**Group:** [Utility](/groups/utility) · **Availability:** Authored here · **Scope:** project
 
 ## When to choose it
 
 You want to audit integrated workspaces, stale registrations, or explicitly authorized temporary lanes.
 
 **Expected result:** An evidence-based cleanup plan, followed only by the exact approved removals and a post-cleanup audit.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill cleanup-workspaces
+```
+
+This command selects only `cleanup-workspaces`. It does not install the rest of the collection or the optional companions listed on this page.
+
+Required instruction packages: [`isolated-workspace`](/skills/isolated-workspace#install-this-skill). If missing, install them separately before applying this skill. The command above does not install these requirements.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -43,10 +57,10 @@ These are optional companions, not extra declared requirements. Choose only what
 
 - [Clean only proven, approved workspaces](/workflows/clean-integrated-workspaces)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/cleanup-workspaces/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/utility/cleanup-workspaces/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

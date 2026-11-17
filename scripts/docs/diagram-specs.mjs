@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { catalog, catalogPath, groups, root } from "./data.mjs";
+import { catalog, catalogPath, catalogRelativePath, groups, root } from "./data.mjs";
 import { workflows } from "./workflows.mjs";
 
 export function identity() {
@@ -47,7 +47,7 @@ function sources(name) {
   const next = lines.findIndex((line, index) => index > start && /^ {2}[a-z0-9-]+:$/.test(line));
   return [
     {
-      path: ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
+      path: catalogRelativePath,
       line: start + 1,
       end_line: next === -1 ? lines.length - 1 : next,
       label: "Pinned source and runtime record",
@@ -139,8 +139,8 @@ export function groupSpec(repository) {
     size: [240, 90],
     sources: [
       {
-        path: ".agents/skills/sync-my-skills/assets/skill-catalog.yaml",
-        label: "Skill purposes and categories",
+        path: catalogRelativePath,
+        label: "Catalogued skill names, sources, and purposes",
       },
     ],
   }));
@@ -148,7 +148,7 @@ export function groupSpec(repository) {
     schema_version: 1,
     diagram_type: "architecture",
     meta: meta("Choose a skill by the task", "skill-groups", repository, {
-      backend: { label: "Reader-oriented group" },
+      backend: { label: "Collection group" },
       external: { label: "Reader decision" },
     }),
     components: [
@@ -170,7 +170,7 @@ export function groupSpec(repository) {
       id: `choose-${group.id}`,
       from: "choose",
       to: group.id,
-      label: ["set up", "clarify", "build", "explain", "visualize", "coordinate"][index],
+      label: ["clarify", "build", "explain", "configure", "prepare", "coordinate"][index],
     })),
     cards: [
       {

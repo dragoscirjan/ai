@@ -919,27 +919,27 @@ been cleared for every commercial, promotional, or redistributive use.</metadata
         <!-- Connection paths (before components for correct z-order) -->
         <g data-graph-role="automatic-crossover" style="--step:0">
           <path data-graph-role="automatic-crossover-underlay" d="M 426 270 L 426 122 Q 426 114 418 114 L 280 114" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="choose" data-edge-to="setup" data-edge-label="set up" data-edge-key="0" data-edge-id="choose-setup" data-composition-points="426,270;426,114;280,114" data-composition-crossover="halo" data-composition-independent="true" d="M 426 270 L 426 122 Q 426 114 418 114 L 280 114" class="a-default" data-animate="edge" style="--step: 0;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-edge-from="choose" data-edge-to="productivity" data-edge-label="clarify" data-edge-key="0" data-edge-id="choose-productivity" data-composition-points="426,270;426,114;280,114" data-composition-crossover="halo" data-composition-independent="true" d="M 426 270 L 426 122 Q 426 114 418 114 L 280 114" class="a-default" data-animate="edge" style="--step: 0;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:1">
           <path data-graph-role="automatic-crossover-underlay" d="M 410 315 L 280 315" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="choose" data-edge-to="discovery" data-edge-label="clarify" data-edge-key="1" data-edge-id="choose-discovery" data-composition-points="410,315;280,315" data-composition-crossover="halo" data-composition-independent="true" d="M 410 315 L 280 315" class="a-default" data-animate="edge" style="--step: 1;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-edge-from="choose" data-edge-to="coding" data-edge-label="build" data-edge-key="1" data-edge-id="choose-coding" data-composition-points="410,315;280,315" data-composition-crossover="halo" data-composition-independent="true" d="M 410 315 L 280 315" class="a-default" data-animate="edge" style="--step: 1;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:2">
           <path data-graph-role="automatic-crossover-underlay" d="M 426 360 L 426 508 Q 426 516 418 516 L 280 516" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="choose" data-edge-to="coding" data-edge-label="build" data-edge-key="2" data-edge-id="choose-coding" data-composition-points="426,360;426,516;280,516" data-composition-crossover="halo" data-composition-independent="true" d="M 426 360 L 426 508 Q 426 516 418 516 L 280 516" class="a-default" data-animate="edge" style="--step: 2;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-edge-from="choose" data-edge-to="documentation" data-edge-label="explain" data-edge-key="2" data-edge-id="choose-documentation" data-composition-points="426,360;426,516;280,516" data-composition-crossover="halo" data-composition-independent="true" d="M 426 360 L 426 508 Q 426 516 418 516 L 280 516" class="a-default" data-animate="edge" style="--step: 2;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:3">
           <path data-graph-role="automatic-crossover-underlay" d="M 624 270 L 624 122 Q 624 114 632 114 L 780 114" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="choose" data-edge-to="writing" data-edge-label="explain" data-edge-key="3" data-edge-id="choose-writing" data-composition-points="624,270;624,114;780,114" data-composition-crossover="halo" data-composition-independent="true" d="M 624 270 L 624 122 Q 624 114 632 114 L 780 114" class="a-default" data-animate="edge" style="--step: 3;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-edge-from="choose" data-edge-to="agentic-work" data-edge-label="configure" data-edge-key="3" data-edge-id="choose-agentic-work" data-composition-points="624,270;624,114;780,114" data-composition-crossover="halo" data-composition-independent="true" d="M 624 270 L 624 122 Q 624 114 632 114 L 780 114" class="a-default" data-animate="edge" style="--step: 3;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:4">
           <path data-graph-role="automatic-crossover-underlay" d="M 640 315 L 780 315" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="choose" data-edge-to="diagrams" data-edge-label="visualize" data-edge-key="4" data-edge-id="choose-diagrams" data-composition-points="640,315;780,315" data-composition-crossover="halo" data-composition-independent="true" d="M 640 315 L 780 315" class="a-default" data-animate="edge" style="--step: 4;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-edge-from="choose" data-edge-to="utility" data-edge-label="prepare" data-edge-key="4" data-edge-id="choose-utility" data-composition-points="640,315;780,315" data-composition-crossover="halo" data-composition-independent="true" d="M 640 315 L 780 315" class="a-default" data-animate="edge" style="--step: 4;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:5">
           <path data-graph-role="automatic-crossover-underlay" d="M 624 360 L 624 508 Q 624 516 632 516 L 780 516" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="choose" data-edge-to="maintenance" data-edge-label="coordinate" data-edge-key="5" data-edge-id="choose-maintenance" data-composition-points="624,360;624,516;780,516" data-composition-crossover="halo" data-composition-independent="true" d="M 624 360 L 624 508 Q 624 516 632 516 L 780 516" class="a-default" data-animate="edge" style="--step: 5;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-edge-from="choose" data-edge-to="unpolished" data-edge-label="coordinate" data-edge-key="5" data-edge-id="choose-unpolished" data-composition-points="624,360;624,516;780,516" data-composition-crossover="halo" data-composition-independent="true" d="M 624 360 L 624 508 Q 624 516 632 516 L 780 516" class="a-default" data-animate="edge" style="--step: 5;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
 
         <!-- Components -->
@@ -954,82 +954,82 @@ been cleared for every commercial, promotional, or redistributive use.</metadata
         <text x="525" y="329" class="t-muted" font-size="9" text-anchor="middle">Start with the actual task</text>
         </g>
 
-        <g id="node-setup" data-node-id="setup" data-node-label="Setup" tabindex="0" role="button" aria-label="Focus Setup, 3 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="3 catalogued skills" data-node-context="Architecture component">
-          <title>Setup · 3 catalogued skills · Architecture component</title>
+        <g id="node-productivity" data-node-id="productivity" data-node-label="Productivity" tabindex="0" role="button" aria-label="Focus Productivity, 8 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="8 catalogued skills" data-node-context="Architecture component">
+          <title>Productivity · 8 catalogued skills · Architecture component</title>
           <rect x="40" y="40" width="240" height="90" rx="8" class="c-mask"/>
           <rect x="40" y="40" width="240" height="90" rx="8" class="c-backend" data-animate="node" style="--step: 1; --flow-node-name: archify-relay-node-1;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="160" y="83" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Setup</text>
-        <text x="160" y="99" class="t-muted" font-size="9" text-anchor="middle">3 catalogued skills</text>
+          <text data-node-label="" x="160" y="83" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Productivity</text>
+        <text x="160" y="99" class="t-muted" font-size="9" text-anchor="middle">8 catalogued skills</text>
         </g>
 
-        <g id="node-discovery" data-node-id="discovery" data-node-label="Discovery and planning" tabindex="0" role="button" aria-label="Focus Discovery and planning, 7 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="7 catalogued skills" data-node-context="Architecture component">
-          <title>Discovery and planning · 7 catalogued skills · Architecture component</title>
+        <g id="node-coding" data-node-id="coding" data-node-label="Coding" tabindex="0" role="button" aria-label="Focus Coding, 7 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="7 catalogued skills" data-node-context="Architecture component">
+          <title>Coding · 7 catalogued skills · Architecture component</title>
           <rect x="40" y="270" width="240" height="90" rx="8" class="c-mask"/>
           <rect x="40" y="270" width="240" height="90" rx="8" class="c-backend" data-animate="node" style="--step: 2; --flow-node-name: archify-relay-node-2;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="160" y="313" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Discovery and planning</text>
+          <text data-node-label="" x="160" y="313" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Coding</text>
         <text x="160" y="329" class="t-muted" font-size="9" text-anchor="middle">7 catalogued skills</text>
         </g>
 
-        <g id="node-coding" data-node-id="coding" data-node-label="Coding and quality" tabindex="0" role="button" aria-label="Focus Coding and quality, 7 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="7 catalogued skills" data-node-context="Architecture component">
-          <title>Coding and quality · 7 catalogued skills · Architecture component</title>
+        <g id="node-documentation" data-node-id="documentation" data-node-label="Documentation" tabindex="0" role="button" aria-label="Focus Documentation, 6 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="6 catalogued skills" data-node-context="Architecture component">
+          <title>Documentation · 6 catalogued skills · Architecture component</title>
           <rect x="40" y="500" width="240" height="90" rx="8" class="c-mask"/>
           <rect x="40" y="500" width="240" height="90" rx="8" class="c-backend" data-animate="node" style="--step: 3; --flow-node-name: archify-relay-node-3;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="160" y="543" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Coding and quality</text>
-        <text x="160" y="559" class="t-muted" font-size="9" text-anchor="middle">7 catalogued skills</text>
+          <text data-node-label="" x="160" y="543" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Documentation</text>
+        <text x="160" y="559" class="t-muted" font-size="9" text-anchor="middle">6 catalogued skills</text>
         </g>
 
-        <g id="node-writing" data-node-id="writing" data-node-label="Documentation and communication" tabindex="0" role="button" aria-label="Focus Documentation and communication, 5 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="5 catalogued skills" data-node-context="Architecture component">
-          <title>Documentation and communication · 5 catalogued skills · Architecture component</title>
+        <g id="node-agentic-work" data-node-id="agentic-work" data-node-label="Agentic work" tabindex="0" role="button" aria-label="Focus Agentic work, 2 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="2 catalogued skills" data-node-context="Architecture component">
+          <title>Agentic work · 2 catalogued skills · Architecture component</title>
           <rect x="780" y="40" width="240" height="90" rx="8" class="c-mask"/>
           <rect x="780" y="40" width="240" height="90" rx="8" class="c-backend" data-animate="node" style="--step: 4; --flow-node-name: archify-relay-node-4;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="900" y="83" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Documentation and communication</text>
-        <text x="900" y="99" class="t-muted" font-size="9" text-anchor="middle">5 catalogued skills</text>
+          <text data-node-label="" x="900" y="83" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Agentic work</text>
+        <text x="900" y="99" class="t-muted" font-size="9" text-anchor="middle">2 catalogued skills</text>
         </g>
 
-        <g id="node-diagrams" data-node-id="diagrams" data-node-label="Diagrams" tabindex="0" role="button" aria-label="Focus Diagrams, 2 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="2 catalogued skills" data-node-context="Architecture component">
-          <title>Diagrams · 2 catalogued skills · Architecture component</title>
+        <g id="node-utility" data-node-id="utility" data-node-label="Utility" tabindex="0" role="button" aria-label="Focus Utility, 3 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="3 catalogued skills" data-node-context="Architecture component">
+          <title>Utility · 3 catalogued skills · Architecture component</title>
           <rect x="780" y="270" width="240" height="90" rx="8" class="c-mask"/>
           <rect x="780" y="270" width="240" height="90" rx="8" class="c-backend" data-animate="node" style="--step: 5; --flow-node-name: archify-relay-node-5;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="900" y="313" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Diagrams</text>
-        <text x="900" y="329" class="t-muted" font-size="9" text-anchor="middle">2 catalogued skills</text>
+          <text data-node-label="" x="900" y="313" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Utility</text>
+        <text x="900" y="329" class="t-muted" font-size="9" text-anchor="middle">3 catalogued skills</text>
         </g>
 
-        <g id="node-maintenance" data-node-id="maintenance" data-node-label="Coordination and maintenance" tabindex="0" role="button" aria-label="Focus Coordination and maintenance, 4 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="4 catalogued skills" data-node-context="Architecture component">
-          <title>Coordination and maintenance · 4 catalogued skills · Architecture component</title>
+        <g id="node-unpolished" data-node-id="unpolished" data-node-label="Unpolished" tabindex="0" role="button" aria-label="Focus Unpolished, 2 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="2 catalogued skills" data-node-context="Architecture component">
+          <title>Unpolished · 2 catalogued skills · Architecture component</title>
           <rect x="780" y="500" width="240" height="90" rx="8" class="c-mask"/>
           <rect x="780" y="500" width="240" height="90" rx="8" class="c-backend" data-animate="node" style="--step: 6; --flow-node-name: archify-relay-node-6;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="900" y="543" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Coordination and maintenance</text>
-        <text x="900" y="559" class="t-muted" font-size="9" text-anchor="middle">4 catalogued skills</text>
+          <text data-node-label="" x="900" y="543" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Unpolished</text>
+        <text x="900" y="559" class="t-muted" font-size="9" text-anchor="middle">2 catalogued skills</text>
         </g>
 
         <!-- Connection labels -->
-        <g data-edge-from="choose" data-edge-to="setup" data-edge-label="set up" data-edge-key="0" data-edge-id="choose-setup">
-          <rect x="333.6" y="94" width="38.8" height="14" rx="3" class="c-mask"/>
-          <text x="353" y="104" class="t-edge-default" font-size="8" text-anchor="middle">set up</text>
+        <g data-edge-from="choose" data-edge-to="productivity" data-edge-label="clarify" data-edge-key="0" data-edge-id="choose-productivity">
+          <rect x="331.2" y="94" width="43.6" height="14" rx="3" class="c-mask"/>
+          <text x="353" y="104" class="t-edge-default" font-size="8" text-anchor="middle">clarify</text>
         </g>
-        <g data-edge-from="choose" data-edge-to="discovery" data-edge-label="clarify" data-edge-key="1" data-edge-id="choose-discovery">
-          <rect x="323.2" y="295" width="43.6" height="14" rx="3" class="c-mask"/>
-          <text x="345" y="305" class="t-edge-default" font-size="8" text-anchor="middle">clarify</text>
+        <g data-edge-from="choose" data-edge-to="coding" data-edge-label="build" data-edge-key="1" data-edge-id="choose-coding">
+          <rect x="328" y="295" width="34" height="14" rx="3" class="c-mask"/>
+          <text x="345" y="305" class="t-edge-default" font-size="8" text-anchor="middle">build</text>
         </g>
-        <g data-edge-from="choose" data-edge-to="coding" data-edge-label="build" data-edge-key="2" data-edge-id="choose-coding">
-          <rect x="336" y="496" width="34" height="14" rx="3" class="c-mask"/>
-          <text x="353" y="506" class="t-edge-default" font-size="8" text-anchor="middle">build</text>
+        <g data-edge-from="choose" data-edge-to="documentation" data-edge-label="explain" data-edge-key="2" data-edge-id="choose-documentation">
+          <rect x="331.2" y="496" width="43.6" height="14" rx="3" class="c-mask"/>
+          <text x="353" y="506" class="t-edge-default" font-size="8" text-anchor="middle">explain</text>
         </g>
-        <g data-edge-from="choose" data-edge-to="writing" data-edge-label="explain" data-edge-key="3" data-edge-id="choose-writing">
-          <rect x="680.2" y="94" width="43.6" height="14" rx="3" class="c-mask"/>
-          <text x="702" y="104" class="t-edge-default" font-size="8" text-anchor="middle">explain</text>
+        <g data-edge-from="choose" data-edge-to="agentic-work" data-edge-label="configure" data-edge-key="3" data-edge-id="choose-agentic-work">
+          <rect x="675.4" y="94" width="53.199999999999996" height="14" rx="3" class="c-mask"/>
+          <text x="702" y="104" class="t-edge-default" font-size="8" text-anchor="middle">configure</text>
         </g>
-        <g data-edge-from="choose" data-edge-to="diagrams" data-edge-label="visualize" data-edge-key="4" data-edge-id="choose-diagrams">
-          <rect x="683.4" y="295" width="53.199999999999996" height="14" rx="3" class="c-mask"/>
-          <text x="710" y="305" class="t-edge-default" font-size="8" text-anchor="middle">visualize</text>
+        <g data-edge-from="choose" data-edge-to="utility" data-edge-label="prepare" data-edge-key="4" data-edge-id="choose-utility">
+          <rect x="688.2" y="295" width="43.6" height="14" rx="3" class="c-mask"/>
+          <text x="710" y="305" class="t-edge-default" font-size="8" text-anchor="middle">prepare</text>
         </g>
-        <g data-edge-from="choose" data-edge-to="maintenance" data-edge-label="coordinate" data-edge-key="5" data-edge-id="choose-maintenance">
+        <g data-edge-from="choose" data-edge-to="unpolished" data-edge-label="coordinate" data-edge-key="5" data-edge-id="choose-unpolished">
           <rect x="673" y="496" width="58" height="14" rx="3" class="c-mask"/>
           <text x="702" y="506" class="t-edge-default" font-size="8" text-anchor="middle">coordinate</text>
         </g>
@@ -1040,13 +1040,13 @@ been cleared for every commercial, promotional, or redistributive use.</metadata
         <!-- Legend -->
         <g data-legend="">
           <text x="40" y="622" class="t-primary" font-size="12" font-weight="650">Legend</text>
-          <g data-legend-semantic-kind="backend" data-legend-x="40" data-legend-baseline="642" data-legend-width="174">
+          <g data-legend-semantic-kind="backend" data-legend-x="40" data-legend-baseline="642" data-legend-width="143">
             <rect x="40" y="633" width="16" height="10" rx="2.5" class="c-backend" stroke-width="1"/>
-            <text x="62" y="642" class="t-muted" font-size="10" font-weight="500">Reader-oriented group</text>
+            <text x="62" y="642" class="t-muted" font-size="10" font-weight="500">Collection group</text>
           </g>
-          <g data-legend-semantic-kind="external" data-legend-x="236" data-legend-baseline="642" data-legend-width="136">
-            <rect x="236" y="633" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
-            <text x="258" y="642" class="t-muted" font-size="10" font-weight="500">Reader decision</text>
+          <g data-legend-semantic-kind="external" data-legend-x="205" data-legend-baseline="642" data-legend-width="136">
+            <rect x="205" y="633" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
+            <text x="227" y="642" class="t-muted" font-size="10" font-weight="500">Reader decision</text>
           </g>
         </g>
       </svg>

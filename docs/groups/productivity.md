@@ -1,24 +1,24 @@
 ---
-title: "Discovery and planning"
+title: "Productivity"
 ---
 
-# Discovery and planning
+# Productivity
 
-Investigate questions and agree on outcomes, specifications, and tasks.
+Research questions, shape initiatives, specify behavior, plan tasks, and learn from results.
 
-Choose by the task you have now. These groups describe reader needs, not a mandatory delivery pipeline.
-
-## [`research`](/skills/research)
-
-Research a question, compare alternatives, or investigate feasibility; report verified evidence, uncertainty, and limits.
-
-**Choose it when:** A decision depends on facts, alternatives, feasibility, or evidence that you do not yet have.
+Choose by the task you have now. These are the collection's groups, including external recommendations. They are not a mandatory delivery pipeline.
 
 ## [`initiative`](/skills/initiative)
 
 Turn an idea or research into an agreed brief covering the problem, outcomes, scope, constraints, and success measures.
 
 **Choose it when:** An idea needs an agreed problem, outcome, scope, constraints, and success measures before solution work.
+
+## [`research`](/skills/research)
+
+Research a question, compare alternatives, or investigate feasibility; report verified evidence, uncertainty, and limits.
+
+**Choose it when:** A decision depends on facts, alternatives, feasibility, or evidence that you do not yet have.
 
 ## [`specify`](/skills/specify)
 
@@ -31,6 +31,12 @@ Turn agreed decisions into a compact specification with observable behavior, acc
 Divide an agreed specification or clear scope into bounded, verifiable tasks with explicit dependencies and completion evidence.
 
 **Choose it when:** The scope or specification is clear enough to divide into bounded pieces of work.
+
+## [`retro`](/skills/retro)
+
+Review a bounded work period for evidence-backed process improvements, including workflow, instructions, tools, and handoffs.
+
+**Choose it when:** A bounded completed work period has enough evidence to review what helped, failed, or should change.
 
 ## [`grill-me`](/skills/grill-me)
 
@@ -57,4 +63,5 @@ Explain the current proposal again with simpler language and missing context.
 - [Agree on behavior before task execution](/workflows/specify-observable-behavior) — An agreed direction still leaves observable behavior or acceptance criteria open.
 - [Divide agreed scope into verifiable tasks](/workflows/plan-bounded-tasks) — The work is understood but too large to execute as one unbounded change.
 - [Challenge a plan without implementing it](/workflows/challenge-a-design) — A confident proposal may conceal unresolved assumptions or decisions.
+- [Turn a completed issue into a small improvement](/workflows/learn-from-completed-work) — A bounded work period has enough evidence to examine the process.
 - [Ask for a clearer explanation](/workflows/re-pitch-an-explanation) — The last proposal or explanation is unclear, lacks context, or does not use the project's shared vocabulary.

@@ -11,7 +11,7 @@ import {
 } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, relative, resolve, sep } from "node:path";
-import { prepareSkills } from "../../.agents/skills/sync-my-skills/scripts/sync-core.mjs";
+import { prepareSkills } from "../../.agents/skills/agentic-work/sync-my-skills/scripts/sync-core.mjs";
 import { catalog, root } from "./data.mjs";
 
 const sha = (bytes) => createHash("sha256").update(bytes).digest("hex");

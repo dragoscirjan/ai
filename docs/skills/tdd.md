@@ -6,13 +6,25 @@ title: "tdd"
 
 Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
 
-**Group:** [Coding and quality](/groups/coding) · **Availability:** Upstream-derived; maintained here · **Scope:** project
+**Group:** [Coding](/groups/coding) · **Availability:** Upstream-derived; maintained here · **Scope:** project
 
 ## When to choose it
 
 You explicitly want test-first feature or bug work, or integration-test slices through public behavior.
 
 **Expected result:** One observed failing behavior test and the smallest change that passes it at a user-confirmed seam. Refactoring is a later review-stage handoff, not part of this implementation loop.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill tdd
+```
+
+This command selects only `tdd`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -47,10 +59,10 @@ These are optional companions, not extra declared requirements. Choose only what
 - [Find the root cause before proposing a fix](/workflows/diagnose-a-failure)
 - [Create a skeleton and stop](/workflows/scaffold-without-implementation)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/tdd/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/coding/tdd/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

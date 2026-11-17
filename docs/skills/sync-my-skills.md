@@ -6,13 +6,25 @@ title: "sync-my-skills"
 
 Synchronize project skills and agent instructions through a guided, approved plan.
 
-**Group:** [Setup](/groups/setup) · **Availability:** Authored here · **Scope:** personal
+**Group:** [Agentic work](/groups/agentic-work) · **Availability:** Authored here · **Scope:** personal
 
 ## When to choose it
 
 You want to choose project skills and review an optional instruction bundle without replacing custom policy blindly.
 
 **Expected result:** A reviewed selection and exact apply plan, followed by installed-state verification when you approve the writes.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. This is a personal installation. Command registration and project synchronization are separate optional actions.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill sync-my-skills --global
+```
+
+This command selects only `sync-my-skills`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -43,10 +55,10 @@ These are optional companions, not extra declared requirements. Choose only what
 
 - [Install a reviewed skill selection](/workflows/install-selected-skills)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/sync-my-skills/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/agentic-work/sync-my-skills/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

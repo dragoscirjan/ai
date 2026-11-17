@@ -12,37 +12,37 @@ hero:
       text: Explore workflows
       link: /workflows/
 features:
-  - title: Set up the workspace
-    details: Choose skills, establish project tooling, and keep changes out of the primary checkout.
-    link: /groups/setup
-    linkText: Explore setup
-  - title: Clarify the work
-    details: Research a question, pressure-test decisions, and agree on outcomes before planning tasks.
-    link: /groups/discovery
-    linkText: Explore discovery and planning
-  - title: Build and check
-    details: Implement, test, diagnose, simplify, and review the behavior that matters.
+  - title: Productivity
+    details: Research questions, shape initiatives, specify behavior, plan tasks, and review completed work.
+    link: /groups/productivity
+    linkText: Explore productivity
+  - title: Coding
+    details: Scaffold, implement, test, diagnose, simplify, and review code.
     link: /groups/coding
-    linkText: Explore coding and quality
-  - title: Explain clearly
-    details: Write usable developer documentation and agent instructions without losing technical meaning.
-    link: /groups/writing
-    linkText: Explore documentation and communication
-  - title: Make relationships visible
-    details: Choose interactive HTML with Archify or editable image diagrams with Excalidraw.
-    link: /groups/diagrams
-    linkText: Explore diagrams
-  - title: Coordinate and maintain
-    details: Bound delegated work, audit workspace cleanup, repair instruction routes, and learn from completed work.
-    link: /groups/maintenance
-    linkText: Explore coordination and maintenance
+    linkText: Explore coding
+  - title: Documentation
+    details: Write technical explanations or create interactive HTML and editable image diagrams.
+    link: /groups/documentation
+    linkText: Explore documentation
+  - title: Agentic work
+    details: Choose agent skills and maintain instructions written for agents.
+    link: /groups/agentic-work
+    linkText: Explore agentic work
+  - title: Utility
+    details: Initialize projects, isolate changes, and clean approved workspaces.
+    link: /groups/utility
+    linkText: Explore utility
+  - title: Unpolished
+    details: Coordinate bounded agent work and audit instruction changes.
+    link: /groups/unpolished
+    linkText: Explore unpolished
 ---
 
 ## For Pi, OpenCode, and Claude Code users
 
 This collection contains reusable agent guidance, not a replacement for your project instructions or judgment. Start with one useful request. Add a companion only when it answers a real need.
 
-New to the collection? [Choose a starting point](/guide/start), then follow the [reviewed installation guide](/guide/install).
+New to the collection? [Choose a starting point](/guide/start), then [install only the skills you choose](/guide/install).
 
 Already working? [Find a skill](/skills/) by name or choose a [supported combination](/workflows/). You can stop at research, a specification, a task plan, a skeleton, or review findings.
 

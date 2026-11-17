@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/install-selected-skills.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "832abe73e8f0cfa2d52c9565ce2b516f2b776da2",
+      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
       "link_mode": "local-only"
     },
     "legend": {
@@ -57,9 +57,9 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/sync-my-skills/SKILL.md",
+          "path": ".agents/skills/agentic-work/sync-my-skills/SKILL.md",
           "line": 1,
-          "end_line": 63,
+          "end_line": 65,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -74,9 +74,9 @@
       "icon": "decision",
       "sources": [
         {
-          "path": ".agents/skills/sync-my-skills/SKILL.md",
+          "path": ".agents/skills/agentic-work/sync-my-skills/SKILL.md",
           "line": 1,
-          "end_line": 63,
+          "end_line": 65,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -91,7 +91,7 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/isolated-workspace/SKILL.md",
+          "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
           "line": 1,
           "end_line": 62,
           "label": "Authoritative skill instructions"
@@ -108,9 +108,9 @@
       "icon": "decision",
       "sources": [
         {
-          "path": ".agents/skills/sync-my-skills/SKILL.md",
+          "path": ".agents/skills/agentic-work/sync-my-skills/SKILL.md",
           "line": 1,
-          "end_line": 63,
+          "end_line": 65,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -125,9 +125,9 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/sync-my-skills/SKILL.md",
+          "path": ".agents/skills/agentic-work/sync-my-skills/SKILL.md",
           "line": 1,
-          "end_line": 63,
+          "end_line": 65,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -142,9 +142,9 @@
       "icon": "stop",
       "sources": [
         {
-          "path": ".agents/skills/sync-my-skills/SKILL.md",
+          "path": ".agents/skills/agentic-work/sync-my-skills/SKILL.md",
           "line": 1,
-          "end_line": 63,
+          "end_line": 65,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -159,9 +159,9 @@
       "icon": "stop",
       "sources": [
         {
-          "path": ".agents/skills/sync-my-skills/SKILL.md",
+          "path": ".agents/skills/agentic-work/sync-my-skills/SKILL.md",
           "line": 1,
-          "end_line": 63,
+          "end_line": 65,
           "label": "Authoritative skill instructions"
         }
       ]

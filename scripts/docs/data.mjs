@@ -1,10 +1,12 @@
 import { fileURLToPath } from "node:url";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { loadCatalog } from "../../.agents/skills/sync-my-skills/scripts/sync-core.mjs";
+import { loadCatalog } from "../../.agents/skills/agentic-work/sync-my-skills/scripts/sync-core.mjs";
 
 export const root = fileURLToPath(new URL("../../", import.meta.url));
-export const catalogPath = join(root, ".agents/skills/sync-my-skills/assets/skill-catalog.yaml");
+export const catalogRelativePath =
+  ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml";
+export const catalogPath = join(root, catalogRelativePath);
 export function catalog() {
   return loadCatalog(catalogPath, root);
 }
@@ -18,20 +20,16 @@ export function docsBase(value = process.env.DOCS_BASE ?? "/") {
 }
 export const groups = [
   {
-    id: "setup",
-    title: "Setup",
-    summary: "Install selected skills, initialize projects, and protect the primary checkout.",
-    skills: ["sync-my-skills", "init-project", "isolated-workspace"],
-  },
-  {
-    id: "discovery",
-    title: "Discovery and planning",
-    summary: "Investigate questions and agree on outcomes, specifications, and tasks.",
+    id: "productivity",
+    title: "Productivity",
+    summary:
+      "Research questions, shape initiatives, specify behavior, plan tasks, and learn from results.",
     skills: [
-      "research",
       "initiative",
+      "research",
       "specify",
       "plan-tasks",
+      "retro",
       "grill-me",
       "grilling",
       "wait-what",
@@ -39,35 +37,49 @@ export const groups = [
   },
   {
     id: "coding",
-    title: "Coding and quality",
-    summary: "Implement, test, diagnose, simplify, and review code.",
+    title: "Coding",
+    summary: "Scaffold, implement, test, diagnose, simplify, and review code.",
     skills: [
       "coding",
       "coding-with-rules",
       "scaffold",
-      "tdd",
-      "debloat",
       "code-review",
       "systematic-debugging",
+      "tdd",
+      "debloat",
     ],
   },
   {
-    id: "writing",
-    title: "Documentation and communication",
-    summary: "Explain technical work and write instructions that readers can follow.",
-    skills: ["document-project", "asd-ste100-technical", "caveman", "unslop", "writing-for-agents"],
+    id: "documentation",
+    title: "Documentation",
+    summary:
+      "Write technical documentation and explanations, or create editable and interactive diagrams.",
+    skills: [
+      "asd-ste100-technical",
+      "caveman",
+      "document-project",
+      "unslop",
+      "excalidraw",
+      "archify",
+    ],
   },
   {
-    id: "diagrams",
-    title: "Diagrams",
-    summary: "Choose editable images or interactive HTML for the reader\u0027s task.",
-    skills: ["archify", "excalidraw"],
+    id: "agentic-work",
+    title: "Agentic work",
+    summary: "Manage selected agent skills and write agent-facing instructions.",
+    skills: ["writing-for-agents", "sync-my-skills"],
   },
   {
-    id: "maintenance",
-    title: "Coordination and maintenance",
-    summary: "Coordinate agents, repair instruction routes, and improve the working process.",
-    skills: ["subagent-orchestration", "cleanup-workspaces", "instruction-maintenance", "retro"],
+    id: "utility",
+    title: "Utility",
+    summary: "Initialize projects, isolate changes, and clean approved workspaces.",
+    skills: ["init-project", "isolated-workspace", "cleanup-workspaces"],
+  },
+  {
+    id: "unpolished",
+    title: "Unpolished",
+    summary: "Coordinate bounded agent work and audit instruction changes.",
+    skills: ["instruction-maintenance", "subagent-orchestration"],
   },
 ];
 export function sourceUrl(entry, file = "SKILL.md") {
@@ -82,5 +94,7 @@ export function sourceUrl(entry, file = "SKILL.md") {
   return `${prefix}/${entry.source.path}/${file}`;
 }
 export function localInstructions(name) {
-  return readFileSync(join(root, ".agents/skills", name, "SKILL.md"), "utf8");
+  const entry = catalog().byName.get(name);
+  if (!entry || entry.source.type !== "local") throw new Error(`No local instructions: ${name}`);
+  return readFileSync(join(root, entry.source.path, "SKILL.md"), "utf8");
 }

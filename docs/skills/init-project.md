@@ -6,13 +6,25 @@ title: "init-project"
 
 Initialize or adopt project foundations, TypeScript tooling, or Godot GDScript tooling only when explicitly requested.
 
-**Group:** [Setup](/groups/setup) · **Availability:** Authored here · **Scope:** project
+**Group:** [Utility](/groups/utility) · **Availability:** Authored here · **Scope:** project
 
 ## When to choose it
 
 You explicitly want a new project foundation or to adopt the supported TypeScript or Godot GDScript tooling.
 
 **Expected result:** An approved, project-specific foundation and the checks appropriate to that selected baseline.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill init-project
+```
+
+This command selects only `init-project`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -43,10 +55,10 @@ These are optional companions, not extra declared requirements. Choose only what
 
 - [Initialize only the foundation you need](/workflows/initialize-a-project)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **initializer**, not as automatically selected for every project.
+The catalog records this entry as **initializer**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/init-project/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/coding/init-project/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

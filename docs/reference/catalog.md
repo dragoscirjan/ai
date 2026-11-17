@@ -4,7 +4,7 @@ title: "Catalog reference"
 
 # Catalog reference
 
-The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/sync-my-skills/assets/skill-catalog.yaml) owns names, sources, selection defaults, runtime notes, installation mechanisms, and legal records. This site adds learning prose and presentation groups; it does not replace that inventory.
+The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml) owns names, sources, selection defaults, runtime notes, installation mechanisms, and legal records. This site adds learning prose and presentation groups; it does not replace that inventory.
 
 ## Availability
 

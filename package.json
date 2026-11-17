@@ -14,7 +14,7 @@
     "docs:diagrams": "node scripts/docs/archify.mjs render",
     "format:check": "prettier --check docs scripts/docs package.json eslint.config.mjs .prettierrc.json .github/workflows/docs.publish.yml",
     "lint": "eslint scripts/docs docs/.vitepress eslint.config.mjs",
-    "test": "node --test .agents/skills/sync-my-skills/scripts/sync-my-skills.test.mjs && bun test ./.agents/skills/isolated-workspace/scripts/create.test.ts ./.agents/skills/cleanup-workspaces/scripts/cleanup.test.ts"
+    "test": "node --test .agents/skills/agentic-work/sync-my-skills/scripts/sync-my-skills.test.mjs && bun test ./.agents/skills/utility/isolated-workspace/scripts/create.test.ts ./.agents/skills/utility/cleanup-workspaces/scripts/cleanup.test.ts"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

@@ -28,7 +28,7 @@ export default defineConfig({
         text: "Start here",
         items: [
           { text: "Choose your starting point", link: "/guide/start" },
-          { text: "Install with review", link: "/guide/install" },
+          { text: "Install a skill", link: "/guide/install" },
           { text: "Your first useful request", link: "/guide/first-use" },
         ],
       },

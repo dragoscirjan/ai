@@ -6,13 +6,25 @@ title: "excalidraw"
 
 Generate PNG or SVG diagrams with local Excalidraw rendering. Use for project structure, component relationships, workflows, or revisions to an existing diagram. Retain scene JSON as editable source and deliver images first.
 
-**Group:** [Diagrams](/groups/diagrams) · **Availability:** Authored here · **Scope:** project
+**Group:** [Documentation](/groups/documentation) · **Availability:** Authored here · **Scope:** project
 
 ## When to choose it
 
 You want an editable Excalidraw scene with a PNG or SVG for a project structure, workflow, or component explanation.
 
 **Expected result:** A rendered image, retained scene JSON, and the checks required by the local rendering workflow.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill excalidraw
+```
+
+This command selects only `excalidraw`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -44,10 +56,10 @@ These are optional companions, not extra declared requirements. Choose only what
 - [Keep a developer task usable](/workflows/maintain-task-based-docs)
 - [Deliver an editable image diagram](/workflows/draw-with-excalidraw)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/excalidraw/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/documentation/excalidraw/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

@@ -6,13 +6,25 @@ title: "systematic-debugging"
 
 Diagnose bugs, failing tests, regressions, flaky behavior, and unexpected results through evidence, root-cause tracing, and single-hypothesis experiments before proposing fixes. Use for debugging in any language, including failures across component or environment boundaries.
 
-**Group:** [Coding and quality](/groups/coding) · **Availability:** Upstream-derived; maintained here · **Scope:** project
+**Group:** [Coding](/groups/coding) · **Availability:** Upstream-derived; maintained here · **Scope:** project
 
 ## When to choose it
 
 A bug, regression, failing test, flaky result, or unexpected behavior needs a root cause rather than a guessed patch.
 
 **Expected result:** An evidence-backed diagnosis from controlled, single-hypothesis experiments, followed by a separately authorized fix and verification when appropriate.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill systematic-debugging
+```
+
+This command selects only `systematic-debugging`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -43,10 +55,10 @@ These are optional companions, not extra declared requirements. Choose only what
 
 - [Find the root cause before proposing a fix](/workflows/diagnose-a-failure)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/systematic-debugging/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/coding/systematic-debugging/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

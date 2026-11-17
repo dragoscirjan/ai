@@ -6,13 +6,25 @@ title: "retro"
 
 Review a bounded work period for evidence-backed process improvements, including workflow, instructions, tools, and handoffs.
 
-**Group:** [Coordination and maintenance](/groups/maintenance) · **Availability:** Authored here · **Scope:** project
+**Group:** [Productivity](/groups/productivity) · **Availability:** Authored here · **Scope:** project
 
 ## When to choose it
 
 A bounded completed work period has enough evidence to review what helped, failed, or should change.
 
 **Expected result:** A small set of evidence-backed process improvements with clear next actions and appropriate ownership.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill retro
+```
+
+This command selects only `retro`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -44,10 +56,10 @@ These are optional companions, not extra declared requirements. Choose only what
 - [Clean only proven, approved workspaces](/workflows/clean-integrated-workspaces)
 - [Turn a completed issue into a small improvement](/workflows/learn-from-completed-work)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/retro/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/productivity/retro/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

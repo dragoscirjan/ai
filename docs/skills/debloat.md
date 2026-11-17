@@ -6,13 +6,25 @@ title: "debloat"
 
 Prevent overengineering during design; simplify existing code, configuration, or dependencies while preserving required behavior, contracts, security, and operational needs.
 
-**Group:** [Coding and quality](/groups/coding) · **Availability:** Authored here · **Scope:** project
+**Group:** [Coding](/groups/coding) · **Availability:** Authored here · **Scope:** project
 
 ## When to choose it
 
 A design risks unnecessary machinery or existing code and configuration have complexity that no longer earns its cost.
 
 **Expected result:** A justified simpler design or scoped simplification that preserves required behavior, security, contracts, and operational needs.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill debloat
+```
+
+This command selects only `debloat`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -44,10 +56,10 @@ These are optional companions, not extra declared requirements. Choose only what
 - [Implement a small approved change](/workflows/implement-a-small-change)
 - [Remove complexity without removing requirements](/workflows/simplify-a-design)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/debloat/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/coding/debloat/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

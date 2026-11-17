@@ -6,13 +6,25 @@ title: "unslop"
 
 Remove AI-generated prose patterns while preserving meaning.
 
-**Group:** [Documentation and communication](/groups/writing) · **Availability:** Upstream-only; approved external setup · **Scope:** project
+**Group:** [Documentation](/groups/documentation) · **Availability:** Upstream-only; approved external setup · **Scope:** project
 
 ## When to choose it
 
 A draft contains generic phrasing, repetitive structure, filler, or claims that do not help the reader act.
 
 **Expected result:** Cleaner, more specific writing that retains the original facts and necessary constraints.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add https://github.com/cursor/plugins/tree/bc697d0a5a163cec979e362b601e36f5616083fd/pstack/skills/unslop --skill unslop
+```
+
+This command selects only `unslop`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -46,9 +58,9 @@ These are optional companions, not extra declared requirements. Choose only what
 - [Shorten a technical answer without losing meaning](/workflows/shorten-without-loss)
 - [Ask for a clearer explanation](/workflows/re-pitch-an-explanation)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **recommended**, not as automatically selected for every project.
+The catalog records this entry as **recommended**, not as automatically selected for every project.
 
 [Read the authoritative skill instructions](https://raw.githubusercontent.com/cursor/plugins/bc697d0a5a163cec979e362b601e36f5616083fd/pstack/skills/unslop/SKILL.md). This link uses the immutable upstream revision `bc697d0a5a163cec979e362b601e36f5616083fd`; there is no vendored copy here.
 

@@ -8,7 +8,7 @@ import { join, resolve } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { pathToFileURL } from "node:url";
 import { browser } from "./browser.mjs";
-import { docsBase, root } from "./data.mjs";
+import { catalog, docsBase, groups, root } from "./data.mjs";
 import { publicToolEnvironment } from "./environment.mjs";
 
 async function freePort() {
@@ -83,6 +83,8 @@ export async function checkBrowser(mode = "preview") {
     search: false,
     mobileMenu: false,
     notices: false,
+    skillInstalls: [],
+    groups: [],
   };
   try {
     await until(async () => {
@@ -120,6 +122,12 @@ export async function checkBrowser(mode = "preview") {
         "guide/start.html",
         "guide/install.html",
         "skills/scaffold.html",
+        "skills/coding-with-rules.html",
+        "skills/archify.html",
+        "skills/sync-my-skills.html",
+        "skills/init-project.html",
+        "skills/grilling.html",
+        ...groups.map((group) => `groups/${group.id}.html`),
         "workflows/install-selected-skills.html",
         "reference/relationships.html",
         "reference/notices.html",
@@ -142,13 +150,44 @@ export async function checkBrowser(mode = "preview") {
           links.every((href) => new URL(href).pathname.startsWith(base)),
           `Link escaped base: ${page}`,
         );
+        if (page.startsWith("skills/")) {
+          const name = page.slice("skills/".length, -".html".length);
+          const command = await b.evaluate(
+            'document.querySelector(".vp-doc div.language-sh code")?.textContent.trim()',
+          );
+          assert.equal(
+            command,
+            catalog().byName.get(name).install.argv.join(" "),
+            `Wrong install command: ${page}`,
+          );
+          report.skillInstalls.push({ viewport: label, skill: name });
+        }
+        if (page.startsWith("groups/")) {
+          const id = page.slice("groups/".length, -".html".length);
+          const group = groups.find((item) => item.id === id);
+          const members = await b.evaluate(
+            'Array.from(document.querySelectorAll(".vp-doc a[href]")).map(a=>new URL(a.href).pathname).filter(p=>p.includes("/skills/")).map(p=>p.split("/").at(-1).replace(/\\.html$/, ""))',
+          );
+          assert.deepEqual(new Set(members), new Set(group.skills), `Wrong group members: ${id}`);
+          report.groups.push({ viewport: label, group: id });
+        }
         report.pages.push({
           viewport: label,
           page: page || "index",
           horizontalOverflow: false,
           imagesLoaded: true,
         });
-        if (["", "guide/start.html", "workflows/install-selected-skills.html"].includes(page))
+        if (
+          [
+            "",
+            "guide/start.html",
+            "workflows/install-selected-skills.html",
+            "groups/documentation.html",
+            "groups/utility.html",
+            "skills/archify.html",
+            "skills/coding-with-rules.html",
+          ].includes(page)
+        )
           await screenshot(
             `${label}-${page ? page.split("/").at(-1).replace(".html", "") : "home"}`,
           );

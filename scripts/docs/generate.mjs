@@ -1,7 +1,7 @@
 import { existsSync, lstatSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { catalog, groups, root, sourceUrl } from "./data.mjs";
+import { catalog, catalogRelativePath, groups, root, sourceUrl } from "./data.mjs";
 import { notes } from "./skill-notes.mjs";
 import { workflows } from "./workflows.mjs";
 import { writeNotices } from "./notices.mjs";
@@ -14,6 +14,41 @@ const image = (id, description) =>
 export function availability(entry) {
   if (entry.source.type !== "local") return "Upstream-only; approved external setup";
   return entry.kind === "authored" ? "Authored here" : "Upstream-derived; maintained here";
+}
+export function installCommand(entry) {
+  const argv = entry.install?.argv;
+  if (
+    !Array.isArray(argv) ||
+    !argv.every((arg) => typeof arg === "string" && !/[\r\n\0]/.test(arg)) ||
+    argv.length < 7 ||
+    argv.length > 8 ||
+    argv[0] !== "npx" ||
+    argv[1] !== "-y" ||
+    !/^skills@\d+\.\d+\.\d+$/.test(argv[2]) ||
+    argv[3] !== "add" ||
+    !argv[4] ||
+    argv[4].startsWith("-") ||
+    argv[5] !== "--skill" ||
+    argv[6] !== entry.name ||
+    (argv.length === 8 && argv[7] !== "--global")
+  )
+    throw new Error(
+      `Installation command must select only ${entry.name} with the pinned Skills CLI`,
+    );
+  return argv
+    .map((arg) =>
+      /^[a-zA-Z0-9_./:@=+-]+$/.test(arg) ? arg : `'${arg.replaceAll("'", "'\"'\"'")}'`,
+    )
+    .join(" ");
+}
+function installation(entry) {
+  const scope = entry.install.argv.includes("--global")
+    ? "This is a personal installation. Command registration and project synchronization are separate optional actions."
+    : "Run this command from the target project after reviewing its instructions and the skill source.";
+  const requirements = entry.prerequisites.length
+    ? `\n\nRequired instruction packages: ${entry.prerequisites.map((name) => `[\`${name}\`](/skills/${name}#install-this-skill)`).join(", ")}. If missing, install them separately before applying this skill. The command above does not install these requirements.`
+    : "";
+  return `## Install this skill\n\nYou need Node.js 22.20 or newer, Git, and npm/npx. ${scope}\n\n\`\`\`sh\n${installCommand(entry)}\n\`\`\`\n\nThis command selects only \`${entry.name}\`. It does not install the rest of the collection or the optional companions listed on this page.${requirements}\n\nSee [installation choices](/guide/install) for prerequisites and the optional reviewed manager.`;
 }
 export function generatedPages() {
   const c = catalog();
@@ -45,7 +80,7 @@ export function generatedPages() {
     pages.set(
       `skills/${entry.name}.md`,
       title(entry.name) +
-        `# ${entry.name}\n\n${entry.description}\n\n**Group:** [${group.title}](/groups/${group.id}) · **Availability:** ${availability(entry)} · **Scope:** ${entry.scope}\n\n## When to choose it\n\n${note.when}\n\n**Expected result:** ${note.result}\n\n## Try it\n\nLoad the installed skill in your harness, then adapt this request to your project. This is a prompt, not a shell command.\n\n\`\`\`text\n${note.prompt}\n\`\`\`\n\n## Requirements and boundaries\n\n**Catalogued instruction requirements:** ${requirements}\n\nResolve required instructions in their declared order before applying the skill. The project-specific \`requires\` extension is not a native harness installation guarantee. A missing requirement stops the affected phase; it does not authorize a download.\n\n**Runtime and setup:**\n\n${runtime}\n\n${note.stop}\n\n## Useful combinations\n\n${note.companions.map((name) => `- ${link(name)} — ${notes[name].when}`).join("\n")}\n\nThese are optional companions, not extra declared requirements. Choose only what the task needs.\n\n${recipes.map((recipe) => `- [${recipe.title}](/workflows/${recipe.id})`).join("\n")}\n\n## Install or inspect\n\nStart with the [reviewed installation guide](/guide/install). The catalog records this entry as **${entry.selection}**, not as automatically selected for every project.\n\n[Read the authoritative skill instructions](${sourceUrl(entry)}). ${entry.source.type === "local" ? "This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry." : `This link uses the immutable upstream revision \`${entry.source.revision}\`; there is no vendored copy here.`}\n\nSupported catalog harnesses: ${entry.harnesses.map((name) => `\`${name}\``).join(", ")}. Runtime availability and actual discovery must still be checked in your chosen harness.\n`,
+        `# ${entry.name}\n\n${entry.description}\n\n**Group:** [${group.title}](/groups/${group.id}) · **Availability:** ${availability(entry)} · **Scope:** ${entry.scope}\n\n## When to choose it\n\n${note.when}\n\n**Expected result:** ${note.result}\n\n${installation(entry)}\n\n## Try it\n\nLoad the installed skill in your harness, then adapt this request to your project. This is a prompt, not a shell command.\n\n\`\`\`text\n${note.prompt}\n\`\`\`\n\n## Requirements and boundaries\n\n**Catalogued instruction requirements:** ${requirements}\n\nResolve required instructions in their declared order before applying the skill. The project-specific \`requires\` extension is not a native harness installation guarantee. A missing requirement stops the affected phase; it does not authorize a download.\n\n**Runtime and setup:**\n\n${runtime}\n\n${note.stop}\n\n## Useful combinations\n\n${note.companions.map((name) => `- ${link(name)} — ${notes[name].when}`).join("\n")}\n\nThese are optional companions, not extra declared requirements. Choose only what the task needs.\n\n${recipes.map((recipe) => `- [${recipe.title}](/workflows/${recipe.id})`).join("\n")}\n\n## Source and harness support\n\nThe catalog records this entry as **${entry.selection}**, not as automatically selected for every project.\n\n[Read the authoritative skill instructions](${sourceUrl(entry)}). ${entry.source.type === "local" ? "This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry." : `This link uses the immutable upstream revision \`${entry.source.revision}\`; there is no vendored copy here.`}\n\nSupported catalog harnesses: ${entry.harnesses.map((name) => `\`${name}\``).join(", ")}. Runtime availability and actual discovery must still be checked in your chosen harness.\n`,
     );
   }
   for (const group of groups) {
@@ -53,7 +88,7 @@ export function generatedPages() {
     pages.set(
       `groups/${group.id}.md`,
       title(group.title) +
-        `# ${group.title}\n\n${group.summary}\n\nChoose by the task you have now. These groups describe reader needs, not a mandatory delivery pipeline.\n\n${group.skills.map((name) => `## ${link(name)}\n\n${c.byName.get(name).description}\n\n**Choose it when:** ${notes[name].when}\n`).join("\n")}\n## Try a workflow\n\n${recipes.map((recipe) => `- [${recipe.title}](/workflows/${recipe.id}) — ${recipe.when}`).join("\n")}\n`,
+        `# ${group.title}\n\n${group.summary}\n\nChoose by the task you have now. These are the collection's groups, including external recommendations. They are not a mandatory delivery pipeline.\n\n${group.skills.map((name) => `## ${link(name)}\n\n${c.byName.get(name).description}\n\n**Choose it when:** ${notes[name].when}\n`).join("\n")}\n## Try a workflow\n\n${recipes.map((recipe) => `- [${recipe.title}](/workflows/${recipe.id}) — ${recipe.when}`).join("\n")}\n`,
     );
   }
   for (const recipe of workflows) {
@@ -69,7 +104,7 @@ export function generatedPages() {
   pages.set(
     "skills/index.md",
     title("Find a skill") +
-      `# Find a skill\n\nThe catalog contains **${c.skills.length} skills**: ${c.skills.filter((entry) => entry.source.type === "local").length} local entries and ${c.skills.filter((entry) => entry.source.type !== "local").length} upstream-only entries. Search by an exact skill name or start with your task.\n\n${image("skill-groups", "Six task-oriented groups for choosing skills; these are discovery routes, not runtime dependencies.")}\n${groups.map((group) => `## [${group.title}](/groups/${group.id})\n\n${group.summary}\n\n${group.skills.map((name) => `- ${link(name)} — ${c.byName.get(name).description}`).join("\n")}\n`).join("\n")}\nThe YAML catalog is the only authored inventory. Grouping and learning prose reference its IDs; generated pages do not define a second installable collection. See the [catalog reference](/reference/catalog).\n`,
+      `# Find a skill\n\nThe catalog contains **${c.skills.length} skills**: ${c.skills.filter((entry) => entry.source.type === "local").length} local entries and ${c.skills.filter((entry) => entry.source.type !== "local").length} upstream-only entries. Search by an exact skill name or start with your task.\n\n${image("skill-groups", "The collection's six groups include local and external skills; grouping is not a runtime dependency.")}\n${groups.map((group) => `## [${group.title}](/groups/${group.id})\n\n${group.summary}\n\n${group.skills.map((name) => `- ${link(name)} — ${c.byName.get(name).description}`).join("\n")}\n`).join("\n")}\nThe YAML catalog is the only authored inventory. Grouping and learning prose reference its IDs; generated pages do not define a second installable collection. See the [catalog reference](/reference/catalog).\n`,
   );
   pages.set(
     "workflows/index.md",
@@ -87,7 +122,7 @@ export function generatedPages() {
   pages.set(
     "reference/catalog.md",
     title("Catalog reference") +
-      `# Catalog reference\n\nThe [YAML catalog](${c.repository}/blob/${c.ref}/.agents/skills/sync-my-skills/assets/skill-catalog.yaml) owns names, sources, selection defaults, runtime notes, installation mechanisms, and legal records. This site adds learning prose and presentation groups; it does not replace that inventory.\n\n## Availability\n\n- **Authored here:** this repository maintains the skill.\n- **Upstream-derived; maintained here:** use the maintained local copy, not an assumed unchanged upstream replacement.\n- **Upstream-only:** the catalog points to an immutable external source. Listing it does not install it.\n\n| Skill | Availability | Selection default |\n| --- | --- | --- |\n${c.skills.map((entry) => `| ${link(entry.name)} | ${availability(entry)} | ${entry.selection} |`).join("\n")}\n\nA recommended default is not approval. A declined skill stays unchanged; policy already active in the target project still applies. Read each profile for runtime setup and its authoritative source.\n\n## What the harness labels mean\n\nThe catalog targets Pi, OpenCode, and Claude Code. That expresses intended compatibility, not proof of live discovery, every harness capability, or model compliance. The manager uses harness-specific adapters; custom configuration roots need separate verification.\n\n## What is not a skill\n\nLanguage and extension documents under \`coding-with-rules/references/\` are conditional references, not separate installable skills. Shared helper code and package dependencies are software dependencies, not instruction \`requires\` edges.\n`,
+      `# Catalog reference\n\nThe [YAML catalog](${c.repository}/blob/${c.ref}/${catalogRelativePath}) owns names, sources, selection defaults, runtime notes, installation mechanisms, and legal records. This site adds learning prose and presentation groups; it does not replace that inventory.\n\n## Availability\n\n- **Authored here:** this repository maintains the skill.\n- **Upstream-derived; maintained here:** use the maintained local copy, not an assumed unchanged upstream replacement.\n- **Upstream-only:** the catalog points to an immutable external source. Listing it does not install it.\n\n| Skill | Availability | Selection default |\n| --- | --- | --- |\n${c.skills.map((entry) => `| ${link(entry.name)} | ${availability(entry)} | ${entry.selection} |`).join("\n")}\n\nA recommended default is not approval. A declined skill stays unchanged; policy already active in the target project still applies. Read each profile for runtime setup and its authoritative source.\n\n## What the harness labels mean\n\nThe catalog targets Pi, OpenCode, and Claude Code. That expresses intended compatibility, not proof of live discovery, every harness capability, or model compliance. The manager uses harness-specific adapters; custom configuration roots need separate verification.\n\n## What is not a skill\n\nLanguage and extension documents under \`coding-with-rules/references/\` are conditional references, not separate installable skills. Shared helper code and package dependencies are software dependencies, not instruction \`requires\` edges.\n`,
   );
   const edges = c.skills.flatMap((entry) =>
     entry.prerequisites.map((required) => ({ from: entry.name, to: required })),

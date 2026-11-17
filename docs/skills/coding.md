@@ -6,13 +6,25 @@ title: "coding"
 
 Design, implement, refactor, review, or test code under project conventions, risk-based security, and behavior-focused checks.
 
-**Group:** [Coding and quality](/groups/coding) · **Availability:** Authored here · **Scope:** project
+**Group:** [Coding](/groups/coding) · **Availability:** Authored here · **Scope:** project
 
 ## When to choose it
 
 You are designing, implementing, refactoring, reviewing, or testing source code under project conventions.
 
 **Expected result:** A small, behavior-preserving or explicitly approved change with risk-appropriate tests and accounted-for quality gates.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill coding
+```
+
+This command selects only `coding`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -43,10 +55,10 @@ These are optional companions, not extra declared requirements. Choose only what
 
 - [Implement a small approved change](/workflows/implement-a-small-change)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **detected**, not as automatically selected for every project.
+The catalog records this entry as **detected**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/coding/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/coding/coding/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

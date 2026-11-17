@@ -6,13 +6,25 @@ title: "asd-ste100-technical"
 
 Technical writing: use ASD-STE100-inspired plain language for software responses and documentation.
 
-**Group:** [Documentation and communication](/groups/writing) · **Availability:** Authored here · **Scope:** project
+**Group:** [Documentation](/groups/documentation) · **Availability:** Authored here · **Scope:** project
 
 ## When to choose it
 
 Technical instructions or explanations need plain language without losing conditions, risks, or precise identifiers.
 
 **Expected result:** Direct, usable prose with stable terminology, explicit actors, exact commands, and honest uncertainty.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill asd-ste100-technical
+```
+
+This command selects only `asd-ste100-technical`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -49,10 +61,10 @@ These are optional companions, not extra declared requirements. Choose only what
 - [Repair instruction drift through exact approval](/workflows/repair-instruction-routes)
 - [Ask for a clearer explanation](/workflows/re-pitch-an-explanation)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **recommended**, not as automatically selected for every project.
+The catalog records this entry as **recommended**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/asd-ste100-technical/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/documentation/asd-ste100-technical/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

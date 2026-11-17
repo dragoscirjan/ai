@@ -6,13 +6,25 @@ title: "writing-for-agents"
 
 Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.
 
-**Group:** [Documentation and communication](/groups/writing) · **Availability:** Upstream-derived; maintained here · **Scope:** project
+**Group:** [Agentic work](/groups/agentic-work) · **Availability:** Upstream-derived; maintained here · **Scope:** project
 
 ## When to choose it
 
 The reader is an agent: you are authoring or revising skills, prompts, agent instructions, or their reference documents.
 
 **Expected result:** Usable agent-facing instructions with clear triggers, actions, conditional references, and completion boundaries.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill writing-for-agents
+```
+
+This command selects only `writing-for-agents`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -44,10 +56,10 @@ These are optional companions, not extra declared requirements. Choose only what
 - [Write guidance for an agent reader](/workflows/write-agent-facing-guidance)
 - [Repair instruction drift through exact approval](/workflows/repair-instruction-routes)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/writing-for-agents/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/agentic-work/writing-for-agents/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

@@ -6,13 +6,25 @@ title: "caveman"
 
 Concise communication that preserves complete technical substance.
 
-**Group:** [Documentation and communication](/groups/writing) · **Availability:** Authored here · **Scope:** project
+**Group:** [Documentation](/groups/documentation) · **Availability:** Authored here · **Scope:** project
 
 ## When to choose it
 
 You explicitly want terse technical fragments and your project policy permits that style.
 
 **Expected result:** A fragment-style answer that preserves technical substance. The mode stays active until you explicitly disable it.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add dragoscirjan/ai --skill caveman
+```
+
+This command selects only `caveman`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -43,10 +55,10 @@ These are optional companions, not extra declared requirements. Choose only what
 
 - [Shorten a technical answer without losing meaning](/workflows/shorten-without-loss)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/caveman/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/documentation/caveman/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

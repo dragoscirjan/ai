@@ -6,13 +6,25 @@ title: "archify"
 
 Generate validated interactive HTML diagrams or one-page explainers with Archify, including architecture, workflows, Mermaid input, and image/SVG/WebM exports.
 
-**Group:** [Diagrams](/groups/diagrams) · **Availability:** Upstream-only; approved external setup · **Scope:** project
+**Group:** [Documentation](/groups/documentation) · **Availability:** Upstream-only; approved external setup · **Scope:** project
 
 ## When to choose it
 
 You need an explorable standalone HTML diagram for relationships, workflows, states, schemas, or other supported structures.
 
 **Expected result:** An editable native candidate and standalone HTML that passes its required validation, artifact, and real-browser gates.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add https://github.com/tt-a1i/archify/tree/a7ed6fd6657da90414831d1d42cf95987188750c/archify --skill archify
+```
+
+This command selects only `archify`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -44,9 +56,9 @@ These are optional companions, not extra declared requirements. Choose only what
 - [Keep a developer task usable](/workflows/maintain-task-based-docs)
 - [Explain relationships with interactive HTML](/workflows/explain-with-archify)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
 [Read the authoritative skill instructions](https://raw.githubusercontent.com/tt-a1i/archify/a7ed6fd6657da90414831d1d42cf95987188750c/archify/SKILL.md). This link uses the immutable upstream revision `a7ed6fd6657da90414831d1d42cf95987188750c`; there is no vendored copy here.
 

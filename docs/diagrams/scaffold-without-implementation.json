@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/scaffold-without-implementation.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "832abe73e8f0cfa2d52c9565ce2b516f2b776da2",
+      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
       "link_mode": "local-only"
     },
     "legend": {
@@ -48,7 +48,7 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/isolated-workspace/SKILL.md",
+          "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
           "line": 1,
           "end_line": 62,
           "label": "Authoritative skill instructions"
@@ -65,7 +65,7 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/coding-with-rules/SKILL.md",
+          "path": ".agents/skills/coding/coding-with-rules/SKILL.md",
           "line": 1,
           "end_line": 53,
           "label": "Authoritative skill instructions"
@@ -82,7 +82,7 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/scaffold/SKILL.md",
+          "path": ".agents/skills/coding/scaffold/SKILL.md",
           "line": 1,
           "end_line": 55,
           "label": "Authoritative skill instructions"
@@ -99,7 +99,7 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/scaffold/SKILL.md",
+          "path": ".agents/skills/coding/scaffold/SKILL.md",
           "line": 1,
           "end_line": 55,
           "label": "Authoritative skill instructions"

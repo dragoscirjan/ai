@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/repair-instruction-routes.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "832abe73e8f0cfa2d52c9565ce2b516f2b776da2",
+      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
       "link_mode": "local-only"
     },
     "legend": {
@@ -57,7 +57,7 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/instruction-maintenance/SKILL.md",
+          "path": ".agents/skills/unpolished/instruction-maintenance/SKILL.md",
           "line": 1,
           "end_line": 46,
           "label": "Authoritative skill instructions"
@@ -74,7 +74,7 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/writing-for-agents/SKILL.md",
+          "path": ".agents/skills/agentic-work/writing-for-agents/SKILL.md",
           "line": 1,
           "end_line": 87,
           "label": "Authoritative skill instructions"
@@ -91,7 +91,7 @@
       "icon": "decision",
       "sources": [
         {
-          "path": ".agents/skills/instruction-maintenance/SKILL.md",
+          "path": ".agents/skills/unpolished/instruction-maintenance/SKILL.md",
           "line": 1,
           "end_line": 46,
           "label": "Authoritative skill instructions"
@@ -108,7 +108,7 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/isolated-workspace/SKILL.md",
+          "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
           "line": 1,
           "end_line": 62,
           "label": "Authoritative skill instructions"
@@ -125,7 +125,7 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/instruction-maintenance/SKILL.md",
+          "path": ".agents/skills/unpolished/instruction-maintenance/SKILL.md",
           "line": 1,
           "end_line": 46,
           "label": "Authoritative skill instructions"
@@ -142,7 +142,7 @@
       "icon": "stop",
       "sources": [
         {
-          "path": ".agents/skills/instruction-maintenance/SKILL.md",
+          "path": ".agents/skills/unpolished/instruction-maintenance/SKILL.md",
           "line": 1,
           "end_line": 46,
           "label": "Authoritative skill instructions"

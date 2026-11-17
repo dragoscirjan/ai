@@ -6,13 +6,25 @@ title: "wait-what"
 
 Explain the current proposal again with simpler language and missing context.
 
-**Group:** [Discovery and planning](/groups/discovery) · **Availability:** Upstream-only; approved external setup · **Scope:** project
+**Group:** [Productivity](/groups/productivity) · **Availability:** Upstream-only; approved external setup · **Scope:** project
 
 ## When to choose it
 
 The last answer is hard to understand or omits context needed to follow the current proposal.
 
 **Expected result:** A clearer explanation with the missing context, plain technical language, and the project's existing vocabulary.
+
+## Install this skill
+
+You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
+
+```sh
+npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/d80fa0f4ebe0c5714af0adf8670336065233ecc6/skills/productivity/wait-what --skill wait-what
+```
+
+This command selects only `wait-what`. It does not install the rest of the collection or the optional companions listed on this page.
+
+See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
 
 ## Try it
 
@@ -48,9 +60,9 @@ These are optional companions, not extra declared requirements. Choose only what
 - [Turn a completed issue into a small improvement](/workflows/learn-from-completed-work)
 - [Ask for a clearer explanation](/workflows/re-pitch-an-explanation)
 
-## Install or inspect
+## Source and harness support
 
-Start with the [reviewed installation guide](/guide/install). The catalog records this entry as **optional**, not as automatically selected for every project.
+The catalog records this entry as **optional**, not as automatically selected for every project.
 
 [Read the authoritative skill instructions](https://raw.githubusercontent.com/mattpocock/skills/d80fa0f4ebe0c5714af0adf8670336065233ecc6/skills/productivity/wait-what/SKILL.md). This link uses the immutable upstream revision `d80fa0f4ebe0c5714af0adf8670336065233ecc6`; there is no vendored copy here.
 

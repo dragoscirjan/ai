@@ -6,7 +6,7 @@ export const workflows = [
   {
     id: "install-selected-skills",
     title: "Install a reviewed skill selection",
-    group: "setup",
+    group: "agentic-work",
     when: "An existing project needs useful skills, not an automatic copy of the entire collection.",
     outcome:
       "A verified installation of only the approved skills and separately selected instructions.",
@@ -24,7 +24,7 @@ export const workflows = [
   {
     id: "initialize-a-project",
     title: "Initialize only the foundation you need",
-    group: "setup",
+    group: "utility",
     when: "You explicitly want a supported project foundation or tooling adoption.",
     outcome: "A checked baseline with setup instructions, without unrelated application machinery.",
     steps: [
@@ -41,7 +41,7 @@ export const workflows = [
   {
     id: "protect-a-change",
     title: "Move a change out of the primary checkout",
-    group: "setup",
+    group: "utility",
     when: "The requested work will mutate a repository.",
     outcome: "A named, owned change workspace at a reviewed base revision.",
     steps: [
@@ -57,7 +57,7 @@ export const workflows = [
   {
     id: "research-a-decision",
     title: "Research before choosing an approach",
-    group: "discovery",
+    group: "productivity",
     when: "Missing facts could change a technical or product decision.",
     outcome: "An evidence-backed comparison with explicit unknowns and a decision boundary.",
     steps: [
@@ -73,7 +73,7 @@ export const workflows = [
   {
     id: "shape-an-initiative",
     title: "Turn an idea into an outcome-level brief",
-    group: "discovery",
+    group: "productivity",
     when: "The problem and success measures are less clear than the proposed solution.",
     outcome: "An agreed problem, outcomes, scope, constraints, and success measures.",
     steps: [
@@ -89,7 +89,7 @@ export const workflows = [
   {
     id: "specify-observable-behavior",
     title: "Agree on behavior before task execution",
-    group: "discovery",
+    group: "productivity",
     when: "An agreed direction still leaves observable behavior or acceptance criteria open.",
     outcome: "A compact specification with testable criteria and explicit exclusions.",
     steps: [
@@ -105,7 +105,7 @@ export const workflows = [
   {
     id: "plan-bounded-tasks",
     title: "Divide agreed scope into verifiable tasks",
-    group: "discovery",
+    group: "productivity",
     when: "The work is understood but too large to execute as one unbounded change.",
     outcome:
       "Tasks with completion evidence, genuine dependencies, and an explicit execution boundary.",
@@ -122,7 +122,7 @@ export const workflows = [
   {
     id: "challenge-a-design",
     title: "Challenge a plan without implementing it",
-    group: "discovery",
+    group: "productivity",
     when: "A confident proposal may conceal unresolved assumptions or decisions.",
     outcome: "Sharper decisions, unresolved risks, and evidence needed to choose the next step.",
     steps: [
@@ -235,7 +235,7 @@ export const workflows = [
   {
     id: "maintain-task-based-docs",
     title: "Keep a developer task usable",
-    group: "writing",
+    group: "documentation",
     when: "Implementation changed first use, configuration, behavior, or maintenance instructions.",
     outcome:
       "A checked procedure with prerequisites, actions, expected results, and recovery guidance.",
@@ -253,7 +253,7 @@ export const workflows = [
   {
     id: "write-agent-facing-guidance",
     title: "Write guidance for an agent reader",
-    group: "writing",
+    group: "agentic-work",
     when: "A skill, prompt, or agent-facing document needs clearer triggers and actions.",
     outcome: "A reviewed instruction draft with co-located rules and clear completion boundaries.",
     steps: [
@@ -269,7 +269,7 @@ export const workflows = [
   {
     id: "shorten-without-loss",
     title: "Shorten a technical answer without losing meaning",
-    group: "writing",
+    group: "documentation",
     when: "A useful answer is buried under repetition or generic framing.",
     outcome: "A concise explanation that retains decisions, commands, risks, and uncertainty.",
     steps: [
@@ -285,7 +285,7 @@ export const workflows = [
   {
     id: "explain-with-archify",
     title: "Explain relationships with interactive HTML",
-    group: "diagrams",
+    group: "documentation",
     when: "The reader needs to explore a workflow, architecture, dependency map, state model, or other supported structure.",
     outcome: "A retained candidate, validated standalone HTML, and an honest verification claim.",
     steps: [
@@ -302,7 +302,7 @@ export const workflows = [
   {
     id: "draw-with-excalidraw",
     title: "Deliver an editable image diagram",
-    group: "diagrams",
+    group: "documentation",
     when: "A reader needs a PNG or SVG, with an editable scene for later changes.",
     outcome: "An image-first delivery with retained scene JSON and the local workflow's checks.",
     steps: [
@@ -318,7 +318,7 @@ export const workflows = [
   {
     id: "delegate-bounded-work",
     title: "Delegate only the work that was authorized",
-    group: "maintenance",
+    group: "unpolished",
     when: "The operator explicitly asks for specialists, independent review, or parallel work.",
     outcome: "Bounded child results integrated and validated by the parent.",
     steps: [
@@ -334,7 +334,7 @@ export const workflows = [
   {
     id: "coordinate-read-only-review",
     title: "Coordinate independent review without writers",
-    group: "maintenance",
+    group: "unpolished",
     when: "You want independent assessment but all changes must stay with the parent.",
     outcome: "Fresh-context read-only findings with evidence and an owner-controlled fix decision.",
     steps: [
@@ -350,7 +350,7 @@ export const workflows = [
   {
     id: "clean-integrated-workspaces",
     title: "Clean only proven, approved workspaces",
-    group: "maintenance",
+    group: "utility",
     when: "Completed work may have left integrated workspaces or stale registrations.",
     outcome: "Exact approved removals, protected uncertain lanes, and a post-cleanup audit.",
     steps: [
@@ -366,7 +366,7 @@ export const workflows = [
   {
     id: "repair-instruction-routes",
     title: "Repair instruction drift through exact approval",
-    group: "maintenance",
+    group: "unpolished",
     when: "Routes, requirements, or policy instructions are missing, duplicated, stale, or conflicting.",
     outcome: "An approved targeted repair with preserved security and authority boundaries.",
     steps: [
@@ -383,7 +383,7 @@ export const workflows = [
   {
     id: "learn-from-completed-work",
     title: "Turn a completed issue into a small improvement",
-    group: "maintenance",
+    group: "productivity",
     when: "A bounded work period has enough evidence to examine the process.",
     outcome:
       "A few actionable improvements, with follow-up authority separated from the retrospective.",
@@ -400,7 +400,7 @@ export const workflows = [
   {
     id: "re-pitch-an-explanation",
     title: "Ask for a clearer explanation",
-    group: "discovery",
+    group: "productivity",
     when: "The last proposal or explanation is unclear, lacks context, or does not use the project\u0027s shared vocabulary.",
     outcome:
       "A re-pitched explanation grounded in the missing context and existing project terminology.",

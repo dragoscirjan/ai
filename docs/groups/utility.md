@@ -1,18 +1,12 @@
 ---
-title: "Setup"
+title: "Utility"
 ---
 
-# Setup
+# Utility
 
-Install selected skills, initialize projects, and protect the primary checkout.
+Initialize projects, isolate changes, and clean approved workspaces.
 
-Choose by the task you have now. These groups describe reader needs, not a mandatory delivery pipeline.
-
-## [`sync-my-skills`](/skills/sync-my-skills)
-
-Synchronize project skills and agent instructions through a guided, approved plan.
-
-**Choose it when:** You want to choose project skills and review an optional instruction bundle without replacing custom policy blindly.
+Choose by the task you have now. These are the collection's groups, including external recommendations. They are not a mandatory delivery pipeline.
 
 ## [`init-project`](/skills/init-project)
 
@@ -26,8 +20,14 @@ Create or reuse an isolated Git worktree or Jujutsu workspace before mutation, u
 
 **Choose it when:** A repository change needs a separate Git worktree or Jujutsu workspace instead of writes in the primary checkout.
 
+## [`cleanup-workspaces`](/skills/cleanup-workspaces)
+
+Audit integrated Git/Jujutsu workspaces, stale registrations, or authorized temporary lanes; apply only an approved exact cleanup plan.
+
+**Choose it when:** You want to audit integrated workspaces, stale registrations, or explicitly authorized temporary lanes.
+
 ## Try a workflow
 
-- [Install a reviewed skill selection](/workflows/install-selected-skills) — An existing project needs useful skills, not an automatic copy of the entire collection.
 - [Initialize only the foundation you need](/workflows/initialize-a-project) — You explicitly want a supported project foundation or tooling adoption.
 - [Move a change out of the primary checkout](/workflows/protect-a-change) — The requested work will mutate a repository.
+- [Clean only proven, approved workspaces](/workflows/clean-integrated-workspaces) — Completed work may have left integrated workspaces or stale registrations.
