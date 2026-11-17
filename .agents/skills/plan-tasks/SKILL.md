@@ -1,18 +1,28 @@
 ---
 name: plan-tasks
-description: Divide a specification or clear scope into bounded, verifiable tasks. Use when work needs sequencing, dependencies, or execution across multiple sessions or workers.
+description: Divide an agreed specification or clear scope into bounded, verifiable tasks with explicit dependencies and completion evidence.
 ---
 
 # Plan tasks
 
-Split agreed work into tasks that someone can implement and verify without repeating the design discussion.
+Divide agreed work into tasks that another implementer can complete and verify without repeating the design discussion.
 
-First, check the target project's `AGENTS.md` and `CONTRIBUTING.md` for the tasks' destination and format. If they leave either unclear, ask the user before drafting. Do not choose chat, files, or tracker issues for them.
+## 1. Establish the planning inputs
 
-1. Read the full specification or agreed scope, relevant comments, and affected code and tests. A separate specification document is not required when direct scope is sufficient.
-2. Size each task around a deliverable worth reviewing on its own. Prefer a working end-to-end slice when it fits. Keep setup, tests, and documentation with the deliverable that needs them. Small work may need one task.
-3. For each task, state what it delivers, its boundaries, the requirements it covers, and how to verify completion. Include file paths or interfaces you inspected when they help. Record the result later tasks need, genuine blockers, and unresolved decisions. Do not invent commands or interfaces.
-4. For wide refactors, use expand-contract sequencing when compatibility requires it. If several steps can only be verified together, identify their shared integration check instead of claiming each step passes alone.
-5. Check that every in-scope requirement has a task, dependencies have no cycles, and each completion check tests the promised result. Distinguish blockers from a preferred order. Present the breakdown for review of task size and dependencies.
+Resolve destination and format from the target project's `AGENTS.md` and `CONTRIBUTING.md`. Ask before drafting if either is unclear; let the user choose chat, files, or a tracker.
 
-Stop at the plan or blocking questions. Name the next ready task, but do not start it or launch workers. Follow project gates before execution or tracker publication beyond the agreed destination.
+Read the full specification or agreed scope, relevant comments, and affected code and tests. A separate specification document is optional when direct scope is sufficient. Continue when the inputs and output location are settled.
+
+## 2. Define reviewable deliverables
+
+Size each task around a deliverable worth reviewing independently. Prefer a working end-to-end slice where it fits. Keep setup, tests, and documentation with the deliverable that needs them. Small work may need one task.
+
+For every task, state its deliverable, boundaries, covered requirements, completion evidence, and results needed by later tasks. Include inspected paths or interfaces where useful. Record genuine blockers and unresolved decisions. Use only commands and interfaces supported by project evidence.
+
+For wide refactors, use expand-contract sequencing when compatibility requires it. If steps cannot pass independently, name their shared integration check rather than claiming each passes alone.
+
+## 3. Check coverage and hand off
+
+Account for every in-scope requirement. Check dependency cycles and confirm that every completion check tests its promised result. Distinguish blocking dependencies from preferred ordering. Present the breakdown for review of task size and dependencies.
+
+Stop at the plan or blocking questions and name the next ready task. Starting work, launching workers, or publishing beyond the agreed destination requires the applicable project gates and authorization.

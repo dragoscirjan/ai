@@ -12,11 +12,7 @@ The security guidance uses these references:
 - [OWASP Developer Guide secure coding checklist](https://devguide.owasp.org/en/04-design/02-web-app-checklist/)
 - [CWE Top 25 Most Dangerous Software Weaknesses](https://cwe.mitre.org/top25/)
 
-The [OWASP Secure Coding Practices Quick Reference Guide](https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/) is archived. OWASP migrated and updated its checklist content in the Developer Guide, so the skill uses the current Developer Guide sources above.
-
 The duplicate-code fallback is [jscpd](https://jscpd.dev/), which supports more than 200 languages. Existing project tooling still takes precedence.
-
-These sources guide risk analysis. They are not copied into the skill and do not replace project-specific requirements.
 
 ## Independent guidance and composition
 

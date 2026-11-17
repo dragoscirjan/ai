@@ -22,7 +22,7 @@ Load only the instructions required for the current phase. When several rows mat
 
 Stop before the gated phase if a required document or skill is unavailable. Do not recreate missing instructions from memory.
 
-Use skill frontmatter descriptions to select task-specific skills; do not preload every skill. Before applying a selected skill, inspect its frontmatter and resolve its `requires` skills recursively in array order, then apply the selected skill. Stop on missing requirements or cycles; do not install missing skills without approval. Requirements load instructions, not authority to act. The declaration format is defined in `CONTRIBUTING.md`.
+Use skill frontmatter descriptions to select task-specific skills; do not preload every skill. Before applying a selected skill, inspect its frontmatter and resolve its `requires` skills recursively in array order, then apply the selected skill. Names may resolve to local skills or installed external skills registered in `.agents/skills/sync-my-skills/assets/skill-catalog.yaml`. A catalog entry identifies a source; it does not count as an installed requirement or authorize fetching it. Stop on missing requirements or cycles and request approved setup; do not install implicitly. Requirements load instructions, not authority to act. The declaration format is defined in `CONTRIBUTING.md`.
 
 ## Skill discovery
 
@@ -45,7 +45,7 @@ Workspace configuration:
 - Branch or bookmark name: pass the full name explicitly and use the `change/` prefix
 - Skill source: `.agents/skills/isolated-workspace/SKILL.md` in the repository origin
 
-The skill is mandatory before mutation. If it is unavailable, stop. With owner approval, install it using `npx skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace`, then reload the harness. Do not install it without approval, use an inline fallback, or recreate its workflow from memory.
+The skill is mandatory before mutation. If it is unavailable, stop. With owner approval, install it using `npx -y skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace`, then reload the harness. Do not install it without approval, use an inline fallback, or recreate its workflow from memory.
 
 Every final repository-work report, including blocked or partial-work handoffs, must state the active branch or bookmark and absolute workspace path. If no isolated workspace was created, state that explicitly.
 

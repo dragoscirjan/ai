@@ -17,30 +17,34 @@ This repository does not define one automated test suite for every asset. Record
 When a change adds or modifies a skill:
 
 - Verify core `name` and `description` frontmatter and the approved project/harness extensions. Do not claim raw strict Agent Skills compliance for files using nonstandard fields.
-- Validate optional `requires` as one nonempty inline JSON-compatible array: unique valid names, existing targets, and no self-reference or cycles. Check its declared load order and independence of unmarked leaves.
+- Validate optional `requires` as one nonempty inline JSON-compatible array: unique valid names, local or catalogued external targets, and no self-reference or cycles. A catalog entry does not prove installation: missing external requirements must stop invocation for approved setup. Check declared load order and independence of unmarked leaves.
 - Verify that each skill directory name matches its declared `name`.
 - Verify that Pi and OpenCode discover the changed skill from `.agents/skills/`.
 - Verify that Claude Code discovers it through an exact relative `.claude/skills/` symlink to the canonical `.agents/skills/` directory.
 - Check relative references, supporting files, and command examples.
 - Confirm that harness-specific behavior is explicit and does not masquerade as portable Agent Skills behavior.
 
-## Agent-asset synchronization changes
+## Skill synchronization changes
 
-When a change modifies `sync-agent-assets` or its catalog:
+When a change modifies `sync-my-skills` or its catalog:
 
-- Run `node --test .agents/skills/sync-agent-assets/scripts/sync-agent-assets.test.mjs`.
-- Run the helper's `catalog --source-root <repository-root>` command and confirm that every skill directory is represented exactly once.
-- Test init detection, update detection, dependency closure, ambiguous skill selection, and unknown catalog entries.
-- Test clean upstream updates, local modifications, conflicts, missing target files, and upstream removals retained for approval.
-- Confirm plan mode is non-mutating and lock recording requires `--apply --confirm --plan-id <approved-id>`.
-- Confirm the managed lock contains no absolute paths, credentials, temporary paths, or secrets.
-- Confirm the workflow uses static inspection and never runs target code or installs target dependencies for detection.
-- Confirm bootstrap uses a temporary Skills CLI invocation and creates an isolated workspace before project-scoped installation.
-- Confirm complete selected skill directories and dependency closures are installed.
+- Use the approved pinned parser setup (`npm ci --ignore-scripts` in the manager package); never install dependencies merely for target detection.
+- Run `node --test .agents/skills/sync-my-skills/scripts/sync-my-skills.test.mjs` and syntax checks for its `.mjs` helpers.
+- Run `catalog --source-root <repository-root>` and confirm every local skill is represented exactly once, alongside valid catalog-only upstream entries.
+- Test strict YAML parsing, duplicate keys, unsafe paths/tags/aliases, source revisions, unknown entries, missing requirements, and cycles. Every `npx` argument array must start with `npx, -y`.
+- Test default catalog refresh, newly added entries, explicit bundled/local modes, unsupported-schema/owner stops, byte-bound catalog provenance, shared authored-source commits, and stage invalidation when only the catalog source pin changes. Never claim a manager self-update or silent offline fallback.
+- Test context evidence, non-coding projects, every-remaining-skill decision coverage, previously declined entries, unknown/custom installations, and explicit harness subsets. Verify the documentation trio is recommended without language signals, may be declined entirely, and never initializes a site or installs automatically.
+- Test authored/upstream/adapted preparation, complete supporting/legal files, OpenAI-metadata exclusion, output-bound adaptation review, unchanged-result reuse, and changed-source/rule/target stops.
+- Test local/unmanaged conflicts, missing files, upstream removals, exact deprecated choices, complete removal snapshots, stale plans, path/symlink escapes, and primary-checkout protection.
+- Confirm plan mode does not mutate the target and apply requires an isolated Git worktree plus `--apply --confirm --plan-id <approved-id>`.
+- Test version-1/2 lock migration: legacy instruction records stay historical and files remain byte-identical until explicit bundle adoption. Test version-3 ownership and retention when later instruction changes are declined.
+- Test selectable instruction scope: the complete four-file bundle and optional Claude import; existing/custom rules, fixed template prose, required guidance, resolved fields, consistent project names, exact-path resolutions, and separate policy approval. Reject arbitrary root paths, partial bundles, hidden fixed rules, and unsupported destinations.
+- Test unchanged template inputs, pinned source acquisition, target binding, evidence/prerequisite changes, edited outputs, and stale plans. Verify skill/deferred-document actions precede startup imports and the lock is last. Static checks do not prove semantic preservation or command execution.
+- Confirm the lock contains no absolute machine paths, credentials, temporary paths, or secrets. Preserve its provenance, approved decisions, and local-change baseline.
 - Confirm `skills-lock.json` remains Skills CLI-owned and `.agents/ai-assets.lock.json` remains synchronization-owned.
-- Confirm Pi and OpenCode discover the synchronized skills.
-- Confirm Claude Code discovers the synchronized skills through recorded relative projections and loads `AGENTS.md` through `CLAUDE.md`.
-- Confirm synchronization never commits, pushes, publishes, merges, or releases without a separate explicit request.
+- Test personal command setup in disposable home directories, including collisions and stale approvals. Do not mutate live personal configuration during tests. For Pi runtime discovery, distinguish global command loading from project skills and document the native project-trust requirement; any test-only approval must remain confined to the reviewed disposable fixture.
+- Verify Pi/OpenCode canonical discovery and only the selected Claude relative projections. Distinguish static adapter/reference checks from live harness validation and model compliance. For populated instructions, verify active imports and the complete reference graph separately.
+- Confirm there is only one manager skill, no old-name compatibility package, and no automatic commit, push, publication, merge, or release.
 
 ## Coding-family changes
 

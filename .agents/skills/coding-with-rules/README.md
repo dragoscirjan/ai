@@ -13,7 +13,7 @@ The 21 references contain only language/extension semantics, language-specific s
 
 The generic [`coding`](../coding/SKILL.md) skill owns the shared workflow, security baseline, test and quality-gate procedure, duplicate-detector fallback, tool-installation approval, and result reporting. The references adapt the former language rules to that shared workflow rather than copying whole skill bodies. `coding` remains independently useful.
 
-`requires` is a project convention, not a native harness loader. Project instructions resolve it; external Skills CLI commands do not install it automatically. Managed synchronization installs the router in its core profile and includes `coding` through requirement closure. Complete installation includes every reference, but the model reads only applicable files.
+`requires` is a project convention, not a native harness loader. Project instructions resolve it; external Skills CLI commands do not install it automatically. `/sync-my-skills` offers the router when relevant or selected and includes `coding` through prerequisite closure. It does not impose a coding profile on every project. Complete installation includes every reference, but the model reads only applicable files.
 
 ## Use
 
@@ -26,18 +26,18 @@ In Pi:
 For a manual installation, explicitly select both skills:
 
 ```sh
-npx skills@1.7.4 add dragoscirjan/ai --skill coding --skill coding-with-rules --agent pi --agent opencode --agent claude-code
+npx -y skills@1.7.4 add dragoscirjan/ai --skill coding --skill coding-with-rules --agent pi
 ```
 
-Review the assets and follow the target project's workspace and approval gates before installation. Claude Code uses the relative `.claude/skills/coding-with-rules` projection; no separate reference projections are needed. Reload the harness after changing its installed skill inventory.
+Choose the intended harnesses rather than assuming a three-harness bundle. Review the assets and follow the target project's workspace and approval gates before installation. Claude Code uses the relative `.claude/skills/coding-with-rules` projection; no separate reference projections are needed. Reload the harness after changing its installed skill inventory.
 
 ## Migrate existing installations
 
 The former `coding-<language>` and `coding-<extension>` skills are removed upstream, not automatically renamed or deleted in target projects.
 
-1. Run `sync-agent-assets` against the new source and review its removed-skill report. In the proposed selection, replace obsolete selected names with `coding-with-rules` and remove obsolete declined names. Reusing an unknown legacy selection is an error; there is no automatic remapping.
-2. Approve the target instruction adaptation: route code work through `coding-with-rules` instead of selecting separate language and extension skills.
-3. Install the complete router and its `coding` requirement using the approved synchronization workflow. Retain legacy files through explicit `retainedFiles` entries for previously recorded paths until their removal is approved. Do not hand-edit either lockfile.
-4. Review retained legacy directories and Claude projections separately. They remain on disk and can remain discoverable; remove them only under an explicit target-approved cleanup plan, then reload the harness. This migration does not authorize that deletion.
+1. Run `/sync-my-skills` and review the explicit deprecated-name list. Select `coding-with-rules` when appropriate, with its `coding` prerequisite. Unknown custom names are not automatically remapped or classified as deprecated.
+2. Choose the exact legacy skills to retain or remove, including none. Review their locations, local changes, and replacement before approving the plan. A decline or missing catalog entry does not authorize deletion.
+3. Install the complete router and applicable harness projections only under the current approved plan in an isolated workspace. Existing local edits remain protected; do not hand-edit either lockfile.
+4. Verify only the approved legacy directories/projections were removed and reload the harness. Migration alone leaves root instructions untouched. Instruction-routing/template changes require selecting the separate bundle, reviewing project-specific drafts and policy changes, and approving the resulting plan.
 
-This repository removes its old directories and projections in the same change. No synchronization deletion or legacy-name remapping behavior is added. See [issue #56](https://github.com/dragoscirjan/ai/issues/56).
+The original consolidation is recorded in [#56](https://github.com/dragoscirjan/ai/issues/56). Explicit, snapshot-bound deprecated removal and reviewed lock migration are provided by [#69](https://github.com/dragoscirjan/ai/issues/69); there is no automatic prefix-based deletion.

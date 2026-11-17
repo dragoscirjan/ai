@@ -12,15 +12,15 @@ A developer-focused how-to:
 
 ### Check the skill catalog
 
-Prerequisites: a trusted checkout of this repository and Node.js 22.20 or newer. Run this command from the repository root:
+Prerequisites: a trusted checkout of this repository, Node.js 22.20 or newer, and the manager's pinned parser dependency installed through [approved setup](../../sync-my-skills/README.md). Do not install dependencies merely to perform this check. Run this command from the repository root:
 
 ```sh
-node .agents/skills/sync-agent-assets/scripts/sync-agent-assets.mjs catalog --source-root .
+node .agents/skills/sync-my-skills/scripts/sync-my-skills.mjs catalog --source-root .
 ```
 
-The command exits with code 0 and prints JSON containing `profiles` and `skills`. Check that `skills` includes an entry named `document-project`. This command reads the catalog and skill metadata; it does not install assets or modify the checkout.
+The command exits with code 0 and prints JSON containing `schemaVersion`, `catalogHash`, `skills`, and `deprecations`. Check that `schemaVersion` is `2` and that `skills` includes `document-project` with `selection: recommended`. A recommendation does not authorize installation. This command reads the catalog and skill metadata; it does not install skills, create a documentation site, or modify the checkout.
 
-If the helper rejects the Node.js version, select a supported runtime. If it reports a catalog coverage mismatch, compare the catalog entries with directories under `.agents/skills/` and correct the mismatch. Do not bypass validation to make the command succeed.
+If the helper rejects the Node.js version, select a supported runtime. If the parser dependency is unavailable, request its approved setup before retrying. For a catalog coverage mismatch, compare local-source entries with directories under `.agents/skills/`. Upstream-only entries deliberately have no vendored directory. Correct the mismatch rather than bypassing validation.
 
 This guide supplies the runtime, working directory, exact command, expected result, and relevant recovery. It does not explain how to open a terminal.
 

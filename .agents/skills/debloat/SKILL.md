@@ -1,6 +1,6 @@
 ---
 name: debloat
-description: Prevent overengineering during code design and implementation, or simplify existing code, configuration, dependencies, and abstractions through evidence-backed refactoring. Use when a direct solution may replace unnecessary mechanisms without weakening behavior, public contracts, security, or operational needs. Not for prose compression.
+description: "Prevent overengineering during design; simplify existing code, configuration, or dependencies while preserving required behavior, contracts, security, and operational needs."
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -9,66 +9,54 @@ metadata:
 
 # Debloat
 
-Prefer a familiar, direct solution that fits the project. Minimize total comprehension, maintenance, testing, security, and operating cost—not lines alone. Keep complexity justified by correctness, compatibility, real boundaries, tests, recovery, or measured constraints.
+Prefer familiar, direct solutions that fit the project. Minimize total comprehension, maintenance, testing, security, and operating cost rather than line count. Retain complexity justified by correctness, compatibility, real boundaries, tests, recovery, or measured constraints.
 
-## Establish scope and authority
+## 1. Establish scope and authority
 
-Choose the mode from the request:
+Choose prevent mode for a proposed design or simplify mode for existing code, configuration, dependencies, or abstractions. Confirm required behavior, allowed area/files, public contracts, and edit authority.
 
-- **Prevent:** compare the proposed design with the simplest project-compatible implementation of the known requirements.
-- **Simplify:** investigate existing mechanisms and propose or implement behavior-preserving reductions within the named area.
+Keep reviews read-only, including generated artifacts and state-writing checks. Obtain approval for broader scope or changed contracts. Follow applicable project approval, workspace, coding, and validation gates; stop on missing instructions or unapproved tools. Read-only inventory does not itself require implementation guidance.
 
-Confirm behavior, allowed files/subsystem, public contracts, and edit authority. Reviews stay read-only: report evidence without edits, generated artifacts, or state-writing checks. Ask before expanding scope or changing contracts; never turn a local task into repository-wide cleanup.
+Continue when mode, boundaries, and authority are explicit. This skill grants no mutation or publication permission.
 
-This guidance grants no mutation or publication authority. Follow project approval, workspace, coding, and validation requirements at their applicable phases. Stop if a required instruction is missing; do not reconstruct it or install missing tools without approval. A read-only inventory does not require implementation guidance.
+## 2. Investigate each candidate
 
-## Gather evidence
+Read implementation, tests, configuration, manifests, and contracts. Trace actual consumers, including public exports, plugins, CLIs, generated code, build/deployment wiring, environment inputs, and integrations where relevant. Import searches alone cannot prove disuse.
 
-Read nearby implementation, tests, configuration, manifests, and documented contracts. Trace actual callers and consumers, including public exports, plugin registration, CLI entrypoints, generated code, build and deployment wiring, environment inputs, and external integrations where relevant. No imports found is not proof that something is unused.
+For every candidate, establish its requirement and consumers, present cost, direct alternative, behavioral/compatibility/security/test/operational risks, supporting evidence, and unknowns.
 
-For each candidate, identify:
+Investigate speculative extensibility, pass-through layers, duplicated facts, and apparently unused mechanisms rather than treating them as deletion orders. Defer removal when consumers or constraints cannot be verified, and name the missing evidence.
 
-- the requirement it serves and who depends on it
-- its present cost, such as indirection, synchronized facts, failure modes, setup, or maintenance work
-- a direct alternative and any behavior, compatibility, security, test, or operational risk
-- evidence supporting the decision and facts still unknown
+## 3. Compare and decide
 
-Treat speculative extensibility, pass-through layers, duplicate facts, and apparently unused mechanisms as questions to investigate, not deletion orders. If consumers or constraints cannot be verified, defer removal and state the missing evidence.
+In prevent mode, start with the simplest project-compatible approach to known requirements. Add a mechanism only for a demonstrated need that the direct approach cannot meet.
 
-## Compare alternatives
+In simplify mode, compare the current implementation with a concrete smaller design:
 
-In prevent mode, start with the familiar direct approach. Add a mechanism only for a demonstrated need; explain why the direct approach fails it, not how a framework might serve imagined variants.
-
-In simplify mode, compare the current implementation with a concrete smaller design. Consider these candidates only where evidence supports them:
-
-| Candidate | Investigation |
+| Candidate | Evidence to inspect |
 |---|---|
-| Factory, registry, interface, or forwarding layer | Does it enforce a boundary, isolate change, enable required tests, or have real variants? Would direct construction or calls preserve those properties? |
-| Repeated code or configuration facts | Is this the same stable concept? Would one owner reduce drift without coupling unrelated behavior? |
-| Options, flags, hooks, or fallback paths | Who supplies or relies on them, including deployment and recovery workflows? What contract would removal affect? |
-| Dependency | What runtime, build, test, or transitive role does it serve? Would replacement increase security, compatibility, or maintenance obligations? |
-| Cache or other optimization | What measurements and operational constraints justify it? Would the alternative still meet them? |
+| Factory, registry, interface, or forwarding layer | Required boundaries, isolated change, real variants, and test seams that direct calls must preserve. |
+| Repeated code or configuration | A stable shared concept whose single owner reduces drift without coupling unrelated behavior. |
+| Options, flags, hooks, or fallback paths | Consumers and contracts, including deployment and recovery. |
+| Dependency | Runtime/build/test/transitive roles and security, compatibility, or maintenance cost of replacement. |
+| Cache or optimization | Measurements and operational constraints the alternative must still satisfy. |
 
-Preserve established cryptography, authorization, error handling, observability, recovery, and necessary tests. Homegrown cryptography or fewer security checks is not simplification.
+Retain established cryptography, authorization, error handling, observability, recovery, and necessary tests. Fewer security checks or homegrown cryptography is not simplification. Evaluate total cost, including obligations shifted to callers.
 
-Do not impose universal line, file, or package counts, deletion quotas, interface bans, or dependency API-use thresholds. Do not merge merely similar code or replace a maintained library with custom code merely because few APIs are used. A local reduction that spreads obligations to callers may cost more overall.
+Use evidence instead of line/file/package quotas, deletion targets, interface bans, or API-use thresholds. Keep unrelated concepts separate and maintained libraries where custom replacements would add obligations.
 
-Assign each candidate a decision:
+Assign each candidate keep, simplify, or defer. Name the evidence for keeping it, the requirement-preserving alternative for simplifying it, or the unresolved risk/authority/prerequisite for deferring it. Consult [decision examples](references/decision-examples.md) when checking a disputed trade-off; examples are not deletion rules.
 
-- **Keep:** its value or boundary justifies the cost; name the evidence.
-- **Simplify:** a concrete alternative lowers maintenance burden while meeting the same requirements.
-- **Defer:** uncertainty, risk, missing authority, or an unmet prerequisite blocks a safe change; name what would resolve it.
+Continue when every candidate has an evidence-backed decision.
 
-## Apply authorized changes
+## 4. Apply only authorized reductions
 
-When edits are authorized, use project source conventions and make small, reviewable, behavior-preserving steps. Establish focused behavioral coverage before removing or collapsing a mechanism; use contract or integration checks when callers cross a boundary. If coverage is infeasible, report the limitation before relying on a weaker check.
+Follow source conventions in small, reviewable steps. Establish focused behavioral coverage before removing or collapsing a mechanism; use contract or integration checks across boundaries. Report infeasible coverage before relying on weaker checks.
 
-Preserve public behavior, defaults, errors, side effects, and compatibility unless a change is explicitly approved. Check consumers again after rewiring them. Remove only mechanisms made unnecessary within the approved scope, and inspect the complete diff for collateral changes.
+Preserve public behavior, defaults, errors, side effects, and compatibility unless a change is explicitly approved. Recheck consumers after rewiring, remove only newly unnecessary mechanisms within scope, and review the complete diff for collateral edits.
 
-Run applicable project gates and report actual results. Do not weaken tests, suppress failures, lower thresholds, or introduce a toolchain to make a reduction appear successful. If a step reveals a necessary boundary or an unapproved behavior change, stop and reassess rather than forcing the deletion.
+Run applicable gates. Preserve tests, failures, and thresholds; toolchain changes require approval. Stop and reassess when a necessary boundary or unapproved behavior change appears.
 
-## Report the outcome
+## 5. Report
 
-Report mode/scope, evidence-backed keep/simplify/defer decisions, proposed or actual changes, justified retained complexity, check results and unrun reasons, uncertainty, and required next approval. No change is valid when the existing design is the simpler sound choice.
-
-Use the [decision examples](references/decision-examples.md) to check that a recommendation preserves the relevant constraints, not as rules to apply without investigation.
+Report mode/scope, evidence-backed decisions, proposed or actual changes, justified retained complexity, check results and unrun reasons, uncertainty, and the next approval needed. Keeping the current design is a valid outcome when it remains the simpler sound choice.
