@@ -4,6 +4,8 @@ title: "Write guidance for an agent reader"
 
 # Write guidance for an agent reader
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 A skill, prompt, or agent-facing document needs clearer triggers and actions.
 
 **Finish with:** A reviewed instruction draft with co-located rules and clear completion boundaries.
@@ -12,7 +14,7 @@ A skill, prompt, or agent-facing document needs clearer triggers and actions.
 
 ![Write guidance for an agent reader: suggested skill handoffs with approval stops where applicable.](/diagrams/write-agent-facing-guidance.svg)
 
-[Open interactive diagram](/diagrams/write-agent-facing-guidance.html) · [Download SVG](/diagrams/write-agent-facing-guidance.svg) · [Editable candidate](/diagram-sources/write-agent-facing-guidance.json)
+[Open interactive diagram](/diagrams/write-agent-facing-guidance.html){class="vp-raw"} · [Download SVG](/diagrams/write-agent-facing-guidance.svg) · [Editable candidate](/diagram-sources/write-agent-facing-guidance.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

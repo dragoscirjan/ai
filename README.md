@@ -4,7 +4,7 @@ This repository contains reusable skills, instructions, configuration assets, an
 
 ## Documentation website
 
-The VitePress site groups the catalogued skills by task and explains supported combinations with editable Archify diagrams. Start with the [documentation source](docs/index.md) or the [first-use guide](docs/guide/start.md).
+The VitePress site explains five project workflows: planning, task implementation, debugging, documentation, and debloating. Each guide covers skill handoffs, optional branches, and rework loops. The skill reference and focused procedures remain available separately. Start with the [documentation source](docs/index.md) or [choose your workflow](docs/guide/start.md).
 
 After reviewing the project configuration and completing the [project-scoped mise setup](docs/maintenance/index.md):
 
@@ -13,7 +13,7 @@ mise run deps:sync
 mise run docs:serve
 ```
 
-Use `mise run docs` for a production build and `mise run docs:check` for catalog coverage, requirements, recipe, diagram, and local-link checks. Independent runs use `/`; hosted builds use `DOCS_BASE=/projects/ai-skills/`. See [site maintenance](docs/maintenance/index.md), [diagram regeneration](docs/maintenance/diagrams.md), and [publication](docs/maintenance/publication.md). The manual publisher exports an artifact by default and can open a destination PR; it does not merge or deploy.
+Use `mise run docs` for a production build and `mise run docs:check` for catalog coverage, requirements, recipe, diagram, and local-link checks. Independent runs use `/`; hosted builds use `DOCS_BASE=/projects/ai-skills/`. See [site maintenance](docs/maintenance/index.md), [diagram regeneration](docs/maintenance/diagrams.md), and [publication](docs/maintenance/publication.md). Every push to `main` builds the documentation and opens a destination PR when the output changes. Manual reruns on `main` need no publish argument. The publisher does not merge or deploy.
 
 ## Skills
 
@@ -122,7 +122,7 @@ flowchart LR
     W["coding-with-rules"] -->|requires| C["coding"]
 ```
 
-`initiative` uses the required interview to settle open decisions. `research` uses it only when the question, scope, or expected result is unclear. A clear research request skips the interview, although the required instructions still load. `specify` also uses `grilling` when detailed requirements or test boundaries need clarification, then records the confirmed answers. `coding-with-rules` adds language and extension guidance to the base coding workflow. Project routing loads each requirement before its caller, and managed synchronization includes it in the installation closure.
+`initiative` uses the required interview to settle open decisions. `research` uses it only when the question, scope, or expected result is unclear. A clear research request skips the interview, although the required instructions still load. `specify` also uses `grilling` when detailed requirements or test boundaries need clarification, then records the confirmed answers. `coding-with-rules` adds language and extension guidance to the base coding workflow. Project routing loads each requirement before its caller. If a selected skill or required instructions are missing, the agent stops and asks the user to install them. No skill needs `sync-my-skills` to be selected or used.
 
 `plan-tasks` and `retro` have no declared skill dependencies. For example, `plan-tasks` can work from clear direct scope without first running `specify`. Select `tdd` and `code-review` separately; placing them in a workflow diagram does not make them declared requirements.
 
@@ -143,7 +143,7 @@ This repository groups source skills by purpose under `.agents/skills/<category>
 Install a local skill with an explicit command after reviewing it:
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/isolated-workspace --skill isolated-workspace
 ```
 
 Upstream-only skills are obtained from their catalogued sources, not from nonexistent directories in this repository. Raw Skills CLI installation alone does not guarantee prerequisite closure or OpenAI-metadata filtering.

@@ -19,12 +19,14 @@ You explicitly want terse technical fragments and your project policy permits th
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill caveman
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/caveman --skill caveman
 ```
 
 This command selects only `caveman`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,7 +55,9 @@ This mode drops articles and uses fragments. It is an alternative to ASD and Uns
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Shorten a technical answer without losing meaning](/workflows/shorten-without-loss)
+
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

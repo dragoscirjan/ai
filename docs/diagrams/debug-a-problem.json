@@ -1,0 +1,377 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Debug an application problem",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/debug-a-problem.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "a6e3f4348fb13fdad5011909f7a2f3a3a24cdb14",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Guided work"
+        },
+        "security": {
+          "label": "Decision or approval"
+        },
+        "external": {
+          "label": "Input or handoff"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "diagnosis",
+      "label": "Evidence before fixes"
+    },
+    {
+      "id": "work",
+      "label": "Authorized correction"
+    },
+    {
+      "id": "review",
+      "label": "Review and reassessment",
+      "variant": "exception"
+    }
+  ],
+  "mainPath": [
+    "investigate",
+    "compare",
+    "hypothesis",
+    "regression",
+    "fix",
+    "verify",
+    "done"
+  ],
+  "nodes": [
+    {
+      "id": "investigate",
+      "lane": "diagnosis",
+      "col": 0,
+      "label": "/systematic-debugging",
+      "sublabel": "Bound and reproduce failure",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
+          "line": 1,
+          "end_line": 99,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "compare",
+      "lane": "diagnosis",
+      "col": 1,
+      "label": "Compare working case",
+      "sublabel": "Trace concrete differences",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
+          "line": 1,
+          "end_line": 99,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "hypothesis",
+      "lane": "diagnosis",
+      "col": 2,
+      "label": "Test one hypothesis",
+      "sublabel": "Prediction and result",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
+          "line": 1,
+          "end_line": 99,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "diagnosis",
+      "lane": "diagnosis",
+      "col": 3,
+      "label": "Diagnosis only",
+      "sublabel": "Report cause or blocker",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
+          "line": 1,
+          "end_line": 99,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "regression",
+      "lane": "work",
+      "col": 3,
+      "label": "Regression evidence",
+      "sublabel": "Observe the failure first",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
+          "line": 1,
+          "end_line": 99,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "fix",
+      "lane": "work",
+      "col": 4,
+      "label": "/coding-with-rules",
+      "sublabel": "Smallest cause-based fix",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/coding-with-rules/SKILL.md",
+          "line": 1,
+          "end_line": 53,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "verify",
+      "lane": "work",
+      "col": 5,
+      "label": "Verify the fix",
+      "sublabel": "Regression + wider checks",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
+          "line": 1,
+          "end_line": 99,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "lane": "review",
+      "col": 4,
+      "label": "/code-review",
+      "sublabel": "If requested and supported",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/code-review/SKILL.md",
+          "line": 1,
+          "end_line": 91,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "done",
+      "lane": "review",
+      "col": 5,
+      "label": "Verified correction",
+      "sublabel": "Report evidence and limits",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
+          "line": 1,
+          "end_line": 99,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "reassess",
+      "lane": "review",
+      "col": 2,
+      "label": "Stop and reassess",
+      "sublabel": "Agree any broader scope",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
+          "line": 1,
+          "end_line": 99,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "investigate-to-compare",
+      "from": "investigate",
+      "to": "compare",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "compare-to-hypothesis",
+      "from": "compare",
+      "to": "hypothesis",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "hypothesis-to-investigate",
+      "from": "hypothesis",
+      "to": "investigate",
+      "label": "not supported",
+      "role": "return",
+      "variant": "default"
+    },
+    {
+      "id": "hypothesis-to-diagnosis",
+      "from": "hypothesis",
+      "to": "diagnosis",
+      "label": "diagnosis request",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "hypothesis-to-regression",
+      "from": "hypothesis",
+      "to": "regression",
+      "label": "cause + approval",
+      "role": "main",
+      "variant": "security"
+    },
+    {
+      "id": "regression-to-fix",
+      "from": "regression",
+      "to": "fix",
+      "label": "failure observed",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "fix-to-verify",
+      "from": "fix",
+      "to": "verify",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "verify-to-done",
+      "from": "verify",
+      "to": "done",
+      "label": "checks accounted",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "verify-to-investigate",
+      "from": "verify",
+      "to": "investigate",
+      "label": "still failing",
+      "role": "return",
+      "variant": "default"
+    },
+    {
+      "id": "verify-to-reassess",
+      "from": "verify",
+      "to": "reassess",
+      "label": "3 failed fixes",
+      "role": "return",
+      "variant": "security"
+    },
+    {
+      "id": "verify-to-review",
+      "from": "verify",
+      "to": "review",
+      "label": "if requested",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "review-to-done",
+      "from": "review",
+      "to": "done",
+      "label": "findings handled",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "review-to-fix",
+      "from": "review",
+      "to": "fix",
+      "label": "bounded correction",
+      "role": "return",
+      "variant": "default"
+    }
+  ],
+  "semanticChecks": {
+    "allowedRoots": [
+      "investigate"
+    ],
+    "allowedTerminals": [
+      "diagnosis",
+      "done",
+      "reassess"
+    ],
+    "requiredEdges": [
+      {
+        "from": "hypothesis",
+        "to": "investigate"
+      },
+      {
+        "from": "hypothesis",
+        "to": "regression"
+      },
+      {
+        "from": "verify",
+        "to": "investigate"
+      },
+      {
+        "from": "verify",
+        "to": "reassess"
+      },
+      {
+        "from": "review",
+        "to": "fix"
+      }
+    ]
+  },
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Evidence, not guesses",
+      "items": [
+        "Keep observations, hypotheses, and demonstrated causes separate.",
+        "Regression evidence precedes the correction; selecting the full TDD skill is optional."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Stop or reassess",
+      "items": [
+        "A diagnosis request does not authorize edits. Missing evidence is a blocker, not a reason to guess.",
+        "After three failed corrective attempts, stop patching. Return to planning for broader scope."
+      ]
+    }
+  ]
+}

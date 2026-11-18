@@ -1,0 +1,395 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Debloat a project",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/debloat-a-project.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "a6e3f4348fb13fdad5011909f7a2f3a3a24cdb14",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Guided work"
+        },
+        "security": {
+          "label": "Decision or approval"
+        },
+        "external": {
+          "label": "Input or handoff"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "exceptions",
+      "label": "Changed behavior needs reassessment",
+      "variant": "exception"
+    },
+    {
+      "id": "work",
+      "label": "Evidence-backed simplification"
+    },
+    {
+      "id": "checks",
+      "label": "Behavior coverage and optional review"
+    },
+    {
+      "id": "outcome",
+      "label": "Evidence-backed handoffs"
+    }
+  ],
+  "mainPath": [
+    "inventory",
+    "decision",
+    "proposal",
+    "approve",
+    "coverage",
+    "simplify",
+    "verify",
+    "done"
+  ],
+  "nodes": [
+    {
+      "id": "inventory",
+      "lane": "work",
+      "col": 0,
+      "label": "/debloat",
+      "sublabel": "Requirements and consumers",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/debloat/SKILL.md",
+          "line": 1,
+          "end_line": 62,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "decision",
+      "lane": "work",
+      "col": 1,
+      "label": "Keep / simplify / defer",
+      "sublabel": "Compare total cost",
+      "type": "security",
+      "icon": "decision",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/debloat/SKILL.md",
+          "line": 1,
+          "end_line": 62,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "proposal",
+      "lane": "work",
+      "col": 2,
+      "label": "Bound the reduction",
+      "sublabel": "Contracts and risks",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/debloat/SKILL.md",
+          "line": 1,
+          "end_line": 62,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "approve",
+      "lane": "work",
+      "col": 3,
+      "label": "Approve reduction",
+      "sublabel": "Only the agreed scope",
+      "type": "security",
+      "icon": "decision",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/debloat/SKILL.md",
+          "line": 1,
+          "end_line": 62,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "coverage",
+      "lane": "checks",
+      "col": 3,
+      "label": "Establish behavior checks",
+      "sublabel": "Preserve contracts first",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/debloat/SKILL.md",
+          "line": 1,
+          "end_line": 62,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "simplify",
+      "lane": "work",
+      "col": 4,
+      "label": "/coding-with-rules",
+      "sublabel": "Small reviewable reductions",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/coding-with-rules/SKILL.md",
+          "line": 1,
+          "end_line": 53,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "verify",
+      "lane": "work",
+      "col": 5,
+      "label": "Verify preservation",
+      "sublabel": "Consumers and project checks",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/debloat/SKILL.md",
+          "line": 1,
+          "end_line": 62,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "report",
+      "lane": "outcome",
+      "col": 1,
+      "label": "Report decisions",
+      "sublabel": "Keeping or deferring is valid",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/debloat/SKILL.md",
+          "line": 1,
+          "end_line": 62,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "reassess",
+      "lane": "exceptions",
+      "col": 5,
+      "label": "Stop and reassess",
+      "sublabel": "Plan broader scope",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/debloat/SKILL.md",
+          "line": 1,
+          "end_line": 62,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "lane": "checks",
+      "col": 5,
+      "label": "/code-review",
+      "sublabel": "If requested and supported",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/code-review/SKILL.md",
+          "line": 1,
+          "end_line": 91,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "done",
+      "lane": "outcome",
+      "col": 5,
+      "label": "Verified reduction",
+      "sublabel": "Retain justified complexity",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/debloat/SKILL.md",
+          "line": 1,
+          "end_line": 62,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "inventory-to-decision",
+      "from": "inventory",
+      "to": "decision",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "decision-to-report",
+      "from": "decision",
+      "to": "report",
+      "label": "keep or defer",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "decision-to-proposal",
+      "from": "decision",
+      "to": "proposal",
+      "label": "simplify",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "proposal-to-approve",
+      "from": "proposal",
+      "to": "approve",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "approve-to-report",
+      "from": "approve",
+      "to": "report",
+      "label": "not approved",
+      "role": "return",
+      "variant": "security"
+    },
+    {
+      "id": "approve-to-coverage",
+      "from": "approve",
+      "to": "coverage",
+      "label": "if approved",
+      "role": "main",
+      "variant": "security"
+    },
+    {
+      "id": "coverage-to-simplify",
+      "from": "coverage",
+      "to": "simplify",
+      "label": "coverage ready",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "simplify-to-verify",
+      "from": "simplify",
+      "to": "verify",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "verify-to-done",
+      "from": "verify",
+      "to": "done",
+      "label": "contracts hold",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "verify-to-reassess",
+      "from": "verify",
+      "to": "reassess",
+      "label": "behavior changed",
+      "role": "error",
+      "variant": "security"
+    },
+    {
+      "id": "verify-to-review",
+      "from": "verify",
+      "to": "review",
+      "label": "if requested",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "review-to-simplify",
+      "from": "review",
+      "to": "simplify",
+      "label": "bounded correction",
+      "role": "return",
+      "variant": "default"
+    },
+    {
+      "id": "review-to-done",
+      "from": "review",
+      "to": "done",
+      "label": "findings handled",
+      "role": "branch",
+      "variant": "default"
+    }
+  ],
+  "semanticChecks": {
+    "allowedRoots": [
+      "inventory"
+    ],
+    "allowedTerminals": [
+      "report",
+      "reassess",
+      "done"
+    ],
+    "requiredEdges": [
+      {
+        "from": "approve",
+        "to": "report"
+      },
+      {
+        "from": "approve",
+        "to": "coverage"
+      },
+      {
+        "from": "verify",
+        "to": "reassess"
+      },
+      {
+        "from": "review",
+        "to": "simplify"
+      }
+    ]
+  },
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Preserve requirements",
+      "items": [
+        "Trace public consumers, plugins, configuration, and operating constraints before deleting.",
+        "Keep authorization, established cryptography, recovery, and meaningful tests. Fewer lines are not the goal."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Approve only a bounded change",
+      "items": [
+        "The read-only inventory can end at keep, simplify, or defer proposals.",
+        "A changed contract or broad redesign returns to planning. Update affected reader guidance."
+      ]
+    }
+  ]
+}

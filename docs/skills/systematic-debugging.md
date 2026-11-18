@@ -19,12 +19,14 @@ A bug, regression, failing test, flaky result, or unexpected behavior needs a ro
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill systematic-debugging
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/systematic-debugging --skill systematic-debugging
 ```
 
 This command selects only `systematic-debugging`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,7 +55,9 @@ Do not stack speculative fixes or treat a symptom disappearing as a proven cause
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Find the root cause before proposing a fix](/workflows/diagnose-a-failure)
+- [Debug an application problem](/workflows/debug-a-problem)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

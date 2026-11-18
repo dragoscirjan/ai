@@ -24,7 +24,9 @@ npx -y skills@1.7.4 add https://github.com/tt-a1i/archify/tree/a7ed6fd6657da9041
 
 This command selects only `archify`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,8 +55,9 @@ The external package and runtime/browser setup need approval. A rendered HTML fi
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Keep a developer task usable](/workflows/maintain-task-based-docs)
-- [Explain relationships with interactive HTML](/workflows/explain-with-archify)
+- [Document a project](/workflows/document-a-project)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

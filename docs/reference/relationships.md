@@ -12,7 +12,7 @@ A line between two skill names can mean different things. Treating every useful 
 
 ![Six declared instruction dependencies, directed from each requesting skill to its required instructions.](/diagrams/required-dependencies.svg)
 
-[Open interactive diagram](/diagrams/required-dependencies.html) · [Download SVG](/diagrams/required-dependencies.svg) · [Editable candidate](/diagram-sources/required-dependencies.json)
+[Open interactive diagram](/diagrams/required-dependencies.html){class="vp-raw"} · [Download SVG](/diagrams/required-dependencies.svg) · [Editable candidate](/diagram-sources/required-dependencies.json)
 
 | Requesting skill | Required instructions |
 | --- | --- |
@@ -23,7 +23,7 @@ A line between two skill names can mean different things. Treating every useful 
 | [`research`](/skills/research) | [`grilling`](/skills/grilling) |
 | [`specify`](/skills/specify) | [`grilling`](/skills/grilling) |
 
-The `requires` declaration is a project extension, not a standard Agent Skills field or a native loader guarantee. Resolve recursively in array order, stop on missing requirements or cycles, and obtain approved setup. Direct Skills CLI installation does not automatically install this closure. The manager's reviewed selection handles catalogued prerequisites.
+The `requires` declaration is a project extension, not a standard Agent Skills field or a native loader guarantee. Resolve recursively in array order, stop on missing requirements or cycles, and obtain approved setup. Direct Skills CLI installation does not automatically install this closure. If a selected skill or required instructions are missing, stop the task and ask the user to install them. Resume only after installation is confirmed and availability is verified.
 
 ## Installation prerequisites
 

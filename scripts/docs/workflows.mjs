@@ -2,6 +2,46 @@
 const work = (skill, label) => ({ skill, label, kind: "work" });
 const gate = (skill, label) => ({ skill, label, kind: "approval" });
 
+// Primary guides are authored Markdown. Recipe IDs preserve links to narrower procedures.
+export const workflowGuides = [
+  {
+    id: "plan-a-project",
+    title: "Plan a project or feature",
+    when: "Define requirements, limitations, and implementation-ready tasks.",
+    recipes: [
+      "research-a-decision",
+      "shape-an-initiative",
+      "specify-observable-behavior",
+      "plan-bounded-tasks",
+      "challenge-a-design",
+    ],
+  },
+  {
+    id: "implement-a-task",
+    title: "Implement a planned task",
+    when: "Turn an agreed task into tested behavior and reviewed changes.",
+    recipes: ["implement-a-small-change", "build-test-first", "scaffold-without-implementation"],
+  },
+  {
+    id: "debug-a-problem",
+    title: "Debug an application problem",
+    when: "Find an evidence-backed cause, then fix and verify the failure.",
+    recipes: ["diagnose-a-failure"],
+  },
+  {
+    id: "document-a-project",
+    title: "Document a project",
+    when: "Create or improve a documentation website around reader tasks.",
+    recipes: ["maintain-task-based-docs"],
+  },
+  {
+    id: "debloat-a-project",
+    title: "Debloat a project",
+    when: "Reduce unnecessary complexity while preserving required behavior.",
+    recipes: ["simplify-a-design"],
+  },
+];
+
 export const workflows = [
   {
     id: "install-selected-skills",

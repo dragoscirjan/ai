@@ -2,7 +2,8 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { catalog, catalogPath, catalogRelativePath, groups, root } from "./data.mjs";
-import { workflows } from "./workflows.mjs";
+import { workflowGuides, workflows } from "./workflows.mjs";
+import { guideDiagram } from "./workflow-guide-diagrams.mjs";
 
 export function identity() {
   const revision = execFileSync("git", ["rev-parse", "HEAD"], {
@@ -277,10 +278,14 @@ export function workflowSpec(recipe, repository) {
     ],
   };
 }
+export function workflowGuideSpec(guide, repository) {
+  return guideDiagram(guide, repository, sources);
+}
 export function diagramSpecs(repository = identity()) {
   return new Map([
     ["required-dependencies", dependencySpec(repository)],
     ["skill-groups", groupSpec(repository)],
+    ...workflowGuides.map((guide) => [guide.id, workflowGuideSpec(guide, repository)]),
     ...workflows.map((recipe) => [recipe.id, workflowSpec(recipe, repository)]),
   ]);
 }

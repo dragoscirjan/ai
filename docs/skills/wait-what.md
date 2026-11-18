@@ -24,7 +24,9 @@ npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/d80fa0f4ebe0c5
 
 This command selects only `wait-what`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -54,11 +56,9 @@ This explicitly invoked upstream entry requests clarification, not adversarial d
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Research before choosing an approach](/workflows/research-a-decision)
-- [Turn an idea into an outcome-level brief](/workflows/shape-an-initiative)
-- [Challenge a plan without implementing it](/workflows/challenge-a-design)
-- [Turn a completed issue into a small improvement](/workflows/learn-from-completed-work)
-- [Ask for a clearer explanation](/workflows/re-pitch-an-explanation)
+- [Plan a project or feature](/workflows/plan-a-project)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

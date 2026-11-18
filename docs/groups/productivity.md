@@ -56,7 +56,9 @@ Explain the current proposal again with simpler language and missing context.
 
 **Choose it when:** The last answer is hard to understand or omits context needed to follow the current proposal.
 
-## Try a workflow
+## Related procedures
+
+[Choose an end-to-end workflow](/workflows/) before selecting an individual procedure.
 
 - [Research before choosing an approach](/workflows/research-a-decision) — Missing facts could change a technical or product decision.
 - [Turn an idea into an outcome-level brief](/workflows/shape-an-initiative) — The problem and success measures are less clear than the proposed solution.

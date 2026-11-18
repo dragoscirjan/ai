@@ -4,6 +4,8 @@ title: "Find the root cause before proposing a fix"
 
 # Find the root cause before proposing a fix
 
+This is a focused procedure. For its place in a larger workflow, see [Debug an application problem](/workflows/debug-a-problem).
+
 A test, build, runtime result, or previously working behavior fails unexpectedly.
 
 **Finish with:** A supported diagnosis and a separate proposed fix, not a stack of guesses.
@@ -12,7 +14,7 @@ A test, build, runtime result, or previously working behavior fails unexpectedly
 
 ![Find the root cause before proposing a fix: suggested skill handoffs with approval stops where applicable.](/diagrams/diagnose-a-failure.svg)
 
-[Open interactive diagram](/diagrams/diagnose-a-failure.html) · [Download SVG](/diagrams/diagnose-a-failure.svg) · [Editable candidate](/diagram-sources/diagnose-a-failure.json)
+[Open interactive diagram](/diagrams/diagnose-a-failure.html){class="vp-raw"} · [Download SVG](/diagrams/diagnose-a-failure.svg) · [Editable candidate](/diagram-sources/diagnose-a-failure.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

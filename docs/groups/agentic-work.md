@@ -20,7 +20,9 @@ Synchronize project skills and agent instructions through a guided, approved pla
 
 **Choose it when:** You want to choose project skills and review an optional instruction bundle without replacing custom policy blindly.
 
-## Try a workflow
+## Related procedures
+
+[Choose an end-to-end workflow](/workflows/) before selecting an individual procedure.
 
 - [Install a reviewed skill selection](/workflows/install-selected-skills) — An existing project needs useful skills, not an automatic copy of the entire collection.
 - [Write guidance for an agent reader](/workflows/write-agent-facing-guidance) — A skill, prompt, or agent-facing document needs clearer triggers and actions.

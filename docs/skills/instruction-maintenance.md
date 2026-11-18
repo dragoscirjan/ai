@@ -19,12 +19,14 @@ Instruction routing, dependencies, metadata, or policy documents appear missing,
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill instruction-maintenance
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/unpolished/instruction-maintenance --skill instruction-maintenance
 ```
 
 This command selects only `instruction-maintenance`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,10 +55,9 @@ An audit does not authorize its own proposal. Changed scope or protected rules r
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Install a reviewed skill selection](/workflows/install-selected-skills)
-- [Write guidance for an agent reader](/workflows/write-agent-facing-guidance)
-- [Repair instruction drift through exact approval](/workflows/repair-instruction-routes)
-- [Turn a completed issue into a small improvement](/workflows/learn-from-completed-work)
+
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

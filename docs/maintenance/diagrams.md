@@ -16,7 +16,7 @@ Read the installed `SKILL.md` and the references required by the selected diagra
 
 ## Author and regenerate
 
-The recipe definitions live in `scripts/docs/workflows.mjs`; `scripts/docs/diagram-specs.mjs` builds complete native candidates from those definitions and the actual catalog. Required instruction edges come from catalog prerequisites and are checked against local frontmatter. Never infer an extra dependency from a useful companion or later phase.
+The five primary workflow diagrams live in `scripts/docs/workflow-guide-diagrams.mjs`. Their titles and the focused recipe definitions live in `scripts/docs/workflows.mjs`. The shared `scripts/docs/diagram-specs.mjs` builds native candidates with source references from the actual catalog. Required instruction edges come from catalog prerequisites and are checked against local frontmatter. Never infer an extra dependency from a useful companion or later phase.
 
 ```sh
 mise run docs:diagrams
@@ -25,7 +25,7 @@ mise run docs:diagrams
 For a focused repair, pass only known diagram IDs:
 
 ```sh
-mise exec -- node scripts/docs/archify.mjs render required-dependencies
+mise exec -- node scripts/docs/archify.mjs render plan-a-project implement-a-task debug-a-problem document-a-project debloat-a-project
 ```
 
 The renderer runs the full native `finalize` contract at showcase quality: validation, delivery, strict artifact checks, and real-browser checks. It then uses the actual Viewer export controls to obtain canonical dual-theme SVGs. A failed gate exits nonzero; it is not normalized to success or a skipped check.
@@ -50,6 +50,8 @@ Automated browser checks prove measured containment and runtime checks at the to
 Inspect the actual outputs for readable labels, arrow direction, conditional approval edges, no misleading service or dependency claims, and correct stopping points. Compare the diagram with its text steps and the authoritative source. Verify light/dark presentation, static SVG, and the standalone Viewer separately.
 
 For native perceptual captures, follow the installed delivery contract's `visual-check` procedure, preserve its evidence set, and inspect the captures before claiming visual review. Use a fresh evidence directory after any candidate change; old screenshots remain bound to the old artifact bytes.
+
+Interactive HTML links use the Markdown attribute `{class="vp-raw"}`. VitePress leaves these links to normal browser navigation while still adding the configured base path. Keep this class on standalone diagram links; an ordinary internal link can open the missing-page route instead of the Viewer. Do not substitute a `target` attribute on a root-absolute link, because VitePress 1.6.4 then skips base-path rewriting.
 
 The native Viewer is desktop-oriented. On a phone, the site provides a static preview and the full text steps; containment does not promise desktop feature parity in the standalone Viewer.
 

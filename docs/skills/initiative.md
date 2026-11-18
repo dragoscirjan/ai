@@ -19,14 +19,16 @@ An idea needs an agreed problem, outcome, scope, constraints, and success measur
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill initiative
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/initiative --skill initiative
 ```
 
 This command selects only `initiative`. It does not install the rest of the collection or the optional companions listed on this page.
 
-Required instruction packages: [`grilling`](/skills/grilling#install-this-skill). If missing, install them separately before applying this skill. The command above does not install these requirements.
+Required instruction packages: [`grilling`](/skills/grilling#install-this-skill). If any are missing, the agent must stop and ask you to install them before continuing. The command above does not install these requirements.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -55,8 +57,9 @@ A brief is not a specification, task plan, or implementation authorization. Reso
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Research before choosing an approach](/workflows/research-a-decision)
-- [Turn an idea into an outcome-level brief](/workflows/shape-an-initiative)
+- [Plan a project or feature](/workflows/plan-a-project)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

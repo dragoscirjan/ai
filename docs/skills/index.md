@@ -8,7 +8,7 @@ The catalog contains **28 skills**: 24 local entries and 4 upstream-only entries
 
 ![The collection's six groups include local and external skills; grouping is not a runtime dependency.](/diagrams/skill-groups.svg)
 
-[Open interactive diagram](/diagrams/skill-groups.html) · [Download SVG](/diagrams/skill-groups.svg) · [Editable candidate](/diagram-sources/skill-groups.json)
+[Open interactive diagram](/diagrams/skill-groups.html){class="vp-raw"} · [Download SVG](/diagrams/skill-groups.svg) · [Editable candidate](/diagram-sources/skill-groups.json)
 
 ## [Productivity](/groups/productivity)
 

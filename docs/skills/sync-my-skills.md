@@ -19,12 +19,14 @@ You want to choose project skills and review an optional instruction bundle with
 You need Node.js 22.20 or newer, Git, and npm/npx. This is a personal installation. Command registration and project synchronization are separate optional actions.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill sync-my-skills --global
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-skills --skill sync-my-skills --global
 ```
 
 This command selects only `sync-my-skills`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,7 +55,9 @@ Inspection is not permission to install, remove old skills, adopt instructions, 
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Install a reviewed skill selection](/workflows/install-selected-skills)
+
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

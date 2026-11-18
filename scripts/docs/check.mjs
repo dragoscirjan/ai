@@ -4,11 +4,11 @@ import { dirname, join, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parse } from "yaml";
 import { catalog, groups, root } from "./data.mjs";
-import { dependencySpec, groupSpec, workflowSpec } from "./diagram-specs.mjs";
+import { dependencySpec, groupSpec, workflowGuideSpec, workflowSpec } from "./diagram-specs.mjs";
 import { generate } from "./generate.mjs";
 import { notes } from "./skill-notes.mjs";
 import { verifyDiagrams } from "./verify.mjs";
-import { workflows } from "./workflows.mjs";
+import { workflowGuides, workflows } from "./workflows.mjs";
 
 export function markdownFiles(directory = join(root, "docs")) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -91,7 +91,12 @@ export function checkDocs() {
     c.byName.get("archify").source.revision,
     join(directory, "manifest.json"),
   );
-  const ids = ["required-dependencies", "skill-groups", ...workflows.map((recipe) => recipe.id)];
+  const ids = [
+    "required-dependencies",
+    "skill-groups",
+    ...workflowGuides.map((guide) => guide.id),
+    ...workflows.map((recipe) => recipe.id),
+  ];
   assert.deepEqual(
     new Set(Object.keys(manifest.artifacts)),
     new Set(ids),
@@ -99,8 +104,10 @@ export function checkDocs() {
   );
   for (const id of ids) {
     const actual = JSON.parse(readFileSync(join(directory, `${id}.json`), "utf8"));
-    const expected =
-      id === "required-dependencies"
+    const guide = workflowGuides.find((item) => item.id === id);
+    const expected = guide
+      ? workflowGuideSpec(guide, actual.meta.repository)
+      : id === "required-dependencies"
         ? dependencySpec(actual.meta.repository)
         : id === "skill-groups"
           ? groupSpec(actual.meta.repository)

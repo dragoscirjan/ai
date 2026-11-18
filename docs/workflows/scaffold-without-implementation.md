@@ -4,6 +4,8 @@ title: "Create a skeleton and stop"
 
 # Create a skeleton and stop
 
+This is a focused procedure. For its place in a larger workflow, see [Implement a planned task](/workflows/implement-a-task).
+
 A feature's source structure needs review before behavioral implementation.
 
 **Finish with:** A checked skeleton with explicit fail-fast placeholders.
@@ -12,7 +14,7 @@ A feature's source structure needs review before behavioral implementation.
 
 ![Create a skeleton and stop: suggested skill handoffs with approval stops where applicable.](/diagrams/scaffold-without-implementation.svg)
 
-[Open interactive diagram](/diagrams/scaffold-without-implementation.html) · [Download SVG](/diagrams/scaffold-without-implementation.svg) · [Editable candidate](/diagram-sources/scaffold-without-implementation.json)
+[Open interactive diagram](/diagrams/scaffold-without-implementation.html){class="vp-raw"} · [Download SVG](/diagrams/scaffold-without-implementation.svg) · [Editable candidate](/diagram-sources/scaffold-without-implementation.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

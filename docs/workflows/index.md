@@ -1,54 +1,41 @@
 ---
-title: "Combine skills by task"
+title: "Project workflows"
 ---
 
-# Combine skills by task
+# Project workflows
 
-Choose the smallest route that answers your question. You do not need to complete a pipeline before writing a small approved change.
+Choose the result you need. Each guide explains where to start, which skill to use next, what to carry into the next phase, and when to return to earlier work.
 
-These **25 recipes** cover supported starting points, handoffs, optional companions, and stop-only outcomes. They are not every mathematical subset of the catalog and are not automatic execution plans. Installation and project policy still apply.
+| Your goal | Workflow |
+| --- | --- |
+| Define requirements, limitations, and implementation-ready tasks. | [Plan a project or feature](/workflows/plan-a-project) |
+| Turn an agreed task into tested behavior and reviewed changes. | [Implement a planned task](/workflows/implement-a-task) |
+| Find an evidence-backed cause, then fix and verify the failure. | [Debug an application problem](/workflows/debug-a-problem) |
+| Create or improve a documentation website around reader tasks. | [Document a project](/workflows/document-a-project) |
+| Reduce unnecessary complexity while preserving required behavior. | [Debloat a project](/workflows/debloat-a-project) |
 
-[Learn the arrow meanings](/reference/relationships) before treating a diagram as a dependency map.
+## How the workflows connect
 
-## Productivity
+```text
+Planning → agreed task
+    ↓
+Implementation
 
-- [Research before choosing an approach](/workflows/research-a-decision) — Missing facts could change a technical or product decision.
-- [Turn an idea into an outcome-level brief](/workflows/shape-an-initiative) — The problem and success measures are less clear than the proposed solution.
-- [Agree on behavior before task execution](/workflows/specify-observable-behavior) — An agreed direction still leaves observable behavior or acceptance criteria open.
-- [Divide agreed scope into verifiable tasks](/workflows/plan-bounded-tasks) — The work is understood but too large to execute as one unbounded change.
-- [Challenge a plan without implementing it](/workflows/challenge-a-design) — A confident proposal may conceal unresolved assumptions or decisions.
-- [Turn a completed issue into a small improvement](/workflows/learn-from-completed-work) — A bounded work period has enough evidence to examine the process.
-- [Ask for a clearer explanation](/workflows/re-pitch-an-explanation) — The last proposal or explanation is unclear, lacks context, or does not use the project's shared vocabulary.
+Failure → debugging → verified fix
+Missing guidance → documentation
+Complexity → debloating
+```
 
-## Coding
+Debugging and debloating reuse implementation and review after their investigation. Documentation can be a separate project or part of any behavior-changing task. Return to planning when a finding changes requirements or scope.
 
-- [Implement a small approved change](/workflows/implement-a-small-change) — The requested behavior and authority to change it are already clear.
-- [Build one behavior slice test-first](/workflows/build-test-first) — The owner explicitly wants test-first development and the behavior is agreed.
-- [Find the root cause before proposing a fix](/workflows/diagnose-a-failure) — A test, build, runtime result, or previously working behavior fails unexpectedly.
-- [Create a skeleton and stop](/workflows/scaffold-without-implementation) — A feature's source structure needs review before behavioral implementation.
-- [Remove complexity without removing requirements](/workflows/simplify-a-design) — Existing machinery or a proposed design is harder than the required behavior needs.
-- [Review a fixed diff from two perspectives](/workflows/review-against-standards-and-spec) — A branch or change needs standards and specification review against a clear baseline.
+You can start with an existing specification or task. You do not need to repeat research or create documents merely to complete a pipeline. Research can also stop at findings without producing implementation work.
 
-## Documentation
+## Read the flows
 
-- [Keep a developer task usable](/workflows/maintain-task-based-docs) — Implementation changed first use, configuration, behavior, or maintenance instructions.
-- [Shorten a technical answer without losing meaning](/workflows/shorten-without-loss) — A useful answer is buried under repetition or generic framing.
-- [Explain relationships with interactive HTML](/workflows/explain-with-archify) — The reader needs to explore a workflow, architecture, dependency map, state model, or other supported structure.
-- [Deliver an editable image diagram](/workflows/draw-with-excalidraw) — A reader needs a PNG or SVG, with an editable scene for later changes.
+Arrows show suggested handoffs, not automatic execution or instruction dependencies. The guides mark optional branches and explicit stops. A handoff carries the agreed scope, decisions, and verification evidence; it does not grant permission for the next action. See [requirements and handoffs](/reference/relationships) for the dependency rules.
 
-## Agentic work
+## Supporting tools and other workflows
 
-- [Install a reviewed skill selection](/workflows/install-selected-skills) — An existing project needs useful skills, not an automatic copy of the entire collection.
-- [Write guidance for an agent reader](/workflows/write-agent-facing-guidance) — A skill, prompt, or agent-facing document needs clearer triggers and actions.
+Workspace isolation and cleanup protect execution; they are not stages in a product workflow. Interviews, delegation, and diagrams help only when the task needs them. See [supporting tools](/workflows/supporting-tools) for setup, limitations, and focused procedures.
 
-## Utility
-
-- [Initialize only the foundation you need](/workflows/initialize-a-project) — You explicitly want a supported project foundation or tooling adoption.
-- [Move a change out of the primary checkout](/workflows/protect-a-change) — The requested work will mutate a repository.
-- [Clean only proven, approved workspaces](/workflows/clean-integrated-workspaces) — Completed work may have left integrated workspaces or stale registrations.
-
-## Unpolished
-
-- [Delegate only the work that was authorized](/workflows/delegate-bounded-work) — The operator explicitly asks for specialists, independent review, or parallel work.
-- [Coordinate independent review without writers](/workflows/coordinate-read-only-review) — You want independent assessment but all changes must stay with the parent.
-- [Repair instruction drift through exact approval](/workflows/repair-instruction-routes) — Routes, requirements, or policy instructions are missing, duplicated, stale, or conflicting.
+Two additional workflows can stand alone: [review an existing change](/workflows/review-against-standards-and-spec) and [learn from completed work](/workflows/learn-from-completed-work). Neither automatically changes the project.

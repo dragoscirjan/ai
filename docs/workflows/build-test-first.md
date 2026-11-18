@@ -4,6 +4,8 @@ title: "Build one behavior slice test-first"
 
 # Build one behavior slice test-first
 
+This is a focused procedure. For its place in a larger workflow, see [Implement a planned task](/workflows/implement-a-task).
+
 The owner explicitly wants test-first development and the behavior is agreed.
 
 **Finish with:** An observed red test and the smallest green implementation at a user-confirmed seam.
@@ -12,7 +14,7 @@ The owner explicitly wants test-first development and the behavior is agreed.
 
 ![Build one behavior slice test-first: suggested skill handoffs with approval stops where applicable.](/diagrams/build-test-first.svg)
 
-[Open interactive diagram](/diagrams/build-test-first.html) · [Download SVG](/diagrams/build-test-first.svg) · [Editable candidate](/diagram-sources/build-test-first.json)
+[Open interactive diagram](/diagrams/build-test-first.html){class="vp-raw"} · [Download SVG](/diagrams/build-test-first.svg) · [Editable candidate](/diagram-sources/build-test-first.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

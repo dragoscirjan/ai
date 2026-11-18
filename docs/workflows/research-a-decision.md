@@ -4,6 +4,8 @@ title: "Research before choosing an approach"
 
 # Research before choosing an approach
 
+This is a focused procedure. For its place in a larger workflow, see [Plan a project or feature](/workflows/plan-a-project).
+
 Missing facts could change a technical or product decision.
 
 **Finish with:** An evidence-backed comparison with explicit unknowns and a decision boundary.
@@ -12,7 +14,7 @@ Missing facts could change a technical or product decision.
 
 ![Research before choosing an approach: suggested skill handoffs with approval stops where applicable.](/diagrams/research-a-decision.svg)
 
-[Open interactive diagram](/diagrams/research-a-decision.html) · [Download SVG](/diagrams/research-a-decision.svg) · [Editable candidate](/diagram-sources/research-a-decision.json)
+[Open interactive diagram](/diagrams/research-a-decision.html){class="vp-raw"} · [Download SVG](/diagrams/research-a-decision.svg) · [Editable candidate](/diagram-sources/research-a-decision.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

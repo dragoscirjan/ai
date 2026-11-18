@@ -19,12 +19,14 @@ You explicitly want a new project foundation or to adopt the supported TypeScrip
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill init-project
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/init-project --skill init-project
 ```
 
 This command selects only `init-project`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,7 +55,9 @@ An inspection or coding request does not authorize initialization. Stop for base
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Initialize only the foundation you need](/workflows/initialize-a-project)
+
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

@@ -656,6 +656,21 @@ test("preparation permits fresh external stages beneath missing parent directori
   assert.equal(existsSync(join(stage, "skills/alpha/SKILL.md")), true);
 });
 
+test("real install sources match grouped paths and never require the personal manager", () => {
+  const catalog = loadCatalog(undefined, repository);
+  for (const entry of catalog.skills) {
+    const source = entry.source;
+    const expected = source.type === "local"
+      ? `${catalog.repository}/tree/${catalog.ref}/${source.path}`
+      : `${source.repository}/tree/${source.revision}/${source.path}`;
+    assert.equal(entry.install.argv[4], expected, entry.name);
+    assert.deepEqual(entry.install.argv.slice(0, 4), ["npx", "-y", "skills@1.7.4", "add"]);
+    assert.equal(entry.install.argv[entry.install.argv.indexOf("--skill") + 1], entry.name);
+    if (entry.name !== "sync-my-skills") assert.ok(!entry.prerequisites.includes("sync-my-skills"));
+    if (source.type === "local") assert.ok(existsSync(join(repository, source.path, "SKILL.md")));
+  }
+});
+
 test("Archify remains an optional pinned external reference with protected legal notices", () => {
   const catalog = loadCatalog(undefined, repository); const entry = catalog.byName.get("archify");
   assert.equal(entry.kind, "upstream"); assert.equal(entry.selection, "optional");

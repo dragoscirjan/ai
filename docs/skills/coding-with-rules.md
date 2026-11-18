@@ -19,14 +19,16 @@ Code or toolchain work needs the base coding workflow plus rules for its actual 
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill coding-with-rules
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/coding-with-rules --skill coding-with-rules
 ```
 
 This command selects only `coding-with-rules`. It does not install the rest of the collection or the optional companions listed on this page.
 
-Required instruction packages: [`coding`](/skills/coding#install-this-skill). If missing, install them separately before applying this skill. The command above does not install these requirements.
+Required instruction packages: [`coding`](/skills/coding#install-this-skill). If any are missing, the agent must stop and ask you to install them before continuing. The command above does not install these requirements.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -56,14 +58,11 @@ Missing or conflicting required references block the affected phase. Do not recr
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Initialize only the foundation you need](/workflows/initialize-a-project)
-- [Move a change out of the primary checkout](/workflows/protect-a-change)
-- [Implement a small approved change](/workflows/implement-a-small-change)
-- [Build one behavior slice test-first](/workflows/build-test-first)
-- [Find the root cause before proposing a fix](/workflows/diagnose-a-failure)
-- [Create a skeleton and stop](/workflows/scaffold-without-implementation)
-- [Remove complexity without removing requirements](/workflows/simplify-a-design)
-- [Coordinate independent review without writers](/workflows/coordinate-read-only-review)
+- [Implement a planned task](/workflows/implement-a-task)
+- [Debug an application problem](/workflows/debug-a-problem)
+- [Debloat a project](/workflows/debloat-a-project)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

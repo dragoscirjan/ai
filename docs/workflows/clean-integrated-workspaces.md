@@ -4,6 +4,8 @@ title: "Clean only proven, approved workspaces"
 
 # Clean only proven, approved workspaces
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 Completed work may have left integrated workspaces or stale registrations.
 
 **Finish with:** Exact approved removals, protected uncertain lanes, and a post-cleanup audit.
@@ -12,7 +14,7 @@ Completed work may have left integrated workspaces or stale registrations.
 
 ![Clean only proven, approved workspaces: suggested skill handoffs with approval stops where applicable.](/diagrams/clean-integrated-workspaces.svg)
 
-[Open interactive diagram](/diagrams/clean-integrated-workspaces.html) · [Download SVG](/diagrams/clean-integrated-workspaces.svg) · [Editable candidate](/diagram-sources/clean-integrated-workspaces.json)
+[Open interactive diagram](/diagrams/clean-integrated-workspaces.html){class="vp-raw"} · [Download SVG](/diagrams/clean-integrated-workspaces.svg) · [Editable candidate](/diagram-sources/clean-integrated-workspaces.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

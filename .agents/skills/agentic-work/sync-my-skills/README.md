@@ -45,7 +45,7 @@ The help should list `inspect`, `prepare`, `review`, `review-instructions`, `pla
 Once this implementation is available on the upstream default branch, you can use the repository source instead of the clean export:
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai \
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-skills \
   --skill sync-my-skills --global --agent pi --yes
 ```
 

@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { test } from "node:test";
-import { catalog, groups, localInstructions } from "./data.mjs";
+import { catalog, groups, localInstructions, root } from "./data.mjs";
 import { generatedPages, installCommand } from "./generate.mjs";
-import { workflows } from "./workflows.mjs";
+import { workflowGuides, workflows } from "./workflows.mjs";
 
 const expected = {
   productivity: [
@@ -50,14 +52,26 @@ test("documentation uses the owner's six groups, external memberships and utilit
   assert.deepEqual(new Set(documented), new Set(catalog().skills.map((entry) => entry.name)));
 });
 
-test("regrouping keeps every existing recipe discoverable without changing the flow library", () => {
+test("goal-based navigation keeps every existing recipe reachable without changing its URL", () => {
   const pages = generatedPages();
+  for (const id of [...workflowGuides.map((guide) => guide.id), "supporting-tools"])
+    pages.set(`workflows/${id}.md`, readFileSync(join(root, "docs/workflows", `${id}.md`), "utf8"));
+  const reachable = new Set(["index"]);
+  for (const id of reachable) {
+    const page = pages.get(`workflows/${id}.md`);
+    assert.ok(page, `Missing reachable workflow: ${id}`);
+    for (const [, target] of page.matchAll(/\]\(\/workflows\/([a-z-]+)(?:#[^)]*)?\)/g))
+      reachable.add(target);
+  }
   assert.equal(workflows.length, 25);
   for (const recipe of workflows) {
     assert.ok(groups.some((group) => group.id === recipe.group));
-    const link = `/workflows/${recipe.id}`;
-    assert.ok(pages.get("workflows/index.md").includes(link), recipe.id);
-    assert.ok(pages.get(`groups/${recipe.group}.md`).includes(link), recipe.id);
+    assert.ok(reachable.has(recipe.id), recipe.id);
+    assert.ok(pages.has(`workflows/${recipe.id}.md`), recipe.id);
+    assert.ok(
+      pages.get(`groups/${recipe.group}.md`).includes(`/workflows/${recipe.id}`),
+      recipe.id,
+    );
   }
 });
 

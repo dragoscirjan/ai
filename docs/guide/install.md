@@ -13,23 +13,25 @@ Installation downloads code and changes personal or project files. Review the so
 Review the target project's instructions and the skill source first. Run the selected profile's command from the target project. For example, this command selects only `asd-ste100-technical`:
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill asd-ste100-technical
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/asd-ste100-technical --skill asd-ste100-technical
 ```
 
-The installer should report `asd-ste100-technical` as the selected skill. Follow its harness prompts and verify discovery in your chosen harness. Other profiles provide their own command, including pinned external sources where applicable.
+The URL names the actual grouped source directory. The installed skill keeps its ordinary name; the source category is not an installed namespace. The installer should report `asd-ste100-technical` as the selected skill. Follow its harness prompts and verify discovery in your chosen harness. Other profiles provide their own command, including pinned external sources where applicable.
 
-Check the profile's required instruction packages separately. Direct Skills CLI installation does not install those requirements automatically. Optional companions remain optional.
+Before using a skill, confirm that it and its declared instruction requirements are installed. If any are missing, the agent must stop, list the missing names, and ask you to install them. It must not install, synchronize, substitute, or continue without those instructions. Resume only after installation is confirmed and availability is verified.
+
+Use each missing skill's own install command after reviewing its source and the target project's instructions. Direct Skills CLI installation does not install declared requirements automatically. Optional companions remain optional.
 
 ## Optional reviewed selection manager
 
-Use `sync-my-skills` only if you want it to inspect a project and propose a reviewed selection. Installing one skill does not require this route.
+`sync-my-skills` is a standalone personal tool for an explicitly requested project inspection and reviewed selection. No other skill needs it as a prerequisite, companion, handoff, or recovery step. Do not choose this route to repair a missing skill during another task; stop and ask the user for direct installation instead.
 
 ### 1. Install the personal manager
 
 The following example selects Pi and the integrated repository source. It is a personal installation, not a project synchronization. The repository is still named `dragoscirjan/ai`; a planned rename is not an available source URL.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai \
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-skills \
   --skill sync-my-skills --global --agent pi --yes
 ```
 

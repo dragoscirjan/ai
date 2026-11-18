@@ -19,12 +19,14 @@ The operator has authorized bounded specialist, independent-review, or parallel 
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill subagent-orchestration
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/unpolished/subagent-orchestration --skill subagent-orchestration
 ```
 
 This command selects only `subagent-orchestration`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,10 +55,9 @@ Complexity alone is not delegation authority. Read-only agents must remain read-
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Divide agreed scope into verifiable tasks](/workflows/plan-bounded-tasks)
-- [Review a fixed diff from two perspectives](/workflows/review-against-standards-and-spec)
-- [Delegate only the work that was authorized](/workflows/delegate-bounded-work)
-- [Coordinate independent review without writers](/workflows/coordinate-read-only-review)
+- [Plan a project or feature](/workflows/plan-a-project)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

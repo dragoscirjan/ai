@@ -4,6 +4,8 @@ title: "Turn an idea into an outcome-level brief"
 
 # Turn an idea into an outcome-level brief
 
+This is a focused procedure. For its place in a larger workflow, see [Plan a project or feature](/workflows/plan-a-project).
+
 The problem and success measures are less clear than the proposed solution.
 
 **Finish with:** An agreed problem, outcomes, scope, constraints, and success measures.
@@ -12,7 +14,7 @@ The problem and success measures are less clear than the proposed solution.
 
 ![Turn an idea into an outcome-level brief: suggested skill handoffs with approval stops where applicable.](/diagrams/shape-an-initiative.svg)
 
-[Open interactive diagram](/diagrams/shape-an-initiative.html) · [Download SVG](/diagrams/shape-an-initiative.svg) · [Editable candidate](/diagram-sources/shape-an-initiative.json)
+[Open interactive diagram](/diagrams/shape-an-initiative.html){class="vp-raw"} · [Download SVG](/diagrams/shape-an-initiative.svg) · [Editable candidate](/diagram-sources/shape-an-initiative.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

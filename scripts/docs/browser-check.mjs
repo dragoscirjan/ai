@@ -10,6 +10,7 @@ import { pathToFileURL } from "node:url";
 import { browser } from "./browser.mjs";
 import { catalog, docsBase, groups, root } from "./data.mjs";
 import { publicToolEnvironment } from "./environment.mjs";
+import { workflowGuides } from "./workflows.mjs";
 
 async function freePort() {
   const server = createServer();
@@ -85,6 +86,8 @@ export async function checkBrowser(mode = "preview") {
     notices: false,
     skillInstalls: [],
     groups: [],
+    interactiveDiagrams: [],
+    themes: [],
   };
   try {
     await until(async () => {
@@ -128,6 +131,9 @@ export async function checkBrowser(mode = "preview") {
         "skills/init-project.html",
         "skills/grilling.html",
         ...groups.map((group) => `groups/${group.id}.html`),
+        "workflows/index.html",
+        ...workflowGuides.map((guide) => `workflows/${guide.id}.html`),
+        "workflows/supporting-tools.html",
         "workflows/install-selected-skills.html",
         "reference/relationships.html",
         "reference/notices.html",
@@ -181,6 +187,8 @@ export async function checkBrowser(mode = "preview") {
           [
             "",
             "guide/start.html",
+            "workflows/index.html",
+            ...workflowGuides.map((guide) => `workflows/${guide.id}.html`),
             "workflows/install-selected-skills.html",
             "groups/documentation.html",
             "groups/utility.html",
@@ -191,6 +199,28 @@ export async function checkBrowser(mode = "preview") {
           await screenshot(
             `${label}-${page ? page.split("/").at(-1).replace(".html", "") : "home"}`,
           );
+        const diagram = await b.evaluate(
+          'Array.from(document.querySelectorAll(".vp-doc a")).find(a=>a.textContent.trim()==="Open interactive diagram")?.href',
+        );
+        if (diagram) {
+          // Keep earlier runtime/network errors, but require a new document load from this click.
+          for (let index = b.events.length - 1; index >= 0; index--)
+            if (b.events[index].method === "Page.loadEventFired") b.events.splice(index, 1);
+          await b.evaluate(
+            'Array.from(document.querySelectorAll(".vp-doc a")).find(a=>a.textContent.trim()==="Open interactive diagram").click()',
+          );
+          await b.waitEvent("Page.loadEventFired");
+          const opened = await b.evaluate(
+            '({url:location.href,viewer:Boolean(document.querySelector("#btn-export")),site:Boolean(document.querySelector(".VPContent"))})',
+          );
+          assert.equal(opened.url, diagram, `Wrong diagram destination: ${page}`);
+          assert.ok(opened.viewer && !opened.site, `Interactive diagram did not open: ${page}`);
+          report.interactiveDiagrams.push({
+            viewport: label,
+            page,
+            path: new URL(diagram).pathname,
+          });
+        }
       }
       await b.navigate(origin + base);
       if (label === "mobile") {
@@ -238,15 +268,97 @@ export async function checkBrowser(mode = "preview") {
       await screenshot(`${label}-search-result`);
     }
     report.search = true;
+    for (const [label, width, height] of [
+      ["desktop", 1440, 1000],
+      ["mobile", 390, 844],
+    ]) {
+      await b.call("Emulation.setDeviceMetricsOverride", {
+        width,
+        height,
+        deviceScaleFactor: 1,
+        mobile: label === "mobile",
+      });
+      for (const [theme, dark, expected] of [
+        [
+          "latte",
+          false,
+          {
+            background: "#eff1f5",
+            foreground: "#4c4f69",
+            accent: "#8839ef",
+            body: "rgb(239, 241, 245)",
+          },
+        ],
+        [
+          "mocha",
+          true,
+          {
+            background: "#1e1e2e",
+            foreground: "#cdd6f4",
+            accent: "#cba6f7",
+            body: "rgb(30, 30, 46)",
+          },
+        ],
+      ]) {
+        await b.navigate(origin + base);
+        if ((await b.evaluate('document.documentElement.classList.contains("dark")')) !== dark) {
+          if (label === "mobile") {
+            await b.evaluate('document.querySelector(".VPNavBarHamburger").click()');
+            await until(
+              () =>
+                b.evaluate(
+                  'document.querySelector(".VPNavBarHamburger").getAttribute("aria-expanded")==="true"',
+                ),
+              "appearance menu",
+            );
+          }
+          await b.evaluate(
+            'const toggle=Array.from(document.querySelectorAll("button.VPSwitchAppearance")).find(button=>button.getClientRects().length);if(!toggle)throw new Error("No visible color-mode switch");toggle.click()',
+          );
+          if (label === "mobile") {
+            await b.evaluate('document.querySelector(".VPNavBarHamburger").click()');
+            await until(
+              () => b.evaluate('!document.querySelector(".VPNavScreen")?.getClientRects().length'),
+              "appearance menu closed",
+            );
+          }
+        }
+        await until(
+          () =>
+            b.evaluate(
+              `document.documentElement.classList.contains("dark")===${dark} && getComputedStyle(document.body).backgroundColor===${JSON.stringify(expected.body)}`,
+            ),
+          `${theme} palette`,
+        );
+        const palette = await b.evaluate(
+          '(()=>{const style=getComputedStyle(document.documentElement);return {background:style.getPropertyValue("--vp-c-bg").trim(),foreground:style.getPropertyValue("--vp-c-text-1").trim(),accent:style.getPropertyValue("--vp-c-brand-1").trim(),body:getComputedStyle(document.body).backgroundColor}})()',
+        );
+        assert.deepEqual(palette, expected, `${label} ${theme} palette`);
+        await screenshot(`${label}-home-${theme}`);
+        await b.navigate(origin + base + "skills/scaffold.html");
+        assert.equal(
+          await b.evaluate('document.documentElement.classList.contains("dark")'),
+          dark,
+          "Color preference did not survive navigation",
+        );
+        const codeTheme = await b.evaluate(
+          'document.querySelector(".vp-doc pre.shiki")?.className',
+        );
+        assert.match(codeTheme, /catppuccin-latte/);
+        assert.match(codeTheme, /catppuccin-mocha/);
+        await b.evaluate(
+          'document.querySelector(".vp-doc pre.shiki").scrollIntoView({block:"center"})',
+        );
+        await screenshot(`${label}-code-${theme}`);
+        report.themes.push({ viewport: label, theme, palette, syntaxHighlighting: true });
+      }
+    }
     await b.call("Emulation.setDeviceMetricsOverride", {
       width: 1440,
       height: 1000,
       deviceScaleFactor: 1,
       mobile: false,
     });
-    await b.navigate(origin + base);
-    await b.evaluate('document.documentElement.classList.add("dark")');
-    await screenshot("desktop-home-dark");
     await b.navigate(origin + base + "reference/notices.html");
     const notices = await b.evaluate(
       'Array.from(document.querySelectorAll(".vp-doc a")).map(a=>a.href).filter(h=>h.startsWith(location.origin))',
@@ -308,6 +420,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
       search: report.search,
       mobileMenu: report.mobileMenu,
       notices: report.notices,
+      interactiveDiagrams: report.interactiveDiagrams.length,
+      themes: report.themes.length,
       screenshots: report.screenshots,
     }),
   );

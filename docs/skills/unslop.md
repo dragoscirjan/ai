@@ -24,7 +24,9 @@ npx -y skills@1.7.4 add https://github.com/cursor/plugins/tree/bc697d0a5a163cec9
 
 This command selects only `unslop`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,10 +55,9 @@ This upstream-only entry is marked for explicit invocation. Do not assume automa
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Keep a developer task usable](/workflows/maintain-task-based-docs)
-- [Write guidance for an agent reader](/workflows/write-agent-facing-guidance)
-- [Shorten a technical answer without losing meaning](/workflows/shorten-without-loss)
-- [Ask for a clearer explanation](/workflows/re-pitch-an-explanation)
+- [Document a project](/workflows/document-a-project)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

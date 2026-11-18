@@ -4,6 +4,8 @@ title: "Delegate only the work that was authorized"
 
 # Delegate only the work that was authorized
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 The operator explicitly asks for specialists, independent review, or parallel work.
 
 **Finish with:** Bounded child results integrated and validated by the parent.
@@ -12,7 +14,7 @@ The operator explicitly asks for specialists, independent review, or parallel wo
 
 ![Delegate only the work that was authorized: suggested skill handoffs with approval stops where applicable.](/diagrams/delegate-bounded-work.svg)
 
-[Open interactive diagram](/diagrams/delegate-bounded-work.html) · [Download SVG](/diagrams/delegate-bounded-work.svg) · [Editable candidate](/diagram-sources/delegate-bounded-work.json)
+[Open interactive diagram](/diagrams/delegate-bounded-work.html){class="vp-raw"} · [Download SVG](/diagrams/delegate-bounded-work.svg) · [Editable candidate](/diagram-sources/delegate-bounded-work.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 
