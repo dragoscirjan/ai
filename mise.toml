@@ -1,0 +1,51 @@
+[settings]
+lockfile = true
+
+[tools]
+node = "24"
+pnpm = "10.33.0"
+bun = "1.4.4"
+
+[tasks."deps:sync"]
+description = "Install pinned runtimes and frozen project dependencies"
+run = ["mise install --yes", "pnpm install --frozen-lockfile"]
+
+[tasks.docs]
+description = "Build the VitePress documentation site"
+run = "pnpm run docs"
+
+[tasks."docs:serve"]
+description = "Serve the documentation locally"
+run = "pnpm run serve"
+
+[tasks."docs:preview"]
+description = "Preview the production build"
+run = "pnpm run docs:preview"
+
+[tasks."docs:check"]
+description = "Check documentation coverage, recipes, links, and configuration"
+run = "pnpm run docs:check"
+
+[tasks."docs:diagrams:setup"]
+description = "Install the catalog-pinned Archify package in an external cache"
+run = "pnpm run docs:diagrams:setup"
+
+[tasks."docs:diagrams"]
+description = "Regenerate and verify the Archify diagrams"
+run = "pnpm run docs:diagrams"
+
+[tasks."format:check"]
+description = "Check formatting of the new documentation and tooling"
+run = "pnpm run format:check"
+
+[tasks."lint:check"]
+description = "Lint documentation JavaScript"
+run = "pnpm run lint"
+
+[tasks.test]
+description = "Run the existing manager and workspace safety suites"
+run = "pnpm test"
+
+[tasks.validate]
+description = "Validate documentation, source formatting, tests, and production build"
+run = ["mise run format:check", "mise run lint:check", "mise run docs:check", "mise run test", "mise run docs"]

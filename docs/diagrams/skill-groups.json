@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Choose a skill by the task",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/skill-groups.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Collection group"
+        },
+        "external": {
+          "label": "Reader decision"
+        }
+      }
+    }
+  },
+  "components": [
+    {
+      "id": "choose",
+      "type": "external",
+      "label": "What do you need next?",
+      "sublabel": "Start with the actual task",
+      "icon": "person",
+      "pos": [
+        410,
+        270
+      ],
+      "size": [
+        230,
+        90
+      ],
+      "sources": [
+        {
+          "path": "README.md",
+          "line": 1,
+          "end_line": 4,
+          "label": "Collection purpose and audience"
+        }
+      ]
+    },
+    {
+      "id": "productivity",
+      "type": "backend",
+      "label": "Productivity",
+      "sublabel": "8 catalogued skills",
+      "icon": "none",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Catalogued skill names, sources, and purposes"
+        }
+      ]
+    },
+    {
+      "id": "coding",
+      "type": "backend",
+      "label": "Coding",
+      "sublabel": "7 catalogued skills",
+      "icon": "none",
+      "pos": [
+        40,
+        270
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Catalogued skill names, sources, and purposes"
+        }
+      ]
+    },
+    {
+      "id": "documentation",
+      "type": "backend",
+      "label": "Documentation",
+      "sublabel": "6 catalogued skills",
+      "icon": "none",
+      "pos": [
+        40,
+        500
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Catalogued skill names, sources, and purposes"
+        }
+      ]
+    },
+    {
+      "id": "agentic-work",
+      "type": "backend",
+      "label": "Agentic work",
+      "sublabel": "2 catalogued skills",
+      "icon": "none",
+      "pos": [
+        780,
+        40
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Catalogued skill names, sources, and purposes"
+        }
+      ]
+    },
+    {
+      "id": "utility",
+      "type": "backend",
+      "label": "Utility",
+      "sublabel": "3 catalogued skills",
+      "icon": "none",
+      "pos": [
+        780,
+        270
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Catalogued skill names, sources, and purposes"
+        }
+      ]
+    },
+    {
+      "id": "unpolished",
+      "type": "backend",
+      "label": "Unpolished",
+      "sublabel": "2 catalogued skills",
+      "icon": "none",
+      "pos": [
+        780,
+        500
+      ],
+      "size": [
+        240,
+        90
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "label": "Catalogued skill names, sources, and purposes"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "choose-productivity",
+      "from": "choose",
+      "to": "productivity",
+      "label": "clarify"
+    },
+    {
+      "id": "choose-coding",
+      "from": "choose",
+      "to": "coding",
+      "label": "build"
+    },
+    {
+      "id": "choose-documentation",
+      "from": "choose",
+      "to": "documentation",
+      "label": "explain"
+    },
+    {
+      "id": "choose-agentic-work",
+      "from": "choose",
+      "to": "agentic-work",
+      "label": "configure"
+    },
+    {
+      "id": "choose-utility",
+      "from": "choose",
+      "to": "utility",
+      "label": "prepare"
+    },
+    {
+      "id": "choose-unpolished",
+      "from": "choose",
+      "to": "unpolished",
+      "label": "coordinate"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Discovery, not execution",
+      "items": [
+        "These presentation groups help readers choose; arrows are navigation choices.",
+        "They are not runtime architecture, required dependencies, or a fixed project lifecycle."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Choose less",
+      "items": [
+        "Use the smallest useful combination for the current task.",
+        "Instructions, runtime setup, and owner approval remain separate requirements."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Find the root cause before proposing a fix",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/diagnose-a-failure.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Guided work"
+        },
+        "security": {
+          "label": "Owner decision"
+        },
+        "external": {
+          "label": "Stopped branch"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "work",
+      "label": "Suggested skill handoffs"
+    }
+  ],
+  "mainPath": [
+    "step-0",
+    "step-1",
+    "step-2",
+    "step-3"
+  ],
+  "nodes": [
+    {
+      "id": "step-0",
+      "lane": "work",
+      "col": 0,
+      "type": "backend",
+      "label": "Reproduce and collect evidence",
+      "sublabel": "systematic-debugging",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
+          "line": 1,
+          "end_line": 99,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-1",
+      "lane": "work",
+      "col": 1,
+      "type": "backend",
+      "label": "Trace the root cause",
+      "sublabel": "systematic-debugging",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
+          "line": 1,
+          "end_line": 99,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-2",
+      "lane": "work",
+      "col": 2,
+      "type": "backend",
+      "label": "Test one hypothesis",
+      "sublabel": "systematic-debugging",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
+          "line": 1,
+          "end_line": 99,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-3",
+      "lane": "work",
+      "col": 3,
+      "type": "backend",
+      "label": "Report cause and fix proposal",
+      "sublabel": "systematic-debugging",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
+          "line": 1,
+          "end_line": 99,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "next-0",
+      "from": "step-0",
+      "to": "step-1",
+      "role": "main"
+    },
+    {
+      "id": "next-1",
+      "from": "step-1",
+      "to": "step-2",
+      "role": "main"
+    },
+    {
+      "id": "next-2",
+      "from": "step-2",
+      "to": "step-3",
+      "role": "main"
+    }
+  ],
+  "semanticChecks": {
+    "allowedRoots": [
+      "step-0"
+    ],
+    "allowedTerminals": [
+      "step-3"
+    ]
+  },
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Expected outcome",
+      "items": [
+        "A supported diagnosis and a separate proposed fix, not a stack of guesses."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Scope and stopping point",
+      "items": [
+        "Stop at diagnosis when the request is diagnostic. Mutating experiments still need the project's isolation and approval; implementation is a later authorized phase.",
+        "Suggested handoffs are not declared instruction dependencies or permission for another phase."
+      ]
+    }
+  ]
+}

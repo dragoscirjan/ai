@@ -1,0 +1,179 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Keep a developer task usable",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/maintain-task-based-docs.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Guided work"
+        },
+        "security": {
+          "label": "Owner decision"
+        },
+        "external": {
+          "label": "Stopped branch"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "work",
+      "label": "Suggested skill handoffs"
+    }
+  ],
+  "mainPath": [
+    "step-0",
+    "step-1",
+    "step-2",
+    "step-3",
+    "step-4"
+  ],
+  "nodes": [
+    {
+      "id": "step-0",
+      "lane": "work",
+      "col": 0,
+      "type": "backend",
+      "label": "Choose the reader's task",
+      "sublabel": "document-project",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/document-project/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-1",
+      "lane": "work",
+      "col": 1,
+      "type": "backend",
+      "label": "Update the procedure",
+      "sublabel": "document-project",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/document-project/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-2",
+      "lane": "work",
+      "col": 2,
+      "type": "backend",
+      "label": "Preserve precise meaning",
+      "sublabel": "asd-ste100-technical",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/asd-ste100-technical/SKILL.md",
+          "line": 1,
+          "end_line": 32,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-3",
+      "lane": "work",
+      "col": 3,
+      "type": "backend",
+      "label": "Remove generic framing",
+      "sublabel": "unslop",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "line": 580,
+          "end_line": 609,
+          "label": "Pinned source and runtime record"
+        }
+      ]
+    },
+    {
+      "id": "step-4",
+      "lane": "work",
+      "col": 4,
+      "type": "backend",
+      "label": "Walk through; check links",
+      "sublabel": "document-project",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/document-project/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "next-0",
+      "from": "step-0",
+      "to": "step-1",
+      "role": "main"
+    },
+    {
+      "id": "next-1",
+      "from": "step-1",
+      "to": "step-2",
+      "role": "main"
+    },
+    {
+      "id": "next-2",
+      "from": "step-2",
+      "to": "step-3",
+      "role": "main"
+    },
+    {
+      "id": "next-3",
+      "from": "step-3",
+      "to": "step-4",
+      "role": "main"
+    }
+  ],
+  "semanticChecks": {
+    "allowedRoots": [
+      "step-0"
+    ],
+    "allowedTerminals": [
+      "step-4"
+    ]
+  },
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Expected outcome",
+      "items": [
+        "A checked procedure with prerequisites, actions, expected results, and recovery guidance."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Scope and stopping point",
+      "items": [
+        "Use a diagram only when it answers a relationship question. A new site or toolchain is a separate approved baseline, not a routine documentation side effect.",
+        "Suggested handoffs are not declared instruction dependencies or permission for another phase."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Clean only proven, approved workspaces",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/clean-integrated-workspaces.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Guided work"
+        },
+        "security": {
+          "label": "Owner decision"
+        },
+        "external": {
+          "label": "Stopped branch"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "work",
+      "label": "Suggested skill handoffs"
+    },
+    {
+      "id": "owner",
+      "label": "Applicable owner approval"
+    },
+    {
+      "id": "stop",
+      "label": "Stop without authorizing writes"
+    }
+  ],
+  "mainPath": [
+    "step-0",
+    "step-1",
+    "step-2",
+    "step-3"
+  ],
+  "nodes": [
+    {
+      "id": "step-0",
+      "lane": "work",
+      "col": 0,
+      "type": "backend",
+      "label": "Resolve workspace guidance",
+      "sublabel": "cleanup-workspaces",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/utility/cleanup-workspaces/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-1",
+      "lane": "work",
+      "col": 1,
+      "type": "backend",
+      "label": "Audit tips/state/ownership",
+      "sublabel": "cleanup-workspaces",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/utility/cleanup-workspaces/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-2",
+      "lane": "owner",
+      "col": 2,
+      "type": "security",
+      "label": "Approve exact removal plan",
+      "sublabel": "cleanup-workspaces",
+      "icon": "decision",
+      "sources": [
+        {
+          "path": ".agents/skills/utility/cleanup-workspaces/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-3",
+      "lane": "work",
+      "col": 3,
+      "type": "backend",
+      "label": "Apply and audit again",
+      "sublabel": "cleanup-workspaces",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/utility/cleanup-workspaces/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "stop-2",
+      "lane": "stop",
+      "col": 2,
+      "type": "external",
+      "label": "Pause this branch",
+      "sublabel": "No approval, no writes",
+      "icon": "stop",
+      "sources": [
+        {
+          "path": ".agents/skills/utility/cleanup-workspaces/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "next-0",
+      "from": "step-0",
+      "to": "step-1",
+      "role": "main"
+    },
+    {
+      "id": "next-1",
+      "from": "step-1",
+      "to": "step-2",
+      "role": "main"
+    },
+    {
+      "id": "next-2",
+      "from": "step-2",
+      "to": "step-3",
+      "role": "main",
+      "label": "if approved",
+      "variant": "security"
+    },
+    {
+      "id": "decline-2",
+      "from": "step-2",
+      "to": "stop-2",
+      "label": "not approved",
+      "role": "branch",
+      "variant": "security"
+    }
+  ],
+  "semanticChecks": {
+    "allowedRoots": [
+      "step-0"
+    ],
+    "allowedTerminals": [
+      "step-3",
+      "stop-2"
+    ]
+  },
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Expected outcome",
+      "items": [
+        "Exact approved removals, protected uncertain lanes, and a post-cleanup audit."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Scope and stopping point",
+      "items": [
+        "Do not infer integration from a similar diff. Dirty, unknown, or unproven work stays; no force removal, branch deletion, or broad cache cleanup is implied.",
+        "Suggested handoffs are not declared instruction dependencies or permission for another phase."
+      ]
+    }
+  ]
+}

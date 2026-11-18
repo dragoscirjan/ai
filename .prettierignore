@@ -1,0 +1,11 @@
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+docs/public/diagrams/
+docs/diagrams/
+docs/skills/
+docs/workflows/
+docs/groups/
+docs/reference/catalog.md
+docs/reference/relationships.md
+docs/public/notices/
+docs/public/diagram-sources/

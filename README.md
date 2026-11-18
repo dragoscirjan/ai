@@ -2,6 +2,19 @@
 
 This repository contains reusable skills, instructions, configuration assets, and references for AI agents in coding and non-coding projects. The assets target Pi, OpenCode, and Claude Code, while portable skills follow the Agent Skills format.
 
+## Documentation website
+
+The VitePress site groups the catalogued skills by task and explains supported combinations with editable Archify diagrams. Start with the [documentation source](docs/index.md) or the [first-use guide](docs/guide/start.md).
+
+After reviewing the project configuration and completing the [project-scoped mise setup](docs/maintenance/index.md):
+
+```sh
+mise run deps:sync
+mise run docs:serve
+```
+
+Use `mise run docs` for a production build and `mise run docs:check` for catalog coverage, requirements, recipe, diagram, and local-link checks. Independent runs use `/`; hosted builds use `DOCS_BASE=/projects/ai-skills/`. See [site maintenance](docs/maintenance/index.md), [diagram regeneration](docs/maintenance/diagrams.md), and [publication](docs/maintenance/publication.md). The manual publisher exports an artifact by default and can open a destination PR; it does not merge or deploy.
+
 ## Skills
 
 | Skill | Purpose |

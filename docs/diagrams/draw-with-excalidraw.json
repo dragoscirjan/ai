@@ -1,0 +1,191 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Deliver an editable image diagram",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/draw-with-excalidraw.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Guided work"
+        },
+        "security": {
+          "label": "Owner decision"
+        },
+        "external": {
+          "label": "Stopped branch"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "work",
+      "label": "Suggested skill handoffs"
+    },
+    {
+      "id": "owner",
+      "label": "Applicable owner approval"
+    },
+    {
+      "id": "stop",
+      "label": "Stop without authorizing writes"
+    }
+  ],
+  "mainPath": [
+    "step-0",
+    "step-1",
+    "step-2",
+    "step-3"
+  ],
+  "nodes": [
+    {
+      "id": "step-0",
+      "lane": "work",
+      "col": 0,
+      "type": "backend",
+      "label": "Trace scoped relationships",
+      "sublabel": "excalidraw",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/excalidraw/SKILL.md",
+          "line": 1,
+          "end_line": 47,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-1",
+      "lane": "owner",
+      "col": 1,
+      "type": "security",
+      "label": "Approve missing renderer",
+      "sublabel": "excalidraw",
+      "icon": "decision",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/excalidraw/SKILL.md",
+          "line": 1,
+          "end_line": 47,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-2",
+      "lane": "work",
+      "col": 2,
+      "type": "backend",
+      "label": "Author and render the scene",
+      "sublabel": "excalidraw",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/excalidraw/SKILL.md",
+          "line": 1,
+          "end_line": 47,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-3",
+      "lane": "work",
+      "col": 3,
+      "type": "backend",
+      "label": "Inspect image; keep source",
+      "sublabel": "excalidraw",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/excalidraw/SKILL.md",
+          "line": 1,
+          "end_line": 47,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "stop-1",
+      "lane": "stop",
+      "col": 1,
+      "type": "external",
+      "label": "Pause this branch",
+      "sublabel": "No approval, no writes",
+      "icon": "stop",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/excalidraw/SKILL.md",
+          "line": 1,
+          "end_line": 47,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "next-0",
+      "from": "step-0",
+      "to": "step-1",
+      "role": "main"
+    },
+    {
+      "id": "next-1",
+      "from": "step-1",
+      "to": "step-2",
+      "role": "main",
+      "label": "setup ready",
+      "variant": "security"
+    },
+    {
+      "id": "next-2",
+      "from": "step-2",
+      "to": "step-3",
+      "role": "main"
+    },
+    {
+      "id": "decline-1",
+      "from": "step-1",
+      "to": "stop-1",
+      "label": "not approved",
+      "role": "branch",
+      "variant": "security"
+    }
+  ],
+  "semanticChecks": {
+    "allowedRoots": [
+      "step-0"
+    ],
+    "allowedTerminals": [
+      "step-3",
+      "stop-1"
+    ]
+  },
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Expected outcome",
+      "items": [
+        "An image-first delivery with retained scene JSON and the local workflow's checks."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Scope and stopping point",
+      "items": [
+        "Skip setup when the approved renderer is already available. Do not replace local rendering with a remote service or deliver source alone when an image was requested.",
+        "Suggested handoffs are not declared instruction dependencies or permission for another phase."
+      ]
+    }
+  ]
+}

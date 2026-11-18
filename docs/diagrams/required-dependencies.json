@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Required instruction dependencies",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/required-dependencies.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Skill instructions"
+        }
+      }
+    }
+  },
+  "components": [
+    {
+      "id": "cleanup-workspaces",
+      "type": "backend",
+      "label": "cleanup-workspaces",
+      "icon": "none",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/utility/cleanup-workspaces/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "isolated-workspace",
+      "type": "backend",
+      "label": "isolated-workspace",
+      "icon": "none",
+      "pos": [
+        400,
+        40
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
+          "line": 1,
+          "end_line": 62,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "coding-with-rules",
+      "type": "backend",
+      "label": "coding-with-rules",
+      "icon": "none",
+      "pos": [
+        40,
+        185
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/coding/coding-with-rules/SKILL.md",
+          "line": 1,
+          "end_line": 53,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "coding",
+      "type": "backend",
+      "label": "coding",
+      "icon": "none",
+      "pos": [
+        400,
+        185
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/coding/coding/SKILL.md",
+          "line": 1,
+          "end_line": 88,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "grill-me",
+      "type": "backend",
+      "label": "grill-me",
+      "icon": "none",
+      "pos": [
+        760,
+        485
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/grill-me/SKILL.md",
+          "line": 1,
+          "end_line": 8,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "grilling",
+      "type": "backend",
+      "label": "grilling",
+      "icon": "none",
+      "pos": [
+        400,
+        485
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "line": 214,
+          "end_line": 242,
+          "label": "Pinned source and runtime record"
+        }
+      ]
+    },
+    {
+      "id": "initiative",
+      "type": "backend",
+      "label": "initiative",
+      "icon": "none",
+      "pos": [
+        40,
+        485
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/initiative/SKILL.md",
+          "line": 1,
+          "end_line": 33,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "research",
+      "type": "backend",
+      "label": "research",
+      "icon": "none",
+      "pos": [
+        40,
+        355
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/research/SKILL.md",
+          "line": 1,
+          "end_line": 35,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "specify",
+      "type": "backend",
+      "label": "specify",
+      "icon": "none",
+      "pos": [
+        40,
+        615
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/specify/SKILL.md",
+          "line": 1,
+          "end_line": 35,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "requires-0",
+      "from": "cleanup-workspaces",
+      "to": "isolated-workspace",
+      "label": "requires"
+    },
+    {
+      "id": "requires-1",
+      "from": "coding-with-rules",
+      "to": "coding",
+      "label": "requires"
+    },
+    {
+      "id": "requires-2",
+      "from": "grill-me",
+      "to": "grilling",
+      "label": "requires"
+    },
+    {
+      "id": "requires-3",
+      "from": "initiative",
+      "to": "grilling",
+      "label": "requires"
+    },
+    {
+      "id": "requires-4",
+      "from": "research",
+      "to": "grilling",
+      "label": "requires"
+    },
+    {
+      "id": "requires-5",
+      "from": "specify",
+      "to": "grilling",
+      "label": "requires"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Read the arrow",
+      "items": [
+        "Requesting skill → required instructions.",
+        "These edges come from declared metadata, not a recommended execution order."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Resolve before use",
+      "items": [
+        "The project extension requires an installed dependency; native harness loading is not guaranteed.",
+        "Missing requirements stop the affected phase. Installation needs approval."
+      ]
+    }
+  ]
+}

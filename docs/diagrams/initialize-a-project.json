@@ -1,0 +1,215 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Initialize only the foundation you need",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/initialize-a-project.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Guided work"
+        },
+        "security": {
+          "label": "Owner decision"
+        },
+        "external": {
+          "label": "Stopped branch"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "work",
+      "label": "Suggested skill handoffs"
+    },
+    {
+      "id": "owner",
+      "label": "Applicable owner approval"
+    },
+    {
+      "id": "stop",
+      "label": "Stop without authorizing writes"
+    }
+  ],
+  "mainPath": [
+    "step-0",
+    "step-1",
+    "step-2",
+    "step-3",
+    "step-4"
+  ],
+  "nodes": [
+    {
+      "id": "step-0",
+      "lane": "work",
+      "col": 0,
+      "type": "backend",
+      "label": "Inspect the starting point",
+      "sublabel": "init-project",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/init-project/SKILL.md",
+          "line": 1,
+          "end_line": 47,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-1",
+      "lane": "owner",
+      "col": 1,
+      "type": "security",
+      "label": "Approve the baseline",
+      "sublabel": "init-project",
+      "icon": "decision",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/init-project/SKILL.md",
+          "line": 1,
+          "end_line": 47,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-2",
+      "lane": "work",
+      "col": 2,
+      "type": "backend",
+      "label": "Create approved workspace",
+      "sublabel": "isolated-workspace",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
+          "line": 1,
+          "end_line": 62,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-3",
+      "lane": "work",
+      "col": 3,
+      "type": "backend",
+      "label": "Install approved foundation",
+      "sublabel": "init-project",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/init-project/SKILL.md",
+          "line": 1,
+          "end_line": 47,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-4",
+      "lane": "work",
+      "col": 4,
+      "type": "backend",
+      "label": "Explain first use",
+      "sublabel": "document-project",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/document-project/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "stop-1",
+      "lane": "stop",
+      "col": 1,
+      "type": "external",
+      "label": "Pause this branch",
+      "sublabel": "No approval, no writes",
+      "icon": "stop",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/init-project/SKILL.md",
+          "line": 1,
+          "end_line": 47,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "next-0",
+      "from": "step-0",
+      "to": "step-1",
+      "role": "main"
+    },
+    {
+      "id": "next-1",
+      "from": "step-1",
+      "to": "step-2",
+      "role": "main",
+      "label": "if approved",
+      "variant": "security"
+    },
+    {
+      "id": "next-2",
+      "from": "step-2",
+      "to": "step-3",
+      "role": "main"
+    },
+    {
+      "id": "next-3",
+      "from": "step-3",
+      "to": "step-4",
+      "role": "main"
+    },
+    {
+      "id": "decline-1",
+      "from": "step-1",
+      "to": "stop-1",
+      "label": "not approved",
+      "role": "branch",
+      "variant": "security"
+    }
+  ],
+  "semanticChecks": {
+    "allowedRoots": [
+      "step-0"
+    ],
+    "allowedTerminals": [
+      "step-4",
+      "stop-1"
+    ]
+  },
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Expected outcome",
+      "items": [
+        "A checked baseline with setup instructions, without unrelated application machinery."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Scope and stopping point",
+      "items": [
+        "Stop if the baseline or installations are not approved. Do not infer initializer permission from a general coding or documentation request.",
+        "Suggested handoffs are not declared instruction dependencies or permission for another phase."
+      ]
+    }
+  ]
+}

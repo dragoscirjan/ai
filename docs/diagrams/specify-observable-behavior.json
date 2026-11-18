@@ -1,0 +1,155 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Agree on behavior before task execution",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/specify-observable-behavior.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Guided work"
+        },
+        "security": {
+          "label": "Owner decision"
+        },
+        "external": {
+          "label": "Stopped branch"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "work",
+      "label": "Suggested skill handoffs"
+    }
+  ],
+  "mainPath": [
+    "step-0",
+    "step-1",
+    "step-2",
+    "step-3"
+  ],
+  "nodes": [
+    {
+      "id": "step-0",
+      "lane": "work",
+      "col": 0,
+      "type": "backend",
+      "label": "Inspect agreed decisions",
+      "sublabel": "specify",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/specify/SKILL.md",
+          "line": 1,
+          "end_line": 35,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-1",
+      "lane": "work",
+      "col": 1,
+      "type": "backend",
+      "label": "Resolve behavior questions",
+      "sublabel": "grilling",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "line": 214,
+          "end_line": 242,
+          "label": "Pinned source and runtime record"
+        }
+      ]
+    },
+    {
+      "id": "step-2",
+      "lane": "work",
+      "col": 2,
+      "type": "backend",
+      "label": "Define acceptance criteria",
+      "sublabel": "specify",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/specify/SKILL.md",
+          "line": 1,
+          "end_line": 35,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "step-3",
+      "lane": "work",
+      "col": 3,
+      "type": "backend",
+      "label": "Record scope and test limits",
+      "sublabel": "specify",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/specify/SKILL.md",
+          "line": 1,
+          "end_line": 35,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "next-0",
+      "from": "step-0",
+      "to": "step-1",
+      "role": "main"
+    },
+    {
+      "id": "next-1",
+      "from": "step-1",
+      "to": "step-2",
+      "role": "main"
+    },
+    {
+      "id": "next-2",
+      "from": "step-2",
+      "to": "step-3",
+      "role": "main"
+    }
+  ],
+  "semanticChecks": {
+    "allowedRoots": [
+      "step-0"
+    ],
+    "allowedTerminals": [
+      "step-3"
+    ]
+  },
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Expected outcome",
+      "items": [
+        "A compact specification with testable criteria and explicit exclusions."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Scope and stopping point",
+      "items": [
+        "Stop at the specification. Do not convert unresolved questions into invented requirements or treat the document as implementation authority.",
+        "Suggested handoffs are not declared instruction dependencies or permission for another phase."
+      ]
+    }
+  ]
+}
