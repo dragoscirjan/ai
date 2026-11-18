@@ -1,19 +1,16 @@
 name: Documentation artifact and destination PR
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
-    inputs:
-      publish:
-        description: Open a destination PR after building; never merge or deploy
-        required: false
-        default: false
-        type: boolean
 
 permissions:
   contents: read
 
 concurrency:
   group: docs-publish-${{ github.ref }}
+  queue: max
   cancel-in-progress: false
 
 env:
@@ -49,7 +46,7 @@ jobs:
 
   publication-pr:
     needs: build
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.publish
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -74,6 +71,5 @@ jobs:
           path: ${{ runner.temp }}/docs-site
       - name: Verify output and open a destination PR without merging
         env:
-          DOCS_PUBLISH: "true"
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: mise exec -- node scripts/docs/publish.mjs "$RUNNER_TEMP/docs-site" "$GITHUB_WORKSPACE/destination"

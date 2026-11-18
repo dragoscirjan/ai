@@ -2,15 +2,15 @@
 
 Run commands from an approved isolated checkout of the source repository. Read the repository's [contribution policy](https://github.com/dragoscirjan/ai/blob/main/CONTRIBUTING.md) before changes and [validation policy](https://github.com/dragoscirjan/ai/blob/main/VALIDATION.md) before checks or publication.
 
-::: warning Draft: dependency audit is blocked
-The final audit reports [GHSA-fc5q-39xc-vjpf](https://github.com/advisories/GHSA-fc5q-39xc-vjpf), a high-severity regular-expression denial-of-service issue in `picomatch@4.0.7` through Vite. The advisory has no known patched version as checked on 2026-11-17. The site remains a blocked draft: keep the full audit and publication gate intact, and do not treat the Vite override as an accepted zero-advisory baseline. No advisory suppression or dependency fallback is configured.
+::: warning Local security mitigation
+The pinned `picomatch@4.0.7` has a local patch and an owner-approved audit exception for `GHSA-fc5q-39xc-vjpf`. The audit still reports this advisory as ignored, not fixed upstream. See [the mitigation and its regression checks](/maintenance/publication#maintain-the-picomatch-mitigation). Keep the full audit and publication gate intact. Investigate and fix other audit failures rather than adding exceptions.
 :::
 
 ## Install the project dependencies
 
 You need mise and Git. Review `mise.toml`, `mise.lock`, `package.json`, and `pnpm-lock.yaml` before trusting or installing this checkout. Mise manages Node 24 LTS, pnpm 10.33.0, and Bun 1.4.4. The tracked mise lock owns exact resolved runtime versions; pnpm owns JavaScript dependencies.
 
-VitePress stays at 1.6.4. An owner-approved `vitepress>vite: 6.4.5` pnpm override addresses the older Vite/esbuild development-toolchain advisories. Compatibility checks passed, but acceptance remains blocked by the separate Picomatch advisory above. This is not an upstream support claim. Keep the override scoped, audit after updates, and rerun both base-path builds plus dev/preview and browser checks before changing it.
+VitePress stays at 1.6.4. An owner-approved `vitepress>vite: 6.4.5` pnpm override addresses the older Vite/esbuild development-toolchain advisories. Compatibility checks passed. The separate Picomatch advisory uses the local mitigation described above. This is not an upstream support claim. Keep the override scoped, audit after updates, and rerun both base-path builds plus dev/preview and browser checks before changing it.
 
 For a terminal session confined to this reviewed project, keep trust state project-scoped rather than modifying global trust configuration:
 
@@ -101,4 +101,4 @@ Record passed, failed, unavailable, and intentionally unrun checks separately. A
 
 ## Keep scope boundaries intact
 
-Do not edit skill bodies, instructions, templates, sibling repositories, secrets, or publishing policy as a side effect of a site update. Follow the applicable approval route when one of those changes is genuinely needed. The [publisher](/maintenance/publication) builds an artifact by default and can open a separate destination PR only when explicitly requested.
+Do not edit skill bodies, instructions, templates, sibling repositories, secrets, or publishing policy as a side effect of a site update. Follow the applicable approval route when one of those changes is genuinely needed. The [publisher](/maintenance/publication) builds on every push to `main`, or on a manual run of `main`, and opens a separate destination PR when the generated output differs from destination `main`. It closes superseded managed proposals even when no new PR is needed. It never merges or deploys. Manual runs on other branches build artifacts without publishing.

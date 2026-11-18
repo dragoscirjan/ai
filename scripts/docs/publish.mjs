@@ -9,11 +9,10 @@ export const publicationBase = "/projects/ai-skills/";
 export function publicationContext(env) {
   if (
     env.GITHUB_ACTIONS !== "true" ||
-    env.GITHUB_EVENT_NAME !== "workflow_dispatch" ||
-    env.GITHUB_REF !== "refs/heads/main" ||
-    env.DOCS_PUBLISH !== "true"
+    !["push", "workflow_dispatch"].includes(env.GITHUB_EVENT_NAME) ||
+    env.GITHUB_REF !== "refs/heads/main"
   )
-    throw new Error("Publication requires an explicit manual publish dispatch on trusted main");
+    throw new Error("Publication requires a push or manual dispatch on trusted main");
   if (!env.GH_TOKEN) throw new Error("The owner must supply the destination GH_TOKEN secret");
   if (
     !/^\d+$/.test(env.GITHUB_RUN_ID ?? "") ||
@@ -47,7 +46,24 @@ function command(executable, args, cwd, env) {
     throw new Error(`${executable} failed: ${result.stderr || result.error || result.status}`);
   return result.stdout.trim();
 }
-export function publishSite(artifact, checkout, env = process.env) {
+function publicationBody(source) {
+  return `Documentation artifact from ${source}.\n\nReview and merge separately; this publisher does not merge or deploy.`;
+}
+function managedPublicationPRs(response, repository) {
+  if (!Array.isArray(response)) throw new Error("Invalid destination pull request response");
+  return response.filter((pr) => {
+    const branch = /^docs-publish\/ai-skills\/(\d+)-\d+$/.exec(pr?.head);
+    return (
+      branch &&
+      Number.isSafeInteger(pr.number) &&
+      pr.number > 0 &&
+      pr.base === "main" &&
+      pr.repository === destinationRepository &&
+      pr.body === publicationBody(`https://github.com/${repository}/actions/runs/${branch[1]}`)
+    );
+  });
+}
+export function publishSite(artifact, checkout, env = process.env, runCommand = command) {
   const context = publicationContext(env);
   const directory = resolve(checkout);
   const target = publicationTarget(directory);
@@ -63,7 +79,7 @@ export function publishSite(artifact, checkout, env = process.env) {
   if (!index.includes(`${publicationBase}assets/`) || /(?:href|src)=["']\/assets\//.test(index))
     throw new Error("Refusing an artifact built with the wrong publication base");
   const git = (args) =>
-    command(
+    runCommand(
       "git",
       ["-c", "core.hooksPath=/dev/null", "-c", "core.fsmonitor=false", ...args],
       directory,
@@ -78,13 +94,41 @@ export function publishSite(artifact, checkout, env = process.env) {
     throw new Error("Wrong destination repository");
   if (git(["branch", "--show-current"]) !== "main" || git(["status", "--porcelain"]))
     throw new Error("Destination checkout must be clean main");
+  // Emit one compact array per page; gh cannot combine --slurp with --jq.
+  const previousPRs = runCommand(
+    "gh",
+    [
+      "api",
+      "--paginate",
+      `repos/${destinationRepository}/pulls?state=open&base=main&per_page=100`,
+      "--jq",
+      "map({number, base: .base.ref, head: .head.ref, repository: .head.repo.full_name, body}) | tojson",
+    ],
+    directory,
+    env,
+  )
+    .split("\n")
+    .flatMap((page) => managedPublicationPRs(JSON.parse(page), env.GITHUB_REPOSITORY));
+  const closeSuperseded = (message) => {
+    for (const pr of previousPRs)
+      runCommand(
+        "gh",
+        ["pr", "close", String(pr.number), "--repo", destinationRepository, "--comment", message],
+        directory,
+        env,
+      );
+  };
   git(["switch", "--create", context.branch]);
   mkdirSync(dirname(target), { recursive: true });
   mkdirSync(target, { recursive: true });
-  command("rsync", ["-a", "--delete", source + "/", target + "/"], directory, env);
+  runCommand("rsync", ["-a", "--delete", source + "/", target + "/"], directory, env);
   git(["add", "--", "projects/ai-skills"]);
-  if (!git(["diff", "--cached", "--name-only"]))
-    return "Output unchanged; no destination commit or PR.";
+  if (!git(["diff", "--cached", "--name-only"])) {
+    closeSuperseded(
+      `Output from ${context.source} already matches destination main. Closing this superseded publication proposal without merging or deploying.`,
+    );
+    return "Output unchanged; no destination commit or new PR.";
+  }
   const paths = git(["diff", "--cached", "--name-only"]).split("\n");
   if (paths.some((path) => !path.startsWith("projects/ai-skills/")))
     throw new Error("Publication escaped its approved directory");
@@ -92,7 +136,7 @@ export function publishSite(artifact, checkout, env = process.env) {
   git(["config", "user.email", "github-actions[bot]@users.noreply.github.com"]);
   git(["commit", "-m", "docs(ai-skills): update documentation site"]);
   git(["push", "--set-upstream", "origin", context.branch]);
-  return command(
+  const publicationPR = runCommand(
     "gh",
     [
       "pr",
@@ -106,11 +150,13 @@ export function publishSite(artifact, checkout, env = process.env) {
       "--title",
       "docs(ai-skills): update documentation site",
       "--body",
-      `Documentation artifact from ${context.source}.\n\nReview and merge separately; this publisher does not merge or deploy.`,
+      publicationBody(context.source),
     ],
     directory,
     env,
   );
+  closeSuperseded(`Superseded by ${publicationPR}. Review and merge the new proposal separately.`);
+  return publicationPR;
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   if (process.argv.length !== 4)

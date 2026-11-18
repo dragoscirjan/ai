@@ -7,6 +7,11 @@ settings:
 overrides:
   vitepress>vite: 6.4.5
 
+patchedDependencies:
+  picomatch@4.0.7:
+    hash: 32c2e1d20c2c3b54292560177778a572ce5ede318746cc1c772d05e6627c9fc9
+    path: patches/picomatch@4.0.7.patch
+
 importers:
 
   .:
@@ -1940,9 +1945,9 @@ snapshots:
 
   fast-levenshtein@2.0.6: {}
 
-  fdir@6.5.0(picomatch@4.0.7):
+  fdir@6.5.0(picomatch@4.0.7(patch_hash=32c2e1d20c2c3b54292560177778a572ce5ede318746cc1c772d05e6627c9fc9)):
     optionalDependencies:
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=32c2e1d20c2c3b54292560177778a572ce5ede318746cc1c772d05e6627c9fc9)
 
   file-entry-cache@11.1.5:
     dependencies:
@@ -2112,7 +2117,7 @@ snapshots:
 
   picocolors@1.1.1: {}
 
-  picomatch@4.0.7: {}
+  picomatch@4.0.7(patch_hash=32c2e1d20c2c3b54292560177778a572ce5ede318746cc1c772d05e6627c9fc9): {}
 
   postcss@8.5.33:
     dependencies:
@@ -2216,8 +2221,8 @@ snapshots:
 
   tinyglobby@0.2.17:
     dependencies:
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
+      fdir: 6.5.0(picomatch@4.0.7(patch_hash=32c2e1d20c2c3b54292560177778a572ce5ede318746cc1c772d05e6627c9fc9))
+      picomatch: 4.0.7(patch_hash=32c2e1d20c2c3b54292560177778a572ce5ede318746cc1c772d05e6627c9fc9)
 
   trim-lines@3.0.1: {}
 
@@ -2265,8 +2270,8 @@ snapshots:
   vite@6.4.5(yaml@2.9.1):
     dependencies:
       esbuild: 0.25.12
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
+      fdir: 6.5.0(picomatch@4.0.7(patch_hash=32c2e1d20c2c3b54292560177778a572ce5ede318746cc1c772d05e6627c9fc9))
+      picomatch: 4.0.7(patch_hash=32c2e1d20c2c3b54292560177778a572ce5ede318746cc1c772d05e6627c9fc9)
       postcss: 8.5.33
       rollup: 4.68.5
       tinyglobby: 0.2.17

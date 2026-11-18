@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import {
+  cpSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -17,7 +19,12 @@ import { catalog, docsBase, groups, root } from "./data.mjs";
 import { checkDocs, checkMarkdownLinks } from "./check.mjs";
 import { publicToolEnvironment } from "./environment.mjs";
 import { generatedPages } from "./generate.mjs";
-import { publicationContext, publicationTarget, publishSite } from "./publish.mjs";
+import {
+  destinationRepository,
+  publicationContext,
+  publicationTarget,
+  publishSite,
+} from "./publish.mjs";
 import {
   hash,
   passingGates,
@@ -83,7 +90,6 @@ const context = {
   GITHUB_ACTIONS: "true",
   GITHUB_EVENT_NAME: "workflow_dispatch",
   GITHUB_REF: "refs/heads/main",
-  DOCS_PUBLISH: "true",
   GH_TOKEN: "test-only-value",
   GITHUB_REPOSITORY: "example/source",
   GITHUB_RUN_ID: "123",
@@ -229,20 +235,26 @@ test("symlinks and hidden secret files are rejected, but .nojekyll is harmless",
   put(directory, ".env", "TEST_ONLY=fixture");
   assert.throws(() => verifySite(directory), /unsafe entry/);
 });
-test("publication requires manual main, explicit publish, token, and valid run identity", () => {
-  assert.equal(publicationContext(context).branch, "docs-publish/ai-skills/123-2");
+test("publication accepts main pushes and dispatches with a token and valid run identity", () => {
+  for (const event of ["push", "workflow_dispatch"])
+    assert.equal(
+      publicationContext({ ...context, GITHUB_EVENT_NAME: event }).branch,
+      "docs-publish/ai-skills/123-2",
+    );
   for (const changed of [
     { GITHUB_ACTIONS: "false" },
     { GITHUB_EVENT_NAME: "pull_request" },
-    { GITHUB_EVENT_NAME: "push" },
+    { GITHUB_EVENT_NAME: "pull_request_target" },
+    { GITHUB_EVENT_NAME: "workflow_run" },
+    { GITHUB_EVENT_NAME: "schedule" },
     { GITHUB_REF: "refs/heads/topic" },
-    { DOCS_PUBLISH: "false" },
+    { GITHUB_REF: "refs/tags/main" },
     { GH_TOKEN: "" },
     { GITHUB_RUN_ID: "../bad" },
     { GITHUB_REPOSITORY: "bad; command" },
   ])
     assert.throws(() => publicationContext({ ...context, ...changed }));
-  assert.throws(() => publishSite("unused", "unused", {}), /explicit manual/);
+  assert.throws(() => publishSite("unused", "unused", {}), /trusted main/);
 });
 test("destination path stays fixed and rejects symlinked project parents", (t) => {
   const directory = temporary(t);
@@ -257,6 +269,155 @@ test("publication refuses overlapping artifact and destination before Git or wri
   mkdirSync(artifact);
   assert.throws(() => publishSite(artifact, directory, context), /must be disjoint/);
   assert.equal(existsSync(join(directory, "projects")), false);
+});
+function publicationFixture(
+  t,
+  { unchanged = false, failCreate = false, invalidList = false } = {},
+) {
+  const artifact = temporary(t);
+  fixture(artifact);
+  const checkout = temporary(t);
+  put(checkout, "README.md", "Keep this file.\n");
+  put(checkout, "projects/other/keep.txt", "Unrelated project.\n");
+  if (unchanged) cpSync(artifact, join(checkout, "projects/ai-skills"), { recursive: true });
+  else {
+    put(checkout, "projects/ai-skills/index.html", "Older site.\n");
+    put(checkout, "projects/ai-skills/obsolete.txt", "Remove from generated output.\n");
+  }
+  const env = {
+    PATH: process.env.PATH,
+    HOME: temporary(t),
+    GIT_CONFIG_NOSYSTEM: "1",
+    GIT_CONFIG_GLOBAL: "/dev/null",
+    ...context,
+  };
+  const localCommand = (executable, args, cwd = checkout, commandEnv = env) => {
+    const result = spawnSync(executable, args, {
+      cwd,
+      env: commandEnv,
+      encoding: "utf8",
+      timeout: 10000,
+    });
+    assert.equal(result.status, 0, result.error?.message || result.stderr);
+    return result.stdout.trim();
+  };
+  const git = (args) => localCommand("git", ["-c", "core.hooksPath=/dev/null", ...args]);
+  git(["init", "--initial-branch=main"]);
+  git(["config", "user.name", "Publication test"]);
+  git(["config", "user.email", "publication@example.invalid"]);
+  git(["remote", "add", "origin", `https://github.com/${destinationRepository}.git`]);
+  git(["add", "."]);
+  git(["commit", "-m", "Initial destination"]);
+  const proposal = (number, run) => ({
+    number,
+    base: "main",
+    head: `docs-publish/ai-skills/${run}-1`,
+    repository: destinationRepository,
+    body: `Documentation artifact from https://github.com/${context.GITHUB_REPOSITORY}/actions/runs/${run}.\n\nReview and merge separately; this publisher does not merge or deploy.`,
+  });
+  const proposals = [
+    proposal(10, 100),
+    proposal(11, 101),
+    { ...proposal(12, 102), repository: "someone/fork" },
+    { ...proposal(13, 103), body: "An owner-authored proposal." },
+    { ...proposal(14, 104), head: "feature/other" },
+    { ...proposal(15, 105), base: "topic" },
+    { ...proposal(16, 106), body: proposal(16, 999).body },
+    {
+      ...proposal(17, 107),
+      body: proposal(17, 107).body.replace(context.GITHUB_REPOSITORY, "unrelated/source"),
+    },
+  ];
+  const calls = [];
+  const url = `https://github.com/${destinationRepository}/pull/20`;
+  const runCommand = (executable, args, cwd, commandEnv) => {
+    calls.push({ executable, args });
+    if (executable === "git" && args.includes("push")) return "";
+    if (executable === "gh") {
+      if (args[0] === "api") {
+        assert.ok(args.includes("--paginate"));
+        assert.ok(args.includes("--jq"));
+        assert.ok(args.at(-1).endsWith("| tojson"));
+        assert.equal(
+          args[2],
+          `repos/${destinationRepository}/pulls?state=open&base=main&per_page=100`,
+        );
+        return [proposals.slice(0, 1), invalidList ? {} : proposals.slice(1)]
+          .map((page) => JSON.stringify(page))
+          .join("\n");
+      }
+      if (args[0] === "pr" && args[1] === "create") {
+        if (failCreate) throw new Error("Simulated PR creation failure");
+        return url;
+      }
+      if (args[0] === "pr" && args[1] === "close") return "";
+      assert.fail("Unexpected remote command");
+    }
+    assert.ok(["git", "rsync"].includes(executable));
+    return localCommand(executable, args, cwd, commandEnv);
+  };
+  return { artifact, checkout, env, runCommand, calls, url };
+}
+test("a changed snapshot creates a replacement PR before closing only managed proposals", (t) => {
+  const f = publicationFixture(t);
+  assert.equal(publishSite(f.artifact, f.checkout, f.env, f.runCommand), f.url);
+  const remote = f.calls.filter((call) => call.executable === "gh");
+  assert.deepEqual(
+    remote.map((call) => call.args.slice(0, 2)),
+    [
+      ["api", "--paginate"],
+      ["pr", "create"],
+      ["pr", "close"],
+      ["pr", "close"],
+    ],
+  );
+  assert.deepEqual(
+    remote.slice(2).map((call) => call.args[2]),
+    ["10", "11"],
+  );
+  for (const call of remote.slice(2)) assert.ok(call.args.at(-1).includes(f.url));
+  assert.equal(readFileSync(join(f.checkout, "README.md"), "utf8"), "Keep this file.\n");
+  assert.equal(existsSync(join(f.checkout, "projects/other/keep.txt")), true);
+  assert.equal(existsSync(join(f.checkout, "projects/ai-skills/obsolete.txt")), false);
+});
+test("a snapshot matching destination main closes stale proposals without a new commit or PR", (t) => {
+  const f = publicationFixture(t, { unchanged: true });
+  assert.match(publishSite(f.artifact, f.checkout, f.env, f.runCommand), /Output unchanged/);
+  const remote = f.calls.filter((call) => call.executable === "gh");
+  assert.deepEqual(
+    remote.slice(1).map((call) => call.args[2]),
+    ["10", "11"],
+  );
+  assert.equal(
+    f.calls.some((call) => call.args.includes("commit") || call.args.includes("push")),
+    false,
+  );
+});
+test("a failed replacement PR leaves existing publication proposals open", (t) => {
+  const f = publicationFixture(t, { failCreate: true });
+  assert.throws(
+    () => publishSite(f.artifact, f.checkout, f.env, f.runCommand),
+    /PR creation failure/,
+  );
+  assert.equal(
+    f.calls.some((call) => call.args[1] === "close"),
+    false,
+  );
+});
+test("a malformed PR listing stops before destination output changes", (t) => {
+  const f = publicationFixture(t, { invalidList: true });
+  assert.throws(
+    () => publishSite(f.artifact, f.checkout, f.env, f.runCommand),
+    /pull request response/,
+  );
+  assert.equal(
+    f.calls.some((call) => call.executable === "rsync"),
+    false,
+  );
+  assert.equal(
+    readFileSync(join(f.checkout, "projects/ai-skills/index.html"), "utf8"),
+    "Older site.\n",
+  );
 });
 test("rendering environment excludes credentials and Node preload state", (t) => {
   const directory = temporary(t);
@@ -273,19 +434,24 @@ test("rendering environment excludes credentials and Node preload state", (t) =>
   assert.equal(env.HOME, directory);
   assert.ok(existsSync(env.TMPDIR));
 });
-test("manual publication workflow has immutable actions and no merge or deployment step", () => {
+test("main-push publication workflow has immutable actions and no merge or deployment step", () => {
   const text = readFileSync(join(root, ".github/workflows/docs.publish.yml"), "utf8");
   const workflow = parse(text);
-  assert.deepEqual(Object.keys(workflow.on), ["workflow_dispatch"]);
-  assert.equal(workflow.on.workflow_dispatch.inputs.publish.default, false);
+  assert.deepEqual(Object.keys(workflow.on), ["push", "workflow_dispatch"]);
+  assert.deepEqual(workflow.on.push.branches, ["main"]);
+  assert.equal(workflow.on.workflow_dispatch, null);
   assert.equal(workflow.permissions.contents, "read");
+  assert.equal(workflow.concurrency.queue, "max");
+  assert.equal(workflow.concurrency["cancel-in-progress"], false);
   assert.match(
     workflow.jobs["publication-pr"].if,
-    /workflow_dispatch.*refs\/heads\/main.*inputs.publish/,
+    /^github\.ref == 'refs\/heads\/main' && \(github\.event_name == 'push' \|\| github\.event_name == 'workflow_dispatch'\)$/,
   );
   for (const job of Object.values(workflow.jobs))
     for (const step of job.steps) if (step.uses) assert.match(step.uses, /@[a-f0-9]{40}$/);
-  assert.doesNotMatch(text, /gh pr merge|deploy-pages|--force/);
+  assert.deepEqual(workflow.jobs["publication-pr"].needs, "build");
+  assert.match(text, /mise exec -- pnpm audit/);
+  assert.doesNotMatch(text, /gh pr merge|deploy-pages|--force|inputs\.publish|DOCS_PUBLISH/);
   const publisher = readFileSync(join(root, "scripts/docs/publish.mjs"), "utf8");
   assert.doesNotMatch(publisher, /"merge"|"--force"|"--global"/);
   assert.match(publisher, /projects\/ai-skills/);
