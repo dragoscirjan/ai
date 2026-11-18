@@ -9,11 +9,10 @@ export const publicationBase = "/projects/ai-skills/";
 export function publicationContext(env) {
   if (
     env.GITHUB_ACTIONS !== "true" ||
-    env.GITHUB_EVENT_NAME !== "workflow_dispatch" ||
-    env.GITHUB_REF !== "refs/heads/main" ||
-    env.DOCS_PUBLISH !== "true"
+    !["push", "workflow_dispatch"].includes(env.GITHUB_EVENT_NAME) ||
+    env.GITHUB_REF !== "refs/heads/main"
   )
-    throw new Error("Publication requires an explicit manual publish dispatch on trusted main");
+    throw new Error("Publication requires a push or manual dispatch on trusted main");
   if (!env.GH_TOKEN) throw new Error("The owner must supply the destination GH_TOKEN secret");
   if (
     !/^\d+$/.test(env.GITHUB_RUN_ID ?? "") ||

@@ -1,0 +1,39 @@
+diff --git a/lib/parse.js b/lib/parse.js
+index 2920751..d27419d 100644
+--- a/lib/parse.js
++++ b/lib/parse.js
+@@ -142 +142,24 @@ const normalizeSimpleBranch = branch => {
++// A wildcard star inside a repeated extglob nests unbounded quantifiers.
++// Keep escaped stars, bracket literals, and nested extglob openers distinct.
++const hasWildcardStar = branch => {
++  let escaped = false;
++  let bracket = false;
++
++  for (let i = 0; i < branch.length; i++) {
++    const ch = branch[i];
++    if (escaped) {
++      escaped = false;
++      continue;
++    }
++    if (ch === '\\') {
++      escaped = true;
++      continue;
++    }
++    if (ch === '[') bracket = true;
++    if (ch === ']') bracket = false;
++    if (ch === '*' && !bracket && branch[i + 1] !== '(') return true;
++  }
++  return false;
++};
++
+ const hasRepeatedCharPrefixOverlap = branches => {
+@@ -287 +310,6 @@ const repeatedExtglobRecursion = pattern => {
+ const analyzeRepeatedExtglob = (body, options) => {
++  const branches = splitTopLevel(body).map(branch => branch.trim());
++  if (branches.some(hasWildcardStar)) {
++    return { risky: true };
++  }
++
+@@ -297,2 +324,0 @@ const analyzeRepeatedExtglob = (body, options) => {
+-  const branches = splitTopLevel(body).map(branch => branch.trim());
+-

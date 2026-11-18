@@ -13,7 +13,7 @@ mise run deps:sync
 mise run docs:serve
 ```
 
-Use `mise run docs` for a production build and `mise run docs:check` for catalog coverage, requirements, recipe, diagram, and local-link checks. Independent runs use `/`; hosted builds use `DOCS_BASE=/projects/ai-skills/`. See [site maintenance](docs/maintenance/index.md), [diagram regeneration](docs/maintenance/diagrams.md), and [publication](docs/maintenance/publication.md). The manual publisher exports an artifact by default and can open a destination PR; it does not merge or deploy.
+Use `mise run docs` for a production build and `mise run docs:check` for catalog coverage, requirements, recipe, diagram, and local-link checks. Independent runs use `/`; hosted builds use `DOCS_BASE=/projects/ai-skills/`. See [site maintenance](docs/maintenance/index.md), [diagram regeneration](docs/maintenance/diagrams.md), and [publication](docs/maintenance/publication.md). Every push to `main` builds the documentation and opens a destination PR when the output changes. Manual reruns on `main` need no publish argument. The publisher does not merge or deploy.
 
 ## Skills
 

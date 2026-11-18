@@ -101,4 +101,4 @@ Record passed, failed, unavailable, and intentionally unrun checks separately. A
 
 ## Keep scope boundaries intact
 
-Do not edit skill bodies, instructions, templates, sibling repositories, secrets, or publishing policy as a side effect of a site update. Follow the applicable approval route when one of those changes is genuinely needed. The [publisher](/maintenance/publication) builds an artifact by default and can open a separate destination PR only when explicitly requested.
+Do not edit skill bodies, instructions, templates, sibling repositories, secrets, or publishing policy as a side effect of a site update. Follow the applicable approval route when one of those changes is genuinely needed. The [publisher](/maintenance/publication) builds and opens a separate destination PR on every push to `main`, or on a manual rerun of `main`. It never merges or deploys. Manual runs on other branches build artifacts without publishing.

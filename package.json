@@ -27,6 +27,14 @@
   "pnpm": {
     "overrides": {
       "vitepress>vite": "6.4.5"
+    },
+    "patchedDependencies": {
+      "picomatch@4.0.7": "patches/picomatch@4.0.7.patch"
+    },
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-fc5q-39xc-vjpf"
+      ]
     }
   }
 }

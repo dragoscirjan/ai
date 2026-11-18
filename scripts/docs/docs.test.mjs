@@ -83,7 +83,6 @@ const context = {
   GITHUB_ACTIONS: "true",
   GITHUB_EVENT_NAME: "workflow_dispatch",
   GITHUB_REF: "refs/heads/main",
-  DOCS_PUBLISH: "true",
   GH_TOKEN: "test-only-value",
   GITHUB_REPOSITORY: "example/source",
   GITHUB_RUN_ID: "123",
@@ -229,20 +228,26 @@ test("symlinks and hidden secret files are rejected, but .nojekyll is harmless",
   put(directory, ".env", "TEST_ONLY=fixture");
   assert.throws(() => verifySite(directory), /unsafe entry/);
 });
-test("publication requires manual main, explicit publish, token, and valid run identity", () => {
-  assert.equal(publicationContext(context).branch, "docs-publish/ai-skills/123-2");
+test("publication accepts main pushes and dispatches with a token and valid run identity", () => {
+  for (const event of ["push", "workflow_dispatch"])
+    assert.equal(
+      publicationContext({ ...context, GITHUB_EVENT_NAME: event }).branch,
+      "docs-publish/ai-skills/123-2",
+    );
   for (const changed of [
     { GITHUB_ACTIONS: "false" },
     { GITHUB_EVENT_NAME: "pull_request" },
-    { GITHUB_EVENT_NAME: "push" },
+    { GITHUB_EVENT_NAME: "pull_request_target" },
+    { GITHUB_EVENT_NAME: "workflow_run" },
+    { GITHUB_EVENT_NAME: "schedule" },
     { GITHUB_REF: "refs/heads/topic" },
-    { DOCS_PUBLISH: "false" },
+    { GITHUB_REF: "refs/tags/main" },
     { GH_TOKEN: "" },
     { GITHUB_RUN_ID: "../bad" },
     { GITHUB_REPOSITORY: "bad; command" },
   ])
     assert.throws(() => publicationContext({ ...context, ...changed }));
-  assert.throws(() => publishSite("unused", "unused", {}), /explicit manual/);
+  assert.throws(() => publishSite("unused", "unused", {}), /trusted main/);
 });
 test("destination path stays fixed and rejects symlinked project parents", (t) => {
   const directory = temporary(t);
@@ -273,19 +278,22 @@ test("rendering environment excludes credentials and Node preload state", (t) =>
   assert.equal(env.HOME, directory);
   assert.ok(existsSync(env.TMPDIR));
 });
-test("manual publication workflow has immutable actions and no merge or deployment step", () => {
+test("main-push publication workflow has immutable actions and no merge or deployment step", () => {
   const text = readFileSync(join(root, ".github/workflows/docs.publish.yml"), "utf8");
   const workflow = parse(text);
-  assert.deepEqual(Object.keys(workflow.on), ["workflow_dispatch"]);
-  assert.equal(workflow.on.workflow_dispatch.inputs.publish.default, false);
+  assert.deepEqual(Object.keys(workflow.on), ["push", "workflow_dispatch"]);
+  assert.deepEqual(workflow.on.push.branches, ["main"]);
+  assert.equal(workflow.on.workflow_dispatch, null);
   assert.equal(workflow.permissions.contents, "read");
   assert.match(
     workflow.jobs["publication-pr"].if,
-    /workflow_dispatch.*refs\/heads\/main.*inputs.publish/,
+    /^github\.ref == 'refs\/heads\/main' && \(github\.event_name == 'push' \|\| github\.event_name == 'workflow_dispatch'\)$/,
   );
   for (const job of Object.values(workflow.jobs))
     for (const step of job.steps) if (step.uses) assert.match(step.uses, /@[a-f0-9]{40}$/);
-  assert.doesNotMatch(text, /gh pr merge|deploy-pages|--force/);
+  assert.deepEqual(workflow.jobs["publication-pr"].needs, "build");
+  assert.match(text, /mise exec -- pnpm audit/);
+  assert.doesNotMatch(text, /gh pr merge|deploy-pages|--force|inputs\.publish|DOCS_PUBLISH/);
   const publisher = readFileSync(join(root, "scripts/docs/publish.mjs"), "utf8");
   assert.doesNotMatch(publisher, /"merge"|"--force"|"--global"/);
   assert.match(publisher, /projects\/ai-skills/);
