@@ -1,6 +1,6 @@
 # Publish documentation through a destination PR
 
-Every push to source `main` runs the documentation workflow. After checks pass, it uploads a site artifact and opens a separate PR in `dragoscirjan/dragoscirjan.github.io` when the output differs from destination `main`. There is no publish argument. The source workflow does not deploy Pages or merge pull requests. An owner must review and merge the destination PR before the destination's existing Pages workflow can publish it.
+Every push to source `main` runs the documentation workflow. After checks pass, it uploads a site artifact and opens a separate PR in `dragoscirjan/dragoscirjan.github.io` when the output differs from destination `main`. It supersedes older managed proposals, including when the latest output needs no destination change. There is no publish argument. The source workflow does not deploy Pages or merge pull requests. An owner must review and merge the destination PR before the destination's existing Pages workflow can publish it.
 
 ## URL paths
 
@@ -21,21 +21,25 @@ For an independent local build, use `mise run docs` with `DOCS_BASE` unset inste
 
 ## Prepare a publication PR
 
-Publication runs after a push to trusted `main` or a manual rerun on `main`. Before merging a source change that will publish:
+Publication runs after a push to trusted `main` or a manual dispatch on `main`. The concurrency group keeps one run active and queues up to 100 pending runs in waiting order. Additional runs are canceled if that queue is full. Before merging a source change that will publish:
 
 1. Review the source change and intended destination.
 2. Confirm that the repository secret `GH_TOKEN` has been supplied by the owner. Do not put its value in files, logs, commands, artifacts, or model prompts.
 3. Use a least-privilege token that can write contents and create PRs in the destination repository. The artifact download uses the caller's short-lived `GITHUB_TOKEN` with `actions: read`, including for private callers; this workflow does not need to grant the destination PAT access to the source repository. The caller's ordinary `GITHUB_TOKEN` cannot write into another repository.
 
-A push to `main` starts the workflow automatically. To retry without a new push, choose **Run workflow** on `main`, or run this command from an authenticated GitHub CLI session:
+A push to `main` starts the workflow automatically. To publish the current `main` without a new push, choose **Run workflow** on `main`, or run this command from an authenticated GitHub CLI session:
 
 ```sh
 gh workflow run docs.publish.yml --repo dragoscirjan/ai --ref main
 ```
 
+A new dispatch selects current `main` at dispatch time, not the original failed run's commit. To retry the original commit instead, open the original Actions run and choose **Re-run all jobs** or **Re-run failed jobs**. GitHub preserves the original commit SHA and ref for a rerun.
+
 The run uploads `docs-site` after the build passes. The dependent publication job then opens a destination PR if the generated output changed.
 
-The publication job verifies the built site, uses a fresh destination checkout, replaces only `projects/ai-skills/`, and pushes a new `docs-publish/ai-skills/<run>-<attempt>` branch. If the output is unchanged, it makes no publication commit or PR. It does not run incoming project code inside the Hugo repository.
+The publication job verifies the built site, uses a fresh destination checkout, replaces only `projects/ai-skills/`, and pushes a new `docs-publish/ai-skills/<run>-<attempt>` branch. After creating the new PR, it closes older managed proposals with a link to the replacement. If the output already matches destination `main`, it closes stale managed proposals without making a new publication commit or PR. It does not run incoming project code inside the Hugo repository.
+
+Only same-repository PRs with the publisher's branch naming and unchanged matching source-provenance body are managed. Unrelated PRs, forks, and proposals with edited bodies are left alone. Superseded branches are not deleted.
 
 A changed artifact produces a destination PR. Review that PR separately. The source workflow never calls `gh pr merge`, never writes directly to destination `main`, and never triggers Pages manually. Do not copy the auto-merge behavior of the older project publishers into this workflow.
 
@@ -46,8 +50,9 @@ A changed artifact produces a destination PR. Review that PR separately. The sou
 - **Dependency audit failure:** inspect the advisory and fix the dependency. Do not bypass the audit. See [the local picomatch mitigation](#maintain-the-picomatch-mitigation) for its scoped exception.
 - **Malformed base, missing page, symlink, diagram hash mismatch, or missing notice:** fix and validate the source artifact. Do not bypass verification or manually patch the destination output.
 - **Changed destination or dirty checkout:** stop and inspect the target. Do not force-push, reset user work, or broaden the writable directory.
-- **Unchanged output:** no PR is needed.
-- **Open destination PR:** wait for owner review and a separate merge decision. A successful build or mergeable PR is not merge authority.
+- **Partial publication failure:** check the destination's `docs-publish/ai-skills/<run>-<attempt>` branch and its PR status before retrying. A push can succeed before PR creation fails. A new run or attempt uses a different branch; it does not reuse or delete an orphaned branch. Existing managed PRs remain open until a replacement PR is created, or until output matches destination `main`.
+- **Unchanged output:** no new PR is needed. Stale managed proposals are closed so they cannot later reintroduce outdated output.
+- **Open destination PR:** review the latest proposal and make a separate merge decision. A newer snapshot can supersede an older managed PR. A successful build or mergeable PR is not merge authority.
 
 ## Maintain the picomatch mitigation
 
