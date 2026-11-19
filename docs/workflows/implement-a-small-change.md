@@ -4,6 +4,8 @@ title: "Implement a small approved change"
 
 # Implement a small approved change
 
+This is a focused procedure. For its place in a larger workflow, see [Implement a planned task](/workflows/implement-a-task).
+
 The requested behavior and authority to change it are already clear.
 
 **Finish with:** A scoped implementation with behavior checks and affected documentation updated.
@@ -12,7 +14,7 @@ The requested behavior and authority to change it are already clear.
 
 ![Implement a small approved change: suggested skill handoffs with approval stops where applicable.](/diagrams/implement-a-small-change.svg)
 
-[Open interactive diagram](/diagrams/implement-a-small-change.html) · [Download SVG](/diagrams/implement-a-small-change.svg) · [Editable candidate](/diagram-sources/implement-a-small-change.json)
+[Open interactive diagram](/diagrams/implement-a-small-change.html){class="vp-raw"} · [Download SVG](/diagrams/implement-a-small-change.svg) · [Editable candidate](/diagram-sources/implement-a-small-change.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

@@ -4,6 +4,8 @@ title: "Shorten a technical answer without losing meaning"
 
 # Shorten a technical answer without losing meaning
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 A useful answer is buried under repetition or generic framing.
 
 **Finish with:** A concise explanation that retains decisions, commands, risks, and uncertainty.
@@ -12,7 +14,7 @@ A useful answer is buried under repetition or generic framing.
 
 ![Shorten a technical answer without losing meaning: suggested skill handoffs with approval stops where applicable.](/diagrams/shorten-without-loss.svg)
 
-[Open interactive diagram](/diagrams/shorten-without-loss.html) · [Download SVG](/diagrams/shorten-without-loss.svg) · [Editable candidate](/diagram-sources/shorten-without-loss.json)
+[Open interactive diagram](/diagrams/shorten-without-loss.html){class="vp-raw"} · [Download SVG](/diagrams/shorten-without-loss.svg) · [Editable candidate](/diagram-sources/shorten-without-loss.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

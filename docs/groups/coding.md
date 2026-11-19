@@ -50,7 +50,9 @@ Prevent overengineering during design; simplify existing code, configuration, or
 
 **Choose it when:** A design risks unnecessary machinery or existing code and configuration have complexity that no longer earns its cost.
 
-## Try a workflow
+## Related procedures
+
+[Choose an end-to-end workflow](/workflows/) before selecting an individual procedure.
 
 - [Implement a small approved change](/workflows/implement-a-small-change) — The requested behavior and authority to change it are already clear.
 - [Build one behavior slice test-first](/workflows/build-test-first) — The owner explicitly wants test-first development and the behavior is agreed.

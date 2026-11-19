@@ -1,0 +1,301 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Document a project",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/document-a-project.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "a6e3f4348fb13fdad5011909f7a2f3a3a24cdb14",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Guided work"
+        },
+        "security": {
+          "label": "Decision or approval"
+        },
+        "external": {
+          "label": "Input or handoff"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "work",
+      "label": "Reader-oriented documentation"
+    },
+    {
+      "id": "scope",
+      "label": "New-site approval",
+      "variant": "exception"
+    }
+  ],
+  "mainPath": [
+    "reader",
+    "inspect",
+    "site",
+    "write",
+    "verify",
+    "done"
+  ],
+  "nodes": [
+    {
+      "id": "reader",
+      "lane": "work",
+      "col": 0,
+      "label": "Choose reader tasks",
+      "sublabel": "Starting point and result",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/document-project/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "inspect",
+      "lane": "work",
+      "col": 1,
+      "label": "Inspect project facts",
+      "sublabel": "Behavior, examples, and docs",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/document-project/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "site",
+      "lane": "work",
+      "col": 2,
+      "label": "Choose the site route",
+      "sublabel": "Preserve the current platform",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/document-project/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "write",
+      "lane": "work",
+      "col": 3,
+      "label": "/document-project",
+      "sublabel": "Guides, reference, navigation",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/document-project/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "verify",
+      "lane": "work",
+      "col": 4,
+      "label": "Walk through and check",
+      "sublabel": "Build, links, examples, base",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/document-project/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "done",
+      "lane": "work",
+      "col": 5,
+      "label": "Checked website",
+      "sublabel": "Stop before deployment",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/document-project/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "baseline",
+      "lane": "scope",
+      "col": 2,
+      "label": "Approve site baseline",
+      "sublabel": "New tools need approval",
+      "type": "security",
+      "icon": "decision",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/document-project/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "pause",
+      "lane": "scope",
+      "col": 3,
+      "label": "Pause site creation",
+      "sublabel": "No approval, no setup",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/documentation/document-project/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "reader-to-inspect",
+      "from": "reader",
+      "to": "inspect",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "inspect-to-site",
+      "from": "inspect",
+      "to": "site",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "site-to-write",
+      "from": "site",
+      "to": "write",
+      "label": "existing site",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "site-to-baseline",
+      "from": "site",
+      "to": "baseline",
+      "label": "new site",
+      "role": "branch",
+      "variant": "security"
+    },
+    {
+      "id": "baseline-to-write",
+      "from": "baseline",
+      "to": "write",
+      "label": "if approved",
+      "role": "branch",
+      "variant": "security"
+    },
+    {
+      "id": "baseline-to-pause",
+      "from": "baseline",
+      "to": "pause",
+      "label": "not approved",
+      "role": "branch",
+      "variant": "security"
+    },
+    {
+      "id": "write-to-verify",
+      "from": "write",
+      "to": "verify",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "verify-to-write",
+      "from": "verify",
+      "to": "write",
+      "label": "gaps remain",
+      "role": "return",
+      "variant": "default"
+    },
+    {
+      "id": "verify-to-done",
+      "from": "verify",
+      "to": "done",
+      "label": "checks accounted",
+      "role": "main",
+      "variant": "default"
+    }
+  ],
+  "semanticChecks": {
+    "allowedRoots": [
+      "reader"
+    ],
+    "allowedTerminals": [
+      "done",
+      "pause"
+    ],
+    "requiredEdges": [
+      {
+        "from": "site",
+        "to": "baseline"
+      },
+      {
+        "from": "baseline",
+        "to": "write"
+      },
+      {
+        "from": "baseline",
+        "to": "pause"
+      },
+      {
+        "from": "verify",
+        "to": "write"
+      }
+    ]
+  },
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Write for the reader",
+      "items": [
+        "Apply asd-ste100-technical and unslop during writing, not as another delivery pipeline.",
+        "Separate tutorials, task guides, reference, and explanation. Add a diagram only when it helps."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Two distinct checks",
+      "items": [
+        "A passing site build does not prove the instructions or examples work.",
+        "Report agent walkthroughs, executed examples, and actual user testing separately. Deployment needs authority."
+      ]
+    }
+  ]
+}

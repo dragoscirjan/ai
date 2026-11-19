@@ -20,7 +20,9 @@ Before delegating, bound child-agent work, assign read/write lanes, integrate re
 
 **Choose it when:** The operator has authorized bounded specialist, independent-review, or parallel work.
 
-## Try a workflow
+## Related procedures
+
+[Choose an end-to-end workflow](/workflows/) before selecting an individual procedure.
 
 - [Delegate only the work that was authorized](/workflows/delegate-bounded-work) — The operator explicitly asks for specialists, independent review, or parallel work.
 - [Coordinate independent review without writers](/workflows/coordinate-read-only-review) — You want independent assessment but all changes must stay with the parent.

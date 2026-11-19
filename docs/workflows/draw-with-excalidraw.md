@@ -4,6 +4,8 @@ title: "Deliver an editable image diagram"
 
 # Deliver an editable image diagram
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 A reader needs a PNG or SVG, with an editable scene for later changes.
 
 **Finish with:** An image-first delivery with retained scene JSON and the local workflow's checks.
@@ -12,7 +14,7 @@ A reader needs a PNG or SVG, with an editable scene for later changes.
 
 ![Deliver an editable image diagram: suggested skill handoffs with approval stops where applicable.](/diagrams/draw-with-excalidraw.svg)
 
-[Open interactive diagram](/diagrams/draw-with-excalidraw.html) · [Download SVG](/diagrams/draw-with-excalidraw.svg) · [Editable candidate](/diagram-sources/draw-with-excalidraw.json)
+[Open interactive diagram](/diagrams/draw-with-excalidraw.html){class="vp-raw"} · [Download SVG](/diagrams/draw-with-excalidraw.svg) · [Editable candidate](/diagram-sources/draw-with-excalidraw.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

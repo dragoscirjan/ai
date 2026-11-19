@@ -4,6 +4,8 @@ title: "Ask for a clearer explanation"
 
 # Ask for a clearer explanation
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 The last proposal or explanation is unclear, lacks context, or does not use the project's shared vocabulary.
 
 **Finish with:** A re-pitched explanation grounded in the missing context and existing project terminology.
@@ -12,7 +14,7 @@ The last proposal or explanation is unclear, lacks context, or does not use the 
 
 ![Ask for a clearer explanation: suggested skill handoffs with approval stops where applicable.](/diagrams/re-pitch-an-explanation.svg)
 
-[Open interactive diagram](/diagrams/re-pitch-an-explanation.html) · [Download SVG](/diagrams/re-pitch-an-explanation.svg) · [Editable candidate](/diagram-sources/re-pitch-an-explanation.json)
+[Open interactive diagram](/diagrams/re-pitch-an-explanation.html){class="vp-raw"} · [Download SVG](/diagrams/re-pitch-an-explanation.svg) · [Editable candidate](/diagram-sources/re-pitch-an-explanation.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

@@ -19,14 +19,16 @@ You want to audit integrated workspaces, stale registrations, or explicitly auth
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill cleanup-workspaces
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/cleanup-workspaces --skill cleanup-workspaces
 ```
 
 This command selects only `cleanup-workspaces`. It does not install the rest of the collection or the optional companions listed on this page.
 
-Required instruction packages: [`isolated-workspace`](/skills/isolated-workspace#install-this-skill). If missing, install them separately before applying this skill. The command above does not install these requirements.
+Required instruction packages: [`isolated-workspace`](/skills/isolated-workspace#install-this-skill). If any are missing, the agent must stop and ask you to install them before continuing. The command above does not install these requirements.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -55,7 +57,9 @@ Resolve isolated-workspace first. Dirty, uncertain, or unproven lanes remain pro
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Clean only proven, approved workspaces](/workflows/clean-integrated-workspaces)
+
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

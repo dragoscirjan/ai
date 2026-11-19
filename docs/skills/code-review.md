@@ -19,12 +19,14 @@ You want changes since a fixed commit, branch, tag, or merge-base checked agains
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill code-review
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/code-review --skill code-review
 ```
 
 This command selects only `code-review`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,12 +55,10 @@ The workflow needs the harness's authorized subagent capability. A review is not
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Implement a small approved change](/workflows/implement-a-small-change)
-- [Build one behavior slice test-first](/workflows/build-test-first)
-- [Remove complexity without removing requirements](/workflows/simplify-a-design)
-- [Review a fixed diff from two perspectives](/workflows/review-against-standards-and-spec)
-- [Delegate only the work that was authorized](/workflows/delegate-bounded-work)
-- [Coordinate independent review without writers](/workflows/coordinate-read-only-review)
+- [Implement a planned task](/workflows/implement-a-task)
+- [Debloat a project](/workflows/debloat-a-project)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

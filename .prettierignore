@@ -3,7 +3,14 @@ docs/.vitepress/dist/
 docs/public/diagrams/
 docs/diagrams/
 docs/skills/
-docs/workflows/
+# Generated workflow index and focused procedures remain byte-owned by generate.mjs.
+docs/workflows/*.md
+!docs/workflows/plan-a-project.md
+!docs/workflows/implement-a-task.md
+!docs/workflows/debug-a-problem.md
+!docs/workflows/document-a-project.md
+!docs/workflows/debloat-a-project.md
+!docs/workflows/supporting-tools.md
 docs/groups/
 docs/reference/catalog.md
 docs/reference/relationships.md

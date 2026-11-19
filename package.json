@@ -17,9 +17,11 @@
     "test": "node --test .agents/skills/agentic-work/sync-my-skills/scripts/sync-my-skills.test.mjs && bun test ./.agents/skills/utility/isolated-workspace/scripts/create.test.ts ./.agents/skills/utility/cleanup-workspaces/scripts/cleanup.test.ts"
   },
   "devDependencies": {
+    "@catppuccin/vitepress": "0.1.4",
     "@eslint/js": "10.0.1",
     "eslint": "10.15.0",
     "prettier": "3.10.1",
+    "typescript": "5.9.3",
     "vitepress": "1.6.4",
     "vue": "3.5.45",
     "yaml": "2.9.1"

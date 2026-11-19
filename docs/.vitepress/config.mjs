@@ -1,6 +1,6 @@
 import { defineConfig } from "vitepress";
 import { catalog, docsBase, groups } from "../../scripts/docs/data.mjs";
-import { workflows } from "../../scripts/docs/workflows.mjs";
+import { workflowGuides } from "../../scripts/docs/workflows.mjs";
 
 // DOCS_BASE is the only site-specific environment input. Default / supports independent runs.
 // Publish with DOCS_BASE=/projects/ai-skills/. Reject malformed paths rather than silently rewriting them.
@@ -15,6 +15,9 @@ export default defineConfig({
   lastUpdated: false,
   ignoreDeadLinks: false,
   srcExclude: ["public/**", "diagrams/**"],
+  markdown: {
+    theme: { light: "catppuccin-latte", dark: "catppuccin-mocha" },
+  },
   themeConfig: {
     siteTitle: "AI skills",
     nav: [
@@ -32,18 +35,20 @@ export default defineConfig({
           { text: "Your first useful request", link: "/guide/first-use" },
         ],
       },
+      {
+        text: "Project workflows",
+        link: "/workflows/",
+        items: [
+          ...workflowGuides.map((guide) => ({ text: guide.title, link: `/workflows/${guide.id}` })),
+          { text: "Supporting tools and other workflows", link: "/workflows/supporting-tools" },
+        ],
+      },
       ...groups.map((group) => ({
         text: group.title,
         collapsed: true,
         link: `/groups/${group.id}`,
         items: group.skills.map((name) => ({ text: name, link: `/skills/${name}` })),
       })),
-      {
-        text: "Combine skills",
-        collapsed: true,
-        link: "/workflows/",
-        items: workflows.map((recipe) => ({ text: recipe.title, link: `/workflows/${recipe.id}` })),
-      },
       {
         text: "Reference and maintenance",
         collapsed: true,

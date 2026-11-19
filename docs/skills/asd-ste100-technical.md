@@ -19,12 +19,14 @@ Technical instructions or explanations need plain language without losing condit
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill asd-ste100-technical
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/asd-ste100-technical --skill asd-ste100-technical
 ```
 
 This command selects only `asd-ste100-technical`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,13 +55,9 @@ Plain language is not a license to simplify away technical meaning. This is STE-
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Keep a developer task usable](/workflows/maintain-task-based-docs)
-- [Write guidance for an agent reader](/workflows/write-agent-facing-guidance)
-- [Shorten a technical answer without losing meaning](/workflows/shorten-without-loss)
-- [Explain relationships with interactive HTML](/workflows/explain-with-archify)
-- [Deliver an editable image diagram](/workflows/draw-with-excalidraw)
-- [Repair instruction drift through exact approval](/workflows/repair-instruction-routes)
-- [Ask for a clearer explanation](/workflows/re-pitch-an-explanation)
+- [Document a project](/workflows/document-a-project)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

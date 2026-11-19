@@ -4,6 +4,8 @@ title: "Challenge a plan without implementing it"
 
 # Challenge a plan without implementing it
 
+This is a focused procedure. For its place in a larger workflow, see [Plan a project or feature](/workflows/plan-a-project).
+
 A confident proposal may conceal unresolved assumptions or decisions.
 
 **Finish with:** Sharper decisions, unresolved risks, and evidence needed to choose the next step.
@@ -12,7 +14,7 @@ A confident proposal may conceal unresolved assumptions or decisions.
 
 ![Challenge a plan without implementing it: suggested skill handoffs with approval stops where applicable.](/diagrams/challenge-a-design.svg)
 
-[Open interactive diagram](/diagrams/challenge-a-design.html) · [Download SVG](/diagrams/challenge-a-design.svg) · [Editable candidate](/diagram-sources/challenge-a-design.json)
+[Open interactive diagram](/diagrams/challenge-a-design.html){class="vp-raw"} · [Download SVG](/diagrams/challenge-a-design.svg) · [Editable candidate](/diagram-sources/challenge-a-design.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

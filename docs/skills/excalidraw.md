@@ -19,12 +19,14 @@ You want an editable Excalidraw scene with a PNG or SVG for a project structure,
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill excalidraw
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/excalidraw --skill excalidraw
 ```
 
 This command selects only `excalidraw`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,8 +55,9 @@ The local rendering toolchain is a separate setup requirement. Do not deliver on
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Keep a developer task usable](/workflows/maintain-task-based-docs)
-- [Deliver an editable image diagram](/workflows/draw-with-excalidraw)
+- [Document a project](/workflows/document-a-project)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

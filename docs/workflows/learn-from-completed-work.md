@@ -4,6 +4,8 @@ title: "Turn a completed issue into a small improvement"
 
 # Turn a completed issue into a small improvement
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 A bounded work period has enough evidence to examine the process.
 
 **Finish with:** A few actionable improvements, with follow-up authority separated from the retrospective.
@@ -12,7 +14,7 @@ A bounded work period has enough evidence to examine the process.
 
 ![Turn a completed issue into a small improvement: suggested skill handoffs with approval stops where applicable.](/diagrams/learn-from-completed-work.svg)
 
-[Open interactive diagram](/diagrams/learn-from-completed-work.html) · [Download SVG](/diagrams/learn-from-completed-work.svg) · [Editable candidate](/diagram-sources/learn-from-completed-work.json)
+[Open interactive diagram](/diagrams/learn-from-completed-work.html){class="vp-raw"} · [Download SVG](/diagrams/learn-from-completed-work.svg) · [Editable candidate](/diagram-sources/learn-from-completed-work.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

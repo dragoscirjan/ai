@@ -1,0 +1,319 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Plan a project or feature",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/plan-a-project.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "a6e3f4348fb13fdad5011909f7a2f3a3a24cdb14",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Guided work"
+        },
+        "security": {
+          "label": "Decision or approval"
+        },
+        "external": {
+          "label": "Input or handoff"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "inputs",
+      "label": "Starting context"
+    },
+    {
+      "id": "work",
+      "label": "Planning work"
+    }
+  ],
+  "mainPath": [
+    "research",
+    "initiative",
+    "specify",
+    "tasks",
+    "ready"
+  ],
+  "nodes": [
+    {
+      "id": "facts",
+      "lane": "inputs",
+      "col": 0,
+      "label": "Missing facts",
+      "sublabel": "Investigate first",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/research/SKILL.md",
+          "line": 1,
+          "end_line": 35,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "idea",
+      "lane": "inputs",
+      "col": 1,
+      "label": "Idea or problem",
+      "sublabel": "Clarify the outcome",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/initiative/SKILL.md",
+          "line": 1,
+          "end_line": 33,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "direction",
+      "lane": "inputs",
+      "col": 2,
+      "label": "Agreed direction",
+      "sublabel": "Behavior still open",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/specify/SKILL.md",
+          "line": 1,
+          "end_line": 35,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "scope",
+      "lane": "inputs",
+      "col": 3,
+      "label": "Clear scope",
+      "sublabel": "Divide the work",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/plan-tasks/SKILL.md",
+          "line": 1,
+          "end_line": 28,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "research",
+      "lane": "work",
+      "col": 0,
+      "label": "/research",
+      "sublabel": "Evidence and limits",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/research/SKILL.md",
+          "line": 1,
+          "end_line": 35,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "initiative",
+      "lane": "work",
+      "col": 1,
+      "label": "/initiative",
+      "sublabel": "Outcomes and constraints",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/initiative/SKILL.md",
+          "line": 1,
+          "end_line": 33,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "specify",
+      "lane": "work",
+      "col": 2,
+      "label": "/specify",
+      "sublabel": "Observable correctness",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/specify/SKILL.md",
+          "line": 1,
+          "end_line": 35,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "tasks",
+      "lane": "work",
+      "col": 3,
+      "label": "/plan-tasks",
+      "sublabel": "Dependencies and checks",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/plan-tasks/SKILL.md",
+          "line": 1,
+          "end_line": 28,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "ready",
+      "lane": "work",
+      "col": 4,
+      "label": "Ready task plan",
+      "sublabel": "Stop before execution",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/plan-tasks/SKILL.md",
+          "line": 1,
+          "end_line": 28,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "facts-to-research",
+      "from": "facts",
+      "to": "research",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "idea-to-initiative",
+      "from": "idea",
+      "to": "initiative",
+      "label": "start here",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "direction-to-specify",
+      "from": "direction",
+      "to": "specify",
+      "label": "start here",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "scope-to-tasks",
+      "from": "scope",
+      "to": "tasks",
+      "label": "start here",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "research-to-initiative",
+      "from": "research",
+      "to": "initiative",
+      "label": "if requested",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "initiative-to-specify",
+      "from": "initiative",
+      "to": "specify",
+      "label": "if requested",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "specify-to-tasks",
+      "from": "specify",
+      "to": "tasks",
+      "label": "if requested",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "tasks-to-ready",
+      "from": "tasks",
+      "to": "ready",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "specify-to-initiative",
+      "from": "specify",
+      "to": "initiative",
+      "label": "scope changed",
+      "role": "return",
+      "variant": "security"
+    },
+    {
+      "id": "tasks-to-specify",
+      "from": "tasks",
+      "to": "specify",
+      "label": "criteria missing",
+      "role": "return",
+      "variant": "default"
+    }
+  ],
+  "semanticChecks": {
+    "allowedRoots": [
+      "facts",
+      "idea",
+      "direction",
+      "scope"
+    ],
+    "allowedTerminals": [
+      "ready"
+    ],
+    "requiredEdges": [
+      {
+        "from": "specify",
+        "to": "initiative"
+      },
+      {
+        "from": "tasks",
+        "to": "specify"
+      }
+    ]
+  },
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Enter where needed",
+      "items": [
+        "Use existing agreements. Research is optional when facts are already known.",
+        "Any stage can stop at its requested result; arrows do not authorize the next phase."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Clarification is contextual",
+      "items": [
+        "Research, initiative, and specify currently require the grilling instructions.",
+        "Ask only about unresolved decisions. Do not turn the interview into another delivery stage."
+      ]
+    }
+  ]
+}

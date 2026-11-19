@@ -59,7 +59,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, asd-ste100-technical ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/asd-ste100-technical, --skill, asd-ste100-technical ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -78,7 +78,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, caveman ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/caveman, --skill, caveman ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -98,7 +98,7 @@ skills:
       - Requires Bun and either Git with worktree support or Jujutsu 0.38 or newer with workspace support.
     signals: {}
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, cleanup-workspaces ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/cleanup-workspaces, --skill, cleanup-workspaces ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -128,7 +128,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, code-review ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/code-review, --skill, code-review ]
     adaptation:
       instructions: Preserve separate Standards and Spec reviews, read-only parallel reviewers, immutable Git endpoints, safe
         revision arguments, and the chosen comparison semantics. Reviewers must not mutate, publish, or delegate. Do not
@@ -169,7 +169,7 @@ skills:
         - .tsx
         - .zig
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, coding ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/coding, --skill, coding ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -187,7 +187,7 @@ skills:
     prerequisites: [ coding ]
     signals: {}
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, coding-with-rules ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/coding-with-rules, --skill, coding-with-rules ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -206,7 +206,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, debloat ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/debloat, --skill, debloat ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -253,7 +253,7 @@ skills:
     prerequisites: []
     signals: {}
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, document-project ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/document-project, --skill, document-project ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -272,7 +272,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, excalidraw]
+      argv: [npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/excalidraw, --skill, excalidraw]
     runtime:
       - "Requires Node.js 22 or newer, the official @excalidraw/cli 0.3.0 package, and an installed Chrome, Chromium, Edge, or Firefox."
     legal:
@@ -297,7 +297,7 @@ skills:
     prerequisites: [ grilling ]
     signals: {}
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, grill-me ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/grill-me, --skill, grill-me ]
     adaptation:
       instructions: Keep the maintained interview wrapper and its grilling prerequisite. Replace harness-specific Skill-tool
         calls with portable entry instructions. Do not add provider/model configuration.
@@ -332,7 +332,7 @@ skills:
         - .mts
         - .cts
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, init-project ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/init-project, --skill, init-project ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -351,7 +351,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, initiative ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/initiative, --skill, initiative ]
   instruction-maintenance:
     kind: authored
     description: "Audit instruction drift, routing, and skill metadata; propose exact changes for human approval before mutation."
@@ -365,7 +365,7 @@ skills:
     prerequisites: []
     signals: {}
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, instruction-maintenance ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/unpolished/instruction-maintenance, --skill, instruction-maintenance ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -385,7 +385,7 @@ skills:
       - Requires Bun and either Git with worktree support or Jujutsu 0.38 or newer with workspace support.
     signals: {}
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, isolated-workspace ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/isolated-workspace, --skill, isolated-workspace ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -404,7 +404,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, plan-tasks ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/plan-tasks, --skill, plan-tasks ]
   research:
     kind: authored
     description: "Research a question, compare alternatives, or investigate feasibility; report verified evidence, uncertainty, and limits."
@@ -419,7 +419,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, research ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/research, --skill, research ]
   retro:
     kind: authored
     description: "Review a bounded work period for evidence-backed process improvements, including workflow, instructions, tools, and handoffs."
@@ -434,7 +434,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, retro ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/retro, --skill, retro ]
   scaffold:
     kind: authored
     description: "Create source skeletons for an approved feature, validate their structure, and stop before implementing behavior."
@@ -449,7 +449,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, scaffold ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/scaffold, --skill, scaffold ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -468,7 +468,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, specify ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/specify, --skill, specify ]
   subagent-orchestration:
     kind: authored
     description: "Before delegating, bound child-agent work, assign read/write lanes, integrate results, review, validate, and clean temporary lanes."
@@ -485,7 +485,7 @@ skills:
         and exact-lane cleanup procedures.
     signals: {}
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, subagent-orchestration ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/unpolished/subagent-orchestration, --skill, subagent-orchestration ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -507,7 +507,7 @@ skills:
         Target writes require an isolated Git worktree.
     signals: {}
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, sync-my-skills, --global ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-skills, --skill, sync-my-skills, --global ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -533,7 +533,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, systematic-debugging ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/systematic-debugging, --skill, systematic-debugging ]
     legal:
       - path: LICENSE
         target: LICENSE
@@ -567,7 +567,7 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, tdd ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/tdd, --skill, tdd ]
     adaptation:
       instructions: Keep the maintained testing workflow, behavior-focused examples, module responsibilities and public test
         seams. Replace mandatory codebase-design/Skill-tool coupling with self-contained guidance. Preserve the
@@ -655,7 +655,7 @@ skills:
     prerequisites: []
     signals: {}
     install:
-      argv: [ npx, -y, skills@1.7.4, add, dragoscirjan/ai, --skill, writing-for-agents ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/writing-for-agents, --skill, writing-for-agents ]
     legal:
       - path: .agents/skills/agentic-work/writing-for-agents/LICENSE
         target: LICENSE

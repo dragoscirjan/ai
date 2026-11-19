@@ -31,10 +31,10 @@ Pass an absolute target root. The default is a non-mutating plan; application re
 Manual installation needs just one asset:
 
 ```sh
-npx skills@1.7.4 add dragoscirjan/ai --skill init-project --agent pi --agent opencode --agent claude-code
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/init-project --skill init-project --agent pi --agent opencode --agent claude-code
 ```
 
-Managed synchronization includes the complete directory and treats initialization as an approval-bound choice, not automatic core setup. Claude Code uses the exact relative projection; reload the harness after installation.
+Install the complete skill directory, including its helpers. Initialization is an approval-bound choice, not automatic setup. Claude Code uses the exact relative projection; reload the harness after installation.
 
 ## Migration and verification
 

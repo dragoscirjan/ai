@@ -4,6 +4,8 @@ title: "Move a change out of the primary checkout"
 
 # Move a change out of the primary checkout
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 The requested work will mutate a repository.
 
 **Finish with:** A named, owned change workspace at a reviewed base revision.
@@ -12,7 +14,7 @@ The requested work will mutate a repository.
 
 ![Move a change out of the primary checkout: suggested skill handoffs with approval stops where applicable.](/diagrams/protect-a-change.svg)
 
-[Open interactive diagram](/diagrams/protect-a-change.html) · [Download SVG](/diagrams/protect-a-change.svg) · [Editable candidate](/diagram-sources/protect-a-change.json)
+[Open interactive diagram](/diagrams/protect-a-change.html){class="vp-raw"} · [Download SVG](/diagrams/protect-a-change.svg) · [Editable candidate](/diagram-sources/protect-a-change.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

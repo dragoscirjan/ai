@@ -19,12 +19,14 @@ A repository change needs a separate Git worktree or Jujutsu workspace instead o
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/isolated-workspace --skill isolated-workspace
 ```
 
 This command selects only `isolated-workspace`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,15 +55,10 @@ Do not reset, stash, force, remove another workspace, or silently reuse someone 
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Install a reviewed skill selection](/workflows/install-selected-skills)
-- [Initialize only the foundation you need](/workflows/initialize-a-project)
-- [Move a change out of the primary checkout](/workflows/protect-a-change)
-- [Implement a small approved change](/workflows/implement-a-small-change)
-- [Build one behavior slice test-first](/workflows/build-test-first)
-- [Create a skeleton and stop](/workflows/scaffold-without-implementation)
-- [Remove complexity without removing requirements](/workflows/simplify-a-design)
-- [Delegate only the work that was authorized](/workflows/delegate-bounded-work)
-- [Repair instruction drift through exact approval](/workflows/repair-instruction-routes)
+- [Implement a planned task](/workflows/implement-a-task)
+- [Debloat a project](/workflows/debloat-a-project)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

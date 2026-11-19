@@ -1,0 +1,354 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Implement a planned task",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "output": ".docs-artifacts/archify/implement-a-task.html",
+    "repository": {
+      "url": "git@github.com:dragoscirjan/ai.git",
+      "revision": "a6e3f4348fb13fdad5011909f7a2f3a3a24cdb14",
+      "link_mode": "local-only"
+    },
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Guided work"
+        },
+        "security": {
+          "label": "Decision or approval"
+        },
+        "external": {
+          "label": "Input or handoff"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "structure",
+      "label": "Optional structure handoff"
+    },
+    {
+      "id": "work",
+      "label": "Implementation and checks"
+    },
+    {
+      "id": "options",
+      "label": "Selected tests and review"
+    }
+  ],
+  "mainPath": [
+    "task",
+    "coding",
+    "checks",
+    "done"
+  ],
+  "nodes": [
+    {
+      "id": "task",
+      "lane": "work",
+      "col": 0,
+      "label": "Agreed task",
+      "sublabel": "Acceptance criteria",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/plan-tasks/SKILL.md",
+          "line": 1,
+          "end_line": 28,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "scaffold",
+      "lane": "structure",
+      "col": 0,
+      "label": "/scaffold",
+      "sublabel": "Only if structure needs review",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/scaffold/SKILL.md",
+          "line": 1,
+          "end_line": 55,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "handoff",
+      "lane": "structure",
+      "col": 1,
+      "label": "STOP: skeleton",
+      "sublabel": "New instruction to implement",
+      "type": "security",
+      "icon": "decision",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/scaffold/SKILL.md",
+          "line": 1,
+          "end_line": 55,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "coding",
+      "lane": "work",
+      "col": 2,
+      "label": "/coding-with-rules",
+      "sublabel": "Implement one behavior",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/coding-with-rules/SKILL.md",
+          "line": 1,
+          "end_line": 53,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "checks",
+      "lane": "work",
+      "col": 3,
+      "label": "Verify the task",
+      "sublabel": "Tests, diff, and affected docs",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/coding/SKILL.md",
+          "line": 1,
+          "end_line": 88,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "done",
+      "lane": "work",
+      "col": 5,
+      "label": "Task accounted for",
+      "sublabel": "Evidence and remaining gaps",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/coding/SKILL.md",
+          "line": 1,
+          "end_line": 88,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "tdd",
+      "lane": "options",
+      "col": 2,
+      "label": "/tdd",
+      "sublabel": "Observe one red test",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/tdd/SKILL.md",
+          "line": 1,
+          "end_line": 23,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "lane": "options",
+      "col": 4,
+      "label": "/code-review",
+      "sublabel": "Fixed snapshots; two axes",
+      "type": "backend",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/coding/code-review/SKILL.md",
+          "line": 1,
+          "end_line": 91,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "planning",
+      "lane": "options",
+      "col": 0,
+      "label": "Return to planning",
+      "sublabel": "Agree changed requirements",
+      "type": "external",
+      "icon": "none",
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/specify/SKILL.md",
+          "line": 1,
+          "end_line": 35,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "task-to-coding",
+      "from": "task",
+      "to": "coding",
+      "label": "structure ready",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "task-to-scaffold",
+      "from": "task",
+      "to": "scaffold",
+      "label": "need skeleton",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "scaffold-to-handoff",
+      "from": "scaffold",
+      "to": "handoff",
+      "label": "handoff",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "handoff-to-coding",
+      "from": "handoff",
+      "to": "coding",
+      "label": "new instruction",
+      "role": "branch",
+      "variant": "security"
+    },
+    {
+      "id": "task-to-tdd",
+      "from": "task",
+      "to": "tdd",
+      "label": "test-first selected",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "tdd-to-coding",
+      "from": "tdd",
+      "to": "coding",
+      "label": "red observed",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "coding-to-tdd",
+      "from": "coding",
+      "to": "tdd",
+      "label": "next slice",
+      "role": "return",
+      "variant": "default"
+    },
+    {
+      "id": "coding-to-checks",
+      "from": "coding",
+      "to": "checks",
+      "label": "check behavior",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "checks-to-done",
+      "from": "checks",
+      "to": "done",
+      "label": "checks accounted",
+      "role": "main",
+      "variant": "default"
+    },
+    {
+      "id": "checks-to-review",
+      "from": "checks",
+      "to": "review",
+      "label": "if requested",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "review-to-done",
+      "from": "review",
+      "to": "done",
+      "label": "findings handled",
+      "role": "branch",
+      "variant": "default"
+    },
+    {
+      "id": "review-to-coding",
+      "from": "review",
+      "to": "coding",
+      "label": "corrections",
+      "role": "return",
+      "variant": "default"
+    },
+    {
+      "id": "review-to-planning",
+      "from": "review",
+      "to": "planning",
+      "label": "scope changed",
+      "role": "return",
+      "variant": "security"
+    }
+  ],
+  "semanticChecks": {
+    "allowedRoots": [
+      "task"
+    ],
+    "allowedTerminals": [
+      "done",
+      "planning"
+    ],
+    "requiredEdges": [
+      {
+        "from": "handoff",
+        "to": "coding"
+      },
+      {
+        "from": "coding",
+        "to": "tdd"
+      },
+      {
+        "from": "review",
+        "to": "coding"
+      },
+      {
+        "from": "review",
+        "to": "planning"
+      }
+    ]
+  },
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Guidance stays active",
+      "items": [
+        "Coding rules apply to source work throughout, including TDD and corrections.",
+        "TDD repeats one red/green slice. The local skill puts refactoring in the review stage."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Review is not release",
+      "items": [
+        "Independent review needs Git snapshots, authorized read-only reviewers, and capacity.",
+        "Scaffold handoff stops before behavior. No task or review grants merge or release authority."
+      ]
+    }
+  ]
+}

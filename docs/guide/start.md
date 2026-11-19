@@ -2,18 +2,13 @@
 
 Pick the task you have now. You do not need to run every skill or complete a fixed lifecycle.
 
-| Your situation                                                | Start with                                           | Finish with                                                  |
-| ------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------ |
-| You want the right guidance installed in an existing project. | [Individual installation](/guide/install)            | An approved selection and verified project setup.            |
-| You need facts to make a decision.                            | [research](/skills/research)                         | Evidence, alternatives, and explicit uncertainty.            |
-| You have an idea but not an agreed problem or outcome.        | [initiative](/skills/initiative)                     | An outcome-level brief.                                      |
-| The direction is agreed but behavior is ambiguous.            | [specify](/skills/specify)                           | Observable behavior and acceptance criteria.                 |
-| The scope is clear but too large for one task.                | [plan-tasks](/skills/plan-tasks)                     | Bounded tasks with completion evidence.                      |
-| A small source change is already approved.                    | [coding-with-rules](/skills/coding-with-rules)       | A checked implementation under the project rules.            |
-| Something fails and you do not know why.                      | [systematic-debugging](/skills/systematic-debugging) | A supported root-cause diagnosis before a guessed fix.       |
-| A developer cannot complete a documented task.                | [document-project](/skills/document-project)         | A usable procedure with expected results.                    |
-| You need to explain relationships visually.                   | [Documentation and diagrams](/groups/documentation)  | Interactive HTML or an editable image, as the reader needs.  |
-| You want review, cleanup, or process improvement.             | [Individual skill reference](/skills/)               | Findings or a proposed plan before owner-controlled changes. |
+- [Plan a project or feature](/workflows/plan-a-project) when requirements, outcomes, or limitations are unsettled. Finish with agreed scope and verifiable tasks, or the requested earlier planning result.
+- [Implement a planned task](/workflows/implement-a-task) when a task is defined and approved. Finish with tested behavior, documentation impact, and review evidence.
+- [Debug an application problem](/workflows/debug-a-problem) when behavior is incorrect. Finish with an evidence-backed cause and verified fix, or a precise blocker.
+- [Document a project](/workflows/document-a-project) when a project needs a usable documentation website. Finish with checked reader tasks, examples, reference, and navigation.
+- [Debloat a project](/workflows/debloat-a-project) when existing complexity needs to justify its cost. Finish with safe reductions or evidence for keeping the current design.
+
+Need skills installed first? Use [installation choices](/guide/install). Need one skill rather than a full journey? Use the [skill reference](/skills/). Workspace safeguards, independent review, retrospectives, and diagrams are in [supporting tools](/workflows/supporting-tools).
 
 ## Start small
 
@@ -23,7 +18,7 @@ Pick the task you have now. You do not need to run every skill or complete a fix
 4. Make one bounded request and verify that the harness loaded the intended guidance.
 5. Stop at the requested result. Decide separately whether another phase is useful.
 
-The [first-use exercise](/guide/first-use) gives you a read-only starting request. The [workflow gallery](/workflows/) shows broader combinations with diagrams and explicit stopping points.
+The [first-use exercise](/guide/first-use) gives you a read-only starting request. The [project workflows](/workflows/) explain skill handoffs, optional branches, correction loops, and explicit stopping points.
 
 ## If you are maintaining the collection
 

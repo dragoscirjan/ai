@@ -4,6 +4,8 @@ title: "Divide agreed scope into verifiable tasks"
 
 # Divide agreed scope into verifiable tasks
 
+This is a focused procedure. For its place in a larger workflow, see [Plan a project or feature](/workflows/plan-a-project).
+
 The work is understood but too large to execute as one unbounded change.
 
 **Finish with:** Tasks with completion evidence, genuine dependencies, and an explicit execution boundary.
@@ -12,7 +14,7 @@ The work is understood but too large to execute as one unbounded change.
 
 ![Divide agreed scope into verifiable tasks: suggested skill handoffs with approval stops where applicable.](/diagrams/plan-bounded-tasks.svg)
 
-[Open interactive diagram](/diagrams/plan-bounded-tasks.html) · [Download SVG](/diagrams/plan-bounded-tasks.svg) · [Editable candidate](/diagram-sources/plan-bounded-tasks.json)
+[Open interactive diagram](/diagrams/plan-bounded-tasks.html){class="vp-raw"} · [Download SVG](/diagrams/plan-bounded-tasks.svg) · [Editable candidate](/diagram-sources/plan-bounded-tasks.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

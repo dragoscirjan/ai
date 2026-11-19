@@ -4,6 +4,8 @@ title: "Keep a developer task usable"
 
 # Keep a developer task usable
 
+This is a focused procedure. For its place in a larger workflow, see [Document a project](/workflows/document-a-project).
+
 Implementation changed first use, configuration, behavior, or maintenance instructions.
 
 **Finish with:** A checked procedure with prerequisites, actions, expected results, and recovery guidance.
@@ -12,7 +14,7 @@ Implementation changed first use, configuration, behavior, or maintenance instru
 
 ![Keep a developer task usable: suggested skill handoffs with approval stops where applicable.](/diagrams/maintain-task-based-docs.svg)
 
-[Open interactive diagram](/diagrams/maintain-task-based-docs.html) · [Download SVG](/diagrams/maintain-task-based-docs.svg) · [Editable candidate](/diagram-sources/maintain-task-based-docs.json)
+[Open interactive diagram](/diagrams/maintain-task-based-docs.html){class="vp-raw"} · [Download SVG](/diagrams/maintain-task-based-docs.svg) · [Editable candidate](/diagram-sources/maintain-task-based-docs.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

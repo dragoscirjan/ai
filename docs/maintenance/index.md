@@ -54,6 +54,16 @@ DOCS_BASE=/projects/ai-skills/ mise run docs:preview
 
 `DOCS_BASE` accepts `/` or slash-delimited path segments made from letters, digits, underscores, and hyphens. It must end in `/`. URLs, traversal, empty segments, query strings, fragments, and encoded separators are rejected. Its implementation is beside the configuration in `scripts/docs/data.mjs` and `docs/.vitepress/config.mjs`.
 
+## Theme and syntax highlighting
+
+The site uses [Catppuccin for VitePress](https://github.com/catppuccin/vitepress) with Latte in light mode, Mocha in dark mode, and a mauve accent. The color-mode switch controls both the site palette and code highlighting.
+
+`docs/.vitepress/theme/index.mjs` imports the official `mocha/mauve.css` stylesheet, which includes Latte. Keep font, layout, image, and reduced-motion rules in `custom.css`; do not restore the old gold palette over the theme. The matching Shiki themes are configured in `docs/.vitepress/config.mjs`.
+
+The theme is pinned to `@catppuccin/vitepress@0.1.4`. TypeScript `5.9.3` is pinned because the theme declares it as a peer dependency. The site configuration remains JavaScript. Frozen setup installs both through the existing lockfile. Dependency changes still require approval, audit, and site checks.
+
+The dependency notice download preserves the theme's MIT license and TypeScript's Apache-2.0 license. Archify HTML and SVG files retain their renderer-owned themes; the VitePress palette does not rewrite those artifacts.
+
 ## Change content at its source
 
 | Content                                                                         | Edit here                                                                                                            |
@@ -61,12 +71,17 @@ DOCS_BASE=/projects/ai-skills/ mise run docs:preview
 | Names, sources, selection defaults, prerequisites, runtime notes, legal records | `.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml`, through its applicable skill-change process. |
 | Reader-oriented groups                                                          | `scripts/docs/data.mjs`                                                                                              |
 | Per-skill guidance and sample prompts                                           | `scripts/docs/skill-notes.mjs`                                                                                       |
-| Supported recipes, steps, optional branches, stopping points                    | `scripts/docs/workflows.mjs`                                                                                         |
+| Primary workflow titles and related procedure IDs; focused recipe data          | `scripts/docs/workflows.mjs`                                                                                         |
+| Five end-to-end workflow guides and supporting tools                            | The authored `docs/workflows/` pages listed below                                                                    |
 | Diagram layout and source citations                                             | `scripts/docs/diagram-specs.mjs`                                                                                     |
 | Start, installation, first-use, and maintenance procedures                      | Their Markdown files under `docs/`                                                                                   |
 | Navigation and theme                                                            | `docs/.vitepress/`                                                                                                   |
 
-The generator owns `docs/skills/`, `docs/groups/`, `docs/workflows/`, and the catalog/relationship reference pages. Do not hand-edit those generated pages or treat them as another inventory. After changing their sources:
+The generator owns `docs/skills/`, `docs/groups/`, the workflow index and focused recipe pages, and the catalog/relationship reference pages. Do not hand-edit those generated pages or treat them as another inventory.
+
+The five primary guides are authored Markdown: `docs/workflows/plan-a-project.md`, `implement-a-task.md`, `debug-a-problem.md`, `document-a-project.md`, and `debloat-a-project.md`. The authored `docs/workflows/supporting-tools.md` covers safeguards and additional workflows. Edit these pages directly; generation preserves them. Their Archify diagrams are generated from `scripts/docs/workflow-guide-diagrams.mjs` through the same native gates as the focused recipes. The guides retain a folded text alternative. See [diagram regeneration](/maintenance/diagrams) before changing diagram definitions.
+
+Keep the focused recipe URLs and their checked-in diagrams available for existing links. The primary navigation leads to the five guides instead of listing every recipe. After changing generator sources:
 
 ```sh
 mise exec -- node scripts/docs/generate.mjs
@@ -93,7 +108,7 @@ mise exec -- node scripts/docs/browser-check.mjs preview
 mise exec -- node scripts/docs/browser-check.mjs dev
 ```
 
-Rebuild with the hosted base, then run the same two commands with `DOCS_BASE=/projects/ai-skills/`. They check desktop/mobile containment, page images, local search, navigation, and legal downloads. Inspect the captures before claiming visual review.
+Rebuild with the hosted base, then run the same two commands with `DOCS_BASE=/projects/ai-skills/`. They check desktop/mobile containment, page images, local search, real interactive-diagram navigation, and legal downloads. They also use the visible color-mode switch to verify Latte/Mocha colors, matching code themes, and preference persistence. Inspect the captures before claiming visual review.
 
 Also inspect the diagrams, review external links, and run `git diff --check`. Formatting and linting cover the new site/tooling, not unrelated skills or templates. Machine-owned lockfiles, native diagrams, legal text, and generated pages are not reformatted as authored prose. Mise parses the TOML configuration; no TOML formatter plugin is installed.
 

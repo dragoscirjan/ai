@@ -22,7 +22,9 @@ Load only the instructions required for the current phase. When several rows mat
 
 Stop before the gated phase if a required document or skill is unavailable. Do not recreate missing instructions from memory.
 
-Use skill frontmatter descriptions to select task-specific skills; do not preload every skill. Before applying a selected skill, inspect its frontmatter and resolve its `requires` skills recursively in array order, then apply the selected skill. Names may resolve to local skills or installed external skills registered in `.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml`. A catalog entry identifies a source; it does not count as an installed requirement or authorize fetching it. Stop on missing requirements or cycles and request approved setup; do not install implicitly. Requirements load instructions, not authority to act. The declaration format is defined in `CONTRIBUTING.md`.
+Use skill frontmatter descriptions to select task-specific skills; do not preload every skill. Before applying a selected skill, inspect its frontmatter and resolve its `requires` skills recursively in array order, then apply the selected skill. Names may resolve to local skills or installed external skills registered in `.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml`. A catalog entry identifies a source; it does not count as an installed requirement or authorize fetching it. Stop on cycles. If a selected skill or one of its declared requirements is not installed, stop the task. List the missing skills and ask the user to install them. Do not fetch, install, synchronize, substitute, or continue without those instructions. Resume only after the user confirms installation and availability is verified. Requirements load instructions, not authority to act. The declaration format is defined in `CONTRIBUTING.md`.
+
+Do not add `sync-my-skills` as another skill's prerequisite, companion, handoff, or recovery step. Load or run it only when the user explicitly requests it. The catalog's storage location does not create a skill dependency.
 
 ## Skill discovery
 
@@ -45,7 +47,7 @@ Workspace configuration:
 - Branch or bookmark name: pass the full name explicitly and use the `change/` prefix
 - Skill source: `.agents/skills/utility/isolated-workspace/SKILL.md` in the repository origin
 
-The skill is mandatory before mutation. If it is unavailable, stop. With owner approval, install it using `npx -y skills@1.7.4 add dragoscirjan/ai --skill isolated-workspace`, then reload the harness. Do not install it without approval, use an inline fallback, or recreate its workflow from memory.
+The skill is mandatory before mutation. If it is unavailable, stop and ask the user to install it using `npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/isolated-workspace --skill isolated-workspace`. Resume only after the user confirms installation, availability is verified, and the harness is reloaded. Do not use an inline fallback or recreate its workflow from memory.
 
 Every final repository-work report, including blocked or partial-work handoffs, must state the active branch or bookmark and absolute workspace path. If no isolated workspace was created, state that explicitly.
 

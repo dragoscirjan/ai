@@ -4,6 +4,8 @@ title: "Agree on behavior before task execution"
 
 # Agree on behavior before task execution
 
+This is a focused procedure. For its place in a larger workflow, see [Plan a project or feature](/workflows/plan-a-project).
+
 An agreed direction still leaves observable behavior or acceptance criteria open.
 
 **Finish with:** A compact specification with testable criteria and explicit exclusions.
@@ -12,7 +14,7 @@ An agreed direction still leaves observable behavior or acceptance criteria open
 
 ![Agree on behavior before task execution: suggested skill handoffs with approval stops where applicable.](/diagrams/specify-observable-behavior.svg)
 
-[Open interactive diagram](/diagrams/specify-observable-behavior.html) · [Download SVG](/diagrams/specify-observable-behavior.svg) · [Editable candidate](/diagram-sources/specify-observable-behavior.json)
+[Open interactive diagram](/diagrams/specify-observable-behavior.html){class="vp-raw"} · [Download SVG](/diagrams/specify-observable-behavior.svg) · [Editable candidate](/diagram-sources/specify-observable-behavior.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

@@ -19,12 +19,14 @@ You explicitly want test-first feature or bug work, or integration-test slices t
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill tdd
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/tdd --skill tdd
 ```
 
 This command selects only `tdd`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,11 +55,11 @@ Confirm the public seams with the user before writing tests. Do not write a larg
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Agree on behavior before task execution](/workflows/specify-observable-behavior)
-- [Implement a small approved change](/workflows/implement-a-small-change)
-- [Build one behavior slice test-first](/workflows/build-test-first)
-- [Find the root cause before proposing a fix](/workflows/diagnose-a-failure)
-- [Create a skeleton and stop](/workflows/scaffold-without-implementation)
+- [Plan a project or feature](/workflows/plan-a-project)
+- [Implement a planned task](/workflows/implement-a-task)
+- [Debug an application problem](/workflows/debug-a-problem)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

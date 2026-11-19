@@ -26,7 +26,9 @@ Audit integrated Git/Jujutsu workspaces, stale registrations, or authorized temp
 
 **Choose it when:** You want to audit integrated workspaces, stale registrations, or explicitly authorized temporary lanes.
 
-## Try a workflow
+## Related procedures
+
+[Choose an end-to-end workflow](/workflows/) before selecting an individual procedure.
 
 - [Initialize only the foundation you need](/workflows/initialize-a-project) — You explicitly want a supported project foundation or tooling adoption.
 - [Move a change out of the primary checkout](/workflows/protect-a-change) — The requested work will mutate a repository.

@@ -19,12 +19,14 @@ You are designing, implementing, refactoring, reviewing, or testing source code 
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill coding
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/coding --skill coding
 ```
 
 This command selects only `coding`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -53,7 +55,9 @@ Tool installation, baseline changes, unsafe scope expansion, and owner-controlle
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Implement a small approved change](/workflows/implement-a-small-change)
+- [Implement a planned task](/workflows/implement-a-task)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

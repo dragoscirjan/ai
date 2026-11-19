@@ -4,6 +4,8 @@ title: "Initialize only the foundation you need"
 
 # Initialize only the foundation you need
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 You explicitly want a supported project foundation or tooling adoption.
 
 **Finish with:** A checked baseline with setup instructions, without unrelated application machinery.
@@ -12,7 +14,7 @@ You explicitly want a supported project foundation or tooling adoption.
 
 ![Initialize only the foundation you need: suggested skill handoffs with approval stops where applicable.](/diagrams/initialize-a-project.svg)
 
-[Open interactive diagram](/diagrams/initialize-a-project.html) · [Download SVG](/diagrams/initialize-a-project.svg) · [Editable candidate](/diagram-sources/initialize-a-project.json)
+[Open interactive diagram](/diagrams/initialize-a-project.html){class="vp-raw"} · [Download SVG](/diagrams/initialize-a-project.svg) · [Editable candidate](/diagram-sources/initialize-a-project.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

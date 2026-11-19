@@ -44,7 +44,9 @@ Generate validated interactive HTML diagrams or one-page explainers with Archify
 
 **Choose it when:** You need an explorable standalone HTML diagram for relationships, workflows, states, schemas, or other supported structures.
 
-## Try a workflow
+## Related procedures
+
+[Choose an end-to-end workflow](/workflows/) before selecting an individual procedure.
 
 - [Keep a developer task usable](/workflows/maintain-task-based-docs) — Implementation changed first use, configuration, behavior, or maintenance instructions.
 - [Shorten a technical answer without losing meaning](/workflows/shorten-without-loss) — A useful answer is buried under repetition or generic framing.

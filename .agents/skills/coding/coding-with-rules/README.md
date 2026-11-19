@@ -13,7 +13,7 @@ The 21 references contain only language/extension semantics, language-specific s
 
 The generic [`coding`](../coding/SKILL.md) skill owns the shared workflow, security baseline, test and quality-gate procedure, duplicate-detector fallback, tool-installation approval, and result reporting. The references adapt the former language rules to that shared workflow rather than copying whole skill bodies. `coding` remains independently useful.
 
-`requires` is a project convention, not a native harness loader. Project instructions resolve it; external Skills CLI commands do not install it automatically. `/sync-my-skills` offers the router when relevant or selected and includes `coding` through prerequisite closure. It does not impose a coding profile on every project. Complete installation includes every reference, but the model reads only applicable files.
+`requires` is a project convention, not a native harness loader. Project instructions resolve it; external Skills CLI commands do not install it automatically. `coding-with-rules` needs the installed `coding` instructions, not a selection manager. If either is missing, stop and ask the user to install it before continuing. Complete installation includes every reference, but the model reads only applicable files.
 
 ## Use
 
@@ -26,7 +26,8 @@ In Pi:
 For a manual installation, explicitly select both skills:
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill coding --skill coding-with-rules --agent pi
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/coding --skill coding --agent pi
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/coding-with-rules --skill coding-with-rules --agent pi
 ```
 
 Choose the intended harnesses rather than assuming a three-harness bundle. Review the assets and follow the target project's workspace and approval gates before installation. Claude Code uses the relative `.claude/skills/coding-with-rules` projection; no separate reference projections are needed. Reload the harness after changing its installed skill inventory.

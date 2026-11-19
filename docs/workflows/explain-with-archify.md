@@ -4,6 +4,8 @@ title: "Explain relationships with interactive HTML"
 
 # Explain relationships with interactive HTML
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 The reader needs to explore a workflow, architecture, dependency map, state model, or other supported structure.
 
 **Finish with:** A retained candidate, validated standalone HTML, and an honest verification claim.
@@ -12,7 +14,7 @@ The reader needs to explore a workflow, architecture, dependency map, state mode
 
 ![Explain relationships with interactive HTML: suggested skill handoffs with approval stops where applicable.](/diagrams/explain-with-archify.svg)
 
-[Open interactive diagram](/diagrams/explain-with-archify.html) · [Download SVG](/diagrams/explain-with-archify.svg) · [Editable candidate](/diagram-sources/explain-with-archify.json)
+[Open interactive diagram](/diagrams/explain-with-archify.html){class="vp-raw"} · [Download SVG](/diagrams/explain-with-archify.svg) · [Editable candidate](/diagram-sources/explain-with-archify.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

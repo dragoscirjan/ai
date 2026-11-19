@@ -44,7 +44,7 @@ This collection contains reusable agent guidance, not a replacement for your pro
 
 New to the collection? [Choose a starting point](/guide/start), then [install only the skills you choose](/guide/install).
 
-Already working? [Find a skill](/skills/) by name or choose a [supported combination](/workflows/). You can stop at research, a specification, a task plan, a skeleton, or review findings.
+Already working? Choose a [project workflow](/workflows/) for planning, implementation, debugging, documentation, or debloating. You can also [find a skill](/skills/) by name. You can stop at research, a specification, a task plan, a skeleton, or review findings.
 
 ## Guidance is not permission
 

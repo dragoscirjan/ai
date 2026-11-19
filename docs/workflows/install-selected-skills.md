@@ -4,6 +4,8 @@ title: "Install a reviewed skill selection"
 
 # Install a reviewed skill selection
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 An existing project needs useful skills, not an automatic copy of the entire collection.
 
 **Finish with:** A verified installation of only the approved skills and separately selected instructions.
@@ -12,7 +14,7 @@ An existing project needs useful skills, not an automatic copy of the entire col
 
 ![Install a reviewed skill selection: suggested skill handoffs with approval stops where applicable.](/diagrams/install-selected-skills.svg)
 
-[Open interactive diagram](/diagrams/install-selected-skills.html) · [Download SVG](/diagrams/install-selected-skills.svg) · [Editable candidate](/diagram-sources/install-selected-skills.json)
+[Open interactive diagram](/diagrams/install-selected-skills.html){class="vp-raw"} · [Download SVG](/diagrams/install-selected-skills.svg) · [Editable candidate](/diagram-sources/install-selected-skills.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

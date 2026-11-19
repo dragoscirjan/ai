@@ -4,6 +4,8 @@ title: "Coordinate independent review without writers"
 
 # Coordinate independent review without writers
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 You want independent assessment but all changes must stay with the parent.
 
 **Finish with:** Fresh-context read-only findings with evidence and an owner-controlled fix decision.
@@ -12,7 +14,7 @@ You want independent assessment but all changes must stay with the parent.
 
 ![Coordinate independent review without writers: suggested skill handoffs with approval stops where applicable.](/diagrams/coordinate-read-only-review.svg)
 
-[Open interactive diagram](/diagrams/coordinate-read-only-review.html) · [Download SVG](/diagrams/coordinate-read-only-review.svg) · [Editable candidate](/diagram-sources/coordinate-read-only-review.json)
+[Open interactive diagram](/diagrams/coordinate-read-only-review.html){class="vp-raw"} · [Download SVG](/diagrams/coordinate-read-only-review.svg) · [Editable candidate](/diagram-sources/coordinate-read-only-review.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

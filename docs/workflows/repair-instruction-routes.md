@@ -4,6 +4,8 @@ title: "Repair instruction drift through exact approval"
 
 # Repair instruction drift through exact approval
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 Routes, requirements, or policy instructions are missing, duplicated, stale, or conflicting.
 
 **Finish with:** An approved targeted repair with preserved security and authority boundaries.
@@ -12,7 +14,7 @@ Routes, requirements, or policy instructions are missing, duplicated, stale, or 
 
 ![Repair instruction drift through exact approval: suggested skill handoffs with approval stops where applicable.](/diagrams/repair-instruction-routes.svg)
 
-[Open interactive diagram](/diagrams/repair-instruction-routes.html) · [Download SVG](/diagrams/repair-instruction-routes.svg) · [Editable candidate](/diagram-sources/repair-instruction-routes.json)
+[Open interactive diagram](/diagrams/repair-instruction-routes.html){class="vp-raw"} · [Download SVG](/diagrams/repair-instruction-routes.svg) · [Editable candidate](/diagram-sources/repair-instruction-routes.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 

@@ -19,12 +19,14 @@ Implementation changes how readers use the project, or existing documentation bl
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add dragoscirjan/ai --skill document-project
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/document-project --skill document-project
 ```
 
 This command selects only `document-project`. It does not install the rest of the collection or the optional companions listed on this page.
 
-See [installation choices](/guide/install) for prerequisites and the optional reviewed manager.
+Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
+
+See [installation choices](/guide/install) for prerequisites and direct install examples.
 
 ## Try it
 
@@ -54,16 +56,11 @@ A documentation request does not implicitly authorize a website, migration, plug
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
-- [Initialize only the foundation you need](/workflows/initialize-a-project)
-- [Move a change out of the primary checkout](/workflows/protect-a-change)
-- [Implement a small approved change](/workflows/implement-a-small-change)
-- [Build one behavior slice test-first](/workflows/build-test-first)
-- [Remove complexity without removing requirements](/workflows/simplify-a-design)
-- [Keep a developer task usable](/workflows/maintain-task-based-docs)
-- [Shorten a technical answer without losing meaning](/workflows/shorten-without-loss)
-- [Explain relationships with interactive HTML](/workflows/explain-with-archify)
-- [Deliver an editable image diagram](/workflows/draw-with-excalidraw)
-- [Turn a completed issue into a small improvement](/workflows/learn-from-completed-work)
+- [Implement a planned task](/workflows/implement-a-task)
+- [Document a project](/workflows/document-a-project)
+- [Debloat a project](/workflows/debloat-a-project)
+
+For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

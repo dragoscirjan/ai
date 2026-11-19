@@ -4,6 +4,8 @@ title: "Review a fixed diff from two perspectives"
 
 # Review a fixed diff from two perspectives
 
+This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
+
 A branch or change needs standards and specification review against a clear baseline.
 
 **Finish with:** An integrated report of two bounded read-only reviews.
@@ -12,7 +14,7 @@ A branch or change needs standards and specification review against a clear base
 
 ![Review a fixed diff from two perspectives: suggested skill handoffs with approval stops where applicable.](/diagrams/review-against-standards-and-spec.svg)
 
-[Open interactive diagram](/diagrams/review-against-standards-and-spec.html) · [Download SVG](/diagrams/review-against-standards-and-spec.svg) · [Editable candidate](/diagram-sources/review-against-standards-and-spec.json)
+[Open interactive diagram](/diagrams/review-against-standards-and-spec.html){class="vp-raw"} · [Download SVG](/diagrams/review-against-standards-and-spec.svg) · [Editable candidate](/diagram-sources/review-against-standards-and-spec.json)
 
 Arrows show this suggested sequence, not declared `requires` dependencies. Approval arrows are conditional. Declining a gate stops that branch without authorizing its writes. The numbered steps below are the text equivalent of the diagram.
 
