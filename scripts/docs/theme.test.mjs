@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { test } from "node:test";
 import siteConfig from "../../docs/.vitepress/config.mjs";
 import { root } from "./data.mjs";
+import { writeNotices } from "./notices.mjs";
 
 const read = (path) => readFileSync(join(root, path), "utf8");
 
@@ -35,6 +36,7 @@ test("local CSS preserves fonts and layout without overriding the official palet
 });
 
 test("the generated notice download preserves both new package licenses", () => {
+  writeNotices();
   const notices = read("docs/public/notices/site-dependencies.txt");
   assert.ok(notices.includes("===== @catppuccin/vitepress@0.1.4 =====\nDeclared license: MIT"));
   assert.ok(notices.includes("===== typescript@5.9.3 =====\nDeclared license: Apache-2.0"));
