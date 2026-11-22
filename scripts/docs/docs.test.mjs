@@ -121,14 +121,17 @@ test("catalog groups are an exact partition, not a replacement inventory", () =>
   const names = groups.flatMap((group) => group.skills);
   assert.equal(names.length, new Set(names).size);
   assert.deepEqual(new Set(names), new Set(catalog().skills.map((skill) => skill.name)));
-  assert.equal(catalog().skills.filter((skill) => skill.source.type !== "local").length, 4);
+  assert.equal(catalog().skills.filter((skill) => skill.source.type !== "local").length, 8);
 });
 test("every catalog entry and recipe has one generated page and a meaningful stopping boundary", () => {
   const pages = generatedPages();
   for (const entry of catalog().skills) {
     const page = pages.get(`skills/${entry.name}.md`);
     assert.match(page, /Requirements and boundaries/);
-    assert.match(page, /Authoritative|authoritative/);
+    if (entry.kind === "adapted" && entry.source.type !== "local") {
+      assert.match(page, /Read the pinned upstream input/);
+      assert.match(page, /review the output and legal notices before use/);
+    } else assert.match(page, /Authoritative|authoritative/);
   }
   assert.equal(workflows.length, 25);
   for (const recipe of workflows) {

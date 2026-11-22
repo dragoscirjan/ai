@@ -50,7 +50,7 @@ Inspection is not permission to install, remove old skills, adopt instructions, 
 
 ## Useful combinations
 
-- [`isolated-workspace`](/skills/isolated-workspace) — A repository change needs a separate Git worktree or Jujutsu workspace instead of writes in the primary checkout.
+- [`isolated-workspace`](/skills/isolated-workspace) — A modifying task needs a dedicated branch or bookmark and a choice between the current checkout and a separate workspace.
 - [`instruction-maintenance`](/skills/instruction-maintenance) — Instruction routing, dependencies, metadata, or policy documents appear missing, stale, conflicting, or unsuitable.
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.

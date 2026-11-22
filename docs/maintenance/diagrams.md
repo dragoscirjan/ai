@@ -1,8 +1,10 @@
 # Regenerate and review diagrams
 
-Normal site builds use the checked-in diagram outputs. Regeneration is an explicit authoring operation with network, executable-code, browser, and filesystem effects. Follow the project's approval and isolated-workspace rules first.
+Normal site builds use the checked-in diagram outputs. Regeneration is an explicit authoring operation with network, executable-code, browser, and filesystem effects. Follow the project's approval, task-branch, and working-location rules first.
 
 ## Before you start
+
+Repository-backed diagrams cite committed source bytes. Obtain owner approval to commit changed source files before regeneration. Stop if the cited changes are still uncommitted; working-tree edits are not evidence for the current HEAD.
 
 Complete the [mise setup](/maintenance/) and approve any missing tools. Archify is an upstream-only catalog entry, not a vendored skill or registered live-agent installation. The setup task acquires the catalog-pinned package into an external `ai-skills-docs` tool cache under `XDG_CACHE_HOME` or the standard user cache. It does not change personal agent discovery paths or install a browser.
 

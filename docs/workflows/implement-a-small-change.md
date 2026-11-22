@@ -24,7 +24,7 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 
 ## Steps
 
-1. **Use approved isolation.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+1. **Create task branch in chosen location.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
 2. **Load applicable rules.** [`coding-with-rules`](/skills/coding-with-rules) provides the guidance for this step.
 3. **Implement and test behavior.** [`coding`](/skills/coding) provides the guidance for this step.
 4. **Update affected guidance.** [`document-project`](/skills/document-project) provides the guidance for this step.

@@ -6,7 +6,7 @@ title: "tdd"
 
 Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
 
-**Group:** [Coding](/groups/coding) · **Availability:** Upstream-derived; maintained here · **Scope:** project
+**Group:** [Coding](/groups/coding) · **Availability:** Pinned upstream input; adaptation required · **Scope:** project
 
 ## When to choose it
 
@@ -19,7 +19,7 @@ You explicitly want test-first feature or bug work, or integration-test slices t
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/tdd --skill tdd
+npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d/skills/engineering/tdd --skill tdd
 ```
 
 This command selects only `tdd`. It does not install the rest of the collection or the optional companions listed on this page.
@@ -48,6 +48,8 @@ No additional runtime is recorded in the catalog. Check the authoritative instru
 
 Confirm the public seams with the user before writing tests. Do not write a large speculative test batch or claim an unobserved red phase. Stop the implementation loop at green; refactoring belongs to a later authorized review stage.
 
+This is pinned upstream input, not a reviewed installed adaptation. Follow the catalogued adaptation instructions and review the output and legal notices before use. A source link or install command does not perform that adaptation.
+
 ## Useful combinations
 
 - [`coding-with-rules`](/skills/coding-with-rules) — Code or toolchain work needs the base coding workflow plus rules for its actual languages and extensions.
@@ -65,6 +67,6 @@ For focused procedures and utilities, see [supporting tools](/workflows/supporti
 
 The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/coding/tdd/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the pinned upstream input](https://raw.githubusercontent.com/mattpocock/skills/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d/skills/engineering/tdd/SKILL.md). This link uses the immutable upstream revision `4ae2317ddb22b046e26455e4f9c9b3aaaf62212d`; there is no vendored copy here.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

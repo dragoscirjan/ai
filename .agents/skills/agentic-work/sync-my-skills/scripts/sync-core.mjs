@@ -16,7 +16,7 @@ const SKILLS = ".agents/skills";
 export const OWNER_CATALOG_PATH = ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml";
 const MARKER = "sync-my-skills/stage-v2";
 export const INSTRUCTION_FILES = Object.freeze(["AGENTS.md", "CONTRIBUTING.md", "DOCUMENTATION.md", "VALIDATION.md", "CLAUDE.md"]);
-const INSTRUCTION_PREREQUISITES = ["isolated-workspace", "document-project", "asd-ste100-technical", "unslop"];
+const INSTRUCTION_PREREQUISITES = ["document-project", "asd-ste100-technical", "unslop"];
 const SKIP = new Set([".git", "node_modules"]);
 const PROJECT_SKIP = new Set([
   ...SKIP, ".agents", ".claude", ".pi", ".opencode", ".venv", "venv", "__pycache__",
@@ -238,6 +238,9 @@ function catalogOrigin(path, text, repository, ref) {
 }
 function localSkillPaths(root) {
   const found = new Map();
+  const ignored = existsSync(join(root, ".git"))
+    ? new Set(runGit(root, ["ls-files", "--others", "--ignored", "--exclude-standard", "--directory", "-z", "--", SKILLS]).split("\0").filter(Boolean).map((path) => path.replace(/\/$/, "")))
+    : new Set();
   let entries = 0;
   function visit(path, depth) {
     check(depth <= 40, "Skill inventory nesting is too deep");
@@ -256,7 +259,7 @@ function localSkillPaths(root) {
       const child = `${path}/${entry.name}`;
       safeRelative(child);
       check(!entry.isSymbolicLink(), `Symlink in skill inventory: ${child}`);
-      if (entry.isDirectory()) visit(child, depth + 1);
+      if (entry.isDirectory() && !ignored.has(child)) visit(child, depth + 1);
     }
   }
   visit(SKILLS, 0);

@@ -11,6 +11,7 @@ The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/a
 - **Authored here:** this repository maintains the skill.
 - **Upstream-derived; maintained here:** use the maintained local copy, not an assumed unchanged upstream replacement.
 - **Upstream-only:** the catalog points to an immutable external source. Listing it does not install it.
+- **Pinned upstream input; adaptation required:** the catalog records immutable input and an adaptation recipe. Review the adapted output and legal notices before use.
 
 | Skill | Availability | Selection default |
 | --- | --- | --- |
@@ -18,14 +19,14 @@ The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/a
 | [`asd-ste100-technical`](/skills/asd-ste100-technical) | Authored here | recommended |
 | [`caveman`](/skills/caveman) | Authored here | optional |
 | [`cleanup-workspaces`](/skills/cleanup-workspaces) | Authored here | optional |
-| [`code-review`](/skills/code-review) | Upstream-derived; maintained here | optional |
+| [`code-review`](/skills/code-review) | Pinned upstream input; adaptation required | optional |
 | [`coding`](/skills/coding) | Authored here | detected |
 | [`coding-with-rules`](/skills/coding-with-rules) | Authored here | optional |
 | [`debloat`](/skills/debloat) | Authored here | optional |
 | [`grilling`](/skills/grilling) | Upstream-only; approved external setup | optional |
 | [`document-project`](/skills/document-project) | Authored here | recommended |
 | [`excalidraw`](/skills/excalidraw) | Authored here | optional |
-| [`grill-me`](/skills/grill-me) | Upstream-derived; maintained here | optional |
+| [`grill-me`](/skills/grill-me) | Pinned upstream input; adaptation required | optional |
 | [`init-project`](/skills/init-project) | Authored here | initializer |
 | [`initiative`](/skills/initiative) | Authored here | optional |
 | [`instruction-maintenance`](/skills/instruction-maintenance) | Authored here | optional |
@@ -38,10 +39,10 @@ The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/a
 | [`subagent-orchestration`](/skills/subagent-orchestration) | Authored here | optional |
 | [`sync-my-skills`](/skills/sync-my-skills) | Authored here | optional |
 | [`systematic-debugging`](/skills/systematic-debugging) | Upstream-derived; maintained here | optional |
-| [`tdd`](/skills/tdd) | Upstream-derived; maintained here | optional |
+| [`tdd`](/skills/tdd) | Pinned upstream input; adaptation required | optional |
 | [`unslop`](/skills/unslop) | Upstream-only; approved external setup | recommended |
 | [`wait-what`](/skills/wait-what) | Upstream-only; approved external setup | optional |
-| [`writing-for-agents`](/skills/writing-for-agents) | Upstream-derived; maintained here | optional |
+| [`writing-for-agents`](/skills/writing-for-agents) | Pinned upstream input; adaptation required | optional |
 
 A recommended default is not approval. A declined skill stays unchanged; policy already active in the target project still applies. Read each profile for runtime setup and its authoritative source.
 

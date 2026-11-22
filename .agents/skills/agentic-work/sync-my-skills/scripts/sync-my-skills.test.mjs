@@ -134,6 +134,38 @@ test("recursive source coverage rejects uncatalogued skills and duplicate names 
   assert.throws(() => loadCatalog(f.catalogPath, f.source), /Duplicate local skill name: alpha/);
 });
 
+test("source coverage excludes ignored installations but preserves nonignored and declared-source checks", (t) => {
+  const f = fixture(t, categorizeSource);
+  put(f.source, ".gitignore", "/.agents/skills/external/\n/.agents/skills/flat-temp/\n");
+  put(f.source, ".agents/skills/external/alpha/SKILL.md", "Ignored local adaptation, not published source.\n");
+  put(f.source, ".agents/skills/flat-temp/SKILL.md", "Ignored transient installation.\n");
+  assert.equal(loadCatalog(f.catalogPath, f.source).skills.length, 2);
+  put(f.source, ".agents/skills/utility/rogue/SKILL.md", skill("rogue"));
+  assert.throws(() => loadCatalog(f.catalogPath, f.source), /coverage/);
+  rmSync(join(f.source, ".agents/skills/utility/rogue"), { recursive: true });
+  rmSync(join(f.source, ".agents/skills/coding/alpha/SKILL.md"));
+  assert.throws(() => loadCatalog(f.catalogPath, f.source), /ENOENT/);
+});
+
+test("source coverage preserves plain-directory inventory and rejects ignored symlink categories", (t) => {
+  const f = fixture(t, categorizeSource);
+  put(f.source, ".gitignore", "/.agents/skills/external/\n");
+  symlinkSync("coding", join(f.source, ".agents/skills/external"));
+  assert.throws(() => loadCatalog(f.catalogPath, f.source), /Symlink/);
+  rmSync(join(f.source, ".agents/skills/external"));
+  rmSync(join(f.source, ".git"), { recursive: true });
+  assert.equal(loadCatalog(f.catalogPath, f.source).skills.length, 2);
+  put(f.source, ".agents/skills/external/rogue/SKILL.md", skill("rogue"));
+  assert.throws(() => loadCatalog(f.catalogPath, f.source), /coverage/);
+});
+
+test("source coverage does not swallow Git inspection failures", (t) => {
+  const f = fixture(t, categorizeSource);
+  rmSync(join(f.source, ".git"), { recursive: true });
+  put(f.source, ".git", "gitdir: missing-metadata\n");
+  assert.throws(() => loadCatalog(f.catalogPath, f.source), /Git/);
+});
+
 test("recursive source coverage rejects linked categories and mismatched source locations", (t) => {
   const f = fixture(t, categorizeSource);
   const alias = join(f.source, ".agents/skills/linked");
@@ -671,6 +703,19 @@ test("real install sources match grouped paths and never require the personal ma
   }
 });
 
+test("removed vendored adaptations retain pinned input, adaptation review, and upstream licensing", () => {
+  const catalog = loadCatalog(undefined, repository);
+  for (const name of ["code-review", "grill-me", "tdd", "writing-for-agents"]) {
+    const entry = catalog.byName.get(name);
+    assert.equal(entry.kind, "adapted");
+    assert.equal(entry.source.type, "github");
+    assert.deepEqual(entry.source, entry.upstream);
+    assert.match(entry.source.revision, /^[a-f0-9]{40}$/);
+    assert.ok(entry.adaptation.instructions);
+    assert.deepEqual(entry.legal, [{ path: "LICENSE", target: "LICENSE", spdx: "MIT" }]);
+  }
+});
+
 test("Archify remains an optional pinned external reference with protected legal notices", () => {
   const catalog = loadCatalog(undefined, repository); const entry = catalog.byName.get("archify");
   assert.equal(entry.kind, "upstream"); assert.equal(entry.selection, "optional");
@@ -805,6 +850,32 @@ test("public GitHub acquisition fetches only selected files, records commit, and
   assert.equal(manifest.skills.beta.origin.revision, "a".repeat(40));
   assert.equal(existsSync(join(f.stage, "skills/beta/agents/openai.yaml")), false);
   f.apply(f.selection(["beta"]));
+});
+
+test("pinned remote adaptations still require fetch permission, reviewed output, and unchanged legal notices", async (t) => {
+  const f = fixture(t, ({ data, source }) => {
+    data.skills.beta.kind = "adapted";
+    data.skills.beta.source = { type: "github", repository: "https://github.com/example/upstream", revision: "a".repeat(40), path: "skills/beta" };
+    data.skills.beta.adaptation = { instructions: "Preserve the useful workflow and legal notices." };
+    rmSync(join(source, ".agents/skills/beta"), { recursive: true });
+  });
+  const license = "MIT License\nCopyright Fixture\n";
+  const fetcher = async (url) => {
+    if (url.includes("/git/trees/")) return new Response(JSON.stringify({ tree: [{ path: "skills/beta/SKILL.md", type: "blob", mode: "100644" }] }));
+    if (url.endsWith("/skills/beta/SKILL.md")) return new Response(skill("beta"));
+    if (url.endsWith("/LICENSE")) return new Response(license);
+    throw new Error("Unexpected source request");
+  };
+  await assert.rejects(() => f.prepare(["beta"], { fetcher }), /--fetch permission/);
+  await f.prepare(["beta"], { fetcher, allowFetch: true });
+  assert.throws(() => f.plan(f.selection(["beta"])), /Adaptation review/);
+  put(f.stage, "skills/beta/LICENSE", "Altered notice.\n");
+  reviewSkill({ stage: f.stage, name: "beta", note: "Review cannot waive legal preservation." });
+  assert.throws(() => f.plan(f.selection(["beta"])), /Legal notice changed/);
+  put(f.stage, "skills/beta/LICENSE", license);
+  reviewSkill({ stage: f.stage, name: "beta", note: "Reviewed the pinned input, self-contained workflow, and unchanged upstream notice." });
+  f.apply(f.selection(["beta"]));
+  assert.equal(readFileSync(join(f.root, ".agents/skills/beta/LICENSE"), "utf8"), license);
 });
 
 test("source truncation and symbolic links stop before target activation", async (t) => {
@@ -945,7 +1016,7 @@ test("review notes cannot leak credentials or absolute machine paths into locks"
 });
 
 const ROOT_BUNDLE = ["AGENTS.md", "CONTRIBUTING.md", "DOCUMENTATION.md", "VALIDATION.md"];
-const ROOT_GUIDANCE = ["isolated-workspace", "document-project", "asd-ste100-technical", "unslop"];
+const ROOT_GUIDANCE = ["document-project", "asd-ste100-technical", "unslop"];
 function instructionFixture(t) {
   const f = fixture(t, ({ source, data }) => {
     for (const name of ROOT_GUIDANCE) {
@@ -981,7 +1052,12 @@ test("selected instruction bundles are reviewed, approval-bound, and managed wit
   const plan = f.plan(f.choice());
   assert.ok(plan.actions.some((a) => a.path === "AGENTS.md"));
   f.apply(f.choice());
-  assert.match(readFileSync(join(f.root, "AGENTS.md"), "utf8"), /Respect existing project authority/);
+  const agents = readFileSync(join(f.root, "AGENTS.md"), "utf8");
+  assert.match(agents, /Respect existing project authority/);
+  assert.match(agents, /Before changing repository files for a new task, create a dedicated task branch\./);
+  assert.match(agents, /Choose the current checkout or a separate workspace/);
+  assert.doesNotMatch(agents, /isolated-workspace|Never mutate the primary checkout/);
+  assert.equal(existsSync(join(f.root, ".agents/skills/isolated-workspace")), false);
   assert.equal(readFileSync(join(f.root, "CLAUDE.md"), "utf8"), "Existing Claude instructions.\n");
   assert.ok(sync.projectStatus(f.root).files.filter((r) => ROOT_BUNDLE.includes(r.path)).every((r) => r.state === "clean"));
   const lock = JSON.parse(readFileSync(join(f.root, LOCK_PATH), "utf8"));
@@ -1013,8 +1089,15 @@ test("instruction review rejects unresolved fields, dropped fixed rules, and edi
   const f = instructionFixture(t); await f.prepare(ROOT_GUIDANCE, { instructionFiles: ROOT_BUNDLE });
   assert.throws(() => sync.reviewInstructions({ stage: f.stage, note: "Not resolved yet." }), /unresolved|template/i);
   f.draft(); const path = join(f.stage, "instructions/AGENTS.md"); const valid = readFileSync(path, "utf8");
-  writeFileSync(path, valid.replace("Never mutate the primary checkout.", ""));
-  assert.throws(() => sync.reviewInstructions({ stage: f.stage, note: "Dropped a fixed rule." }), /template rule/i);
+  for (const rule of [
+    "Before changing repository files for a new task, create a dedicated task branch.",
+    "Choose the current checkout or a separate workspace from the task requirements and repository state.",
+    "For Jujutsu, create a dedicated task change and bookmark.",
+  ]) {
+    assert.ok(valid.includes(rule));
+    writeFileSync(path, valid.replace(rule, ""));
+    assert.throws(() => sync.reviewInstructions({ stage: f.stage, note: "Dropped a fixed rule." }), /template rule/i);
+  }
   writeFileSync(path, valid);
   put(f.stage, "templates/AGENTS.template.md", "Changed source template.\n");
   assert.throws(() => sync.reviewInstructions({ stage: f.stage, note: "Raw template changed." }), /template source.*changed/i);
@@ -1176,11 +1259,14 @@ test("CLI reports usage failures and real catalog includes every local skill exa
     assert.equal(existsSync(join(repository, ".agents/skills", name)), false);
     assert.equal(existsSync(join(repository, ".claude/skills", name)), false);
   }
-  for (const name of ["grill-me", "tdd", "code-review", "systematic-debugging"]) {
-    assert.equal(catalog.byName.get(name).kind, "adapted");
-    assert.ok(existsSync(join(repository, catalog.byName.get(name).source.path, "SKILL.md")));
+  for (const name of ["grill-me", "tdd", "code-review", "writing-for-agents", "systematic-debugging"]) {
+    const entry = catalog.byName.get(name);
+    assert.equal(entry.kind, "adapted");
+    assert.equal(entry.source.type === "local", name === "systematic-debugging");
+    if (entry.source.type === "local") assert.ok(existsSync(join(repository, entry.source.path, "SKILL.md")));
+    else assert.match(entry.source.revision, /^[a-f0-9]{40}$/);
   }
-  for (const name of ["grill-me", "code-review"]) assert.equal(existsSync(join(repository, catalog.byName.get(name).source.path, "agents/openai.yaml")), false);
+  assert.ok(catalog.defaults.exclude.includes("agents/openai.yaml"));
   assert.equal(existsSync(join(repository, ".agents/skills/sync-agent-assets")), false);
   assert.equal(existsSync(join(repository, ".claude/skills")), false);
   assert.equal(catalog.byName.get("unslop").legal[0].path, "pstack/LICENSE");

@@ -4,7 +4,7 @@ Populate the templates with verified target details. Keep unfinished sources ina
 
 ## Outputs
 
-- [AGENTS.template.md](AGENTS.template.md) produces `AGENTS.md`: context, phase rules, isolation, safety, and authority.
+- [AGENTS.template.md](AGENTS.template.md) produces `AGENTS.md`: context, phase rules, task branches, working location, safety, and authority.
 - [CONTRIBUTING.template.md](CONTRIBUTING.template.md) produces `CONTRIBUTING.md`: setup, development, configuration, and release procedures.
 - [DOCUMENTATION.template.md](DOCUMENTATION.template.md) produces `DOCUMENTATION.md`: audience, engine, ownership, commands, and maintenance.
 - [VALIDATION.template.md](VALIDATION.template.md) produces `VALIDATION.md`: required checks, evidence, and completion.
@@ -16,7 +16,7 @@ Place the four required outputs at the same scope. Their paths refer to that pop
 
 These rules are not population choices:
 
-- Before mutation, follow `.agents/skills/isolated-workspace/SKILL.md`. Work only in an approved isolated workspace, never the primary checkout.
+- Before task edits, create a dedicated task branch, or a dedicated change and bookmark for Jujutsu. Continue an existing task ref only for the same task. Choose the current checkout or a separate workspace from task requirements and repository state; ask the user when unclear.
 - During implementation, follow `.agents/skills/document-project/SKILL.md`.
 - Before documentation writing, also follow `.agents/skills/asd-ste100-technical/SKILL.md` and `.agents/skills/unslop/SKILL.md`.
 
@@ -50,7 +50,7 @@ Resolve these paths within the target bundle's scope. Missing skills or prerequi
 ### Required policy
 
 - `{{READ_ONLY_ROUTE}}`: Research and inspection prerequisites, including any code-inspection gate. State explicitly when no deferred document is needed.
-- `{{WORKFLOW_SETTINGS}}`: VCS, base/branch policy, and settings accepted by the isolation procedure. Keep its path contract intact.
+- `{{WORKFLOW_SETTINGS}}`: Explicit VCS, base revision, task-ref naming policy, and any owner-approved working-location constraints. A task ref is mandatory in either location; a separate workspace is not a fixed prerequisite.
 - `{{PUBLICATION_POLICY}}`: Authority for commits, pushes, PRs, merges, releases, and deployment, including approved automation.
 - `{{TASK_POLICY}}`: Work records, source of truth, scope, approvals, and exceptions.
 - `{{IMPLEMENTATION_RULES}}`: Coding or content conventions and invariants. Reference reusable procedures rather than copying them.

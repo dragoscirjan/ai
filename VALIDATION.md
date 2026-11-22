@@ -70,10 +70,11 @@ When a change modifies `isolated-workspace` or `cleanup-workspaces`:
 - Exercise the Git procedure in a disposable repository.
 - Exercise the Jujutsu procedure in a disposable repository.
 - Test the relevant safety stops, not only the successful path.
-- Confirm that `AGENTS.md` still provides the required project workspace configuration.
+- Confirm that `AGENTS.md` provides the VCS, base revision, and task-branch policy.
+- Exercise task-branch creation in the current checkout as well as the isolated path. Verify same-task continuation, unrelated-change preservation, and branch/bookmark creation before task edits.
 - Confirm that callers must select `git` or `jj` explicitly and that colocated repositories do not trigger VCS inference.
 - Confirm that automation detects the primary local repository and derives the sibling `<repository>--workspaces` directory without hosted-repository identity.
-- Confirm that planning is non-destructive, mutation requires `--apply --confirm --plan-id <approved-id>`, and cleanup rechecks state immediately before removal.
+- Confirm that isolated-workspace planning is non-destructive, applying its plan requires `--apply --confirm --plan-id <approved-id>`, and cleanup rechecks state immediately before removal.
 - Confirm that active, primary, dirty, locked, conflicted, and unmerged workspaces remain protected.
 - Confirm that workspace commands remain in the skills and are not duplicated in project policy files.
 
@@ -116,7 +117,8 @@ When a change modifies `AGENTS.md`, `CONTRIBUTING.md`, `VALIDATION.md`, or anoth
 - Confirm that every deferred document or mandatory skill has a clear trigger in `AGENTS.md`.
 - Confirm that read-only analysis does not require deferred contributor instructions unless it needs repository identity.
 - Confirm that planning or performing a repository change requires `CONTRIBUTING.md`.
-- Confirm that mutation requires `isolated-workspace`.
+- Confirm that every new modifying task requires a dedicated task branch, or a dedicated change and bookmark for Jujutsu.
+- Confirm that current-checkout and isolated-workspace execution both satisfy the task-branch gate. Worktree creation is a task-level choice, not a universal prerequisite.
 - Confirm that validating, committing, pushing, or publishing requires `VALIDATION.md`.
 - Confirm that workspace cleanup requires `cleanup-workspaces`.
 - Confirm that instruction drift requires `instruction-maintenance` before an adaptation proposal.

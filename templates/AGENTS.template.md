@@ -14,10 +14,11 @@ If a required document, skill, or tool is missing, stop that phase and report th
 
 Read and follow `CONTRIBUTING.md`.
 
-## Before any repository mutation
+## Before changing repository files
 
-Read and follow `.agents/skills/isolated-workspace/SKILL.md`.
-Create or reuse an approved, dedicated isolated workspace using these settings. Work only there. Never mutate the primary checkout.
+Before changing repository files for a new task, create a dedicated task branch. When resuming the same task, verify and continue its existing task branch. Choose the current checkout or a separate workspace from the task requirements and repository state. Ask the user when the choice is unclear. A task branch is required in either location.
+
+For Jujutsu, create a dedicated task change and bookmark. Workspace setup may create the task ref and working directory together. Verify the ref, directory, and ownership of existing changes before edits. Use one writer per working directory.
 
 {{WORKFLOW_SETTINGS}}
 

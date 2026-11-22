@@ -123,6 +123,21 @@ test("installation commands reject broadened selection and quote source argument
   );
 });
 
+test("remote adaptations identify pinned inputs and require review rather than claiming a vendored copy", () => {
+  const pages = generatedPages();
+  for (const name of ["code-review", "grill-me", "tdd", "writing-for-agents"]) {
+    const entry = catalog().byName.get(name);
+    const page = pages.get(`skills/${name}.md`);
+    assert.match(page, /Pinned upstream input; adaptation required/);
+    assert.match(page, /not a reviewed installed adaptation/);
+    assert.match(page, /review the output and legal notices before use/);
+    assert.match(page, /Read the pinned upstream input/);
+    assert.ok(page.includes(entry.source.revision));
+    assert.doesNotMatch(page, /maintained local copy/);
+    assert.throws(() => localInstructions(name), /No local instructions/);
+  }
+});
+
 test("source inspection follows grouped catalog paths even when the documentation group differs", () => {
   assert.match(localInstructions("coding"), /^name: coding$/m);
   assert.match(localInstructions("init-project"), /^name: init-project$/m);

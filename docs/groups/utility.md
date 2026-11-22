@@ -16,9 +16,9 @@ Initialize or adopt project foundations, TypeScript tooling, or Godot GDScript t
 
 ## [`isolated-workspace`](/skills/isolated-workspace)
 
-Create or reuse an isolated Git worktree or Jujutsu workspace before mutation, using an explicit VCS and branch or bookmark.
+Create a dedicated task branch or bookmark before repository edits. Choose the current checkout or an isolated Git worktree or Jujutsu workspace; ask the user when the location is unclear.
 
-**Choose it when:** A repository change needs a separate Git worktree or Jujutsu workspace instead of writes in the primary checkout.
+**Choose it when:** A modifying task needs a dedicated branch or bookmark and a choice between the current checkout and a separate workspace.
 
 ## [`cleanup-workspaces`](/skills/cleanup-workspaces)
 
@@ -31,5 +31,5 @@ Audit integrated Git/Jujutsu workspaces, stale registrations, or authorized temp
 [Choose an end-to-end workflow](/workflows/) before selecting an individual procedure.
 
 - [Initialize only the foundation you need](/workflows/initialize-a-project) — You explicitly want a supported project foundation or tooling adoption.
-- [Move a change out of the primary checkout](/workflows/protect-a-change) — The requested work will mutate a repository.
+- [Start a change on its own task branch](/workflows/protect-a-change) — A new task will change repository files, or an existing task needs verified continuation.
 - [Clean only proven, approved workspaces](/workflows/clean-integrated-workspaces) — Completed work may have left integrated workspaces or stale registrations.

@@ -4,7 +4,7 @@ title: "Find a skill"
 
 # Find a skill
 
-The catalog contains **28 skills**: 24 local entries and 4 upstream-only entries. Search by an exact skill name or start with your task.
+The catalog contains **28 skills**: 20 local entries and 8 remote-source entries. Search by an exact skill name or start with your task.
 
 ![The collection's six groups include local and external skills; grouping is not a runtime dependency.](/diagrams/skill-groups.svg)
 
@@ -58,7 +58,7 @@ Manage selected agent skills and write agent-facing instructions.
 Initialize projects, isolate changes, and clean approved workspaces.
 
 - [`init-project`](/skills/init-project) — Initialize or adopt project foundations, TypeScript tooling, or Godot GDScript tooling only when explicitly requested.
-- [`isolated-workspace`](/skills/isolated-workspace) — Create or reuse an isolated Git worktree or Jujutsu workspace before mutation, using an explicit VCS and branch or bookmark.
+- [`isolated-workspace`](/skills/isolated-workspace) — Create a dedicated task branch or bookmark before repository edits. Choose the current checkout or an isolated Git worktree or Jujutsu workspace; ask the user when the location is unclear.
 - [`cleanup-workspaces`](/skills/cleanup-workspaces) — Audit integrated Git/Jujutsu workspaces, stale registrations, or authorized temporary lanes; apply only an approved exact cleanup plan.
 
 ## [Unpolished](/groups/unpolished)

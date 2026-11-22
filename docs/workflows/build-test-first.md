@@ -24,7 +24,7 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 
 ## Steps
 
-1. **Use approved isolation.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+1. **Create task branch in chosen location.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
 2. **Resolve language guidance.** [`coding-with-rules`](/skills/coding-with-rules) provides the guidance for this step.
 3. **Run one failing behavior test.** [`tdd`](/skills/tdd) provides the guidance for this step.
 4. **Make the slice pass.** [`tdd`](/skills/tdd) provides the guidance for this step.

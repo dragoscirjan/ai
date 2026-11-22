@@ -70,7 +70,7 @@ export const workflows = [
     steps: [
       work("init-project", "Inspect the starting point"),
       gate("init-project", "Approve the baseline"),
-      work("isolated-workspace", "Create approved workspace"),
+      work("isolated-workspace", "Create task branch in chosen location"),
       work("init-project", "Install approved foundation"),
       work("document-project", "Explain first use"),
     ],
@@ -80,19 +80,20 @@ export const workflows = [
   },
   {
     id: "protect-a-change",
-    title: "Move a change out of the primary checkout",
+    title: "Start a change on its own task branch",
     group: "utility",
-    when: "The requested work will mutate a repository.",
-    outcome: "A named, owned change workspace at a reviewed base revision.",
+    when: "A new task will change repository files, or an existing task needs verified continuation.",
+    outcome:
+      "A dedicated task ref and verified working directory, with or without a separate workspace.",
     steps: [
-      work("isolated-workspace", "Inspect existing workspaces"),
-      work("isolated-workspace", "Plan VCS, base, and path"),
-      gate("isolated-workspace", "Approve the exact plan"),
-      work("isolated-workspace", "Create or verify reuse"),
+      work("isolated-workspace", "Inspect task and checkout"),
+      work("isolated-workspace", "Choose location, ref, and base"),
+      work("isolated-workspace", "Check selected setup permissions"),
+      work("isolated-workspace", "Create task ref and verify directory"),
     ],
     optional: ["coding-with-rules", "document-project"],
     limit:
-      "Stop when isolation is established. This recipe does not approve source changes, cleanup, resets, stashes, or another owner's lane.",
+      "Ask when the location is unclear. Isolation needs the owner's exact plan approval; current-checkout setup follows the project's normal permissions. Stop after task-ref setup or verified same-task continuation. Setup does not approve source changes, cleanup, resets, stashes, or another owner's work.",
   },
   {
     id: "research-a-decision",
@@ -182,7 +183,7 @@ export const workflows = [
     when: "The requested behavior and authority to change it are already clear.",
     outcome: "A scoped implementation with behavior checks and affected documentation updated.",
     steps: [
-      work("isolated-workspace", "Use approved isolation"),
+      work("isolated-workspace", "Create task branch in chosen location"),
       work("coding-with-rules", "Load applicable rules"),
       work("coding", "Implement and test behavior"),
       work("document-project", "Update affected guidance"),
@@ -199,7 +200,7 @@ export const workflows = [
     when: "The owner explicitly wants test-first development and the behavior is agreed.",
     outcome: "An observed red test and the smallest green implementation at a user-confirmed seam.",
     steps: [
-      work("isolated-workspace", "Use approved isolation"),
+      work("isolated-workspace", "Create task branch in chosen location"),
       work("coding-with-rules", "Resolve language guidance"),
       work("tdd", "Run one failing behavior test"),
       work("tdd", "Make the slice pass"),
@@ -231,7 +232,7 @@ export const workflows = [
     when: "A feature's source structure needs review before behavioral implementation.",
     outcome: "A checked skeleton with explicit fail-fast placeholders.",
     steps: [
-      work("isolated-workspace", "Use approved isolation"),
+      work("isolated-workspace", "Create task branch in chosen location"),
       work("coding-with-rules", "Select language references"),
       work("scaffold", "Write source skeletons"),
       work("scaffold", "Check structure and stop"),
@@ -249,7 +250,7 @@ export const workflows = [
     steps: [
       work("debloat", "Find unnecessary parts"),
       gate("debloat", "Approve the change scope"),
-      work("isolated-workspace", "Use approved isolation"),
+      work("isolated-workspace", "Create task branch in chosen location"),
       work("coding-with-rules", "Simplify and test behavior"),
     ],
     optional: ["code-review", "document-project"],
@@ -413,7 +414,7 @@ export const workflows = [
       work("instruction-maintenance", "Audit without mutation"),
       work("writing-for-agents", "Prepare the exact proposal"),
       gate("instruction-maintenance", "Approve the proposed policy"),
-      work("isolated-workspace", "Use approved isolation"),
+      work("isolated-workspace", "Create task branch in chosen location"),
       work("instruction-maintenance", "Apply + check the repair"),
     ],
     optional: ["asd-ste100-technical"],

@@ -1,18 +1,18 @@
 ---
-title: "Move a change out of the primary checkout"
+title: "Start a change on its own task branch"
 ---
 
-# Move a change out of the primary checkout
+# Start a change on its own task branch
 
 This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
 
-The requested work will mutate a repository.
+A new task will change repository files, or an existing task needs verified continuation.
 
-**Finish with:** A named, owned change workspace at a reviewed base revision.
+**Finish with:** A dedicated task ref and verified working directory, with or without a separate workspace.
 
 ## Read the diagram
 
-![Move a change out of the primary checkout: suggested skill handoffs with approval stops where applicable.](/diagrams/protect-a-change.svg)
+![Start a change on its own task branch: suggested skill handoffs with approval stops where applicable.](/diagrams/protect-a-change.svg)
 
 [Open interactive diagram](/diagrams/protect-a-change.html){class="vp-raw"} · [Download SVG](/diagrams/protect-a-change.svg) · [Editable candidate](/diagram-sources/protect-a-change.json)
 
@@ -24,14 +24,14 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 
 ## Steps
 
-1. **Inspect existing workspaces.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
-2. **Plan VCS, base, and path.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
-3. **Approve the exact plan.** [`isolated-workspace`](/skills/isolated-workspace) owns this approval boundary; continue only when the applicable approval or existing approved setup is established.
-4. **Create or verify reuse.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+1. **Inspect task and checkout.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+2. **Choose location, ref, and base.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+3. **Check selected setup permissions.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+4. **Create task ref and verify directory.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
 
 ## Where to stop
 
-Stop when isolation is established. This recipe does not approve source changes, cleanup, resets, stashes, or another owner's lane.
+Ask when the location is unclear. Isolation needs the owner's exact plan approval; current-checkout setup follows the project's normal permissions. Stop after task-ref setup or verified same-task continuation. Setup does not approve source changes, cleanup, resets, stashes, or another owner's work.
 
 ## Optional branches
 
