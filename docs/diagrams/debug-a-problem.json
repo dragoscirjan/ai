@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/debug-a-problem.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "a6e3f4348fb13fdad5011909f7a2f3a3a24cdb14",
+      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
       "link_mode": "local-only"
     },
     "legend": {
@@ -62,7 +62,7 @@
         {
           "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
           "line": 1,
-          "end_line": 99,
+          "end_line": 96,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -79,7 +79,7 @@
         {
           "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
           "line": 1,
-          "end_line": 99,
+          "end_line": 96,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -96,7 +96,7 @@
         {
           "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
           "line": 1,
-          "end_line": 99,
+          "end_line": 96,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -113,7 +113,7 @@
         {
           "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
           "line": 1,
-          "end_line": 99,
+          "end_line": 96,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -130,7 +130,7 @@
         {
           "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
           "line": 1,
-          "end_line": 99,
+          "end_line": 96,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -164,7 +164,7 @@
         {
           "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
           "line": 1,
-          "end_line": 99,
+          "end_line": 96,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -179,10 +179,10 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/coding/code-review/SKILL.md",
-          "line": 1,
-          "end_line": 91,
-          "label": "Authoritative skill instructions"
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "line": 106,
+          "end_line": 145,
+          "label": "Pinned source and runtime record"
         }
       ]
     },
@@ -198,7 +198,7 @@
         {
           "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
           "line": 1,
-          "end_line": 99,
+          "end_line": 96,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -215,7 +215,7 @@
         {
           "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
           "line": 1,
-          "end_line": 99,
+          "end_line": 96,
           "label": "Authoritative skill instructions"
         }
       ]

@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/re-pitch-an-explanation.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
       "link_mode": "local-only"
     },
     "legend": {
@@ -49,8 +49,8 @@
       "sources": [
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 610,
-          "end_line": 639,
+          "line": 623,
+          "end_line": 652,
           "label": "Pinned source and runtime record"
         }
       ]
@@ -66,8 +66,8 @@
       "sources": [
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 610,
-          "end_line": 639,
+          "line": 623,
+          "end_line": 652,
           "label": "Pinned source and runtime record"
         }
       ]
@@ -100,8 +100,8 @@
       "sources": [
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 610,
-          "end_line": 639,
+          "line": 623,
+          "end_line": 652,
           "label": "Pinned source and runtime record"
         }
       ]

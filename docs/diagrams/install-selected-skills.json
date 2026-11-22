@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/install-selected-skills.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
       "link_mode": "local-only"
     },
     "legend": {
@@ -59,7 +59,7 @@
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -76,7 +76,7 @@
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -93,7 +93,7 @@
         {
           "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
           "line": 1,
-          "end_line": 62,
+          "end_line": 76,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -110,7 +110,7 @@
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -127,7 +127,7 @@
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -144,7 +144,7 @@
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -161,7 +161,7 @@
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]

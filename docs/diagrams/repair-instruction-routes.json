@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/repair-instruction-routes.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
       "link_mode": "local-only"
     },
     "legend": {
@@ -74,10 +74,10 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/agentic-work/writing-for-agents/SKILL.md",
-          "line": 1,
-          "end_line": 87,
-          "label": "Authoritative skill instructions"
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "line": 653,
+          "end_line": 684,
+          "label": "Pinned source and runtime record"
         }
       ]
     },
@@ -103,14 +103,14 @@
       "lane": "work",
       "col": 3,
       "type": "backend",
-      "label": "Use approved isolation",
+      "label": "Create task branch",
       "sublabel": "isolated-workspace",
       "icon": "none",
       "sources": [
         {
           "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
           "line": 1,
-          "end_line": 62,
+          "end_line": 76,
           "label": "Authoritative skill instructions"
         }
       ]

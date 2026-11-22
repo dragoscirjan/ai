@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/initialize-a-project.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
       "link_mode": "local-only"
     },
     "legend": {
@@ -59,7 +59,7 @@
         {
           "path": ".agents/skills/coding/init-project/SKILL.md",
           "line": 1,
-          "end_line": 47,
+          "end_line": 48,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -76,7 +76,7 @@
         {
           "path": ".agents/skills/coding/init-project/SKILL.md",
           "line": 1,
-          "end_line": 47,
+          "end_line": 48,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -86,14 +86,14 @@
       "lane": "work",
       "col": 2,
       "type": "backend",
-      "label": "Create approved workspace",
+      "label": "Create task branch",
       "sublabel": "isolated-workspace",
       "icon": "none",
       "sources": [
         {
           "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
           "line": 1,
-          "end_line": 62,
+          "end_line": 76,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -110,7 +110,7 @@
         {
           "path": ".agents/skills/coding/init-project/SKILL.md",
           "line": 1,
-          "end_line": 47,
+          "end_line": 48,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -144,7 +144,7 @@
         {
           "path": ".agents/skills/coding/init-project/SKILL.md",
           "line": 1,
-          "end_line": 47,
+          "end_line": 48,
           "label": "Authoritative skill instructions"
         }
       ]

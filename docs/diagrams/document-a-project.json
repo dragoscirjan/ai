@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/document-a-project.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "a6e3f4348fb13fdad5011909f7a2f3a3a24cdb14",
+      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
       "link_mode": "local-only"
     },
     "legend": {
