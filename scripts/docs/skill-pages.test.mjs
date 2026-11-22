@@ -138,6 +138,16 @@ test("remote adaptations identify pinned inputs and require review rather than c
   }
 });
 
+test("native recipe labels fit the pinned renderer node budget", () => {
+  // Conservative ASCII budget for native workflow nodes capped at 200px.
+  for (const recipe of workflows) {
+    for (const step of recipe.steps) {
+      assert.match(step.label, /^[\x20-\x7E]+$/);
+      assert.ok(step.label.length <= 28, recipe.id + ": " + step.label);
+    }
+  }
+});
+
 test("source inspection follows grouped catalog paths even when the documentation group differs", () => {
   assert.match(localInstructions("coding"), /^name: coding$/m);
   assert.match(localInstructions("init-project"), /^name: init-project$/m);

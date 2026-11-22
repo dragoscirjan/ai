@@ -25,9 +25,9 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 ## Steps
 
 1. **Inspect task and checkout.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
-2. **Choose location, ref, and base.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
-3. **Check selected setup permissions.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
-4. **Create task ref and verify directory.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+2. **Choose ref, base, location.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+3. **Check setup permissions.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+4. **Create ref; verify directory.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
 
 ## Where to stop
 

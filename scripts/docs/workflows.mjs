@@ -70,7 +70,7 @@ export const workflows = [
     steps: [
       work("init-project", "Inspect the starting point"),
       gate("init-project", "Approve the baseline"),
-      work("isolated-workspace", "Create task branch in chosen location"),
+      work("isolated-workspace", "Create task branch"),
       work("init-project", "Install approved foundation"),
       work("document-project", "Explain first use"),
     ],
@@ -87,9 +87,9 @@ export const workflows = [
       "A dedicated task ref and verified working directory, with or without a separate workspace.",
     steps: [
       work("isolated-workspace", "Inspect task and checkout"),
-      work("isolated-workspace", "Choose location, ref, and base"),
-      work("isolated-workspace", "Check selected setup permissions"),
-      work("isolated-workspace", "Create task ref and verify directory"),
+      work("isolated-workspace", "Choose ref, base, location"),
+      work("isolated-workspace", "Check setup permissions"),
+      work("isolated-workspace", "Create ref; verify directory"),
     ],
     optional: ["coding-with-rules", "document-project"],
     limit:
@@ -183,7 +183,7 @@ export const workflows = [
     when: "The requested behavior and authority to change it are already clear.",
     outcome: "A scoped implementation with behavior checks and affected documentation updated.",
     steps: [
-      work("isolated-workspace", "Create task branch in chosen location"),
+      work("isolated-workspace", "Create task branch"),
       work("coding-with-rules", "Load applicable rules"),
       work("coding", "Implement and test behavior"),
       work("document-project", "Update affected guidance"),
@@ -200,9 +200,9 @@ export const workflows = [
     when: "The owner explicitly wants test-first development and the behavior is agreed.",
     outcome: "An observed red test and the smallest green implementation at a user-confirmed seam.",
     steps: [
-      work("isolated-workspace", "Create task branch in chosen location"),
+      work("isolated-workspace", "Create task branch"),
       work("coding-with-rules", "Resolve language guidance"),
-      work("tdd", "Run one failing behavior test"),
+      work("tdd", "Run one failing test"),
       work("tdd", "Make the slice pass"),
     ],
     optional: ["document-project", "code-review"],
@@ -216,10 +216,10 @@ export const workflows = [
     when: "A test, build, runtime result, or previously working behavior fails unexpectedly.",
     outcome: "A supported diagnosis and a separate proposed fix, not a stack of guesses.",
     steps: [
-      work("systematic-debugging", "Reproduce and collect evidence"),
+      work("systematic-debugging", "Reproduce with evidence"),
       work("systematic-debugging", "Trace the root cause"),
       work("systematic-debugging", "Test one hypothesis"),
-      work("systematic-debugging", "Report cause and fix proposal"),
+      work("systematic-debugging", "Report cause and propose fix"),
     ],
     optional: ["coding-with-rules", "tdd"],
     limit:
@@ -232,7 +232,7 @@ export const workflows = [
     when: "A feature's source structure needs review before behavioral implementation.",
     outcome: "A checked skeleton with explicit fail-fast placeholders.",
     steps: [
-      work("isolated-workspace", "Create task branch in chosen location"),
+      work("isolated-workspace", "Create task branch"),
       work("coding-with-rules", "Select language references"),
       work("scaffold", "Write source skeletons"),
       work("scaffold", "Check structure and stop"),
@@ -250,7 +250,7 @@ export const workflows = [
     steps: [
       work("debloat", "Find unnecessary parts"),
       gate("debloat", "Approve the change scope"),
-      work("isolated-workspace", "Create task branch in chosen location"),
+      work("isolated-workspace", "Create task branch"),
       work("coding-with-rules", "Simplify and test behavior"),
     ],
     optional: ["code-review", "document-project"],
@@ -414,7 +414,7 @@ export const workflows = [
       work("instruction-maintenance", "Audit without mutation"),
       work("writing-for-agents", "Prepare the exact proposal"),
       gate("instruction-maintenance", "Approve the proposed policy"),
-      work("isolated-workspace", "Create task branch in chosen location"),
+      work("isolated-workspace", "Create task branch"),
       work("instruction-maintenance", "Apply + check the repair"),
     ],
     optional: ["asd-ste100-technical"],

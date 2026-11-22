@@ -27,7 +27,7 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 1. **Audit without mutation.** [`instruction-maintenance`](/skills/instruction-maintenance) provides the guidance for this step.
 2. **Prepare the exact proposal.** [`writing-for-agents`](/skills/writing-for-agents) provides the guidance for this step.
 3. **Approve the proposed policy.** [`instruction-maintenance`](/skills/instruction-maintenance) owns this approval boundary; continue only when the applicable approval or existing approved setup is established.
-4. **Create task branch in chosen location.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+4. **Create task branch.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
 5. **Apply + check the repair.** [`instruction-maintenance`](/skills/instruction-maintenance) provides the guidance for this step.
 
 ## Where to stop
