@@ -1,5 +1,6 @@
 ---
 name: init-project
+disable-model-invocation: true
 description: "Initialize or adopt project foundations, TypeScript tooling, or Godot GDScript tooling only when explicitly requested."
 compatibility: Requires Git, mise, and Bun with Bun.TOML.parse. Initialized targets require an approved Node 24-or-newer/pnpm control plane; GDScript also needs an explicitly selected compatible Godot toolchain. Installation and lockfile updates require approval.
 metadata:

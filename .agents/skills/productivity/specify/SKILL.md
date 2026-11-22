@@ -1,5 +1,6 @@
 ---
 name: specify
+disable-model-invocation: true
 description: Turn agreed decisions into a compact specification with observable behavior, acceptance criteria, constraints, and test boundaries.
 requires: ["grilling"]
 ---

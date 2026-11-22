@@ -520,11 +520,6 @@ skills:
     source:
       type: local
       path: .agents/skills/coding/systematic-debugging
-    upstream:
-      type: github
-      repository: https://github.com/obra/superpowers
-      revision: 22f0b463e7a5e579904dd6211a520321035526f7
-      path: skills/systematic-debugging
     category: debugging
     selection: optional
     safety: project-write-guidance
@@ -542,7 +537,7 @@ skills:
       instructions: Use the substantial maintained local variant, not a wholesale upstream replacement. Preserve
         evidence-first root-cause diagnosis, single-hypothesis experiments, boundary checks and reassessment after
         repeated failures. Keep target-owned implementation/validation/workspace handoffs; do not import executable
-        utilities or new Superpowers dependencies.
+        utilities or new upstream dependencies.
       review:
         - Preserve substantive behavior and all mandatory prerequisites.
         - Show the diff and explain any target-specific change.

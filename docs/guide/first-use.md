@@ -8,6 +8,18 @@ Complete the [reviewed installation](/guide/install) and open the harness in its
 
 Do not install another skill automatically if the exercise's guidance is absent. Return to the approved setup process.
 
+## Choose how a skill starts
+
+Human-selected workflows use `disable-model-invocation: true`. In Pi, their descriptions are hidden from automatic model selection, but their explicit commands still work. For example:
+
+```text
+/skill:research Investigate this question and report the evidence. Do not implement changes.
+```
+
+Guidance and safeguard skills omit that property. Pi advertises their descriptions so the model can select them when relevant; it loads their full instructions only when needed. You can also invoke these skills explicitly.
+
+This setting controls selection, not permission. Workspace, delegation, mutation, and publication rules still apply. After changing skills in an existing Pi session, run `/reload`. Check invocation support separately in other harnesses.
+
 ## Make one bounded request
 
 Ask the agent in plain language:

@@ -17,7 +17,7 @@ Use `mise run docs` for a production build and `mise run docs:check` for catalog
 
 ## Install this repository's authoring dependencies
 
-Use Bash 4 or newer, Node.js 24, and npm/npx. This command downloads pinned packages. Run it only after you review the script and trust the external skill sources.
+Use Bash 4 or newer, Node.js 24, and npm/npx. This command downloads packages and upstream skills from `main`. Run it only after you review the script and trust the external skill sources.
 
 From this repository's root, run:
 
@@ -25,7 +25,7 @@ From this repository's root, run:
 bash scripts/install-dev-skills.sh
 ```
 
-The script installs missing external skills into this checkout's ignored `.agents/skills/<name>/` directories for Pi. It installs the manager's pinned YAML parser with `npm ci --ignore-scripts` if needed. It does not install globally, replace existing skills, or synchronize instructions. Existing categorized adaptations remain unchanged. Run `/reload` in Pi afterward.
+The plain Bash script groups skills by source and uses `for` loops to install from upstream `main` branches, then moves the installed directories into this checkout's ignored `.agents/skills/external/<name>/` folder. Existing flat installations move there without reinstalling. Existing categorized adaptations and external-folder copies remain unchanged. There is no embedded Node code, YAML parsing, parser setup, global installation, or instruction synchronization. Run `/reload` in Pi afterward.
 
 See [external authoring dependencies](.agents/skills/agentic-work/sync-my-skills/references/external-skills.md) for the dependency list, local modification rules, and troubleshooting. Run `node --test scripts/install-dev-skills.test.mjs` for the network-free installer tests.
 
