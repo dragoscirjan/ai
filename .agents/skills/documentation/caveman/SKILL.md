@@ -1,5 +1,6 @@
 ---
 name: caveman
+disable-model-invocation: true
 description: Concise communication that preserves complete technical substance.
 ---
 

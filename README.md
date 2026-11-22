@@ -15,6 +15,20 @@ mise run docs:serve
 
 Use `mise run docs` for a production build and `mise run docs:check` for catalog coverage, requirements, recipe, diagram, and local-link checks. Independent runs use `/`; hosted builds use `DOCS_BASE=/projects/ai-skills/`. See [site maintenance](docs/maintenance/index.md), [diagram regeneration](docs/maintenance/diagrams.md), and [publication](docs/maintenance/publication.md). Every push to `main` builds the documentation and opens a destination PR when the output changes. Manual reruns on `main` need no publish argument. The publisher does not merge or deploy.
 
+## Install this repository's authoring dependencies
+
+Use Bash 4 or newer, Node.js 24, and npm/npx. This command downloads packages and upstream skills from `main`. Run it only after you review the script and trust the external skill sources.
+
+From this repository's root, run:
+
+```sh
+bash scripts/install-dev-skills.sh
+```
+
+The plain Bash script groups skills by source and uses `for` loops to install from upstream `main` branches, then moves the installed directories into this checkout's ignored `.agents/skills/external/<name>/` folder. Existing flat installations move there without reinstalling. Existing categorized adaptations and external-folder copies remain unchanged. There is no embedded Node code, YAML parsing, parser setup, global installation, or instruction synchronization. Run `/reload` in Pi afterward.
+
+See [external authoring dependencies](.agents/skills/agentic-work/sync-my-skills/references/external-skills.md) for the dependency list, local modification rules, and troubleshooting. Run `node --test scripts/install-dev-skills.test.mjs` for the network-free installer tests.
+
 ## Skills
 
 | Skill | Purpose |

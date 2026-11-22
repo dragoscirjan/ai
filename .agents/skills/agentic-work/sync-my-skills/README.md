@@ -6,6 +6,8 @@ Source skills may be grouped under `.agents/skills/<category>/<name>/`. The mana
 
 Each run assesses both scopes. Declining instruction changes keeps those files unchanged. Selecting them starts a project-specific interview and reviewed draft, not a blind template copy. Sites, initializers, trust changes, commits, and deprecated removals require their own applicable approval.
 
+For project-local dependencies used to maintain this repository, use the [external authoring dependency setup](references/external-skills.md). That setup does not install the personal manager or run synchronization.
+
 ## Before you start
 
 For the steps below, you need:

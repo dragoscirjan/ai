@@ -4,6 +4,15 @@ docs/.vitepress/cache/
 docs/.vitepress/dist/
 .docs-artifacts/
 /.local-skills/
+# External authoring skills, transient flat installs, and the Skills CLI lock.
+/.agents/skills/external/
+/.agents/skills/code-review/
+/.agents/skills/grill-me/
+/.agents/skills/grilling/
+/.agents/skills/tdd/
+/.agents/skills/unslop/
+/.agents/skills/writing-for-agents/
+/skills-lock.json
 docs/public/diagram-sources/
 docs/public/diagrams/manifest.json
 docs/public/notices/site-dependencies.txt
