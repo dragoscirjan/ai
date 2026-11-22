@@ -4,6 +4,15 @@ docs/.vitepress/cache/
 docs/.vitepress/dist/
 .docs-artifacts/
 /.local-skills/
+# Project-local external authoring skills and the Skills CLI lock.
+/.agents/skills/code-review/
+/.agents/skills/grill-me/
+/.agents/skills/grilling/
+/.agents/skills/systematic-debugging/
+/.agents/skills/tdd/
+/.agents/skills/unslop/
+/.agents/skills/writing-for-agents/
+/skills-lock.json
 docs/public/diagram-sources/
 docs/public/diagrams/manifest.json
 docs/public/notices/site-dependencies.txt
