@@ -4,7 +4,7 @@ title: "Catalog reference"
 
 # Catalog reference
 
-The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml) owns names, sources, selection defaults, runtime notes, installation mechanisms, and legal records. This site adds learning prose and presentation groups; it does not replace that inventory.
+The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml) owns categories, membership, names, sources, runtime notes, installation mechanisms, and legal records. This site adds learning prose and presentation groups; it does not replace that inventory.
 
 ## Availability
 
@@ -15,34 +15,34 @@ The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/a
 
 | Skill | Availability | Selection default |
 | --- | --- | --- |
-| [`archify`](/skills/archify) | Upstream-only; approved external setup | optional |
-| [`asd-ste100-technical`](/skills/asd-ste100-technical) | Authored here | recommended |
-| [`caveman`](/skills/caveman) | Authored here | optional |
-| [`cleanup-workspaces`](/skills/cleanup-workspaces) | Authored here | optional |
-| [`code-review`](/skills/code-review) | Pinned upstream input; adaptation required | optional |
-| [`coding`](/skills/coding) | Authored here | detected |
-| [`coding-with-rules`](/skills/coding-with-rules) | Authored here | optional |
-| [`debloat`](/skills/debloat) | Authored here | optional |
-| [`grilling`](/skills/grilling) | Upstream-only; approved external setup | optional |
-| [`document-project`](/skills/document-project) | Authored here | recommended |
-| [`excalidraw`](/skills/excalidraw) | Authored here | optional |
-| [`grill-me`](/skills/grill-me) | Pinned upstream input; adaptation required | optional |
-| [`init-project`](/skills/init-project) | Authored here | initializer |
-| [`initiative`](/skills/initiative) | Authored here | optional |
-| [`instruction-maintenance`](/skills/instruction-maintenance) | Authored here | optional |
-| [`isolated-workspace`](/skills/isolated-workspace) | Authored here | optional |
-| [`plan-tasks`](/skills/plan-tasks) | Authored here | optional |
-| [`research`](/skills/research) | Authored here | optional |
-| [`retro`](/skills/retro) | Authored here | optional |
-| [`scaffold`](/skills/scaffold) | Authored here | optional |
-| [`specify`](/skills/specify) | Authored here | optional |
-| [`subagent-orchestration`](/skills/subagent-orchestration) | Authored here | optional |
-| [`sync-my-skills`](/skills/sync-my-skills) | Authored here | optional |
-| [`systematic-debugging`](/skills/systematic-debugging) | Upstream-derived; maintained here | optional |
-| [`tdd`](/skills/tdd) | Pinned upstream input; adaptation required | optional |
-| [`unslop`](/skills/unslop) | Upstream-only; approved external setup | recommended |
-| [`wait-what`](/skills/wait-what) | Upstream-only; approved external setup | optional |
-| [`writing-for-agents`](/skills/writing-for-agents) | Pinned upstream input; adaptation required | optional |
+| [`initiative`](/skills/initiative) | Authored here | undefined |
+| [`research`](/skills/research) | Authored here | undefined |
+| [`specify`](/skills/specify) | Authored here | undefined |
+| [`plan-tasks`](/skills/plan-tasks) | Authored here | undefined |
+| [`retro`](/skills/retro) | Authored here | undefined |
+| [`grill-me`](/skills/grill-me) | Pinned upstream input; adaptation required | undefined |
+| [`grilling`](/skills/grilling) | Upstream-only; approved external setup | undefined |
+| [`wait-what`](/skills/wait-what) | Upstream-only; approved external setup | undefined |
+| [`coding`](/skills/coding) | Authored here | undefined |
+| [`coding-with-rules`](/skills/coding-with-rules) | Authored here | undefined |
+| [`scaffold`](/skills/scaffold) | Authored here | undefined |
+| [`code-review`](/skills/code-review) | Pinned upstream input; adaptation required | undefined |
+| [`systematic-debugging`](/skills/systematic-debugging) | Upstream-derived; maintained here | undefined |
+| [`tdd`](/skills/tdd) | Pinned upstream input; adaptation required | undefined |
+| [`debloat`](/skills/debloat) | Authored here | undefined |
+| [`asd-ste100-technical`](/skills/asd-ste100-technical) | Authored here | undefined |
+| [`caveman`](/skills/caveman) | Authored here | undefined |
+| [`document-project`](/skills/document-project) | Authored here | undefined |
+| [`unslop`](/skills/unslop) | Upstream-only; approved external setup | undefined |
+| [`excalidraw`](/skills/excalidraw) | Authored here | undefined |
+| [`archify`](/skills/archify) | Upstream-only; approved external setup | undefined |
+| [`writing-for-agents`](/skills/writing-for-agents) | Pinned upstream input; adaptation required | undefined |
+| [`sync-my-skills`](/skills/sync-my-skills) | Authored here | undefined |
+| [`init-project`](/skills/init-project) | Authored here | undefined |
+| [`isolated-workspace`](/skills/isolated-workspace) | Authored here | undefined |
+| [`cleanup-workspaces`](/skills/cleanup-workspaces) | Authored here | undefined |
+| [`instruction-maintenance`](/skills/instruction-maintenance) | Authored here | undefined |
+| [`subagent-orchestration`](/skills/subagent-orchestration) | Authored here | undefined |
 
 A recommended default is not approval. A declined skill stays unchanged; policy already active in the target project still applies. Read each profile for runtime setup and its authoritative source.
 

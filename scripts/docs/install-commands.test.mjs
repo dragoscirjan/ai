@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { test } from "node:test";
 import { parse } from "yaml";
-import { catalog, localInstructions, root, sourceUrl } from "./data.mjs";
+import { catalog, groups, localInstructions, root, sourceUrl } from "./data.mjs";
 import { generatedPages, installCommand } from "./generate.mjs";
 import { notes } from "./skill-notes.mjs";
 import { workflows } from "./workflows.mjs";
@@ -53,6 +53,51 @@ test("published skill commands and source links match every catalog acquisition 
     );
   }
 });
+test("documentation categories and memberships come directly from the YAML", () => {
+  const raw = parse(read(".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml"));
+  assert.equal(raw.schemaVersion, 3);
+  assert.deepEqual(Object.keys(raw.categories), [
+    "productivity",
+    "coding",
+    "documentation",
+    "agentic-work",
+    "utility",
+    "unpolished",
+  ]);
+  const derived = Object.keys(raw.categories).map((id) => ({
+    id,
+    ...raw.categories[id],
+    skills: Object.entries(raw.skills)
+      .filter(([, entry]) => entry.category === id)
+      .map(([name]) => name),
+  }));
+  assert.deepEqual(groups, derived);
+});
+
+test("the personal skill is command-driven with one runtime catalog pointer and no installer engine", () => {
+  const base = ".agents/skills/agentic-work/sync-my-skills/";
+  const instruction = localInstructions("sync-my-skills");
+  assert.match(instruction, /Generate commands from each selected entry's `install.argv`/);
+  assert.match(instruction, /Obtain approval, then run the commands directly/);
+  assert.deepEqual(
+    [...instruction.matchAll(/\]\(([^)]+)\)/g)].map((m) => m[1]),
+    ["assets/skill-catalog.yaml"],
+  );
+  for (const file of [
+    "scripts/sync-core.mjs",
+    "scripts/sync-my-skills.mjs",
+    "package.json",
+    "assets/selection.schema.json",
+    "assets/ai-assets-lock.schema.json",
+  ])
+    assert.equal(existsSync(join(root, base, file)), false, file);
+  for (const name of ["pi", "opencode"]) {
+    const stub = read(base + "assets/commands/" + name + ".md");
+    assert.match(stub, /Load the installed sync-my-skills skill and follow it/);
+    assert.doesNotMatch(stub, /every remaining|planId|--bundled|grill/);
+  }
+});
+
 test("single-skill selection and the personal manager scope remain unchanged", () => {
   for (const entry of catalog().skills) {
     const argv = entry.install.argv;

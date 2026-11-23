@@ -14,8 +14,8 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
-import { parse } from "yaml";
-import { catalog, docsBase, groups, root } from "./data.mjs";
+import { parse, stringify } from "yaml";
+import { catalog, catalogPath, docsBase, groups, root, loadCatalog, parseYaml } from "./data.mjs";
 import { checkDocs, checkMarkdownLinks } from "./check.mjs";
 import { publicToolEnvironment } from "./environment.mjs";
 import { generatedPages } from "./generate.mjs";
@@ -117,6 +117,96 @@ test("base validation rejects URLs, traversal, encoded separators, empty segment
   ])
     assert.throws(() => docsBase(value), /DOCS_BASE/);
 });
+function catalogFixture(t, change) {
+  const directory = temporary(t);
+  const data = parse(readFileSync(catalogPath, "utf8"));
+  change(data);
+  const file = join(directory, "catalog.yaml");
+  writeFileSync(file, stringify(data));
+  return { directory, file, data };
+}
+
+test("catalog parsing rejects duplicate keys, aliases, tags, multiple documents, and unsafe keys", () => {
+  for (const text of [
+    "a: 1\na: 2",
+    "a: &x [1]\nb: *x",
+    "a: !unknown text",
+    "---\na: 1\n---\nb: 2",
+    "__proto__: x",
+    "a:\n  constructor: x",
+  ]) {
+    assert.throws(() => parseYaml(text));
+  }
+});
+
+test("catalog validation rejects taxonomy drift, unsafe sources, commands, and dependency cycles", (t) => {
+  const changes = [
+    (c) => {
+      c.schemaVersion = 2;
+    },
+    (c) => {
+      c.skills.coding.category = "coding-base";
+    },
+    (c) => {
+      delete c.categories.productivity;
+    },
+    (c) => {
+      c.skills.coding.source.path = "../escape";
+    },
+    (c) => {
+      c.skills.tdd.source.revision = "main";
+    },
+    (c) => {
+      c.skills.tdd.source.repository = "https://user:secret@github.com/mattpocock/skills";
+    },
+    (c) => {
+      c.skills.coding.install.argv = ["npx", "skills@1.7.4", "add", "example/repo"];
+    },
+    (c) => {
+      c.skills.coding.install.argv = ["sh", "-c", "untrusted"];
+    },
+    (c) => {
+      c.skills.coding.prerequisites = ["missing"];
+    },
+    (c) => {
+      c.skills.coding.prerequisites = ["coding-with-rules"];
+    },
+    (c) => {
+      c.skills.coding.legal[0].target = "../escape";
+    },
+  ];
+  for (const change of changes) {
+    const f = catalogFixture(t, change);
+    assert.throws(() => loadCatalog(f.file));
+  }
+});
+
+test("catalog coverage rejects uncatalogued source skills, duplicates, and linked categories", (t) => {
+  const f = catalogFixture(t, () => {});
+  for (const [name, entry] of Object.entries(f.data.skills)) {
+    if (entry.source.type !== "local") continue;
+    const file = join(f.directory, entry.source.path, "SKILL.md");
+    mkdirSync(dirname(file), { recursive: true });
+    writeFileSync(
+      file,
+      `---\nname: ${name}\ndescription: Fixture.\n${entry.prerequisites.length ? "requires: " + JSON.stringify(entry.prerequisites) + "\n" : ""}---\n`,
+    );
+  }
+  assert.equal(loadCatalog(f.file, f.directory).skills.length, 28);
+  const extra = join(f.directory, ".agents/skills/extra");
+  mkdirSync(extra);
+  writeFileSync(join(extra, "SKILL.md"), "---\nname: extra\ndescription: Fixture.\n---\n");
+  assert.throws(() => loadCatalog(f.file, f.directory), /coverage/);
+  rmSync(extra, { recursive: true });
+  const duplicate = join(f.directory, ".agents/skills/duplicate/coding");
+  mkdirSync(duplicate, { recursive: true });
+  writeFileSync(join(duplicate, "SKILL.md"), "---\nname: coding\ndescription: Fixture.\n---\n");
+  assert.throws(() => loadCatalog(f.file, f.directory), /Duplicate local skill name/);
+  rmSync(dirname(duplicate), { recursive: true });
+  symlinkSync(join(f.directory, ".agents/skills/coding"), extra, "dir");
+  assert.throws(() => loadCatalog(f.file, f.directory), /Symlink/);
+});
+
 test("catalog groups are an exact partition, not a replacement inventory", () => {
   const names = groups.flatMap((group) => group.skills);
   assert.equal(names.length, new Set(names).size);

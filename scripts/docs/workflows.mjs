@@ -52,14 +52,14 @@ export const workflows = [
       "A verified installation of only the approved skills and separately selected instructions.",
     steps: [
       work("sync-my-skills", "Inspect the project"),
-      gate("sync-my-skills", "Choose each scope"),
-      work("isolated-workspace", "Prepare approved isolation"),
-      gate("sync-my-skills", "Approve exact apply plan"),
-      work("sync-my-skills", "Apply and verify status"),
+      gate("sync-my-skills", "Choose YAML categories"),
+      work("sync-my-skills", "Generate install commands"),
+      gate("sync-my-skills", "Approve commands"),
+      work("sync-my-skills", "Run, verify, offer review"),
     ],
     optional: ["instruction-maintenance"],
     limit:
-      "Keep personal manager setup separate. Declined entries and unknown custom skills remain unchanged; a stale plan requires a new review.",
+      "Keep personal setup separate. Use approved catalog commands, preserve skipped/custom content, and review instructions only after successful installation.",
   },
   {
     id: "initialize-a-project",

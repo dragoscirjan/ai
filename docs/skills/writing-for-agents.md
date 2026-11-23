@@ -63,7 +63,7 @@ For focused procedures and utilities, see [supporting tools](/workflows/supporti
 
 ## Source and harness support
 
-The catalog records this entry as **optional**, not as automatically selected for every project.
+Install this skill only through an approved category selection or an explicit single-skill request.
 
 [Read the pinned upstream input](https://raw.githubusercontent.com/mattpocock/skills/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/productivity/writing-for-agents/SKILL.md). This link uses the immutable upstream revision `5863806dd4e15c63174bee4e7515a4256792ecfa`; there is no vendored copy here.
 

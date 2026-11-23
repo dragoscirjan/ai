@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 784 528" data-reader-fit="width-first" data-layout-contract="readable-v2" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase" data-node-ui="" style="--flow-cycle: 5.175s; width: 784px; height: 528px; min-width: 0px;" width="784" height="528" xmlns="http://www.w3.org/2000/svg"><style>
+<svg viewBox="0 0 784 528" data-reader-fit="width-first" data-layout-contract="readable-v2" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase" data-node-ui="" style="--flow-cycle: 6.571s; width: 784px; height: 528px; min-width: 0px;" width="784" height="528" xmlns="http://www.w3.org/2000/svg"><style>
 /*
 JetBrains Mono variable WOFF2 subsets from Google Fonts service revision v24.
 These fixed bytes are shared by the viewer and its SVG/raster exports.
@@ -399,115 +399,115 @@ svg[data-preset="editorial"] { --flow-halo-peak: 0.07; --flow-glow-peak: 0.28; -
 }
 @keyframes archify-relay-ripple { 
   0% { r: 2px; opacity: var(--flow-peak, 0.6); }
-  14.494%, 100% { r: 20px; opacity: 0; }
+  11.414%, 100% { r: 20px; opacity: 0; }
 }
 @keyframes archify-relay-comet-0 { 
   0% { stroke-dashoffset: calc(var(--flow-len, 0px) + var(--flow-shift, 0px)); opacity: 0; animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  2.319% { opacity: var(--flow-peak, 0.9); }
-  12.213% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
-  15.305%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
+  1.826% { opacity: var(--flow-peak, 0.9); }
+  9.618% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
+  12.053%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
 }
 @keyframes archify-relay-wake-0 { 
-  0%, 3.664% { opacity: 0; }
-  12.213% { opacity: var(--flow-peak, 0.3); }
-  29.605%, 100% { stroke-dashoffset: 0px; opacity: 0; }
+  0%, 2.885% { opacity: 0; }
+  9.618% { opacity: var(--flow-peak, 0.3); }
+  23.315%, 100% { stroke-dashoffset: 0px; opacity: 0; }
 }
 @keyframes archify-relay-comet-1 { 
   0% { stroke-dashoffset: calc(var(--flow-len, 0px) + var(--flow-shift, 0px)); opacity: 0; animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  1.623% { opacity: var(--flow-peak, 0.9); }
-  8.116% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
-  11.208%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
+  1.278% { opacity: var(--flow-peak, 0.9); }
+  6.392% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
+  8.827%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
 }
 @keyframes archify-relay-wake-1 { 
-  0%, 2.435% { opacity: 0; }
-  8.116% { opacity: var(--flow-peak, 0.3); }
-  25.509%, 100% { stroke-dashoffset: 0px; opacity: 0; }
+  0%, 1.918% { opacity: 0; }
+  6.392% { opacity: var(--flow-peak, 0.3); }
+  20.088%, 100% { stroke-dashoffset: 0px; opacity: 0; }
 }
 @keyframes archify-relay-comet-2 { 
   0% { stroke-dashoffset: calc(var(--flow-len, 0px) + var(--flow-shift, 0px)); opacity: 0; animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  2.319% { opacity: var(--flow-peak, 0.9); }
-  20.495% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
-  23.587%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
+  1.826% { opacity: var(--flow-peak, 0.9); }
+  17.01% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
+  19.445%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
 }
 @keyframes archify-relay-wake-2 { 
   0% { stroke-dashoffset: var(--flow-len, 0px); opacity: var(--flow-peak, 0.3); animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  20.495% { stroke-dashoffset: 0px; opacity: var(--flow-peak, 0.3); }
-  37.887%, 100% { stroke-dashoffset: 0px; opacity: 0; }
+  17.01% { stroke-dashoffset: 0px; opacity: var(--flow-peak, 0.3); }
+  30.707%, 100% { stroke-dashoffset: 0px; opacity: 0; }
 }
 @keyframes archify-relay-comet-3 { 
   0% { stroke-dashoffset: calc(var(--flow-len, 0px) + var(--flow-shift, 0px)); opacity: 0; animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  2.208% { opacity: var(--flow-peak, 0.9); }
-  11.042% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
-  14.134%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
+  1.826% { opacity: var(--flow-peak, 0.9); }
+  15.433% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
+  17.868%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
 }
 @keyframes archify-relay-wake-3 { 
-  0%, 3.313% { opacity: 0; }
-  11.042% { opacity: var(--flow-peak, 0.3); }
-  28.434%, 100% { stroke-dashoffset: 0px; opacity: 0; }
+  0%, 4.63% { opacity: 0; }
+  15.433% { opacity: var(--flow-peak, 0.3); }
+  29.13%, 100% { stroke-dashoffset: 0px; opacity: 0; }
 }
 @keyframes archify-relay-comet-4 { 
   0% { stroke-dashoffset: calc(var(--flow-len, 0px) + var(--flow-shift, 0px)); opacity: 0; animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  1.78% { opacity: var(--flow-peak, 0.9); }
-  8.902% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
-  11.994%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
+  1.826% { opacity: var(--flow-peak, 0.9); }
+  19.13% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
+  21.565%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
 }
 @keyframes archify-relay-wake-4 { 
   0% { stroke-dashoffset: var(--flow-len, 0px); opacity: var(--flow-peak, 0.3); animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  8.902% { stroke-dashoffset: 0px; opacity: var(--flow-peak, 0.3); }
-  26.295%, 100% { stroke-dashoffset: 0px; opacity: 0; }
+  19.13% { stroke-dashoffset: 0px; opacity: var(--flow-peak, 0.3); }
+  32.827%, 100% { stroke-dashoffset: 0px; opacity: 0; }
 }
 @keyframes archify-relay-comet-5 { 
   0% { stroke-dashoffset: calc(var(--flow-len, 0px) + var(--flow-shift, 0px)); opacity: 0; animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  1.863% { opacity: var(--flow-peak, 0.9); }
-  9.316% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
-  12.408%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
+  1.772% { opacity: var(--flow-peak, 0.9); }
+  8.859% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
+  11.294%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
 }
 @keyframes archify-relay-wake-5 { 
-  0%, 2.795% { opacity: 0; }
-  9.316% { opacity: var(--flow-peak, 0.3); }
-  26.709%, 100% { stroke-dashoffset: 0px; opacity: 0; }
+  0%, 2.658% { opacity: 0; }
+  8.859% { opacity: var(--flow-peak, 0.3); }
+  22.555%, 100% { stroke-dashoffset: 0px; opacity: 0; }
 }
 @keyframes archify-relay-node-0 { 
   0%, 100% { filter: var(--ambient-node-base-filter, none); }
   0% { filter: var(--ambient-node-base-filter, none); }
-  2.319%, 8.116% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
-  23.19% { filter: var(--ambient-node-base-filter, none); }
+  1.826%, 6.392% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
+  18.262% { filter: var(--ambient-node-base-filter, none); }
 }
 @keyframes archify-relay-node-1 { 
   0%, 100% { filter: var(--ambient-node-base-filter, none); }
-  20.495% { filter: var(--ambient-node-base-filter, none); }
-  22.814%, 28.612% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
-  43.685% { filter: var(--ambient-node-base-filter, none); }
+  17.01% { filter: var(--ambient-node-base-filter, none); }
+  18.836%, 23.402% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
+  35.272% { filter: var(--ambient-node-base-filter, none); }
 }
 @keyframes archify-relay-node-2 { 
   0%, 100% { filter: var(--ambient-node-base-filter, none); }
-  34.641% { filter: var(--ambient-node-base-filter, none); }
-  36.96%, 42.757% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
-  57.831% { filter: var(--ambient-node-base-filter, none); }
+  28.15% { filter: var(--ambient-node-base-filter, none); }
+  29.976%, 34.542% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
+  46.412% { filter: var(--ambient-node-base-filter, none); }
 }
 @keyframes archify-relay-node-3 { 
   0%, 100% { filter: var(--ambient-node-base-filter, none); }
-  33.469% { filter: var(--ambient-node-base-filter, none); }
-  35.788%, 41.586% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
-  56.659% { filter: var(--ambient-node-base-filter, none); }
+  33.965% { filter: var(--ambient-node-base-filter, none); }
+  35.791%, 40.356% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
+  52.227% { filter: var(--ambient-node-base-filter, none); }
 }
 @keyframes archify-relay-node-4 { 
   0%, 100% { filter: var(--ambient-node-base-filter, none); }
-  44.304% { filter: var(--ambient-node-base-filter, none); }
-  46.623%, 52.421% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
-  67.494% { filter: var(--ambient-node-base-filter, none); }
+  54.617% { filter: var(--ambient-node-base-filter, none); }
+  56.443%, 61.009% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
+  72.879% { filter: var(--ambient-node-base-filter, none); }
 }
 @keyframes archify-relay-node-5 { 
   0%, 100% { filter: var(--ambient-node-base-filter, none); }
-  54.353% { filter: var(--ambient-node-base-filter, none); }
-  56.672%, 62.469% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
-  77.543% { filter: var(--ambient-node-base-filter, none); }
+  62.531% { filter: var(--ambient-node-base-filter, none); }
+  64.357%, 68.922% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
+  80.793% { filter: var(--ambient-node-base-filter, none); }
 }
 @keyframes archify-relay-node-6 { 
   0%, 100% { filter: var(--ambient-node-base-filter, none); }
-  55.553% { filter: var(--ambient-node-base-filter, none); }
-  57.872%, 63.669% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
-  78.743% { filter: var(--ambient-node-base-filter, none); }
+  64.997% { filter: var(--ambient-node-base-filter, none); }
+  66.824%, 71.389% { filter: var(--ambient-node-base-filter,) drop-shadow(0 0 10px var(--arrow-emphasis)); }
+  83.26% { filter: var(--ambient-node-base-filter, none); }
 }
 svg[data-node-ui] [data-node-id] &gt; rect:not(.c-mask) { stroke-width: 1.25px; }
 :is([data-theme="dark"] svg[data-node-ui], svg[data-node-ui][data-theme="dark"]) [data-node-id] &gt; rect:not(.c-mask).c-frontend { fill: color-mix(in srgb, var(--frontend-stroke) 13%, var(--mask)); stroke: color-mix(in srgb, var(--frontend-stroke) 72%, var(--mask)); }
@@ -932,10 +932,10 @@ been cleared for every commercial, promotional, or redistributive use.</metadata
         <!-- Edge paths -->
         <path data-edge-from="step-1" data-edge-to="stop-1" data-edge-label="not approved" data-edge-key="0" data-edge-id="decline-1" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="230,269;230,290;302,290;302,367;286,367" d="M 230 269 L 230 282 Q 230 290 238 290 L 294 290 Q 302 290 302 298 L 302 359 Q 302 367 294 367 L 286 367" class="a-security" data-animate="edge" style="--step: 5;" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
         <path data-edge-from="step-3" data-edge-to="stop-3" data-edge-label="not approved" data-edge-key="1" data-edge-id="decline-3" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="470,269;470,341" d="M 470 269 L 470 341" class="a-security" data-animate="edge" style="--step: 6;" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="step-0" data-edge-to="step-1" data-edge-key="2" data-edge-id="next-0" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="110,145;110,166;302,166;302,243;286,243" d="M 110 145 L 110 158 Q 110 166 118 166 L 294 166 Q 302 166 302 174 L 302 235 Q 302 243 294 243 L 286 243" class="a-default" data-animate="edge" style="--step: 0;" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="step-1" data-edge-to="step-2" data-edge-label="if approved" data-edge-key="3" data-edge-id="next-1" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="286,251;343,251;343,145" d="M 286 251 L 335 251 Q 343 251 343 243 L 343 145" class="a-security" data-animate="edge" style="--step: 1;" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="step-2" data-edge-to="step-3" data-edge-key="4" data-edge-id="next-2" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="436,119;470,119;470,217" d="M 436 119 L 462 119 Q 470 119 470 127 L 470 217" class="a-default" data-animate="edge" style="--step: 2;" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="step-3" data-edge-to="step-4" data-edge-label="if approved" data-edge-key="5" data-edge-id="next-3" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="550,243;590,243;590,145" d="M 550 243 L 582 243 Q 590 243 590 235 L 590 145" class="a-security" data-animate="edge" style="--step: 3;" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="step-0" data-edge-to="step-1" data-edge-key="2" data-edge-id="next-0" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="110,145;110,166;318,166;318,243;302,243" d="M 110 145 L 110 158 Q 110 166 118 166 L 310 166 Q 318 166 318 174 L 318 235 Q 318 243 310 243 L 302 243" class="a-default" data-animate="edge" style="--step: 0;" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="step-1" data-edge-to="step-2" data-edge-label="if approved" data-edge-key="3" data-edge-id="next-1" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="302,253;334,253;334,190;448,190;448,119;432,119" d="M 302 253 L 326 253 Q 334 253 334 245 L 334 198 Q 334 190 342 190 L 440 190 Q 448 190 448 182 L 448 127 Q 448 119 440 119 L 432 119" class="a-security" data-animate="edge" style="--step: 1;" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="step-2" data-edge-to="step-3" data-edge-key="4" data-edge-id="next-2" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="350,93;350,36;470,36;470,217" d="M 350 93 L 350 44 Q 350 36 358 36 L 462 36 Q 470 36 470 44 L 470 217" class="a-default" data-animate="edge" style="--step: 2;" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="step-3" data-edge-to="step-4" data-edge-label="if approved" data-edge-key="5" data-edge-id="next-3" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="522,243;590,243;590,145" d="M 522 243 L 582 243 Q 590 243 590 235 L 590 145" class="a-security" data-animate="edge" style="--step: 3;" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
 
         <!-- Nodes -->
         <g id="node-step-0" data-node-id="step-0" data-node-label="Inspect the project" tabindex="0" role="button" aria-label="Focus Inspect the project, sync-my-skills, Suggested skill handoffs" aria-pressed="false" data-node-kind="backend" data-node-sublabel="sync-my-skills" data-node-context="Suggested skill handoffs">
@@ -947,44 +947,44 @@ been cleared for every commercial, promotional, or redistributive use.</metadata
           <text x="110" y="136.2" class="t-muted" font-size="8" text-anchor="middle">sync-my-skills</text>
         </g>
 
-        <g id="node-step-2" data-node-id="step-2" data-node-label="Prepare approved isolation" tabindex="0" role="button" aria-label="Focus Prepare approved isolation, isolated-workspace, Suggested skill handoffs" aria-pressed="false" data-node-kind="backend" data-node-sublabel="isolated-workspace" data-node-context="Suggested skill handoffs">
-          <title>Prepare approved isolation · isolated-workspace · Suggested skill handoffs</title>
-          <rect x="264" y="93" width="172" height="52" rx="8" class="c-mask"/>
-          <rect x="264" y="93" width="172" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 2; --flow-node-name: archify-relay-node-3;" stroke-width="1.5"/>
+        <g id="node-step-2" data-node-id="step-2" data-node-label="Generate install commands" tabindex="0" role="button" aria-label="Focus Generate install commands, sync-my-skills, Suggested skill handoffs" aria-pressed="false" data-node-kind="backend" data-node-sublabel="sync-my-skills" data-node-context="Suggested skill handoffs">
+          <title>Generate install commands · sync-my-skills · Suggested skill handoffs</title>
+          <rect x="268" y="93" width="164" height="52" rx="8" class="c-mask"/>
+          <rect x="268" y="93" width="164" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 2; --flow-node-name: archify-relay-node-3;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="350" y="124.5" class="t-primary" font-size="10.5" font-weight="600" text-anchor="middle">Prepare approved isolation</text>
-          <text x="350" y="136.7" class="t-muted" font-size="8" text-anchor="middle">isolated-workspace</text>
+          <text data-node-label="" x="350" y="124.4" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">Generate install commands</text>
+          <text x="350" y="136.6" class="t-muted" font-size="8" text-anchor="middle">sync-my-skills</text>
         </g>
 
-        <g id="node-step-4" data-node-id="step-4" data-node-label="Apply and verify status" tabindex="0" role="button" aria-label="Focus Apply and verify status, sync-my-skills, Suggested skill handoffs" aria-pressed="false" data-node-kind="backend" data-node-sublabel="sync-my-skills" data-node-context="Suggested skill handoffs">
-          <title>Apply and verify status · sync-my-skills · Suggested skill handoffs</title>
-          <rect x="514" y="93" width="152" height="52" rx="8" class="c-mask"/>
-          <rect x="514" y="93" width="152" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 4; --flow-node-name: archify-relay-node-6;" stroke-width="1.5"/>
+        <g id="node-step-4" data-node-id="step-4" data-node-label="Run, verify, offer review" tabindex="0" role="button" aria-label="Focus Run, verify, offer review, sync-my-skills, Suggested skill handoffs" aria-pressed="false" data-node-kind="backend" data-node-sublabel="sync-my-skills" data-node-context="Suggested skill handoffs">
+          <title>Run, verify, offer review · sync-my-skills · Suggested skill handoffs</title>
+          <rect x="508" y="93" width="164" height="52" rx="8" class="c-mask"/>
+          <rect x="508" y="93" width="164" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 4; --flow-node-name: archify-relay-node-6;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="590" y="124.4" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">Apply and verify status</text>
+          <text data-node-label="" x="590" y="124.4" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">Run, verify, offer review</text>
           <text x="590" y="136.6" class="t-muted" font-size="8" text-anchor="middle">sync-my-skills</text>
         </g>
 
-        <g id="node-step-1" data-node-id="step-1" data-node-label="Choose each scope" tabindex="0" role="button" aria-label="Focus Choose each scope, sync-my-skills, Applicable owner approval" aria-pressed="false" data-node-kind="security" data-node-sublabel="sync-my-skills" data-node-context="Applicable owner approval">
-          <title>Choose each scope · sync-my-skills · Applicable owner approval</title>
-          <rect x="174" y="217" width="112" height="52" rx="8" class="c-mask"/>
-          <rect x="174" y="217" width="112" height="52" rx="8" class="c-security" data-animate="node" style="--step: 1; --flow-node-name: archify-relay-node-1;" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="decision" class="semantic-sigil s-security" transform="translate(180 223) scale(0.6875)">
+        <g id="node-step-1" data-node-id="step-1" data-node-label="Choose YAML categories" tabindex="0" role="button" aria-label="Focus Choose YAML categories, sync-my-skills, Applicable owner approval" aria-pressed="false" data-node-kind="security" data-node-sublabel="sync-my-skills" data-node-context="Applicable owner approval">
+          <title>Choose YAML categories · sync-my-skills · Applicable owner approval</title>
+          <rect x="158" y="217" width="144" height="52" rx="8" class="c-mask"/>
+          <rect x="158" y="217" width="144" height="52" rx="8" class="c-security" data-animate="node" style="--step: 1; --flow-node-name: archify-relay-node-1;" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="decision" class="semantic-sigil s-security" transform="translate(164 223) scale(0.6875)">
             <path d="M8 2.2 13.8 8 8 13.8 2.2 8Z"/>
           </g>
-          <text data-node-label="" x="230" y="248.1" class="t-primary" font-size="10.1" font-weight="600" text-anchor="middle">Choose each scope</text>
-          <text x="230" y="260.2" class="t-muted" font-size="8" text-anchor="middle">sync-my-skills</text>
+          <text data-node-label="" x="230" y="248.3" class="t-primary" font-size="10.3" font-weight="600" text-anchor="middle">Choose YAML categories</text>
+          <text x="230" y="260.4" class="t-muted" font-size="8" text-anchor="middle">sync-my-skills</text>
         </g>
 
-        <g id="node-step-3" data-node-id="step-3" data-node-label="Approve exact apply plan" tabindex="0" role="button" aria-label="Focus Approve exact apply plan, sync-my-skills, Applicable owner approval" aria-pressed="false" data-node-kind="security" data-node-sublabel="sync-my-skills" data-node-context="Applicable owner approval">
-          <title>Approve exact apply plan · sync-my-skills · Applicable owner approval</title>
-          <rect x="390" y="217" width="160" height="52" rx="8" class="c-mask"/>
-          <rect x="390" y="217" width="160" height="52" rx="8" class="c-security" data-animate="node" style="--step: 3; --flow-node-name: archify-relay-node-4;" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="decision" class="semantic-sigil s-security" transform="translate(396 223) scale(0.6875)">
+        <g id="node-step-3" data-node-id="step-3" data-node-label="Approve commands" tabindex="0" role="button" aria-label="Focus Approve commands, sync-my-skills, Applicable owner approval" aria-pressed="false" data-node-kind="security" data-node-sublabel="sync-my-skills" data-node-context="Applicable owner approval">
+          <title>Approve commands · sync-my-skills · Applicable owner approval</title>
+          <rect x="418" y="217" width="104" height="52" rx="8" class="c-mask"/>
+          <rect x="418" y="217" width="104" height="52" rx="8" class="c-security" data-animate="node" style="--step: 3; --flow-node-name: archify-relay-node-4;" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="decision" class="semantic-sigil s-security" transform="translate(424 223) scale(0.6875)">
             <path d="M8 2.2 13.8 8 8 13.8 2.2 8Z"/>
           </g>
-          <text data-node-label="" x="470" y="248.5" class="t-primary" font-size="10.5" font-weight="600" text-anchor="middle">Approve exact apply plan</text>
-          <text x="470" y="260.7" class="t-muted" font-size="8" text-anchor="middle">sync-my-skills</text>
+          <text data-node-label="" x="470" y="250" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Approve commands</text>
+          <text x="470" y="264.6" class="t-muted" font-size="8" text-anchor="middle">sync-my-skills</text>
         </g>
 
         <g id="node-stop-1" data-node-id="stop-1" data-node-label="Pause this branch" tabindex="0" role="button" aria-label="Focus Pause this branch, No approval, no writes, Stop without authorizing writes" aria-pressed="false" data-node-kind="external" data-node-sublabel="No approval, no writes" data-node-context="Stop without authorizing writes">
@@ -1022,13 +1022,13 @@ been cleared for every commercial, promotional, or redistributive use.</metadata
         </g>
 
         <g data-edge-from="step-1" data-edge-to="step-2" data-edge-label="if approved" data-edge-key="3" data-edge-id="next-1">
-          <rect x="311.6" y="188" width="62.8" height="14" rx="3" class="c-mask"/>
-          <text x="343" y="198" class="t-edge-security" font-size="8" text-anchor="middle">if approved</text>
+          <rect x="359.6" y="170" width="62.8" height="14" rx="3" class="c-mask"/>
+          <text x="391" y="180" class="t-edge-security" font-size="8" text-anchor="middle">if approved</text>
         </g>
 
         <g data-edge-from="step-3" data-edge-to="step-4" data-edge-label="if approved" data-edge-key="5" data-edge-id="next-3">
-          <rect x="558.6" y="184" width="62.8" height="14" rx="3" class="c-mask"/>
-          <text x="590" y="194" class="t-edge-security" font-size="8" text-anchor="middle">if approved</text>
+          <rect x="524.6" y="223" width="62.8" height="14" rx="3" class="c-mask"/>
+          <text x="556" y="233" class="t-edge-security" font-size="8" text-anchor="middle">if approved</text>
         </g>
 
         <!-- Legend -->

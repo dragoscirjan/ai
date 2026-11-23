@@ -6,9 +6,9 @@
   },
   "artifacts": {
     "required-dependencies": {
-      "candidateSha256": "6396ad33664f9c2c585880925f00515886c0937fbf4a5b4b7b2c63d66d454ebb",
-      "htmlSha256": "598924c5ec599529a29b01ef2bb48a0baa91e2fc68080f1989065c4488a2c1c7",
-      "svgSha256": "c97cc03524368e8f53e625bb17acd832b2288fdf5b88eb1b81237ead5f3a0b62",
+      "candidateSha256": "2c6068303c794bbc237d1cd1066c77091122dcb9c6c8785ca3a156e89c759ba1",
+      "htmlSha256": "88692a551291f2eacef7392c731524fd425b370796ccb835ad52bb9d129c8e71",
+      "svgSha256": "01c3b6d621e38f1c1660ec0baf85e8381c47691db63a2e4ee6ec821205f46591",
       "gates": {
         "validate": "pass",
         "deliver": "pass",
@@ -18,7 +18,7 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
@@ -42,9 +42,9 @@
       "visualReview": "not-requested"
     },
     "install-selected-skills": {
-      "candidateSha256": "e78a29597be08576eeea687b7932e331e7d690d6fcf67509bf7c9d46aaf3d170",
-      "htmlSha256": "f989297fbf3cd9955af2f46cc3cd99487c06b2f57d5fffc655d99c8febb59080",
-      "svgSha256": "c73bdd553463b0d5c865a57494e01c8f42906ebb09e7ed02b38491c14584b966",
+      "candidateSha256": "eb00bc35a4e1c61709310506a064ce053bb9f1a4789d7b0539fbfdf9a900e58e",
+      "htmlSha256": "b9c2b5304caae87fd3bd64301cc0b0d26e3ccaff34cde7c40c285c335ace890d",
+      "svgSha256": "aa0206b0574e10d32f77afb005fe9fa4476126384fef0f7a2e76bdb9baebaa96",
       "gates": {
         "validate": "pass",
         "deliver": "pass",
@@ -54,7 +54,7 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
@@ -96,8 +96,8 @@
       "visualReview": "not-requested"
     },
     "research-a-decision": {
-      "candidateSha256": "520cd5e25b8ce9b6c75a3fa44583997ec9a7f9b7a822408f856bff8dbb7bb4d3",
-      "htmlSha256": "009ae3480bde1b43e99da042eb5596bb2c9c90d1ce93226127bd3d4fc8966445",
+      "candidateSha256": "473e6671bdba41219378da859c48b91bc36f6eef5cd9910be8af8dd9f0a6331e",
+      "htmlSha256": "de4b9af381a45685b6903ed7ca2299bdd5399f2415a5c245c1f6703dd747dd94",
       "svgSha256": "665a47063ef01bf0327cb9f4692a05779eb21d3c6bec34c9145247be7b4c25f6",
       "gates": {
         "validate": "pass",
@@ -108,14 +108,14 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
     },
     "shape-an-initiative": {
-      "candidateSha256": "2f09203a72fb4cf587263758333623ec8b7ba12ea6a176092dd465b40bdf954b",
-      "htmlSha256": "34a5c6794770334750a03019b1827df1d29a903de5d6861f126610208f4782c5",
+      "candidateSha256": "de78e952d619c32b451fdc28044e395acadd21955e21d08a4d4984d263170ca1",
+      "htmlSha256": "60c038926651b6af000781e5775cf8a7fbee33f715fce5945db77276b776d598",
       "svgSha256": "df7c87d0965e5ba625ff5a5f9f7479f58dadf4d39ac70acf8df1cd69156d5f31",
       "gates": {
         "validate": "pass",
@@ -126,14 +126,14 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
     },
     "specify-observable-behavior": {
-      "candidateSha256": "559dca0ab88b9b3379e6f93c66d14c95a0199e76979bc41d7d5b2e22d8990466",
-      "htmlSha256": "f2b248f338c86e6420bac3da3234a79c00e0460ce4705a4375685952d9667b12",
+      "candidateSha256": "844d199fd2b3a2f8d8be07f236b243ff300623e6bd62a51db4cd508409afd966",
+      "htmlSha256": "1682f67706e0afedf7315f052627b739a0a008b7cf4f9f0d1c2eb740b3dcbd7b",
       "svgSha256": "c73116ccb3d18100fca8683389847a424b69074b7cfddfb1bc66201ddec955b8",
       "gates": {
         "validate": "pass",
@@ -144,7 +144,7 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
@@ -168,8 +168,8 @@
       "visualReview": "not-requested"
     },
     "challenge-a-design": {
-      "candidateSha256": "8e10b03f01d736ac6a121951940b9e18fdcd07d615cc21518bfa1f02da7bc4ab",
-      "htmlSha256": "ed22ecadca8fed188e8c95b116c4e940f232b2d9808a2cd22e20166598c13783",
+      "candidateSha256": "565a3c6261a1554bf4a833dbd8d265797f80e3cc1e370f47298d9876c0e86671",
+      "htmlSha256": "0eb8bf4ed0b08b36d2728b7d66f5561d2862f7d32eb40c9416f7d277c3102ad2",
       "svgSha256": "880b5e174b4bace025f4d48edd9eb8e00319f4625a94c279f7833891bf6a1407",
       "gates": {
         "validate": "pass",
@@ -180,7 +180,7 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
@@ -204,8 +204,8 @@
       "visualReview": "not-requested"
     },
     "build-test-first": {
-      "candidateSha256": "15834f0c739cf4b5bc7b650e2c67cb2a9524c39218c4c18f8093341fd8b9a122",
-      "htmlSha256": "e02caa111b40c1f40b2563ade05bcf3e7205d72a55ac57ec1a8ec9816ad390f2",
+      "candidateSha256": "b5ab1bf09d0ddd70e9fd0690753ed43aa695478e1693e6bc4546aab8c3ce1106",
+      "htmlSha256": "545a274c5c903cff1a2dd48c4314a479048414c3a0f8acfa1a87f4eb3f072cff",
       "svgSha256": "4a2c4316205a9873d373f3f8ecc5c868ed55e28e160498882bc3210006f3e6c5",
       "gates": {
         "validate": "pass",
@@ -216,7 +216,7 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
@@ -276,8 +276,8 @@
       "visualReview": "not-requested"
     },
     "review-against-standards-and-spec": {
-      "candidateSha256": "59b80625fca751594f598f1cd4cbafb1e04238800dae0b7453383463bac0c5c3",
-      "htmlSha256": "dfc191947d9bc1f1c95db1d437f1cc85ffcff47252caa75c9a9ea42449078479",
+      "candidateSha256": "7b7f141724ae6a06f7112a8b3388102e7c5e7fddcd0cf09dcc2d59388311bfc9",
+      "htmlSha256": "93a91459ebd7d4ae10de6e9238cfd8abf5dbaafad1ff1921e2cdf649e2b68a4b",
       "svgSha256": "ace930832df19f42d312f1e377d3d6f8fee2d51d4634680159e42ab69c63e10f",
       "gates": {
         "validate": "pass",
@@ -288,14 +288,14 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
     },
     "maintain-task-based-docs": {
-      "candidateSha256": "2c4c6a7bdf1a2643859b50ce62e10c87be6a68578f8e1bfb7e3974913662fcb7",
-      "htmlSha256": "711fcb4e0bcbdfeecce923545579d885b2558ff9fbdfb67dad841cafeca71fb2",
+      "candidateSha256": "df48c1bfcaff3985650a7ec89a324f1527787222a140bdc465e3a53b98b68cdf",
+      "htmlSha256": "f19a11b8242bac553546cfac0d16ad25ee0677bdf071f09c977ba368fb2e39ad",
       "svgSha256": "21272c822584726cec94f24e96d224b975f0ff614d1d794522153a18df4b8b7c",
       "gates": {
         "validate": "pass",
@@ -306,14 +306,14 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
     },
     "write-agent-facing-guidance": {
-      "candidateSha256": "bb0077f881a9e105af281c3bbaa9fe2e48c2db587988db17aa35edb9498f7cb6",
-      "htmlSha256": "d54c02b18d73eb089f5b8f8fb1d8edaeb29a744da2859a25ca2ca61878380ed4",
+      "candidateSha256": "7be61977f7a42f9b215c9b4dc5a5ef21efd089a4ee09dcbb8c8997cb4dee1014",
+      "htmlSha256": "b48131ec92c4ee746b20dafa7e5de05efa3e1ba53beb65d306e37c253d2f47fe",
       "svgSha256": "55d77a5ea299f314061e84aa797fbb6f613eb574464300a91f25f381b6a2e6a3",
       "gates": {
         "validate": "pass",
@@ -324,14 +324,14 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
     },
     "shorten-without-loss": {
-      "candidateSha256": "c8518885b56bee6d914f3e4b06cfb9841622a55d4edf5499f60b62473cc80b1c",
-      "htmlSha256": "eead3d7ddf50dda9212bbcec3b6c5990d83bc04655606b2c85454cfe02402caf",
+      "candidateSha256": "072007df54cd1aeeed3c77cb4dc3c4adf2d08899f9e05678448bac186983f409",
+      "htmlSha256": "99e39e4252cf5d40ef203b661acb8a9595b8fb51f15aeaec54edd2df92702876",
       "svgSha256": "003b9dab60be9ef224a53f8bfee6caf78be918193199a17e2ee2551de8160884",
       "gates": {
         "validate": "pass",
@@ -342,14 +342,14 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
     },
     "explain-with-archify": {
-      "candidateSha256": "0161951c5cc495b26a2ab8b826dfdb4a71d2e0ebf702705489693ffb9cb3497d",
-      "htmlSha256": "3221fe87f243005e752a154a23b5b1adc4a0b79e1a16f375359a299c3b54e424",
+      "candidateSha256": "b27db6b851401acc04134d801ea53ae45c91622950916101ffe742dd7fb39f36",
+      "htmlSha256": "bf1296a286b6428ad13f5e3656a0fda36434e8d886a73db6e049d7d338462b2d",
       "svgSha256": "c428ba4ace9e7c3af4dc7879a5728e6fbdd14c958e4d6f7651df5658bf845d9d",
       "gates": {
         "validate": "pass",
@@ -360,7 +360,7 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
@@ -402,8 +402,8 @@
       "visualReview": "not-requested"
     },
     "coordinate-read-only-review": {
-      "candidateSha256": "9b4dc3e8523b2312c579210946bc736d9e938941a8b681880a5947bc3f064555",
-      "htmlSha256": "68630efdf2be1109bdbcdddab7f02aa51a1995feac3fec283baefae178b033b3",
+      "candidateSha256": "a8cd251d45b1ba9110dbcc8cd1ba087c52b29f6b2008eae7e182987ce8c032aa",
+      "htmlSha256": "80302661878db9ec69c815ae35c4daadee714f28b3dcb1ab9e876a76704a7105",
       "svgSha256": "04f6b29a7dc107255bc52dfd8ca4c83f0fa178fbd5d98eaf3cb48101f847c497",
       "gates": {
         "validate": "pass",
@@ -414,7 +414,7 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
@@ -438,8 +438,8 @@
       "visualReview": "not-requested"
     },
     "repair-instruction-routes": {
-      "candidateSha256": "4cc34b0cddcfe84dee4c21325ba4f9a16d3624ae0e1aecb7422678366f1e6421",
-      "htmlSha256": "d1e6b265fce183f86e673d81fed5a0a03c60f371b86d62f3f5bf1d7edcb351c6",
+      "candidateSha256": "0df9c80e6c0aa51ee45170c3e46858027234a8045d94fe5d61299c28f824ff83",
+      "htmlSha256": "f3fc018db79202e21ccc615893702b9a696c97a3e32607d178c4e4748a6ea21a",
       "svgSha256": "1bb6466dcc7f7cca91a81580c08d0ebe05afae5b8df66593db54866f505e6c81",
       "gates": {
         "validate": "pass",
@@ -450,7 +450,7 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
@@ -474,8 +474,8 @@
       "visualReview": "not-requested"
     },
     "re-pitch-an-explanation": {
-      "candidateSha256": "4a39a5d180cbe78d8bf322e11cbcd3d7026a5f5f4f6487067c5b74e54243d820",
-      "htmlSha256": "d3665c04ed2bcfc0114a2a3cf49b9536963a406e79df50086efaac15b097a41a",
+      "candidateSha256": "b6a5658e7e3dab4665f219397b664167f640848d1b449f5aebc50344ff5789b7",
+      "htmlSha256": "edff749379d6b7cabe450dda2710957b210b007edd97f275301c93b5a92d7efa",
       "svgSha256": "d431682a6a4f5e48f89699fe96cb17a4e40f569b94bdecfaded1a93e2c7ef51a",
       "gates": {
         "validate": "pass",
@@ -486,7 +486,7 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
@@ -510,8 +510,8 @@
       "visualReview": "not-requested"
     },
     "implement-a-task": {
-      "candidateSha256": "c40f40c36841e679708cf84c9f5c146137dcf484feea47b72a5cbce8711580b2",
-      "htmlSha256": "8dfa73b7783df18d2b4b45f09905a81d766d99de20e1cf0238219109a862aedd",
+      "candidateSha256": "880c9bf17491721b26368565d19ca5822d62a7000a2071777f8a46d78b2b265d",
+      "htmlSha256": "f710cd9c3f716e206c2dae45bf8a1c5b66a9dad140f173b72efe71b83412317b",
       "svgSha256": "ec6bef1c4b64604e7376d1d9cfed4a84888572e1c261583a01abc853fde93099",
       "gates": {
         "validate": "pass",
@@ -522,14 +522,14 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
     },
     "debug-a-problem": {
-      "candidateSha256": "ca9f229c0858c7acb71cbc78811dcafaeec89ad918878ecd7d2adfb61c79e780",
-      "htmlSha256": "91408dd3a4a3f6c050cab09e33fc9b1c416b71127c3844e5fc29e9f4005f1d92",
+      "candidateSha256": "8bc511fa3cc1165d5df5abbf8e917875368314f5fe878d6aa4b49a574cb46804",
+      "htmlSha256": "a8a790e5132721c507d4169777944e3fd1674dfb983fbe925f494a782ac4c668",
       "svgSha256": "d4dc49494f8dfe743d4c103815354a1d89d1ef97fc7b7b956734084952a0673b",
       "gates": {
         "validate": "pass",
@@ -540,7 +540,7 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
@@ -564,8 +564,8 @@
       "visualReview": "not-requested"
     },
     "debloat-a-project": {
-      "candidateSha256": "40a884bc52ea6f70599e2c2566f7759ead7aa0d92dd318cec8f57559b23ebb38",
-      "htmlSha256": "04c1492d4c44a57a1d13b7dc2b71de0fc3f1877c6ab7bae6facaac50f6a7a6c3",
+      "candidateSha256": "52fb8e7db0a123e3998ea3d0f8782c6c7960a4906608df757c8138b95f5ada70",
+      "htmlSha256": "1e7434f18b74501003314b41795eb91d810f143bf0bc47e5dc494db77353698a",
       "svgSha256": "e1e09e4cbf01ce37db5921b95a9cf7f13342a631c0631c672bf9e85782acaed1",
       "gates": {
         "validate": "pass",
@@ -576,7 +576,7 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"

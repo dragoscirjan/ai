@@ -1,6 +1,6 @@
 # Writing examples and scenario checks
 
-Assume the reader can use standard development tools. Supply the project-specific facts needed to complete the task. The catalog example below uses this repository's real read-only helper; adapt it rather than copying it into another project's documentation.
+Assume the reader can use standard development tools. Supply the project-specific facts needed to complete the task. The catalog example below uses this repository's real read-only checks; adapt it rather than copying it into another project's documentation.
 
 ## Replace shorthand with a complete task
 
@@ -12,15 +12,15 @@ A developer-focused how-to:
 
 ### Check the skill catalog
 
-Prerequisites: a trusted checkout of this repository, Node.js 22.20 or newer, and the manager's pinned parser dependency installed through [approved setup](../../../agentic-work/sync-my-skills/README.md). Do not install dependencies merely to perform this check. Run this command from the repository root:
+Prerequisites: a trusted checkout of this repository, Node.js 24, and its approved documentation dependencies already installed. Do not install dependencies merely to perform this check. Run this command from the repository root:
 
 ```sh
-node .agents/skills/sync-my-skills/scripts/sync-my-skills.mjs catalog --source-root .
+npm run docs:check
 ```
 
-The command exits with code 0 and prints JSON containing `schemaVersion`, `catalogHash`, `skills`, and `deprecations`. Check that `schemaVersion` is `2` and that `skills` includes `document-project` with `selection: recommended`. A recommendation does not authorize installation. This command reads the catalog and skill metadata; it does not install skills, create a documentation site, or modify the checkout.
+The command exits with code 0, reports passing tests, and prints a summary containing `skills`, `workflows`, `diagrams`, and `localLinks`. The checks validate the YAML categories, metadata, references, and source coverage. They do not install skills, create a documentation site, or authorize executing generated install commands.
 
-If the helper rejects the Node.js version, select a supported runtime. If the parser dependency is unavailable, request its approved setup before retrying. For a catalog coverage mismatch, compare local-source entries with directories under `.agents/skills/`. Upstream-only entries deliberately have no vendored directory. Correct the mismatch rather than bypassing validation.
+If the checks reject the Node.js version, select the project's supported runtime. If documentation dependencies are unavailable, request their approved setup before retrying. For a catalog coverage mismatch, compare local-source entries with directories under `.agents/skills/`. Upstream-only entries deliberately have no vendored directory. Correct the mismatch rather than bypassing validation.
 
 This guide supplies the runtime, working directory, exact command, expected result, and relevant recovery. It does not explain how to open a terminal.
 

@@ -8,16 +8,16 @@ This repository is a curated collection of reusable AI-agent skills, prompts, co
 
 Load only the instructions required for the current phase. When several rows match, load each required document or skill before that phase begins.
 
-| Trigger | Required instructions |
-|---|---|
-| Read-only questions, inspection, comparison, or research | No deferred project document is required unless the workflow needs repository identity; then read and follow `CONTRIBUTING.md`. |
-| Before planning or performing a repository architecture, design, implementation, documentation, configuration, policy, or publication change | Read and follow `CONTRIBUTING.md`. |
-| Before changing repository files | Follow the task-branch and working-location policy below. |
-| Before designing, changing, testing, or reviewing source code | Read `coding-with-rules` and follow its language and extension reference selection. Resolve its declared requirements first. |
-| During implementation, and before creating or revising project documentation | Read and follow `document-project`, `asd-ste100-technical`, and `unslop`. Assess documentation impact and update affected documentation in the same change. |
-| Before delegating work to child agents | Read and follow `.agents/skills/unpolished/subagent-orchestration/SKILL.md`. |
-| Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
-| Before auditing or removing old workspaces | Read and follow `.agents/skills/utility/cleanup-workspaces/SKILL.md`. |
+| Trigger                                                                                                                                                   | Required instructions                                                                                                                                                                                      |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Read-only questions, inspection, comparison, or research                                                                                                  | No deferred project document is required unless the workflow needs repository identity; then read and follow `CONTRIBUTING.md`.                                                                            |
+| Before planning or performing a repository architecture, design, implementation, documentation, configuration, policy, or publication change              | Read and follow `CONTRIBUTING.md`.                                                                                                                                                                         |
+| Before changing repository files                                                                                                                          | Follow the task-branch and working-location policy below.                                                                                                                                                  |
+| Before designing, changing, testing, or reviewing source code                                                                                             | Read `coding-with-rules` and follow its language and extension reference selection. Resolve its declared requirements first.                                                                               |
+| During implementation, and before creating or revising project documentation                                                                              | Read and follow `document-project`, `asd-ste100-technical`, and `unslop`. Assess documentation impact and update affected documentation in the same change.                                                |
+| Before delegating work to child agents                                                                                                                    | Read and follow `.agents/skills/unpolished/subagent-orchestration/SKILL.md`.                                                                                                                               |
+| Before validating, committing, pushing, or publishing                                                                                                     | Read and follow `VALIDATION.md`.                                                                                                                                                                           |
+| Before auditing or removing old workspaces                                                                                                                | Read and follow `.agents/skills/utility/cleanup-workspaces/SKILL.md`.                                                                                                                                      |
 | When instructions, their relationships, or skill routing metadata appear missing, stale, conflicting, duplicated, or unsuitable for the observed workflow | Read and follow `.agents/skills/unpolished/instruction-maintenance/SKILL.md`. It permits a read-only audit and exact proposal; do not mutate instructions before explicit human approval of that proposal. |
 
 Stop before the gated phase if a required document or skill is unavailable. Do not recreate missing instructions from memory.
@@ -30,10 +30,11 @@ Do not add `sync-my-skills` as another skill's prerequisite, companion, handoff,
 
 Before proposing a skill solution in this project, including revisions to current drafts, search all four sources:
 
-- https://github.com/mattpocock/skills/tree/main/skills/
-- https://github.com/obra/superpowers/tree/main/skills/
-- https://github.com/cursor/plugins/
-- https://github.com/vercel-labs/skills
+- <https://github.com/mattpocock/skills/tree/main/skills/>
+- <https://github.com/obra/superpowers/tree/main/skills/>
+- <https://github.com/cursor/plugins/>
+- <https://github.com/vercel-labs/skills>
+- <https://github.com/poteto/noodle/blob/main/.agents/skills/>
 
 Read relevant skill instructions, compare them with local capabilities, and explain what to reuse, adapt, or write anew. Report unavailable sources; do not treat an unsuccessful search as evidence that no suitable skill exists.
 

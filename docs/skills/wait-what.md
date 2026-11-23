@@ -62,7 +62,7 @@ For focused procedures and utilities, see [supporting tools](/workflows/supporti
 
 ## Source and harness support
 
-The catalog records this entry as **optional**, not as automatically selected for every project.
+Install this skill only through an approved category selection or an explicit single-skill request.
 
 [Read the authoritative skill instructions](https://raw.githubusercontent.com/mattpocock/skills/d80fa0f4ebe0c5714af0adf8670336065233ecc6/skills/productivity/wait-what/SKILL.md). This link uses the immutable upstream revision `d80fa0f4ebe0c5714af0adf8670336065233ecc6`; there is no vendored copy here.
 

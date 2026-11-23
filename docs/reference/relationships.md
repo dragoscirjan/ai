@@ -16,12 +16,12 @@ A line between two skill names can mean different things. Treating every useful 
 
 | Requesting skill | Required instructions |
 | --- | --- |
-| [`cleanup-workspaces`](/skills/cleanup-workspaces) | [`isolated-workspace`](/skills/isolated-workspace) |
-| [`coding-with-rules`](/skills/coding-with-rules) | [`coding`](/skills/coding) |
-| [`grill-me`](/skills/grill-me) | [`grilling`](/skills/grilling) |
 | [`initiative`](/skills/initiative) | [`grilling`](/skills/grilling) |
 | [`research`](/skills/research) | [`grilling`](/skills/grilling) |
 | [`specify`](/skills/specify) | [`grilling`](/skills/grilling) |
+| [`grill-me`](/skills/grill-me) | [`grilling`](/skills/grilling) |
+| [`coding-with-rules`](/skills/coding-with-rules) | [`coding`](/skills/coding) |
+| [`cleanup-workspaces`](/skills/cleanup-workspaces) | [`isolated-workspace`](/skills/isolated-workspace) |
 
 The `requires` declaration is a project extension, not a standard Agent Skills field or a native loader guarantee. Resolve recursively in array order, stop on missing requirements or cycles, and obtain approved setup. Direct Skills CLI installation does not automatically install this closure. If a selected skill or required instructions are missing, stop the task and ask the user to install them. Resume only after installation is confirmed and availability is verified.
 

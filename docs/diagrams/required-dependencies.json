@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/required-dependencies.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+      "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
       "link_mode": "local-only"
     },
     "legend": {
@@ -21,13 +21,13 @@
   },
   "components": [
     {
-      "id": "cleanup-workspaces",
+      "id": "initiative",
       "type": "backend",
-      "label": "cleanup-workspaces",
+      "label": "initiative",
       "icon": "none",
       "pos": [
         40,
-        40
+        485
       ],
       "size": [
         220,
@@ -35,21 +35,21 @@
       ],
       "sources": [
         {
-          "path": ".agents/skills/utility/cleanup-workspaces/SKILL.md",
+          "path": ".agents/skills/productivity/initiative/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 34,
           "label": "Authoritative skill instructions"
         }
       ]
     },
     {
-      "id": "isolated-workspace",
+      "id": "grilling",
       "type": "backend",
-      "label": "isolated-workspace",
+      "label": "grilling",
       "icon": "none",
       "pos": [
         400,
-        40
+        485
       ],
       "size": [
         220,
@@ -57,10 +57,76 @@
       ],
       "sources": [
         {
-          "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "line": 178,
+          "end_line": 204,
+          "label": "Pinned source and runtime record"
+        }
+      ]
+    },
+    {
+      "id": "research",
+      "type": "backend",
+      "label": "research",
+      "icon": "none",
+      "pos": [
+        40,
+        355
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/research/SKILL.md",
           "line": 1,
-          "end_line": 76,
+          "end_line": 36,
           "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "specify",
+      "type": "backend",
+      "label": "specify",
+      "icon": "none",
+      "pos": [
+        40,
+        615
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/productivity/specify/SKILL.md",
+          "line": 1,
+          "end_line": 36,
+          "label": "Authoritative skill instructions"
+        }
+      ]
+    },
+    {
+      "id": "grill-me",
+      "type": "backend",
+      "label": "grill-me",
+      "icon": "none",
+      "pos": [
+        760,
+        485
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "line": 139,
+          "end_line": 177,
+          "label": "Pinned source and runtime record"
         }
       ]
     },
@@ -109,13 +175,13 @@
       ]
     },
     {
-      "id": "grill-me",
+      "id": "cleanup-workspaces",
       "type": "backend",
-      "label": "grill-me",
+      "label": "cleanup-workspaces",
       "icon": "none",
       "pos": [
-        760,
-        485
+        40,
+        40
       ],
       "size": [
         220,
@@ -123,21 +189,21 @@
       ],
       "sources": [
         {
-          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 288,
-          "end_line": 319,
-          "label": "Pinned source and runtime record"
+          "path": ".agents/skills/utility/cleanup-workspaces/SKILL.md",
+          "line": 1,
+          "end_line": 65,
+          "label": "Authoritative skill instructions"
         }
       ]
     },
     {
-      "id": "grilling",
+      "id": "isolated-workspace",
       "type": "backend",
-      "label": "grilling",
+      "label": "isolated-workspace",
       "icon": "none",
       "pos": [
         400,
-        485
+        40
       ],
       "size": [
         220,
@@ -145,75 +211,9 @@
       ],
       "sources": [
         {
-          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 220,
-          "end_line": 248,
-          "label": "Pinned source and runtime record"
-        }
-      ]
-    },
-    {
-      "id": "initiative",
-      "type": "backend",
-      "label": "initiative",
-      "icon": "none",
-      "pos": [
-        40,
-        485
-      ],
-      "size": [
-        220,
-        72
-      ],
-      "sources": [
-        {
-          "path": ".agents/skills/productivity/initiative/SKILL.md",
+          "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
           "line": 1,
-          "end_line": 34,
-          "label": "Authoritative skill instructions"
-        }
-      ]
-    },
-    {
-      "id": "research",
-      "type": "backend",
-      "label": "research",
-      "icon": "none",
-      "pos": [
-        40,
-        355
-      ],
-      "size": [
-        220,
-        72
-      ],
-      "sources": [
-        {
-          "path": ".agents/skills/productivity/research/SKILL.md",
-          "line": 1,
-          "end_line": 36,
-          "label": "Authoritative skill instructions"
-        }
-      ]
-    },
-    {
-      "id": "specify",
-      "type": "backend",
-      "label": "specify",
-      "icon": "none",
-      "pos": [
-        40,
-        615
-      ],
-      "size": [
-        220,
-        72
-      ],
-      "sources": [
-        {
-          "path": ".agents/skills/productivity/specify/SKILL.md",
-          "line": 1,
-          "end_line": 36,
+          "end_line": 76,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -222,38 +222,38 @@
   "connections": [
     {
       "id": "requires-0",
-      "from": "cleanup-workspaces",
-      "to": "isolated-workspace",
-      "label": "requires"
-    },
-    {
-      "id": "requires-1",
-      "from": "coding-with-rules",
-      "to": "coding",
-      "label": "requires"
-    },
-    {
-      "id": "requires-2",
-      "from": "grill-me",
-      "to": "grilling",
-      "label": "requires"
-    },
-    {
-      "id": "requires-3",
       "from": "initiative",
       "to": "grilling",
       "label": "requires"
     },
     {
-      "id": "requires-4",
+      "id": "requires-1",
       "from": "research",
       "to": "grilling",
       "label": "requires"
     },
     {
-      "id": "requires-5",
+      "id": "requires-2",
       "from": "specify",
       "to": "grilling",
+      "label": "requires"
+    },
+    {
+      "id": "requires-3",
+      "from": "grill-me",
+      "to": "grilling",
+      "label": "requires"
+    },
+    {
+      "id": "requires-4",
+      "from": "coding-with-rules",
+      "to": "coding",
+      "label": "requires"
+    },
+    {
+      "id": "requires-5",
+      "from": "cleanup-workspaces",
+      "to": "isolated-workspace",
       "label": "requires"
     }
   ],

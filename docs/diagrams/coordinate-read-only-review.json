@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/coordinate-read-only-review.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+      "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
       "link_mode": "local-only"
     },
     "legend": {
@@ -66,8 +66,8 @@
       "sources": [
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 106,
-          "end_line": 145,
+          "line": 310,
+          "end_line": 356,
           "label": "Pinned source and runtime record"
         }
       ]

@@ -414,25 +414,25 @@ svg[data-preset="editorial"] { --flow-halo-peak: 0.07; --flow-glow-peak: 0.28; -
 }
 @keyframes archify-relay-comet-1 { 
   0% { stroke-dashoffset: calc(var(--flow-len, 0px) + var(--flow-shift, 0px)); opacity: 0; animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  2.778% { opacity: var(--flow-peak, 0.9); }
-  13.889% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
-  18.333%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
+  3.333% { opacity: var(--flow-peak, 0.9); }
+  22.518% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
+  26.963%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
 }
 @keyframes archify-relay-wake-1 { 
   0% { stroke-dashoffset: var(--flow-len, 0px); opacity: var(--flow-peak, 0.3); animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  13.889% { stroke-dashoffset: 0px; opacity: var(--flow-peak, 0.3); }
-  38.889%, 100% { stroke-dashoffset: 0px; opacity: 0; }
+  22.518% { stroke-dashoffset: 0px; opacity: var(--flow-peak, 0.3); }
+  47.518%, 100% { stroke-dashoffset: 0px; opacity: 0; }
 }
 @keyframes archify-relay-comet-2 { 
   0% { stroke-dashoffset: calc(var(--flow-len, 0px) + var(--flow-shift, 0px)); opacity: 0; animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  2.778% { opacity: var(--flow-peak, 0.9); }
-  13.889% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
-  18.333%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
+  3.333% { opacity: var(--flow-peak, 0.9); }
+  22.518% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
+  26.963%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
 }
 @keyframes archify-relay-wake-2 { 
   0% { stroke-dashoffset: var(--flow-len, 0px); opacity: var(--flow-peak, 0.3); animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  13.889% { stroke-dashoffset: 0px; opacity: var(--flow-peak, 0.3); }
-  38.889%, 100% { stroke-dashoffset: 0px; opacity: 0; }
+  22.518% { stroke-dashoffset: 0px; opacity: var(--flow-peak, 0.3); }
+  47.518%, 100% { stroke-dashoffset: 0px; opacity: 0; }
 }
 @keyframes archify-relay-comet-3 { 
   0% { stroke-dashoffset: calc(var(--flow-len, 0px) + var(--flow-shift, 0px)); opacity: 0; animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
@@ -447,25 +447,25 @@ svg[data-preset="editorial"] { --flow-halo-peak: 0.07; --flow-glow-peak: 0.28; -
 }
 @keyframes archify-relay-comet-4 { 
   0% { stroke-dashoffset: calc(var(--flow-len, 0px) + var(--flow-shift, 0px)); opacity: 0; animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  3.333% { opacity: var(--flow-peak, 0.9); }
-  22.518% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
-  26.963%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
+  2.778% { opacity: var(--flow-peak, 0.9); }
+  13.889% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
+  18.333%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
 }
 @keyframes archify-relay-wake-4 { 
   0% { stroke-dashoffset: var(--flow-len, 0px); opacity: var(--flow-peak, 0.3); animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  22.518% { stroke-dashoffset: 0px; opacity: var(--flow-peak, 0.3); }
-  47.518%, 100% { stroke-dashoffset: 0px; opacity: 0; }
+  13.889% { stroke-dashoffset: 0px; opacity: var(--flow-peak, 0.3); }
+  38.889%, 100% { stroke-dashoffset: 0px; opacity: 0; }
 }
 @keyframes archify-relay-comet-5 { 
   0% { stroke-dashoffset: calc(var(--flow-len, 0px) + var(--flow-shift, 0px)); opacity: 0; animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  3.333% { opacity: var(--flow-peak, 0.9); }
-  22.518% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
-  26.963%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
+  2.778% { opacity: var(--flow-peak, 0.9); }
+  13.889% { stroke-dashoffset: var(--flow-shift, 0px); opacity: var(--flow-peak, 0.9); }
+  18.333%, 100% { stroke-dashoffset: var(--flow-shift, 0px); opacity: 0; }
 }
 @keyframes archify-relay-wake-5 { 
   0% { stroke-dashoffset: var(--flow-len, 0px); opacity: var(--flow-peak, 0.3); animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1); }
-  22.518% { stroke-dashoffset: 0px; opacity: var(--flow-peak, 0.3); }
-  47.518%, 100% { stroke-dashoffset: 0px; opacity: 0; }
+  13.889% { stroke-dashoffset: 0px; opacity: var(--flow-peak, 0.3); }
+  38.889%, 100% { stroke-dashoffset: 0px; opacity: 0; }
 }
 @keyframes archify-relay-node-0 { 
   0%, 100% { filter: var(--ambient-node-base-filter, none); }
@@ -930,91 +930,51 @@ been cleared for every commercial, promotional, or redistributive use.</metadata
 
         <!-- Connection paths (before components for correct z-order) -->
         <g data-graph-role="automatic-crossover" style="--step:0">
-          <path data-graph-role="automatic-crossover-underlay" d="M 260 76 L 400 76" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="cleanup-workspaces" data-edge-to="isolated-workspace" data-edge-label="requires" data-edge-key="0" data-edge-id="requires-0" data-composition-points="260,76;400,76" data-composition-crossover="halo" data-composition-independent="true" d="M 260 76 L 400 76" class="a-default" data-animate="edge" style="--step: 0;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 260 521 L 400 521" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="initiative" data-edge-to="grilling" data-edge-label="requires" data-edge-key="0" data-edge-id="requires-0" data-composition-points="260,521;400,521" data-composition-crossover="halo" data-composition-independent="true" d="M 260 521 L 400 521" class="a-default" data-animate="edge" style="--step: 0;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:1">
-          <path data-graph-role="automatic-crossover-underlay" d="M 260 221 L 400 221" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="coding-with-rules" data-edge-to="coding" data-edge-label="requires" data-edge-key="1" data-edge-id="requires-1" data-composition-points="260,221;400,221" data-composition-crossover="halo" data-composition-independent="true" d="M 260 221 L 400 221" class="a-default" data-animate="edge" style="--step: 1;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 260 411 L 408 411 Q 416 411 416 419 L 416 485" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="research" data-edge-to="grilling" data-edge-label="requires" data-edge-key="1" data-edge-id="requires-1" data-composition-points="260,411;416,411;416,485" data-composition-crossover="halo" data-composition-independent="true" d="M 260 411 L 408 411 Q 416 411 416 419 L 416 485" class="a-default" data-animate="edge" style="--step: 1;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:2">
-          <path data-graph-role="automatic-crossover-underlay" d="M 760 521 L 620 521" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="grill-me" data-edge-to="grilling" data-edge-label="requires" data-edge-key="2" data-edge-id="requires-2" data-composition-points="760,521;620,521" data-composition-crossover="halo" data-composition-independent="true" d="M 760 521 L 620 521" class="a-default" data-animate="edge" style="--step: 2;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 260 631 L 408 631 Q 416 631 416 623 L 416 557" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="specify" data-edge-to="grilling" data-edge-label="requires" data-edge-key="2" data-edge-id="requires-2" data-composition-points="260,631;416,631;416,557" data-composition-crossover="halo" data-composition-independent="true" d="M 260 631 L 408 631 Q 416 631 416 623 L 416 557" class="a-default" data-animate="edge" style="--step: 2;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:3">
-          <path data-graph-role="automatic-crossover-underlay" d="M 260 521 L 400 521" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="initiative" data-edge-to="grilling" data-edge-label="requires" data-edge-key="3" data-edge-id="requires-3" data-composition-points="260,521;400,521" data-composition-crossover="halo" data-composition-independent="true" d="M 260 521 L 400 521" class="a-default" data-animate="edge" style="--step: 3;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 760 521 L 620 521" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="grill-me" data-edge-to="grilling" data-edge-label="requires" data-edge-key="3" data-edge-id="requires-3" data-composition-points="760,521;620,521" data-composition-crossover="halo" data-composition-independent="true" d="M 760 521 L 620 521" class="a-default" data-animate="edge" style="--step: 3;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:4">
-          <path data-graph-role="automatic-crossover-underlay" d="M 260 411 L 408 411 Q 416 411 416 419 L 416 485" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="research" data-edge-to="grilling" data-edge-label="requires" data-edge-key="4" data-edge-id="requires-4" data-composition-points="260,411;416,411;416,485" data-composition-crossover="halo" data-composition-independent="true" d="M 260 411 L 408 411 Q 416 411 416 419 L 416 485" class="a-default" data-animate="edge" style="--step: 4;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 260 221 L 400 221" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="coding-with-rules" data-edge-to="coding" data-edge-label="requires" data-edge-key="4" data-edge-id="requires-4" data-composition-points="260,221;400,221" data-composition-crossover="halo" data-composition-independent="true" d="M 260 221 L 400 221" class="a-default" data-animate="edge" style="--step: 4;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:5">
-          <path data-graph-role="automatic-crossover-underlay" d="M 260 631 L 408 631 Q 416 631 416 623 L 416 557" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="specify" data-edge-to="grilling" data-edge-label="requires" data-edge-key="5" data-edge-id="requires-5" data-composition-points="260,631;416,631;416,557" data-composition-crossover="halo" data-composition-independent="true" d="M 260 631 L 408 631 Q 416 631 416 623 L 416 557" class="a-default" data-animate="edge" style="--step: 5;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 260 76 L 400 76" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="cleanup-workspaces" data-edge-to="isolated-workspace" data-edge-label="requires" data-edge-key="5" data-edge-id="requires-5" data-composition-points="260,76;400,76" data-composition-crossover="halo" data-composition-independent="true" d="M 260 76 L 400 76" class="a-default" data-animate="edge" style="--step: 5;" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
 
         <!-- Components -->
-        <g id="node-cleanup-workspaces" data-node-id="cleanup-workspaces" data-node-label="cleanup-workspaces" tabindex="0" role="button" aria-label="Focus cleanup-workspaces, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
-          <title>cleanup-workspaces · Architecture component</title>
-          <rect x="40" y="40" width="220" height="72" rx="8" class="c-mask"/>
-          <rect x="40" y="40" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 0; --flow-node-name: archify-relay-node-0;" stroke-width="1.5"/>
+        <g id="node-initiative" data-node-id="initiative" data-node-label="initiative" tabindex="0" role="button" aria-label="Focus initiative, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
+          <title>initiative · Architecture component</title>
+          <rect x="40" y="485" width="220" height="72" rx="8" class="c-mask"/>
+          <rect x="40" y="485" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 0; --flow-node-name: archify-relay-node-0;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="150" y="80" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">cleanup-workspaces</text>
-        </g>
-
-        <g id="node-isolated-workspace" data-node-id="isolated-workspace" data-node-label="isolated-workspace" tabindex="0" role="button" aria-label="Focus isolated-workspace, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
-          <title>isolated-workspace · Architecture component</title>
-          <rect x="400" y="40" width="220" height="72" rx="8" class="c-mask"/>
-          <rect x="400" y="40" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 1; --flow-node-name: archify-relay-node-6;" stroke-width="1.5"/>
-          
-          <text data-node-label="" x="510" y="80" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">isolated-workspace</text>
-        </g>
-
-        <g id="node-coding-with-rules" data-node-id="coding-with-rules" data-node-label="coding-with-rules" tabindex="0" role="button" aria-label="Focus coding-with-rules, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
-          <title>coding-with-rules · Architecture component</title>
-          <rect x="40" y="185" width="220" height="72" rx="8" class="c-mask"/>
-          <rect x="40" y="185" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 1; --flow-node-name: archify-relay-node-1;" stroke-width="1.5"/>
-          
-          <text data-node-label="" x="150" y="225" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">coding-with-rules</text>
-        </g>
-
-        <g id="node-coding" data-node-id="coding" data-node-label="coding" tabindex="0" role="button" aria-label="Focus coding, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
-          <title>coding · Architecture component</title>
-          <rect x="400" y="185" width="220" height="72" rx="8" class="c-mask"/>
-          <rect x="400" y="185" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 2; --flow-node-name: archify-relay-node-7;" stroke-width="1.5"/>
-          
-          <text data-node-label="" x="510" y="225" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">coding</text>
-        </g>
-
-        <g id="node-grill-me" data-node-id="grill-me" data-node-label="grill-me" tabindex="0" role="button" aria-label="Focus grill-me, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
-          <title>grill-me · Architecture component</title>
-          <rect x="760" y="485" width="220" height="72" rx="8" class="c-mask"/>
-          <rect x="760" y="485" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 2; --flow-node-name: archify-relay-node-2;" stroke-width="1.5"/>
-          
-          <text data-node-label="" x="870" y="525" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">grill-me</text>
+          <text data-node-label="" x="150" y="525" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">initiative</text>
         </g>
 
         <g id="node-grilling" data-node-id="grilling" data-node-label="grilling" tabindex="0" role="button" aria-label="Focus grilling, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
           <title>grilling · Architecture component</title>
           <rect x="400" y="485" width="220" height="72" rx="8" class="c-mask"/>
-          <rect x="400" y="485" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 3; --flow-node-name: archify-relay-node-8;" stroke-width="1.5"/>
+          <rect x="400" y="485" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 1; --flow-node-name: archify-relay-node-6;" stroke-width="1.5"/>
           
           <text data-node-label="" x="510" y="525" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">grilling</text>
-        </g>
-
-        <g id="node-initiative" data-node-id="initiative" data-node-label="initiative" tabindex="0" role="button" aria-label="Focus initiative, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
-          <title>initiative · Architecture component</title>
-          <rect x="40" y="485" width="220" height="72" rx="8" class="c-mask"/>
-          <rect x="40" y="485" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 3; --flow-node-name: archify-relay-node-3;" stroke-width="1.5"/>
-          
-          <text data-node-label="" x="150" y="525" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">initiative</text>
         </g>
 
         <g id="node-research" data-node-id="research" data-node-label="research" tabindex="0" role="button" aria-label="Focus research, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
           <title>research · Architecture component</title>
           <rect x="40" y="355" width="220" height="72" rx="8" class="c-mask"/>
-          <rect x="40" y="355" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 4; --flow-node-name: archify-relay-node-4;" stroke-width="1.5"/>
+          <rect x="40" y="355" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 1; --flow-node-name: archify-relay-node-1;" stroke-width="1.5"/>
           
           <text data-node-label="" x="150" y="395" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">research</text>
         </g>
@@ -1022,35 +982,75 @@ been cleared for every commercial, promotional, or redistributive use.</metadata
         <g id="node-specify" data-node-id="specify" data-node-label="specify" tabindex="0" role="button" aria-label="Focus specify, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
           <title>specify · Architecture component</title>
           <rect x="40" y="615" width="220" height="72" rx="8" class="c-mask"/>
-          <rect x="40" y="615" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 5; --flow-node-name: archify-relay-node-5;" stroke-width="1.5"/>
+          <rect x="40" y="615" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 2; --flow-node-name: archify-relay-node-2;" stroke-width="1.5"/>
           
           <text data-node-label="" x="150" y="655" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">specify</text>
         </g>
 
+        <g id="node-grill-me" data-node-id="grill-me" data-node-label="grill-me" tabindex="0" role="button" aria-label="Focus grill-me, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
+          <title>grill-me · Architecture component</title>
+          <rect x="760" y="485" width="220" height="72" rx="8" class="c-mask"/>
+          <rect x="760" y="485" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 3; --flow-node-name: archify-relay-node-3;" stroke-width="1.5"/>
+          
+          <text data-node-label="" x="870" y="525" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">grill-me</text>
+        </g>
+
+        <g id="node-coding-with-rules" data-node-id="coding-with-rules" data-node-label="coding-with-rules" tabindex="0" role="button" aria-label="Focus coding-with-rules, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
+          <title>coding-with-rules · Architecture component</title>
+          <rect x="40" y="185" width="220" height="72" rx="8" class="c-mask"/>
+          <rect x="40" y="185" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 4; --flow-node-name: archify-relay-node-4;" stroke-width="1.5"/>
+          
+          <text data-node-label="" x="150" y="225" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">coding-with-rules</text>
+        </g>
+
+        <g id="node-coding" data-node-id="coding" data-node-label="coding" tabindex="0" role="button" aria-label="Focus coding, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
+          <title>coding · Architecture component</title>
+          <rect x="400" y="185" width="220" height="72" rx="8" class="c-mask"/>
+          <rect x="400" y="185" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 5; --flow-node-name: archify-relay-node-7;" stroke-width="1.5"/>
+          
+          <text data-node-label="" x="510" y="225" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">coding</text>
+        </g>
+
+        <g id="node-cleanup-workspaces" data-node-id="cleanup-workspaces" data-node-label="cleanup-workspaces" tabindex="0" role="button" aria-label="Focus cleanup-workspaces, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
+          <title>cleanup-workspaces · Architecture component</title>
+          <rect x="40" y="40" width="220" height="72" rx="8" class="c-mask"/>
+          <rect x="40" y="40" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 5; --flow-node-name: archify-relay-node-5;" stroke-width="1.5"/>
+          
+          <text data-node-label="" x="150" y="80" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">cleanup-workspaces</text>
+        </g>
+
+        <g id="node-isolated-workspace" data-node-id="isolated-workspace" data-node-label="isolated-workspace" tabindex="0" role="button" aria-label="Focus isolated-workspace, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-context="Architecture component">
+          <title>isolated-workspace · Architecture component</title>
+          <rect x="400" y="40" width="220" height="72" rx="8" class="c-mask"/>
+          <rect x="400" y="40" width="220" height="72" rx="8" class="c-backend" data-animate="node" style="--step: 6; --flow-node-name: archify-relay-node-8;" stroke-width="1.5"/>
+          
+          <text data-node-label="" x="510" y="80" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">isolated-workspace</text>
+        </g>
+
         <!-- Connection labels -->
-        <g data-edge-from="cleanup-workspaces" data-edge-to="isolated-workspace" data-edge-label="requires" data-edge-key="0" data-edge-id="requires-0">
-          <rect x="305.8" y="56" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="330" y="66" class="t-edge-default" font-size="8" text-anchor="middle">requires</text>
-        </g>
-        <g data-edge-from="coding-with-rules" data-edge-to="coding" data-edge-label="requires" data-edge-key="1" data-edge-id="requires-1">
-          <rect x="305.8" y="201" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="330" y="211" class="t-edge-default" font-size="8" text-anchor="middle">requires</text>
-        </g>
-        <g data-edge-from="grill-me" data-edge-to="grilling" data-edge-label="requires" data-edge-key="2" data-edge-id="requires-2">
-          <rect x="665.8" y="501" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="690" y="511" class="t-edge-default" font-size="8" text-anchor="middle">requires</text>
-        </g>
-        <g data-edge-from="initiative" data-edge-to="grilling" data-edge-label="requires" data-edge-key="3" data-edge-id="requires-3">
+        <g data-edge-from="initiative" data-edge-to="grilling" data-edge-label="requires" data-edge-key="0" data-edge-id="requires-0">
           <rect x="305.8" y="501" width="48.4" height="14" rx="3" class="c-mask"/>
           <text x="330" y="511" class="t-edge-default" font-size="8" text-anchor="middle">requires</text>
         </g>
-        <g data-edge-from="research" data-edge-to="grilling" data-edge-label="requires" data-edge-key="4" data-edge-id="requires-4">
+        <g data-edge-from="research" data-edge-to="grilling" data-edge-label="requires" data-edge-key="1" data-edge-id="requires-1">
           <rect x="391.8" y="428" width="48.4" height="14" rx="3" class="c-mask"/>
           <text x="416" y="438" class="t-edge-default" font-size="8" text-anchor="middle">requires</text>
         </g>
-        <g data-edge-from="specify" data-edge-to="grilling" data-edge-label="requires" data-edge-key="5" data-edge-id="requires-5">
+        <g data-edge-from="specify" data-edge-to="grilling" data-edge-label="requires" data-edge-key="2" data-edge-id="requires-2">
           <rect x="391.8" y="574" width="48.4" height="14" rx="3" class="c-mask"/>
           <text x="416" y="584" class="t-edge-default" font-size="8" text-anchor="middle">requires</text>
+        </g>
+        <g data-edge-from="grill-me" data-edge-to="grilling" data-edge-label="requires" data-edge-key="3" data-edge-id="requires-3">
+          <rect x="665.8" y="501" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="690" y="511" class="t-edge-default" font-size="8" text-anchor="middle">requires</text>
+        </g>
+        <g data-edge-from="coding-with-rules" data-edge-to="coding" data-edge-label="requires" data-edge-key="4" data-edge-id="requires-4">
+          <rect x="305.8" y="201" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="330" y="211" class="t-edge-default" font-size="8" text-anchor="middle">requires</text>
+        </g>
+        <g data-edge-from="cleanup-workspaces" data-edge-to="isolated-workspace" data-edge-label="requires" data-edge-key="5" data-edge-id="requires-5">
+          <rect x="305.8" y="56" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="330" y="66" class="t-edge-default" font-size="8" text-anchor="middle">requires</text>
         </g>
 
         <!-- Boundary labels (foreground masks keep routes out of titles) -->

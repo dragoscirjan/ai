@@ -61,7 +61,7 @@ For focused procedures and utilities, see [supporting tools](/workflows/supporti
 
 ## Source and harness support
 
-The catalog records this entry as **recommended**, not as automatically selected for every project.
+Install this skill only through an approved category selection or an explicit single-skill request.
 
 [Read the authoritative skill instructions](https://raw.githubusercontent.com/cursor/plugins/bc697d0a5a163cec979e362b601e36f5616083fd/pstack/skills/unslop/SKILL.md). This link uses the immutable upstream revision `bc697d0a5a163cec979e362b601e36f5616083fd`; there is no vendored copy here.
 

@@ -65,7 +65,7 @@ For focused procedures and utilities, see [supporting tools](/workflows/supporti
 
 ## Source and harness support
 
-The catalog records this entry as **optional**, not as automatically selected for every project.
+Install this skill only through an approved category selection or an explicit single-skill request.
 
 [Read the pinned upstream input](https://raw.githubusercontent.com/mattpocock/skills/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d/skills/engineering/tdd/SKILL.md). This link uses the immutable upstream revision `4ae2317ddb22b046e26455e4f9c9b3aaaf62212d`; there is no vendored copy here.
 

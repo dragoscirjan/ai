@@ -61,7 +61,7 @@ For focused procedures and utilities, see [supporting tools](/workflows/supporti
 
 ## Source and harness support
 
-The catalog records this entry as **optional**, not as automatically selected for every project.
+Install this skill only through an approved category selection or an explicit single-skill request.
 
 [Read the authoritative skill instructions](https://raw.githubusercontent.com/mattpocock/skills/95249b0b49782349740fd9b8c6ce32b4e59e497a/skills/productivity/grilling/SKILL.md). This link uses the immutable upstream revision `95249b0b49782349740fd9b8c6ce32b4e59e497a`; there is no vendored copy here.
 

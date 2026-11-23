@@ -4,7 +4,7 @@ title: "sync-my-skills"
 
 # sync-my-skills
 
-Synchronize project skills and agent instructions through a guided, approved plan.
+Install selected skill categories with catalogued commands, then optionally update project instructions.
 
 **Group:** [Agentic work](/groups/agentic-work) · **Availability:** Authored here · **Scope:** personal
 
@@ -12,7 +12,7 @@ Synchronize project skills and agent instructions through a guided, approved pla
 
 You want to choose project skills and review an optional instruction bundle without replacing custom policy blindly.
 
-**Expected result:** A reviewed selection and exact apply plan, followed by installed-state verification when you approve the writes.
+**Expected result:** Approved catalog-generated install commands, followed by verification and optional necessary instruction updates.
 
 ## Install this skill
 
@@ -33,7 +33,7 @@ See [installation choices](/guide/install) for prerequisites and direct install 
 Load the installed skill in your harness, then adapt this request to your project. This is a prompt, not a shell command.
 
 ```text
-Use sync-my-skills to inspect this project. Recommend skills, ask about the remaining entries, and assess instructions separately. Do not apply changes yet.
+Use sync-my-skills to show the YAML category checkboxes. Generate the catalogued commands for all selected project skills and prerequisites, ask for approval, then run them directly. Do not use sync scripts. After successful installation, ask whether to review AGENTS.md and its dependencies.
 ```
 
 ## Requirements and boundaries
@@ -44,7 +44,7 @@ Resolve required instructions in their declared order before applying the skill.
 
 **Runtime and setup:**
 
-- Requires Node.js 22.20 or newer, Git, and the pinned yaml dependency installed during approved personal setup. Target writes require an isolated Git worktree.
+- Node.js 22.20 or newer, npm/npx, Git, and native checkbox controls. Installation commands require approval.
 
 Inspection is not permission to install, remove old skills, adopt instructions, update manager code, or change personal configuration. The manager is a personal installation; selected project skills are a separate operation.
 
@@ -61,7 +61,7 @@ For focused procedures and utilities, see [supporting tools](/workflows/supporti
 
 ## Source and harness support
 
-The catalog records this entry as **optional**, not as automatically selected for every project.
+Install this skill only through an approved category selection or an explicit single-skill request.
 
 [Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/agentic-work/sync-my-skills/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 

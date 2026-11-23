@@ -3,9 +3,9 @@ export const notes = {
   "sync-my-skills": {
     when: "You want to choose project skills and review an optional instruction bundle without replacing custom policy blindly.",
     result:
-      "A reviewed selection and exact apply plan, followed by installed-state verification when you approve the writes.",
+      "Approved catalog-generated install commands, followed by verification and optional necessary instruction updates.",
     prompt:
-      "Use sync-my-skills to inspect this project. Recommend skills, ask about the remaining entries, and assess instructions separately. Do not apply changes yet.",
+      "Use sync-my-skills to show the YAML category checkboxes. Generate the catalogued commands for all selected project skills and prerequisites, ask for approval, then run them directly. Do not use sync scripts. After successful installation, ask whether to review AGENTS.md and its dependencies.",
     stop: "Inspection is not permission to install, remove old skills, adopt instructions, update manager code, or change personal configuration. The manager is a personal installation; selected project skills are a separate operation.",
     companions: ["isolated-workspace", "instruction-maintenance"],
   },

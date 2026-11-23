@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/explain-with-archify.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+      "revision": "278d9a1d4a5cb694c4a263ca5555d9b10e10de73",
       "link_mode": "local-only"
     },
     "legend": {
@@ -58,8 +58,8 @@
       "sources": [
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 10,
-          "end_line": 47,
+          "line": 594,
+          "end_line": 639,
           "label": "Pinned source and runtime record"
         }
       ]
@@ -75,8 +75,8 @@
       "sources": [
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 10,
-          "end_line": 47,
+          "line": 594,
+          "end_line": 639,
           "label": "Pinned source and runtime record"
         }
       ]
@@ -92,8 +92,8 @@
       "sources": [
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 10,
-          "end_line": 47,
+          "line": 594,
+          "end_line": 639,
           "label": "Pinned source and runtime record"
         }
       ]
@@ -109,8 +109,8 @@
       "sources": [
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 10,
-          "end_line": 47,
+          "line": 594,
+          "end_line": 639,
           "label": "Pinned source and runtime record"
         }
       ]
@@ -143,8 +143,8 @@
       "sources": [
         {
           "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 10,
-          "end_line": 47,
+          "line": 594,
+          "end_line": 639,
           "label": "Pinned source and runtime record"
         }
       ]

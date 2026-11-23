@@ -61,7 +61,7 @@ For focused procedures and utilities, see [supporting tools](/workflows/supporti
 
 ## Source and harness support
 
-The catalog records this entry as **optional**, not as automatically selected for every project.
+Install this skill only through an approved category selection or an explicit single-skill request.
 
 [Read the authoritative skill instructions](https://raw.githubusercontent.com/tt-a1i/archify/a7ed6fd6657da90414831d1d42cf95987188750c/archify/SKILL.md). This link uses the immutable upstream revision `a7ed6fd6657da90414831d1d42cf95987188750c`; there is no vendored copy here.
 

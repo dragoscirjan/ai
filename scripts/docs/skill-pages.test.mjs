@@ -94,6 +94,19 @@ test("each skill page has exactly one command selecting only its own catalog ski
   }
 });
 
+test("manager example syncs categories before offering instruction review", () => {
+  const page = generatedPages().get("skills/sync-my-skills.md");
+  assert.match(page, /YAML category checkboxes/);
+  assert.match(page, /catalogued commands for all selected project skills and prerequisites/);
+  assert.match(page, /ask for approval, then run them directly/);
+  assert.match(page, /Do not use sync scripts/);
+  assert.match(page, /After successful installation, ask whether to review AGENTS.md/);
+  assert.doesNotMatch(
+    page,
+    /then skills through native checkboxes|ask about the remaining entries/,
+  );
+});
+
 test("required instructions have separate install links instead of widening the selected command", () => {
   const pages = generatedPages();
   assert.match(pages.get("skills/coding-with-rules.md"), /\/skills\/coding#install-this-skill/);

@@ -25,14 +25,14 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 ## Steps
 
 1. **Inspect the project.** [`sync-my-skills`](/skills/sync-my-skills) provides the guidance for this step.
-2. **Choose each scope.** [`sync-my-skills`](/skills/sync-my-skills) owns this approval boundary; continue only when the applicable approval or existing approved setup is established.
-3. **Prepare approved isolation.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
-4. **Approve exact apply plan.** [`sync-my-skills`](/skills/sync-my-skills) owns this approval boundary; continue only when the applicable approval or existing approved setup is established.
-5. **Apply and verify status.** [`sync-my-skills`](/skills/sync-my-skills) provides the guidance for this step.
+2. **Choose YAML categories.** [`sync-my-skills`](/skills/sync-my-skills) owns this approval boundary; continue only when the applicable approval or existing approved setup is established.
+3. **Generate install commands.** [`sync-my-skills`](/skills/sync-my-skills) provides the guidance for this step.
+4. **Approve commands.** [`sync-my-skills`](/skills/sync-my-skills) owns this approval boundary; continue only when the applicable approval or existing approved setup is established.
+5. **Run, verify, offer review.** [`sync-my-skills`](/skills/sync-my-skills) provides the guidance for this step.
 
 ## Where to stop
 
-Keep personal manager setup separate. Declined entries and unknown custom skills remain unchanged; a stale plan requires a new review.
+Keep personal setup separate. Use approved catalog commands, preserve skipped/custom content, and review instructions only after successful installation.
 
 ## Optional branches
 

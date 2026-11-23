@@ -16,7 +16,7 @@ Writing documents for agents. Use when creating or editing skills, or modifying 
 
 ## [`sync-my-skills`](/skills/sync-my-skills)
 
-Synchronize project skills and agent instructions through a guided, approved plan.
+Install selected skill categories with catalogued commands, then optionally update project instructions.
 
 **Choose it when:** You want to choose project skills and review an optional instruction bundle without replacing custom policy blindly.
 
