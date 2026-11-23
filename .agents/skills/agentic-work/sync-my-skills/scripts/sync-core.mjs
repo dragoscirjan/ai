@@ -825,7 +825,7 @@ function normalizeSelection(selection, catalog) {
     declined.add(decision.name);
   }
   const missing = catalog.skills.filter((entry) => entry.scope === "project" && !selected.includes(entry.name) && !declined.has(entry.name)).map((entry) => entry.name);
-  check(missing.length === 0, `Ask about remaining catalog skills: ${missing.join(", ")}`);
+  check(missing.length === 0, `Record decisions for remaining catalog skills: ${missing.join(", ")}`);
   const removals = strings(selection.removeSkills ?? [], "removeSkills", { names: true });
   for (const name of removals) check(Object.hasOwn(catalog.deprecations ?? {}, name) && !selected.includes(name), `Removal is not a catalogued deprecation: ${name}`);
   check(object(selection.resolutions ?? {}), "resolutions must map exact paths to review notes");

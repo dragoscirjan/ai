@@ -22,27 +22,25 @@ Run `inspect --root <project>` and read the target's active instructions, purpos
 
 Normal inspection refreshes the curated YAML and pins its source commit. Carry `catalogSnapshot.path` with `--catalog` through the rest of the run. An explicit `--bundled`, `--source-root`, or `--catalog` chooses a review/offline input; explain possible staleness. Refresh failures stop for a decision, not an automatic fallback or code update.
 
-**Done:** project purpose, existing skills, instruction scope, evidence, and one catalog snapshot are identified.
+**Done:** project evidence, existing skills, available scopes, and one catalog snapshot are identified.
 
 ## 2. Choose
 
-Present catalog recommendations, every remaining active project entry, prior decisions, compatibility limits, desired harnesses, and exact deprecated retention/removal choices. Preserve unknown custom skills. Personal tooling is not a required project installation.
+Follow [Category and skill selection](references/selection.md). The first selection question offers catalog categories through native checkboxes; each chosen category then offers its actual skills. Recommend from project evidence. Skipped categories stay unchanged.
 
-Offer instruction changes separately. The user can retain skills-only synchronization. Explain the instruction bundle's prerequisites before requesting that choice; missing requirements block the affected phase, not permission to bypass existing target rules.
+Assess instruction changes, harnesses, prerequisites, and exact deprecated removals separately. Preserve unknown custom skills. Personal tooling is not a required project installation.
 
-**Done:** every active project skill has a selected/declined decision; instruction scope, harnesses, prerequisites, and removals are explicit.
+**Done:** the user confirmed the category/skill summary, including skipped categories; every active project skill has a selected/declined decision; instruction scope, harnesses, prerequisites, and removals are explicit.
 
-## 3. Grill
+## 3. Confirm project understanding
 
-When instructions are selected, read [Project instructions](references/project-instructions.md) and the pinned template contract. Inspect existing rules and interfaces before questioning the user.
+When instructions are selected, follow [Project instructions](references/project-instructions.md) and the pinned template contract. Investigate, interview on unresolved intent and policy, then read back the project understanding. Wait for the owner's explicit confirmation before preparing or drafting instruction candidates.
 
-Ask the current decision frontier in rounds: all questions whose prerequisites are settled. Recommend answers, wait, and then ask dependent questions. Cover unresolved implementation, documentation, configuration, validation, isolation, and publication choices. Reuse verified facts and previously confirmed decisions.
-
-**Done:** every required template field has evidence or an approved policy decision; no unknown is disguised as a default.
+**Done:** the owner confirmed the read-back; every required template field has evidence or an approved policy decision. Skills-only runs skip this phase.
 
 ## 4. Prepare
 
-Source categories organize the repository, not installations. Use each selected entry's catalogued source path and keep its complete package flat at `.agents/skills/<name>/` in the target; never reproduce category folders or resolve duplicate names by overwriting.
+Catalog categories guide selection, not destination namespaces. Use each selected entry's catalogued source path and keep its complete package flat at `.agents/skills/<name>/` in the target; never reproduce category folders or resolve duplicate names by overwriting.
 
 Establish the target's approved isolated Git worktree and re-inspect it with the same catalog snapshot. Inventory changes require renewed decisions. Missing isolation instructions need approved temporary tooling or a stop, not a policy bundle installed merely to proceed.
 

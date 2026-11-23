@@ -33,7 +33,7 @@ See [installation choices](/guide/install) for prerequisites and direct install 
 Load the installed skill in your harness, then adapt this request to your project. This is a prompt, not a shell command.
 
 ```text
-Use sync-my-skills to inspect this project. Recommend skills, ask about the remaining entries, and assess instructions separately. Do not apply changes yet.
+Use sync-my-skills to inspect this project. Let me choose categories, then skills through native checkboxes, with project-specific recommendations. Leave skipped categories unchanged. Assess instructions separately and confirm project understanding before drafting them. Do not apply changes yet.
 ```
 
 ## Requirements and boundaries

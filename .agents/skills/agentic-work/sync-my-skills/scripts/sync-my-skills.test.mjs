@@ -459,7 +459,7 @@ test("project source declarations cannot escape through a linked skill directory
 
 test("selection requires a decision for every remaining entry and confirms harness compatibility", async (t) => {
   const f = fixture(t); await f.prepare();
-  assert.throws(() => f.plan({ selectedSkills: ["alpha"], declinedSkills: [], harnesses: ["pi"] }), /remaining catalog skills: beta/);
+  assert.throws(() => f.plan({ selectedSkills: ["alpha"], declinedSkills: [], harnesses: ["pi"] }), /Record decisions for remaining catalog skills: beta/);
   assert.throws(() => f.plan(f.selection(["alpha"], { harnesses: [] })), /at least one/);
   assert.throws(() => f.plan(f.selection(["alpha"], { harnesses: ["unknown"] })), /supported harness/);
   assert.throws(() => f.plan(f.selection(["alpha"], { rootFiles: ["AGENTS.md"] })), /Legacy rootFiles does not authorize/);
@@ -475,6 +475,9 @@ test("prerequisites are installed by closure and unsupported harness selections 
   assert.deepEqual(closure(["alpha"], f.catalog), ["alpha", "beta"]);
   await f.prepare();
   assert.deepEqual(f.plan().selection.selectedSkills, ["alpha", "beta"]);
+  assert.throws(() => f.plan(f.selection(["alpha"], {
+    declinedSkills: [{ name: "beta", reason: "Category documentation left unchanged in this run." }],
+  })), /Conflicting or duplicate skill decision/);
   assert.throws(() => f.plan(f.selection(["alpha"], { harnesses: ["claude-code"] })), /Incompatible/);
 });
 
@@ -827,6 +830,45 @@ test("declining an installed managed skill preserves its files and prior local-c
   f.apply(f.selection(), { stage: stage2 });
   assert.match(readFileSync(join(f.root, ".agents/skills/beta/SKILL.md"), "utf8"), /Local beta edit/);
   assert.equal(projectStatus(f.root).files.find((f) => f.path === ".agents/skills/beta/SKILL.md").state, "modified-or-missing");
+});
+
+test("skipped categories retain installed edits, custom skills, and their recorded decline reasons", async (t) => {
+  const f = fixture(t, ({ data }) => {
+    data.skills.alpha.category = "coding";
+    data.skills.beta.category = "documentation";
+  });
+  await f.prepare(["alpha", "beta"]); f.apply(f.selection(["alpha", "beta"]));
+  const previous = JSON.parse(readFileSync(join(f.root, LOCK_PATH), "utf8"));
+  const betaPath = ".agents/skills/beta/SKILL.md";
+  const customPath = ".agents/skills/custom/SKILL.md";
+  put(f.root, betaPath, skill("beta", "Owner's local edit."));
+  put(f.root, customPath, skill("custom", "Unmanaged content."));
+  const stage = join(f.base, "category-stage"); await f.prepare(["alpha"], { stage });
+  const choice = f.selection(["alpha"], {
+    declinedSkills: [{ name: "beta", reason: "Category documentation left unchanged in this run." }],
+  });
+  const plan = f.plan(choice, { stage });
+  assert.deepEqual(plan.selection.declinedSkills, choice.declinedSkills);
+  assert.ok(plan.actions.every((action) => !action.path?.startsWith(".agents/skills/beta/") && !action.path?.startsWith(".agents/skills/custom/")));
+  f.apply(choice, { stage });
+  const lock = JSON.parse(readFileSync(join(f.root, LOCK_PATH), "utf8"));
+  assert.deepEqual(lock.selection.declinedSkills, choice.declinedSkills);
+  assert.deepEqual(lock.files[betaPath], { ...previous.files[betaPath], retained: true });
+  assert.equal(readFileSync(join(f.root, betaPath), "utf8"), skill("beta", "Owner's local edit."));
+  assert.equal(readFileSync(join(f.root, customPath), "utf8"), skill("custom", "Unmanaged content."));
+  assert.equal(projectStatus(f.root).files.find((file) => file.path === betaPath).state, "modified-or-missing");
+});
+
+test("leaving every category unchanged records decisions without installing skills or instructions", async (t) => {
+  const f = fixture(t); await f.prepare([]);
+  const choice = f.selection([], {
+    declinedSkills: ["alpha", "beta"].map((name) => ({ name, reason: "Category left unchanged in this run." })),
+  });
+  assert.ok(f.plan(choice).actions.every((action) => action.path === LOCK_PATH));
+  f.apply(choice);
+  assert.ok(!existsSync(join(f.root, ".agents/skills")));
+  assert.equal(readFileSync(join(f.root, "AGENTS.md"), "utf8"), "Respect existing project authority.\n");
+  assert.deepEqual(JSON.parse(readFileSync(join(f.root, LOCK_PATH), "utf8")).selection.declinedSkills, choice.declinedSkills);
 });
 
 test("public GitHub acquisition fetches only selected files, records commit, and filters metadata", async (t) => {

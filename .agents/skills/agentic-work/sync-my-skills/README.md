@@ -1,6 +1,6 @@
 # Sync project skills and instructions
 
-Use `/sync-my-skills` to inspect a project, choose skills, and review its agent instructions. Install the manager once in your personal agent configuration. Approve skill changes and an optional instruction bundle separately.
+Use `/sync-my-skills` to inspect a project, choose categories and skills through native checkboxes, and review its agent instructions. Install the manager once in your personal agent configuration. Approve skill changes and an optional instruction bundle separately.
 
 Source skills may be grouped under `.agents/skills/<category>/<name>/`. The manager reads their catalogued source paths and installs each complete package flat under the target's `.agents/skills/<name>/`. Categories are not installed or used as namespaces; duplicate source names stop catalog validation. The installed personal manager also remains at `~/.agents/skills/sync-my-skills`.
 
@@ -90,15 +90,16 @@ For normal use after upstream integration, run `/sync-my-skills` without that op
 
 The agent should first read the project's instructions and investigate its purpose without installing anything. For this documentation-only example, expect recommendations for `document-project`, `asd-ste100-technical`, and `unslop`, not a forced coding bundle. Recommendations remain your choices.
 
-Answer the selection questions:
+Answer the native selection questions:
 
-1. Choose which recommended skills to install or update. You may decline them all.
-2. Review every remaining active project catalog entry. Choose additional skills or none. Earlier declines stay visible, and missing requirements or incompatible destinations must be explained.
-3. Choose whether to adopt or revise the instruction bundle. You can retain skills-only scope. Instruction adoption requires its four guidance skills to be selected or already installed and reviewed.
+1. Tick the categories you want to review. The agent recommends categories from project evidence and pages the menu to fit the question tool. Unchecked categories stay unchanged.
+2. Within each chosen category, tick the actual skills to install or update. Recommendations explain their relevance. Installed state, earlier declines, and compatibility limits stay visible. Large categories have additional checkbox pages; catalog skill names need not be typed.
+3. Decide explicitly about any prerequisites outside your chosen categories. Choose whether to adopt or revise the instruction bundle separately. You can retain skills-only scope. Instruction adoption requires its guidance to be selected or already installed and reviewed.
 4. Choose the desired harnesses. Pi is a suggestion for this example, not permission to configure every harness.
 5. If deprecated installations exist, choose the exact skills to retain or remove. The default is retention. An unknown custom name is not deprecated merely because it begins with `coding-`.
+6. Confirm the scope summary, including skipped categories. This is not approval of an apply plan.
 
-For a skills-only first installation, accept the three documentation recommendations, decline instruction changes and other entries, and retain any deprecated skills. The agent should then prepare sources and an isolated workspace, show the actual file changes and source revisions, and ask you to approve one plan. It must stop for unavailable requirements or unresolved local edits rather than bypassing them.
+For a skills-only first installation, review the categories containing the three documentation recommendations, select those skills, decline instruction changes, and retain any deprecated skills. Other categories stay unchanged. The agent should then prepare sources and an isolated workspace, show the actual file changes and source revisions, and ask you to approve one plan. It must stop for unavailable requirements or unresolved local edits rather than bypassing them.
 
 Check the plan before approving it:
 
@@ -138,7 +139,9 @@ The required bundle is `AGENTS.md`, `CONTRIBUTING.md`, `DOCUMENTATION.md`, and `
 
 The templates require `document-project`, `asd-ste100-technical`, and `unslop` at their canonical `.agents/skills/` paths. Their fixed task policy requires a dedicated branch or Jujutsu change and bookmark, with a task-level choice of working location. Instruction adoption does not require installing a workspace skill. The manager's own apply operation still requires an isolated worktree. Select their installation/update explicitly, or review the existing versions. Missing prerequisites block instruction adoption; declining it can preserve skills-only work where current policy permits. Installing the skills does not authorize running their tools or initializers.
 
-The agent should find setup commands, test configuration, documentation sources, and approved automation from actual files. It should ask you only for unresolved choices, such as audience, desired policy changes, publication authority, or how to handle a missing gate. It must distinguish an inspected command from an executed check. Unknowns cannot be filled with guessed tools, thresholds, releases, or a new website.
+The agent should find setup commands, test configuration, documentation sources, and approved automation from actual files. It interviews you about unresolved project purpose, supported behaviour, non-goals, constraints, and development expectations. Questions should build on your answers and the inspected project, not ask you to retrieve facts.
+
+Before drafting, the agent reads back its understanding and waits for your explicit confirmation or corrections. Confirming this understanding is separate from approving the resulting policy changes and the final apply plan. A filled checklist alone does not authorize drafting. The agent must distinguish inspected commands from executed checks and verified facts from inferences. Material unknowns block instruction drafting rather than being filled with guessed tools, thresholds, releases, or a new website.
 
 For this documentation-only example, an appropriate result describes the existing Markdown workflow and verified absence of an application runtime. If it proposes a code/tooling bundle or site merely to fill a field, ask it to correct the draft.
 
@@ -184,6 +187,7 @@ No model or provider is selected by these command files. The normal project work
 | Temporary storage resolves inside a target or source location. | Choose an external temporary directory, including when `TMPDIR` is a symbolic link. Inspection must not write into those locations. |
 | Catalog refresh is unavailable or incompatible. | Resolve the network/source version or approve a manager update. Choose `--bundled` explicitly if an older installed snapshot is acceptable. No automatic fallback occurs. |
 | The helper cannot load `yaml`. | Request or complete the manager's approved `npm ci --ignore-scripts` setup. Do not install target dependencies merely for detection. |
+| The current client has no native multi-select controls. | Pause selection and choose supported controls or cancel. A prose list requiring typed catalog names is not the checkbox workflow. |
 | Setup or apply reports a stale plan. | Inspect current content and generate a new plan. Do not reuse the old identifier. |
 | A personal command already exists with different content. | Keep it and review the conflict before any replacement. |
 | A target skill or instruction contains local edits. | Review the diff and choose an exact-path resolution, or leave it unchanged. |
@@ -206,6 +210,8 @@ npm --prefix .agents/skills/agentic-work/sync-my-skills test
 npm --prefix .agents/skills/agentic-work/sync-my-skills audit --omit=dev
 ```
 
+For conversation changes, follow the [interaction checks](references/interaction-checks.md). Record static checks, fixture walkthroughs, and live user-control tests separately; passing source tests does not prove the picker renders or the agent waits for confirmation.
+
 The source tests include repository/catalog coverage checks. Do not expect those source-checkout checks to run from a personal package containing only the manager. Detection does not execute target code or install dependencies; explicit source/runtime setup is a different operation.
 
-Track this work in [#69](https://github.com/dragoscirjan/ai/issues/69). Documentation remains Markdown by owner decision. No site build or deployment is configured by this change.
+The original manager conversion is tracked in [#69](https://github.com/dragoscirjan/ai/issues/69). Category-first selection and confirmed project discovery are tracked in [#95](https://github.com/dragoscirjan/ai/issues/95). Synchronization does not initialize a documentation site in the target or authorize deployment.

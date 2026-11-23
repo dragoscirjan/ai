@@ -4,7 +4,7 @@ Read before preparing or adapting selected skills. The YAML catalog owns sources
 
 ## Select complete packages
 
-Investigate purpose rather than treating file extensions as a coding-policy decision. Present all active project entries: recommended or remaining, including incompatible entries and earlier declines. Explain installation closure, runtime requirements, and capabilities before recording choices.
+Use [Category and skill selection](selection.md) before preparing packages. Investigate purpose rather than treating file extensions as a coding-policy decision. Keep incompatible entries and earlier declines visible within reviewed categories. Explain installation closure, runtime requirements, and capabilities before recording choices.
 
 A decline retains an existing installation. Removal is a separate exact deprecated-name choice. Unknown custom skills are preserved. The personal manager is not a project skill, and installing an initializer does not authorize running it.
 
