@@ -94,6 +94,14 @@ test("each skill page has exactly one command selecting only its own catalog ski
   }
 });
 
+test("the manager example requests category checkboxes and confirmed understanding before drafting", () => {
+  const page = generatedPages().get("skills/sync-my-skills.md");
+  assert.match(page, /choose categories, then skills through native checkboxes/);
+  assert.match(page, /Leave skipped categories unchanged/);
+  assert.match(page, /confirm project understanding before drafting/);
+  assert.doesNotMatch(page, /ask about the remaining entries/);
+});
+
 test("required instructions have separate install links instead of widening the selected command", () => {
   const pages = generatedPages();
   assert.match(pages.get("skills/coding-with-rules.md"), /\/skills\/coding#install-this-skill/);

@@ -18,21 +18,30 @@ The user may decline instruction changes. That preserves the files; it never wai
 
 ## Investigate, then grill
 
-Read the effective instruction graph and relevant project evidence. Distinguish verified facts, owner decisions, and unknowns. Inspect public configuration/schema/example sources, not credentials or unrelated private material. Reading a command is not proof it runs.
+Read the effective instruction graph and relevant project evidence. Separate verified facts with source paths, inferred intent, existing policy, confirmed owner decisions, and unresolved questions. Inspect public configuration/schema/example sources, not credentials or unrelated private material. Reading a command is not proof it runs.
 
 Use the template contract's required fields as the completion checklist. Establish:
 
-- Project purpose, supported users/tasks, owned sources, generated content, and scoped instructions.
+- Project purpose, supported users/tasks, success conditions, non-goals, owned sources, generated content, and scoped instructions.
+- Important user workflows, operating behaviour, integrations, compatibility/data constraints, and which architecture or development choices are fixed versus open.
 - Actual runtimes, setup/development commands, environments, test conventions, and configuration precedence.
 - Documentation audience, sources, existing engine, commands, ownership, and maintenance boundaries.
 - Applicable checks and their real thresholds, missing tools, limitations, and completion obligations.
 - Task records, explicit VCS, base revision, mandatory task-ref creation, working-location choices, implementation invariants, approved automation, and publication authority.
 
-Find facts yourself. Grill only unresolved choices, in frontier rounds: recommend an answer, wait, then ask questions that depended on it. Reuse earlier decisions. Preserve existing policy unless the user explicitly changes it; neither silence nor a template default is approval.
+Find facts yourself. Ask project-specific questions about unresolved intent and policy in frontier rounds: ask only decisions whose prerequisites are settled, wait, then ask the dependent questions. An open question is appropriate when the purpose itself is unknown; use native choices for bounded decisions. Explain why an answer matters and distinguish a recommendation from an accepted choice. Reuse verified facts and earlier explicit decisions rather than asking the owner to retrieve facts or repeat answers.
+
+Cover how the project should be developed, not just its current files: implementation invariants, testing expectations, documentation audience, permitted automation, and decisions reserved for the owner. Preserve existing policy unless the user explicitly changes it; neither silence nor a template default is approval.
 
 No new site is implied by `DOCUMENTATION.md`. Preserve an approved engine. For a project without an approved site, describe its actual Markdown workflow and absent commands rather than inventing a build or configuring VitePress/MkDocs.
 
-**Ready to draft:** every required evidence/policy field is grounded, uncertainty is resolved or handled through an explicit blocking decision, and selected scope is confirmed.
+## Confirm understanding before drafting
+
+Read back the project purpose, users and supported behaviour, success conditions, non-goals, important constraints, and consequential development decisions. Label remaining inferences and blockers. Ask the owner to confirm that understanding or correct it, then wait. Resolve corrections through the relevant decision rounds and show the corrected read-back. Previously confirmed decisions can be reused; the current read-back still requires explicit confirmation.
+
+Draft only after the owner explicitly confirms the read-back of project purpose, supported behaviour, non-goals, constraints, and consequential development decisions. A request to sync skills, selection of the instruction bundle, a filled template checklist, or approval of this understanding is not approval of the eventual instruction-policy changes.
+
+**Ready to draft:** the owner confirmed the current read-back, every required evidence/policy field is grounded, material unknowns are resolved, and selected scope is confirmed. An unresolved material choice blocks instruction drafting. Offer a return to skills-only scope where target rules permit it rather than guessing.
 
 ## Prepare and draft
 
@@ -53,7 +62,7 @@ Treat new safety, task-branch, working-location, skill-loading, validation, or p
 
 Inspect each actual diff against both the target's original rules and the template contract. Validate the complete reference graph, required guidance/version, all required fields, source evidence, decisions, commands, and limits. Root symlink/directory destinations stop rather than being overwritten.
 
-Run `review-instructions` with a substantive note. Record facts checked, consequential decisions, preserved rules, and uncertainty resolved. Pass `--evidence <json-file>` for additional source paths used by the draft; the file is an array of project-relative filenames or verified absences. The helper also fingerprints root instructions, README files, standard manifests/configurations, and workflows. List custom command/configuration evidence explicitly. Credential files are not evidence inputs.
+Run `review-instructions` with a substantive note. Record facts checked, the owner's understanding confirmation and resolved corrections, consequential decisions, preserved rules, and uncertainty resolved. This note records the conversation; static review does not independently enforce the understanding checkpoint. Pass `--evidence <json-file>` for additional source paths used by the draft; the file is an array of project-relative filenames or verified absences. The helper also fingerprints root instructions, README files, standard manifests/configurations, and workflows. List custom command/configuration evidence explicitly. Credential files are not evidence inputs.
 
 Static checks enforce scope, unchanged template inputs, resolved markers, consistent project names, visible fixed rules, current evidence, and reviewed output digests. They do not prove semantic correctness, policy preservation, command execution, or user comprehension; those require the review above.
 

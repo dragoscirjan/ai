@@ -42,8 +42,8 @@
       "visualReview": "not-requested"
     },
     "install-selected-skills": {
-      "candidateSha256": "e78a29597be08576eeea687b7932e331e7d690d6fcf67509bf7c9d46aaf3d170",
-      "htmlSha256": "f989297fbf3cd9955af2f46cc3cd99487c06b2f57d5fffc655d99c8febb59080",
+      "candidateSha256": "ff5e81d0309a8df7ebbab1a5731aa32d66ef6a9c0dd144918b79785ddb8a920d",
+      "htmlSha256": "e8afe157c5b1c3e293b64dafc86dc43b8fd1e2a4c5d2ee4f1610d41c715f7d4b",
       "svgSha256": "c73bdd553463b0d5c865a57494e01c8f42906ebb09e7ed02b38491c14584b966",
       "gates": {
         "validate": "pass",
@@ -54,7 +54,7 @@
       "quality": "showcase",
       "repository": {
         "url": "git@github.com:dragoscirjan/ai.git",
-        "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+        "revision": "053db08b226acf5243e0dd99810788adf7a675f8",
         "link_mode": "local-only"
       },
       "visualReview": "not-requested"
