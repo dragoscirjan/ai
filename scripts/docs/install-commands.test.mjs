@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { test } from "node:test";
 import { parse } from "yaml";
-import { catalog, localInstructions, root } from "./data.mjs";
+import { catalog, localInstructions, root, sourceUrl } from "./data.mjs";
 import { generatedPages, installCommand } from "./generate.mjs";
 import { notes } from "./skill-notes.mjs";
 import { workflows } from "./workflows.mjs";
@@ -35,6 +35,24 @@ test("external install URLs retain their immutable source revisions and exact pa
   }
 });
 
+test("published skill commands and source links match every catalog acquisition source", () => {
+  const c = catalog();
+  for (const entry of c.skills) {
+    const page = read(`docs/skills/${entry.name}.md`);
+    assert.ok(page.includes(installCommand(entry)), entry.name);
+    assert.ok(page.includes(sourceUrl(entry)), entry.name);
+  }
+  for (const name of ["code-review", "grill-me", "tdd", "writing-for-agents"]) {
+    const entry = c.byName.get(name);
+    assert.equal(entry.source.type, "github", name);
+    assert.equal(entry.source.repository, "https://github.com/mattpocock/skills", name);
+    const page = read(`docs/skills/${name}.md`);
+    assert.doesNotMatch(
+      page,
+      /https:\/\/github\.com\/dragoscirjan\/ai\/(?:tree|blob)\/[^\s)]+\/\.agents\/skills\//,
+    );
+  }
+});
 test("single-skill selection and the personal manager scope remain unchanged", () => {
   for (const entry of catalog().skills) {
     const argv = entry.install.argv;
