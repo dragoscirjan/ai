@@ -51,7 +51,7 @@ Complexity alone is not delegation authority. Read-only agents must remain read-
 ## Useful combinations
 
 - [`code-review`](/skills/code-review) — You want changes since a fixed commit, branch, tag, or merge-base checked against both standards and the originating specification.
-- [`isolated-workspace`](/skills/isolated-workspace) — A repository change needs a separate Git worktree or Jujutsu workspace instead of writes in the primary checkout.
+- [`isolated-workspace`](/skills/isolated-workspace) — A modifying task needs a dedicated branch or bookmark and a choice between the current checkout and a separate workspace.
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 

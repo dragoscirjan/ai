@@ -1,6 +1,6 @@
 # Maintain this site
 
-Run commands from an approved isolated checkout of the source repository. Read the repository's [contribution policy](https://github.com/dragoscirjan/ai/blob/main/CONTRIBUTING.md) before changes and [validation policy](https://github.com/dragoscirjan/ai/blob/main/VALIDATION.md) before checks or publication.
+Run modifying commands from the verified task branch and working directory of the source repository. Choose the current checkout or a separate workspace under the project's task policy. Read the repository's [contribution policy](https://github.com/dragoscirjan/ai/blob/main/CONTRIBUTING.md) before changes and [validation policy](https://github.com/dragoscirjan/ai/blob/main/VALIDATION.md) before checks or publication.
 
 ::: warning Local security mitigation
 The pinned `picomatch@4.0.7` has a local patch and an owner-approved audit exception for `GHSA-fc5q-39xc-vjpf`. The audit still reports this advisory as ignored, not fixed upstream. See [the mitigation and its regression checks](/maintenance/publication#maintain-the-picomatch-mitigation). Keep the full audit and publication gate intact. Investigate and fix other audit failures rather than adding exceptions.

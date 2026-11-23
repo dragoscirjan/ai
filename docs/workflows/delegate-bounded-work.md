@@ -35,7 +35,7 @@ Read-only children do not need write lanes. Authorized concurrent writers do, an
 
 ## Optional branches
 
-- Choose [`isolated-workspace`](/skills/isolated-workspace) when a repository change needs a separate Git worktree or Jujutsu workspace instead of writes in the primary checkout.
+- Choose [`isolated-workspace`](/skills/isolated-workspace) when a modifying task needs a dedicated branch or bookmark and a choice between the current checkout and a separate workspace.
 - Choose [`code-review`](/skills/code-review) when you want changes since a fixed commit, branch, tag, or merge-base checked against both standards and the originating specification.
 
 Optional branches are not prerequisites or permission to launch another phase. You can omit them or stop at the stated result. See [relationship types](/reference/relationships) for the distinction.

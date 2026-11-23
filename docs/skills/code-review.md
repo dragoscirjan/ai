@@ -6,7 +6,7 @@ title: "code-review"
 
 Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Standards (does the code follow this repo's documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to "review since X".
 
-**Group:** [Coding](/groups/coding) · **Availability:** Upstream-derived; maintained here · **Scope:** project
+**Group:** [Coding](/groups/coding) · **Availability:** Pinned upstream input; adaptation required · **Scope:** project
 
 ## When to choose it
 
@@ -19,7 +19,7 @@ You want changes since a fixed commit, branch, tag, or merge-base checked agains
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/code-review --skill code-review
+npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/59db609eb1e18aaf59b63284d0e52255aff0c63c/skills/engineering/code-review --skill code-review
 ```
 
 This command selects only `code-review`. It does not install the rest of the collection or the optional companions listed on this page.
@@ -48,6 +48,8 @@ Resolve required instructions in their declared order before applying the skill.
 
 The workflow needs the harness's authorized subagent capability. A review is not permission to fix findings, spawn writers, merge, or release.
 
+This is pinned upstream input, not a reviewed installed adaptation. Follow the catalogued adaptation instructions and review the output and legal notices before use. A source link or install command does not perform that adaptation.
+
 ## Useful combinations
 
 - [`subagent-orchestration`](/skills/subagent-orchestration) — The operator has authorized bounded specialist, independent-review, or parallel work.
@@ -64,6 +66,6 @@ For focused procedures and utilities, see [supporting tools](/workflows/supporti
 
 The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/coding/code-review/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the pinned upstream input](https://raw.githubusercontent.com/mattpocock/skills/59db609eb1e18aaf59b63284d0e52255aff0c63c/skills/engineering/code-review/SKILL.md). This link uses the immutable upstream revision `59db609eb1e18aaf59b63284d0e52255aff0c63c`; there is no vendored copy here.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

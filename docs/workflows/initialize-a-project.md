@@ -26,7 +26,7 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 
 1. **Inspect the starting point.** [`init-project`](/skills/init-project) provides the guidance for this step.
 2. **Approve the baseline.** [`init-project`](/skills/init-project) owns this approval boundary; continue only when the applicable approval or existing approved setup is established.
-3. **Create approved workspace.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+3. **Create task branch.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
 4. **Install approved foundation.** [`init-project`](/skills/init-project) provides the guidance for this step.
 5. **Explain first use.** [`document-project`](/skills/document-project) provides the guidance for this step.
 

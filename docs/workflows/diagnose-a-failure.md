@@ -24,10 +24,10 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 
 ## Steps
 
-1. **Reproduce and collect evidence.** [`systematic-debugging`](/skills/systematic-debugging) provides the guidance for this step.
+1. **Reproduce with evidence.** [`systematic-debugging`](/skills/systematic-debugging) provides the guidance for this step.
 2. **Trace the root cause.** [`systematic-debugging`](/skills/systematic-debugging) provides the guidance for this step.
 3. **Test one hypothesis.** [`systematic-debugging`](/skills/systematic-debugging) provides the guidance for this step.
-4. **Report cause and fix proposal.** [`systematic-debugging`](/skills/systematic-debugging) provides the guidance for this step.
+4. **Report cause and propose fix.** [`systematic-debugging`](/skills/systematic-debugging) provides the guidance for this step.
 
 ## Where to stop
 

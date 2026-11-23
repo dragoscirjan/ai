@@ -26,7 +26,7 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 
 1. **Find unnecessary parts.** [`debloat`](/skills/debloat) provides the guidance for this step.
 2. **Approve the change scope.** [`debloat`](/skills/debloat) owns this approval boundary; continue only when the applicable approval or existing approved setup is established.
-3. **Use approved isolation.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+3. **Create task branch.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
 4. **Simplify and test behavior.** [`coding-with-rules`](/skills/coding-with-rules) provides the guidance for this step.
 
 ## Where to stop

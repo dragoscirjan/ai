@@ -24,7 +24,7 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 
 ## Steps
 
-1. **Use approved isolation.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
+1. **Create task branch.** [`isolated-workspace`](/skills/isolated-workspace) provides the guidance for this step.
 2. **Select language references.** [`coding-with-rules`](/skills/coding-with-rules) provides the guidance for this step.
 3. **Write source skeletons.** [`scaffold`](/skills/scaffold) provides the guidance for this step.
 4. **Check structure and stop.** [`scaffold`](/skills/scaffold) provides the guidance for this step.

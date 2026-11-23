@@ -9,7 +9,7 @@ Read this document before planning or performing a repository architecture, desi
 1. Clarify ambiguous requirements and confirm shared understanding.
 2. Create or link a GitHub issue before architecture, design, implementation, or policy changes. Typo and broken-link fixes do not require an issue.
 3. Keep each change focused on one issue or task.
-4. Follow the isolated-workspace gate and configuration in `AGENTS.md` before changing repository state.
+4. Follow the task-branch and working-location policy in `AGENTS.md` before changing repository files.
 5. Assess documentation impact during implementation with `document-project`, `asd-ste100-technical`, and `unslop`. Update affected documentation in the same change before marking the work complete. Explain when no documentation change is needed.
 6. Read and follow [`VALIDATION.md`](VALIDATION.md) before validating or publishing the change.
 7. Commit with [Conventional Commits](https://www.conventionalcommits.org/).
@@ -27,8 +27,6 @@ Required documentation is part of completing the change. If documentation or req
 
 ## Repository identity for automated contributors
 
-Local workspace creation does not require hosted-repository identity. The `isolated-workspace` automation detects the primary local repository and derives its sibling workspace directory directly.
-
 When another workflow needs hosted-repository identity, query project-scoped memory or context first. On a miss, read the Git origin once, sanitize the result, and store only an unambiguous `host/owner/repository` identity with its provenance. Never store credentials, token-bearing URLs, embedded user information, or personal filesystem paths.
 
 ## Architecture rules
@@ -45,7 +43,7 @@ When another workflow needs hosted-repository identity, query project-scoped mem
 
 Keep each leaf skill useful on its own: state its scope, real prerequisites, and operation-specific safeguards. Project instructions or the user select additional skills; do not make leaves load them implicitly.
 
-Declare instruction dependencies only for thin, intentional compositions or the owner-approved `cleanup-workspaces` → `isolated-workspace` exception. For example:
+Declare instruction dependencies only for thin, intentional compositions or individually owner-approved exceptions. For example:
 
 ```yaml
 requires: ["grilling"]
@@ -75,7 +73,7 @@ Instruction adoption requires its fixed guidance to be explicitly selected or al
 
 When repository instructions no longer fit an observed workflow, follow the `instruction-maintenance` skill. An agent may inspect the instruction graph and present an exact proposal without prior approval. It must not mutate instructions until a human explicitly approves that proposal.
 
-Approval is limited to the stated files and rule changes. Changed evidence, scope, dependencies, handoffs, or protected rules require a revised proposal and new approval. After approval, follow the normal issue, isolated-workspace, validation, commit, and pull-request gates.
+Approval is limited to the stated files and rule changes. Changed evidence, scope, dependencies, handoffs, or protected rules require a revised proposal and new approval. After approval, follow the normal issue, task-branch, working-location, validation, commit, and pull-request gates.
 
 This adaptation workflow covers instruction routes, deferred policy documents, dependency or handoff statements, and skill routing metadata. It does not authorize changes to detailed skill behavior.
 

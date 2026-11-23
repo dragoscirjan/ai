@@ -4,15 +4,15 @@ title: "isolated-workspace"
 
 # isolated-workspace
 
-Create or reuse an isolated Git worktree or Jujutsu workspace before mutation, using an explicit VCS and branch or bookmark.
+Create a dedicated task branch or bookmark before repository edits. Choose the current checkout or an isolated Git worktree or Jujutsu workspace; ask the user when the location is unclear.
 
 **Group:** [Utility](/groups/utility) · **Availability:** Authored here · **Scope:** project
 
 ## When to choose it
 
-A repository change needs a separate Git worktree or Jujutsu workspace instead of writes in the primary checkout.
+A modifying task needs a dedicated branch or bookmark and a choice between the current checkout and a separate workspace.
 
-**Expected result:** An explicit VCS, branch or bookmark, base revision, absolute workspace path, and reviewed creation or reuse plan.
+**Expected result:** A verified task branch or bookmark, explicit VCS, resolved base, selected working directory, and status. A separate workspace is optional.
 
 ## Install this skill
 
@@ -33,7 +33,7 @@ See [installation choices](/guide/install) for prerequisites and direct install 
 Load the installed skill in your harness, then adapt this request to your project. This is a prompt, not a shell command.
 
 ```text
-Use isolated-workspace with Git to plan a change/example branch from main. Show the exact path, base commit, and plan ID before creation.
+Use isolated-workspace to plan a new Git task branch change/example from main. Recommend the current checkout or a separate worktree, and ask if unclear. Show the selected setup before creating anything.
 ```
 
 ## Requirements and boundaries
@@ -44,9 +44,9 @@ Resolve required instructions in their declared order before applying the skill.
 
 **Runtime and setup:**
 
-- Requires Bun and either Git with worktree support or Jujutsu 0.38 or newer with workspace support.
+- Requires Git or Jujutsu 0.38 or newer. The isolated path also requires Bun.
 
-Do not reset, stash, force, remove another workspace, or silently reuse someone else's work. Plan approval covers the named workspace operation, not every later source change.
+Create a task ref before edits in either location. Preserve unrelated work and existing refs. An isolated setup still needs its exact plan approval; a failed setup does not authorize switching locations.
 
 ## Useful combinations
 

@@ -19,13 +19,13 @@ Arrows show possible handoffs. They do not change `requires` declarations or gra
 
 ## Workspace safeguards and setup
 
-Apply the target project's workspace policy before mutation. Use [`isolated-workspace`](/skills/isolated-workspace) where selected or required, and use [`cleanup-workspaces`](/skills/cleanup-workspaces) only for separately authorized cleanup.
+Apply the target project's task-branch and working-location policy before edits. [`isolated-workspace`](/skills/isolated-workspace) can establish the task ref in the current checkout or a separate workspace. The agent chooses from task constraints and asks when unclear. Use [`cleanup-workspaces`](/skills/cleanup-workspaces) only for separately authorized cleanup.
 
-These safeguards protect planning records, source edits, documentation, and other writes alike. They belong around execution rather than inside each product-flow diagram. This repository requires isolation before mutation.
+These safeguards protect planning records, source edits, documentation, and other writes alike. They belong around execution rather than inside each product-flow diagram. This repository requires a dedicated branch for every new modifying task. A worktree is optional; continuing the same task uses its verified branch.
 
 Focused procedures:
 
-- [Prepare a change workspace](/workflows/protect-a-change).
+- [Prepare a task branch and working directory](/workflows/protect-a-change).
 - [Clean proven, approved workspaces](/workflows/clean-integrated-workspaces).
 - [Install a reviewed skill selection](/workflows/install-selected-skills).
 - [Initialize only an approved project foundation](/workflows/initialize-a-project).

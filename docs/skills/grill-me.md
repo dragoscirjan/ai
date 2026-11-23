@@ -6,7 +6,7 @@ title: "grill-me"
 
 A relentless interview to sharpen a plan or design.
 
-**Group:** [Productivity](/groups/productivity) · **Availability:** Upstream-derived; maintained here · **Scope:** project
+**Group:** [Productivity](/groups/productivity) · **Availability:** Pinned upstream input; adaptation required · **Scope:** project
 
 ## When to choose it
 
@@ -19,7 +19,7 @@ You want to explicitly start the grilling interview through a small local compos
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/grill-me --skill grill-me
+npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me --skill grill-me
 ```
 
 This command selects only `grill-me`. It does not install the rest of the collection or the optional companions listed on this page.
@@ -50,6 +50,8 @@ No additional runtime is recorded in the catalog. Check the authoritative instru
 
 This entry is explicitly invoked, not automatically model-invoked. It requires the separately installed grilling instructions; the wrapper does not contain the interview itself.
 
+This is pinned upstream input, not a reviewed installed adaptation. Follow the catalogued adaptation instructions and review the output and legal notices before use. A source link or install command does not perform that adaptation.
+
 ## Useful combinations
 
 - [`initiative`](/skills/initiative) — An idea needs an agreed problem, outcome, scope, constraints, and success measures before solution work.
@@ -65,6 +67,6 @@ For focused procedures and utilities, see [supporting tools](/workflows/supporti
 
 The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/productivity/grill-me/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the pinned upstream input](https://raw.githubusercontent.com/mattpocock/skills/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me/SKILL.md). This link uses the immutable upstream revision `fcf0071560d32913c9d4f820e0d7ca467c881619`; there is no vendored copy here.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

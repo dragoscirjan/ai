@@ -2,13 +2,13 @@
   "schema_version": 2,
   "diagram_type": "workflow",
   "meta": {
-    "title": "Move a change out of the primary checkout",
+    "title": "Start a change on its own task branch",
     "locale": "en",
     "quality_profile": "showcase",
     "output": ".docs-artifacts/archify/protect-a-change.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
       "link_mode": "local-only"
     },
     "legend": {
@@ -29,14 +29,6 @@
     {
       "id": "work",
       "label": "Suggested skill handoffs"
-    },
-    {
-      "id": "owner",
-      "label": "Applicable owner approval"
-    },
-    {
-      "id": "stop",
-      "label": "Stop without authorizing writes"
     }
   ],
   "mainPath": [
@@ -51,14 +43,14 @@
       "lane": "work",
       "col": 0,
       "type": "backend",
-      "label": "Inspect existing workspaces",
+      "label": "Inspect task and checkout",
       "sublabel": "isolated-workspace",
       "icon": "none",
       "sources": [
         {
           "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
           "line": 1,
-          "end_line": 62,
+          "end_line": 76,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -68,31 +60,31 @@
       "lane": "work",
       "col": 1,
       "type": "backend",
-      "label": "Plan VCS, base, and path",
+      "label": "Choose ref, base, location",
       "sublabel": "isolated-workspace",
       "icon": "none",
       "sources": [
         {
           "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
           "line": 1,
-          "end_line": 62,
+          "end_line": 76,
           "label": "Authoritative skill instructions"
         }
       ]
     },
     {
       "id": "step-2",
-      "lane": "owner",
+      "lane": "work",
       "col": 2,
-      "type": "security",
-      "label": "Approve the exact plan",
+      "type": "backend",
+      "label": "Check setup permissions",
       "sublabel": "isolated-workspace",
-      "icon": "decision",
+      "icon": "none",
       "sources": [
         {
           "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
           "line": 1,
-          "end_line": 62,
+          "end_line": 76,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -102,31 +94,14 @@
       "lane": "work",
       "col": 3,
       "type": "backend",
-      "label": "Create or verify reuse",
+      "label": "Create ref; verify directory",
       "sublabel": "isolated-workspace",
       "icon": "none",
       "sources": [
         {
           "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
           "line": 1,
-          "end_line": 62,
-          "label": "Authoritative skill instructions"
-        }
-      ]
-    },
-    {
-      "id": "stop-2",
-      "lane": "stop",
-      "col": 2,
-      "type": "external",
-      "label": "Pause this branch",
-      "sublabel": "No approval, no writes",
-      "icon": "stop",
-      "sources": [
-        {
-          "path": ".agents/skills/utility/isolated-workspace/SKILL.md",
-          "line": 1,
-          "end_line": 62,
+          "end_line": 76,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -149,17 +124,7 @@
       "id": "next-2",
       "from": "step-2",
       "to": "step-3",
-      "role": "main",
-      "label": "if approved",
-      "variant": "security"
-    },
-    {
-      "id": "decline-2",
-      "from": "step-2",
-      "to": "stop-2",
-      "label": "not approved",
-      "role": "branch",
-      "variant": "security"
+      "role": "main"
     }
   ],
   "semanticChecks": {
@@ -167,8 +132,7 @@
       "step-0"
     ],
     "allowedTerminals": [
-      "step-3",
-      "stop-2"
+      "step-3"
     ]
   },
   "cards": [
@@ -176,14 +140,14 @@
       "dot": "cyan",
       "title": "Expected outcome",
       "items": [
-        "A named, owned change workspace at a reviewed base revision."
+        "A dedicated task ref and verified working directory, with or without a separate workspace."
       ]
     },
     {
       "dot": "amber",
       "title": "Scope and stopping point",
       "items": [
-        "Stop when isolation is established. This recipe does not approve source changes, cleanup, resets, stashes, or another owner's lane.",
+        "Ask when the location is unclear. Isolation needs the owner's exact plan approval; current-checkout setup follows the project's normal permissions. Stop after task-ref setup or verified same-task continuation. Setup does not approve source changes, cleanup, resets, stashes, or another owner's work.",
         "Suggested handoffs are not declared instruction dependencies or permission for another phase."
       ]
     }

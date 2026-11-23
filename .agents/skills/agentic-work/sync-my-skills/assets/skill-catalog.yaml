@@ -110,8 +110,10 @@ skills:
       issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user
       wants to review a branch, a PR, work-in-progress changes, or asks to \"review since X\"."
     source:
-      type: local
-      path: .agents/skills/coding/code-review
+      type: github
+      repository: https://github.com/mattpocock/skills
+      revision: 59db609eb1e18aaf59b63284d0e52255aff0c63c
+      path: skills/engineering/code-review
     upstream:
       type: github
       repository: https://github.com/mattpocock/skills
@@ -128,7 +130,11 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/code-review, --skill, code-review ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/mattpocock/skills/tree/59db609eb1e18aaf59b63284d0e52255aff0c63c/skills/engineering/code-review, --skill, code-review ]
+    legal:
+      - path: LICENSE
+        target: LICENSE
+        spdx: MIT
     adaptation:
       instructions: Preserve separate Standards and Spec reviews, read-only parallel reviewers, immutable Git endpoints, safe
         revision arguments, and the chosen comparison semantics. Reviewers must not mutate, publish, or delegate. Do not
@@ -283,8 +289,10 @@ skills:
     kind: adapted
     description: A relentless interview to sharpen a plan or design.
     source:
-      type: local
-      path: .agents/skills/productivity/grill-me
+      type: github
+      repository: https://github.com/mattpocock/skills
+      revision: fcf0071560d32913c9d4f820e0d7ca467c881619
+      path: skills/productivity/grill-me
     upstream:
       type: github
       repository: https://github.com/mattpocock/skills
@@ -297,7 +305,11 @@ skills:
     prerequisites: [ grilling ]
     signals: {}
     install:
-      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/grill-me, --skill, grill-me ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/mattpocock/skills/tree/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me, --skill, grill-me ]
+    legal:
+      - path: LICENSE
+        target: LICENSE
+        spdx: MIT
     adaptation:
       instructions: Keep the maintained interview wrapper and its grilling prerequisite. Replace harness-specific Skill-tool
         calls with portable entry instructions. Do not add provider/model configuration.
@@ -372,7 +384,7 @@ skills:
         spdx: MIT
   isolated-workspace:
     kind: authored
-    description: "Create or reuse an isolated Git worktree or Jujutsu workspace before mutation, using an explicit VCS and branch or bookmark."
+    description: "Create a dedicated task branch or bookmark before repository edits. Choose the current checkout or an isolated Git worktree or Jujutsu workspace; ask the user when the location is unclear."
     source:
       type: local
       path: .agents/skills/utility/isolated-workspace
@@ -382,7 +394,7 @@ skills:
     harnesses: [ pi, opencode, claude-code ]
     prerequisites: []
     runtime:
-      - Requires Bun and either Git with worktree support or Jujutsu 0.38 or newer with workspace support.
+      - Requires Git or Jujutsu 0.38 or newer. The isolated path also requires Bun.
     signals: {}
     install:
       argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/isolated-workspace, --skill, isolated-workspace ]
@@ -547,8 +559,10 @@ skills:
     description: Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions
       "red-green-refactor", or wants integration tests.
     source:
-      type: local
-      path: .agents/skills/coding/tdd
+      type: github
+      repository: https://github.com/mattpocock/skills
+      revision: 4ae2317ddb22b046e26455e4f9c9b3aaaf62212d
+      path: skills/engineering/tdd
     upstream:
       type: github
       repository: https://github.com/mattpocock/skills
@@ -562,7 +576,11 @@ skills:
     signals:
       askWithoutSignals: true
     install:
-      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/tdd, --skill, tdd ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/mattpocock/skills/tree/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d/skills/engineering/tdd, --skill, tdd ]
+    legal:
+      - path: LICENSE
+        target: LICENSE
+        spdx: MIT
     adaptation:
       instructions: Keep the maintained testing workflow, behavior-focused examples, module responsibilities and public test
         seams. Replace mandatory codebase-design/Skill-tool coupling with self-contained guidance. Preserve the
@@ -636,8 +654,10 @@ skills:
     kind: adapted
     description: Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.
     source:
-      type: local
-      path: .agents/skills/agentic-work/writing-for-agents
+      type: github
+      repository: https://github.com/mattpocock/skills
+      revision: 5863806dd4e15c63174bee4e7515a4256792ecfa
+      path: skills/productivity/writing-for-agents
     upstream:
       type: github
       repository: https://github.com/mattpocock/skills
@@ -650,9 +670,9 @@ skills:
     prerequisites: []
     signals: {}
     install:
-      argv: [ npx, -y, skills@1.7.4, add, https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/writing-for-agents, --skill, writing-for-agents ]
+      argv: [ npx, -y, skills@1.7.4, add, https://github.com/mattpocock/skills/tree/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/productivity/writing-for-agents, --skill, writing-for-agents ]
     legal:
-      - path: .agents/skills/agentic-work/writing-for-agents/LICENSE
+      - path: LICENSE
         target: LICENSE
         spdx: MIT
     adaptation:
@@ -754,4 +774,4 @@ instructionTemplates:
   enabled: true
   issue: 68
   path: templates
-  prerequisites: [ isolated-workspace, document-project, asd-ste100-technical, unslop ]
+  prerequisites: [ document-project, asd-ste100-technical, unslop ]

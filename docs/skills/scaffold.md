@@ -50,7 +50,7 @@ Scaffolding ends before behavioral implementation. Do not silently convert the r
 
 ## Useful combinations
 
-- [`isolated-workspace`](/skills/isolated-workspace) — A repository change needs a separate Git worktree or Jujutsu workspace instead of writes in the primary checkout.
+- [`isolated-workspace`](/skills/isolated-workspace) — A modifying task needs a dedicated branch or bookmark and a choice between the current checkout and a separate workspace.
 - [`coding-with-rules`](/skills/coding-with-rules) — Code or toolchain work needs the base coding workflow plus rules for its actual languages and extensions.
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.

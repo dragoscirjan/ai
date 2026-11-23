@@ -13,7 +13,7 @@ const read = (path) => readFileSync(join(root, path), "utf8");
 test("every local install URL names the actual grouped source directory and declared skill", () => {
   const c = catalog();
   const local = c.skills.filter((entry) => entry.source.type === "local");
-  assert.equal(local.length, 24);
+  assert.equal(local.length, 20);
   for (const entry of local) {
     const expected = `${c.repository}/tree/${c.ref}/${entry.source.path}`;
     assert.equal(entry.install.argv[4], expected, entry.name);
@@ -107,7 +107,13 @@ test("startup and reader guidance hard-stop on missing instructions and require 
     /Do not add `sync-my-skills` as another skill's prerequisite, companion, handoff, or recovery step/,
   );
   assert.match(policy, /Load or run it only when the user explicitly requests it/);
-  assert.match(policy, /If it is unavailable, stop and ask the user to install it using/);
+  assert.match(
+    policy,
+    /Before changing repository files for a new task, create a dedicated task branch/,
+  );
+  assert.match(policy, /Choose the current checkout or a separate workspace/);
+  assert.doesNotMatch(policy, /isolated-workspace/);
+  assert.doesNotMatch(read("CONTRIBUTING.md"), /isolated-workspace/);
   assert.doesNotMatch(policy, /With owner approval, install it/);
   for (const [path, text] of generatedPages())
     if (path.startsWith("skills/") && path !== "skills/index.md") {

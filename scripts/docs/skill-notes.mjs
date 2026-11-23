@@ -19,12 +19,12 @@ export const notes = {
     companions: ["isolated-workspace", "document-project"],
   },
   "isolated-workspace": {
-    when: "A repository change needs a separate Git worktree or Jujutsu workspace instead of writes in the primary checkout.",
+    when: "A modifying task needs a dedicated branch or bookmark and a choice between the current checkout and a separate workspace.",
     result:
-      "An explicit VCS, branch or bookmark, base revision, absolute workspace path, and reviewed creation or reuse plan.",
+      "A verified task branch or bookmark, explicit VCS, resolved base, selected working directory, and status. A separate workspace is optional.",
     prompt:
-      "Use isolated-workspace with Git to plan a change/example branch from main. Show the exact path, base commit, and plan ID before creation.",
-    stop: "Do not reset, stash, force, remove another workspace, or silently reuse someone else's work. Plan approval covers the named workspace operation, not every later source change.",
+      "Use isolated-workspace to plan a new Git task branch change/example from main. Recommend the current checkout or a separate worktree, and ask if unclear. Show the selected setup before creating anything.",
+    stop: "Create a task ref before edits in either location. Preserve unrelated work and existing refs. An isolated setup still needs its exact plan approval; a failed setup does not authorize switching locations.",
     companions: ["coding-with-rules", "cleanup-workspaces"],
   },
   research: {

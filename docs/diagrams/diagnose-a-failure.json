@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/diagnose-a-failure.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
       "link_mode": "local-only"
     },
     "legend": {
@@ -43,14 +43,14 @@
       "lane": "work",
       "col": 0,
       "type": "backend",
-      "label": "Reproduce and collect evidence",
+      "label": "Reproduce with evidence",
       "sublabel": "systematic-debugging",
       "icon": "none",
       "sources": [
         {
           "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
           "line": 1,
-          "end_line": 99,
+          "end_line": 96,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -67,7 +67,7 @@
         {
           "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
           "line": 1,
-          "end_line": 99,
+          "end_line": 96,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -84,7 +84,7 @@
         {
           "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
           "line": 1,
-          "end_line": 99,
+          "end_line": 96,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -94,14 +94,14 @@
       "lane": "work",
       "col": 3,
       "type": "backend",
-      "label": "Report cause and fix proposal",
+      "label": "Report cause and propose fix",
       "sublabel": "systematic-debugging",
       "icon": "none",
       "sources": [
         {
           "path": ".agents/skills/coding/systematic-debugging/SKILL.md",
           "line": 1,
-          "end_line": 99,
+          "end_line": 96,
           "label": "Authoritative skill instructions"
         }
       ]

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 998 280" data-layout-contract="readable-v2" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase" data-node-ui="" style="--flow-cycle: 3.760s; width: 998px; height: 280px; min-width: 0px;" width="998" height="280" xmlns="http://www.w3.org/2000/svg"><style>
+<svg viewBox="0 0 974 280" data-layout-contract="readable-v2" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase" data-node-ui="" style="--flow-cycle: 3.760s; width: 974px; height: 280px; min-width: 0px;" width="974" height="280" xmlns="http://www.w3.org/2000/svg"><style>
 /*
 JetBrains Mono variable WOFF2 subsets from Google Fonts service revision v24.
 These fixed bytes are shared by the viewer and its SVG/raster exports.
@@ -482,7 +482,7 @@ svg[data-node-ui][data-preset="editorial"] :is([data-graph-role="structural-fram
 svg[data-theme="light"] { --bg: #f4f5f7; --grid: #e9edf2; --canvas-dot: #e2e7ec; --text: #111827; --text-muted: #5b6474; --text-dim: #9aa3b2; --text-faint: #6b7280; --panel: #ffffff; --panel-border: #e5e7eb; --lane-fill: rgba(248, 250, 252, 0.65); --lane-stroke: #cbd5e1; --arrow: #64748b; --arrow-emphasis: #059669; --mask: #ffffff; --frontend-fill: rgba(34, 211, 238, 0.15); --frontend-stroke: #0891b2; --backend-fill: rgba(52, 211, 153, 0.18); --backend-stroke: #059669; --database-fill: rgba(167, 139, 250, 0.2); --database-stroke: #7c3aed; --cloud-fill: rgba(251, 191, 36, 0.18); --cloud-stroke: #d97706; --security-fill: rgba(251, 113, 133, 0.15); --security-stroke: #e11d48; --messagebus-fill: rgba(251, 146, 60, 0.15); --messagebus-stroke: #ea580c; --external-fill: rgba(148, 163, 184, 0.18); --external-stroke: #64748b; --toolbar-bg: rgba(255, 255, 255, 0.92); --toolbar-border: #cbd5e1; --toolbar-text: #334155; --toolbar-hover: #ffffff; --toolbar-menu-bg: #ffffff; --flow-cycle: ; --flow-halo-peak: ; --flow-glow-peak: ; --flow-tail-peak: ; --flow-head-peak: ; --flow-wake-peak: ; --flow-ripple-peak: ; --flow-peak: ; }
 svg[data-theme="dark"] { --bg: #020617; --grid: #1e293b; --canvas-dot: rgba(148, 163, 184, 0.16); --text: #ffffff; --text-muted: #94a3b8; --text-dim: #475569; --text-faint: #7d8da1; --panel: rgba(15, 23, 42, 0.5); --panel-border: #1e293b; --lane-fill: rgba(15, 23, 42, 0.22); --lane-stroke: #334155; --arrow: #94a3b8; --arrow-emphasis: #34d399; --mask: #0f172a; --frontend-fill: rgba(8, 51, 68, 0.4); --frontend-stroke: #22d3ee; --backend-fill: rgba(6, 78, 59, 0.4); --backend-stroke: #34d399; --database-fill: rgba(76, 29, 149, 0.4); --database-stroke: #a78bfa; --cloud-fill: rgba(120, 53, 15, 0.3); --cloud-stroke: #fbbf24; --security-fill: rgba(136, 19, 55, 0.4); --security-stroke: #fb7185; --messagebus-fill: rgba(251, 146, 60, 0.3); --messagebus-stroke: #fb923c; --external-fill: rgba(30, 41, 59, 0.5); --external-stroke: #94a3b8; --toolbar-bg: rgba(15, 23, 42, 0.8); --toolbar-border: #334155; --toolbar-text: #e2e8f0; --toolbar-hover: rgba(15, 23, 42, 0.95); --toolbar-menu-bg: #0f172a; --flow-cycle: ; --flow-halo-peak: ; --flow-glow-peak: ; --flow-tail-peak: ; --flow-head-peak: ; --flow-wake-peak: ; --flow-ripple-peak: ; --flow-peak: ; }
 rect.c-bg-rect { fill: var(--bg); }
-</style><rect x="0" y="0" width="998" height="280" class="c-bg-rect"/><metadata id="archify-software-notices">NOTICE
+</style><rect x="0" y="0" width="974" height="280" class="c-bg-rect"/><metadata id="archify-software-notices">NOTICE
 Archify
 Copyright (c) 2026 tt-a1i (Archify)
 Copyright (c) 2025 Cocoon AI
@@ -863,7 +863,7 @@ been cleared for every commercial, promotional, or redistributive use.</metadata
         <rect width="100%" height="100%" fill="url(#grid)"/>
 
         <!-- Swimlanes -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="942" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="918" height="104" rx="10" class="c-lane" stroke-width="1"/>
         <text x="54" y="74" class="t-muted" font-size="10" font-weight="600">01 / Suggested skill handoffs</text>
 
         <!-- Phase headers -->
@@ -873,45 +873,45 @@ been cleared for every commercial, promotional, or redistributive use.</metadata
 
 
         <!-- Edge paths -->
-        <path data-edge-from="step-0" data-edge-to="step-1" data-edge-key="0" data-edge-id="next-0" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="192,119;224,119" d="M 192 119 L 224 119" class="a-default" data-animate="edge" style="--step: 0;" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="step-1" data-edge-to="step-2" data-edge-key="1" data-edge-id="next-1" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="396,119;428,119" d="M 396 119 L 428 119" class="a-default" data-animate="edge" style="--step: 1;" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="step-2" data-edge-to="step-3" data-edge-key="2" data-edge-id="next-2" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="572,119;604,119" d="M 572 119 L 604 119" class="a-default" data-animate="edge" style="--step: 2;" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="step-0" data-edge-to="step-1" data-edge-key="0" data-edge-id="next-0" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="168,119;200,119" d="M 168 119 L 200 119" class="a-default" data-animate="edge" style="--step: 0;" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="step-1" data-edge-to="step-2" data-edge-key="1" data-edge-id="next-1" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="372,119;404,119" d="M 372 119 L 404 119" class="a-default" data-animate="edge" style="--step: 1;" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="step-2" data-edge-to="step-3" data-edge-key="2" data-edge-id="next-2" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="548,119;580,119" d="M 548 119 L 580 119" class="a-default" data-animate="edge" style="--step: 2;" stroke-width="1.4" marker-end="url(#arrowhead)"/>
 
         <!-- Nodes -->
-        <g id="node-step-0" data-node-id="step-0" data-node-label="Use approved isolation" tabindex="0" role="button" aria-label="Focus Use approved isolation, isolated-workspace, Suggested skill handoffs" aria-pressed="false" data-node-kind="backend" data-node-sublabel="isolated-workspace" data-node-context="Suggested skill handoffs">
-          <title>Use approved isolation · isolated-workspace · Suggested skill handoffs</title>
-          <rect x="48" y="93" width="144" height="52" rx="8" class="c-mask"/>
-          <rect x="48" y="93" width="144" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 0; --flow-node-name: archify-relay-node-0;" stroke-width="1.5"/>
+        <g id="node-step-0" data-node-id="step-0" data-node-label="Create task branch" tabindex="0" role="button" aria-label="Focus Create task branch, isolated-workspace, Suggested skill handoffs" aria-pressed="false" data-node-kind="backend" data-node-sublabel="isolated-workspace" data-node-context="Suggested skill handoffs">
+          <title>Create task branch · isolated-workspace · Suggested skill handoffs</title>
+          <rect x="48" y="93" width="120" height="52" rx="8" class="c-mask"/>
+          <rect x="48" y="93" width="120" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 0; --flow-node-name: archify-relay-node-0;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="120" y="124.3" class="t-primary" font-size="10.3" font-weight="600" text-anchor="middle">Use approved isolation</text>
-          <text x="120" y="136.4" class="t-muted" font-size="8" text-anchor="middle">isolated-workspace</text>
+          <text data-node-label="" x="108" y="124.3" class="t-primary" font-size="10.3" font-weight="600" text-anchor="middle">Create task branch</text>
+          <text x="108" y="136.4" class="t-muted" font-size="8" text-anchor="middle">isolated-workspace</text>
         </g>
 
         <g id="node-step-1" data-node-id="step-1" data-node-label="Select language references" tabindex="0" role="button" aria-label="Focus Select language references, coding-with-rules, Suggested skill handoffs" aria-pressed="false" data-node-kind="backend" data-node-sublabel="coding-with-rules" data-node-context="Suggested skill handoffs">
           <title>Select language references · coding-with-rules · Suggested skill handoffs</title>
-          <rect x="224" y="93" width="172" height="52" rx="8" class="c-mask"/>
-          <rect x="224" y="93" width="172" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 1; --flow-node-name: archify-relay-node-1;" stroke-width="1.5"/>
+          <rect x="200" y="93" width="172" height="52" rx="8" class="c-mask"/>
+          <rect x="200" y="93" width="172" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 1; --flow-node-name: archify-relay-node-1;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="310" y="124.5" class="t-primary" font-size="10.5" font-weight="600" text-anchor="middle">Select language references</text>
-          <text x="310" y="136.7" class="t-muted" font-size="8" text-anchor="middle">coding-with-rules</text>
+          <text data-node-label="" x="286" y="124.5" class="t-primary" font-size="10.5" font-weight="600" text-anchor="middle">Select language references</text>
+          <text x="286" y="136.7" class="t-muted" font-size="8" text-anchor="middle">coding-with-rules</text>
         </g>
 
         <g id="node-step-2" data-node-id="step-2" data-node-label="Write source skeletons" tabindex="0" role="button" aria-label="Focus Write source skeletons, scaffold, Suggested skill handoffs" aria-pressed="false" data-node-kind="backend" data-node-sublabel="scaffold" data-node-context="Suggested skill handoffs">
           <title>Write source skeletons · scaffold · Suggested skill handoffs</title>
-          <rect x="428" y="93" width="144" height="52" rx="8" class="c-mask"/>
-          <rect x="428" y="93" width="144" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 2; --flow-node-name: archify-relay-node-2;" stroke-width="1.5"/>
+          <rect x="404" y="93" width="144" height="52" rx="8" class="c-mask"/>
+          <rect x="404" y="93" width="144" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 2; --flow-node-name: archify-relay-node-2;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="500" y="124.3" class="t-primary" font-size="10.3" font-weight="600" text-anchor="middle">Write source skeletons</text>
-          <text x="500" y="136.4" class="t-muted" font-size="8" text-anchor="middle">scaffold</text>
+          <text data-node-label="" x="476" y="124.3" class="t-primary" font-size="10.3" font-weight="600" text-anchor="middle">Write source skeletons</text>
+          <text x="476" y="136.4" class="t-muted" font-size="8" text-anchor="middle">scaffold</text>
         </g>
 
         <g id="node-step-3" data-node-id="step-3" data-node-label="Check structure and stop" tabindex="0" role="button" aria-label="Focus Check structure and stop, scaffold, Suggested skill handoffs" aria-pressed="false" data-node-kind="backend" data-node-sublabel="scaffold" data-node-context="Suggested skill handoffs">
           <title>Check structure and stop · scaffold · Suggested skill handoffs</title>
-          <rect x="604" y="93" width="160" height="52" rx="8" class="c-mask"/>
-          <rect x="604" y="93" width="160" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 3; --flow-node-name: archify-relay-node-3;" stroke-width="1.5"/>
+          <rect x="580" y="93" width="160" height="52" rx="8" class="c-mask"/>
+          <rect x="580" y="93" width="160" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 3; --flow-node-name: archify-relay-node-3;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="684" y="124.5" class="t-primary" font-size="10.5" font-weight="600" text-anchor="middle">Check structure and stop</text>
-          <text x="684" y="136.7" class="t-muted" font-size="8" text-anchor="middle">scaffold</text>
+          <text data-node-label="" x="660" y="124.5" class="t-primary" font-size="10.5" font-weight="600" text-anchor="middle">Check structure and stop</text>
+          <text x="660" y="136.7" class="t-muted" font-size="8" text-anchor="middle">scaffold</text>
         </g>
 
         <!-- Edge labels -->

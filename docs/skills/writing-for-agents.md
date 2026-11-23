@@ -6,7 +6,7 @@ title: "writing-for-agents"
 
 Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.
 
-**Group:** [Agentic work](/groups/agentic-work) · **Availability:** Upstream-derived; maintained here · **Scope:** project
+**Group:** [Agentic work](/groups/agentic-work) · **Availability:** Pinned upstream input; adaptation required · **Scope:** project
 
 ## When to choose it
 
@@ -19,7 +19,7 @@ The reader is an agent: you are authoring or revising skills, prompts, agent ins
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/writing-for-agents --skill writing-for-agents
+npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/productivity/writing-for-agents --skill writing-for-agents
 ```
 
 This command selects only `writing-for-agents`. It does not install the rest of the collection or the optional companions listed on this page.
@@ -48,6 +48,8 @@ No additional runtime is recorded in the catalog. Check the authoritative instru
 
 Writing mechanics do not authorize policy changes. Existing instruction edits still need the project's audit, exact proposal, approval, and isolated-write process.
 
+This is pinned upstream input, not a reviewed installed adaptation. Follow the catalogued adaptation instructions and review the output and legal notices before use. A source link or install command does not perform that adaptation.
+
 ## Useful combinations
 
 - [`instruction-maintenance`](/skills/instruction-maintenance) — Instruction routing, dependencies, metadata, or policy documents appear missing, stale, conflicting, or unsuitable.
@@ -63,6 +65,6 @@ For focused procedures and utilities, see [supporting tools](/workflows/supporti
 
 The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/agentic-work/writing-for-agents/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the pinned upstream input](https://raw.githubusercontent.com/mattpocock/skills/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/productivity/writing-for-agents/SKILL.md). This link uses the immutable upstream revision `5863806dd4e15c63174bee4e7515a4256792ecfa`; there is no vendored copy here.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

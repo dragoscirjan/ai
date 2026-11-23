@@ -1,16 +1,24 @@
 # Isolated workspace
 
-`isolated-workspace` protects the primary checkout by creating each change in a dedicated Git worktree or Jujutsu workspace. The tracked change has one canonical integration workspace; approved orchestration may create temporary sibling lanes beside it, never inside it.
+`isolated-workspace` creates a dedicated task branch or Jujutsu change and bookmark, then verifies the selected working directory. The task may use the current checkout or a separate worktree/workspace. The agent selects the location from task requirements and repository state, and asks when the choice is unclear.
 
-## Automation
+A new modifying task always needs its own task ref. Continuing the same task uses its verified existing ref. Read-only work needs neither a new ref nor a workspace. Each working directory has one writer.
 
-The skill includes Bun-executed TypeScript automation:
+## Current checkout
+
+After selecting in-place work, follow [current-checkout setup](references/current-checkout.md). This path uses Git or Jujutsu directly and does not require Bun. Verify a clean starting point, create the task ref, and confirm the current ref and status before edits. Preserve unrelated changes and stop when ownership is unclear.
+
+For isolated work, the automation below creates the task ref and workspace together. Existing refs may be attached or reused only for a verified continuation. The tracked task has one canonical integration directory; approved orchestration may create temporary sibling lanes beside it.
+
+## Isolated-workspace automation
+
+Only the isolated path uses the Bun-executed TypeScript automation:
 
 - [`scripts/create.ts`](scripts/create.ts) plans, creates, attaches, repairs, or reuses a workspace.
 - [`scripts/lib.ts`](scripts/lib.ts) provides shared argument, command, repository-discovery, path, and output helpers.
 - [`scripts/create.test.ts`](scripts/create.test.ts) exercises Git, Jujutsu, collisions, mutation gates, and explicit selection in a colocated repository.
 
-The caller must provide:
+For this helper, the caller must provide:
 
 ```text
 --vcs git|jj

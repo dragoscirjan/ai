@@ -12,7 +12,7 @@ Load only the instructions required for the current phase. When several rows mat
 |---|---|
 | Read-only questions, inspection, comparison, or research | No deferred project document is required unless the workflow needs repository identity; then read and follow `CONTRIBUTING.md`. |
 | Before planning or performing a repository architecture, design, implementation, documentation, configuration, policy, or publication change | Read and follow `CONTRIBUTING.md`. |
-| Before any repository mutation | Read and follow `.agents/skills/utility/isolated-workspace/SKILL.md`. |
+| Before changing repository files | Follow the task-branch and working-location policy below. |
 | Before designing, changing, testing, or reviewing source code | Read `coding-with-rules` and follow its language and extension reference selection. Resolve its declared requirements first. |
 | During implementation, and before creating or revising project documentation | Read and follow `document-project`, `asd-ste100-technical`, and `unslop`. Assess documentation impact and update affected documentation in the same change. |
 | Before delegating work to child agents | Read and follow `.agents/skills/unpolished/subagent-orchestration/SKILL.md`. |
@@ -37,17 +37,15 @@ Before proposing a skill solution in this project, including revisions to curren
 
 Read relevant skill instructions, compare them with local capabilities, and explain what to reuse, adapt, or write anew. Report unavailable sources; do not treat an unsuccessful search as evidence that no suitable skill exists.
 
-## Isolated workspace
+## Task branch and working location
 
-Workspace configuration:
+Before changing repository files for a new task, create a dedicated task branch. When resuming the same task, verify and continue its existing task branch. Choose the current checkout or a separate workspace from the task requirements and repository state. Ask the user when the choice is unclear. A task branch is required in either location.
 
-- Version-control system: `git`; pass it explicitly as `--vcs git`
+- Version-control system: `git`
 - Base revision: `main`
-- Workspace root: detect the primary repository and derive the sibling `<repository>--workspaces` directory
-- Branch or bookmark name: pass the full name explicitly and use the `change/` prefix
-- Skill source: `.agents/skills/utility/isolated-workspace/SKILL.md` in the repository origin
+- Task branch prefix: `change/`
 
-The skill is mandatory before mutation. If it is unavailable, stop and ask the user to install it using `npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/isolated-workspace --skill isolated-workspace`. Resume only after the user confirms installation, availability is verified, and the harness is reloaded. Do not use an inline fallback or recreate its workflow from memory.
+Workspace setup may create the branch and working directory together. Verify the task branch, working directory, and ownership of existing changes before edits. Preserve unrelated work and use one writer per working directory.
 
 Every final repository-work report, including blocked or partial-work handoffs, must state the active branch or bookmark and absolute workspace path. If no isolated workspace was created, state that explicitly.
 

@@ -35,9 +35,9 @@ The repository ignores `external/`, the six transient flat dependency directorie
 
 The CLI records its original flat destinations. Do not rely on `skills update` or `skills remove` to manage the moved copies. For an approved refresh, preserve local adaptations, remove only the selected external copy, and rerun this installer.
 
-The existing tracked, categorized adaptations are not removed by this installer. Their approved migration to local-only copies is separate work. Adding an ignore rule does not untrack a committed file.
+The installer does not remove tracked adaptations. Adding an ignore rule does not untrack a committed file. The four removed vendored adaptations remain catalogued as pinned upstream inputs with mandatory adaptation review; ignored local copies do not replace those provenance records.
 
-That migration also needs source-inventory filtering for ignored dependencies. Until then, source-coverage checks can report `Catalog coverage differs from local skill directories` after local installation. Do not relax those checks as part of this setup script.
+Published-source coverage excludes Git-ignored installation directories. It still validates every catalogued local source and rejects unlisted nonignored skills, duplicate local names, and symlinked source categories. Local-only authoring dependencies are not published source assets. A plain source directory without Git metadata retains complete inventory checks.
 
 ## Configure invocation ownership
 

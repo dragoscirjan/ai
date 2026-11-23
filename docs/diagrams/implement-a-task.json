@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/implement-a-task.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "a6e3f4348fb13fdad5011909f7a2f3a3a24cdb14",
+      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
       "link_mode": "local-only"
     },
     "legend": {
@@ -58,7 +58,7 @@
         {
           "path": ".agents/skills/productivity/plan-tasks/SKILL.md",
           "line": 1,
-          "end_line": 28,
+          "end_line": 29,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -75,7 +75,7 @@
         {
           "path": ".agents/skills/coding/scaffold/SKILL.md",
           "line": 1,
-          "end_line": 55,
+          "end_line": 56,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -92,7 +92,7 @@
         {
           "path": ".agents/skills/coding/scaffold/SKILL.md",
           "line": 1,
-          "end_line": 55,
+          "end_line": 56,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -158,10 +158,10 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/coding/tdd/SKILL.md",
-          "line": 1,
-          "end_line": 23,
-          "label": "Authoritative skill instructions"
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "line": 557,
+          "end_line": 592,
+          "label": "Pinned source and runtime record"
         }
       ]
     },
@@ -175,10 +175,10 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/coding/code-review/SKILL.md",
-          "line": 1,
-          "end_line": 91,
-          "label": "Authoritative skill instructions"
+          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
+          "line": 106,
+          "end_line": 145,
+          "label": "Pinned source and runtime record"
         }
       ]
     },
@@ -194,7 +194,7 @@
         {
           "path": ".agents/skills/productivity/specify/SKILL.md",
           "line": 1,
-          "end_line": 35,
+          "end_line": 36,
           "label": "Authoritative skill instructions"
         }
       ]

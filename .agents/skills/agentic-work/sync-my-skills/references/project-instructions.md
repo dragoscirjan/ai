@@ -8,7 +8,6 @@ The required bundle is `AGENTS.md`, `CONTRIBUTING.md`, `DOCUMENTATION.md`, and `
 
 Adoption requires the template's fixed guidance at its canonical target paths:
 
-- `.agents/skills/isolated-workspace/SKILL.md`
 - `.agents/skills/document-project/SKILL.md`
 - `.agents/skills/asd-ste100-technical/SKILL.md`
 - `.agents/skills/unslop/SKILL.md`
@@ -27,7 +26,7 @@ Use the template contract's required fields as the completion checklist. Establi
 - Actual runtimes, setup/development commands, environments, test conventions, and configuration precedence.
 - Documentation audience, sources, existing engine, commands, ownership, and maintenance boundaries.
 - Applicable checks and their real thresholds, missing tools, limitations, and completion obligations.
-- Task records, isolation/VCS settings, implementation invariants, approved automation, and publication authority.
+- Task records, explicit VCS, base revision, mandatory task-ref creation, working-location choices, implementation invariants, approved automation, and publication authority.
 
 Find facts yourself. Grill only unresolved choices, in frontier rounds: recommend an answer, wait, then ask questions that depended on it. Reuse earlier decisions. Preserve existing policy unless the user explicitly changes it; neither silence nor a template default is approval.
 
@@ -48,7 +47,7 @@ Write the candidates with LLM reasoning. The helper does not substitute placehol
 
 Use one project name. Keep authority in `AGENTS.md`, general procedures in `CONTRIBUTING.md`, documentation policy/commands in `DOCUMENTATION.md`, and check requirements in `VALIDATION.md`. Reference canonical commands rather than maintaining contradictory copies. Output must have no unresolved authoring markers, private machine paths, or credential values.
 
-Treat new safety, isolation, skill-loading, validation, or publication rules as protected policy changes. Describe their effects separately from prose cleanup and request explicit owner approval. The fixed template prerequisites are not optional population choices.
+Treat new safety, task-branch, working-location, skill-loading, validation, or publication rules as protected policy changes. Describe their effects separately from prose cleanup and request explicit owner approval. The fixed template prerequisites are not optional population choices.
 
 ## Review and approve
 

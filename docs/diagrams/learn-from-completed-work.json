@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/learn-from-completed-work.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "889c289b4b8fa0e0dbcfc08adedab60a26fd11fa",
+      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
       "link_mode": "local-only"
     },
     "legend": {
@@ -50,7 +50,7 @@
         {
           "path": ".agents/skills/productivity/retro/SKILL.md",
           "line": 1,
-          "end_line": 32,
+          "end_line": 33,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -67,7 +67,7 @@
         {
           "path": ".agents/skills/productivity/retro/SKILL.md",
           "line": 1,
-          "end_line": 32,
+          "end_line": 33,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -84,7 +84,7 @@
         {
           "path": ".agents/skills/productivity/retro/SKILL.md",
           "line": 1,
-          "end_line": 32,
+          "end_line": 33,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -101,7 +101,7 @@
         {
           "path": ".agents/skills/productivity/retro/SKILL.md",
           "line": 1,
-          "end_line": 32,
+          "end_line": 33,
           "label": "Authoritative skill instructions"
         }
       ]

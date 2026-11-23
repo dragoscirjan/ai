@@ -50,7 +50,7 @@ An inspection or coding request does not authorize initialization. Stop for base
 
 ## Useful combinations
 
-- [`isolated-workspace`](/skills/isolated-workspace) — A repository change needs a separate Git worktree or Jujutsu workspace instead of writes in the primary checkout.
+- [`isolated-workspace`](/skills/isolated-workspace) — A modifying task needs a dedicated branch or bookmark and a choice between the current checkout and a separate workspace.
 - [`document-project`](/skills/document-project) — Implementation changes how readers use the project, or existing documentation blocks a real developer task.
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.

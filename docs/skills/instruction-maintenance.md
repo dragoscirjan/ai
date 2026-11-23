@@ -51,7 +51,7 @@ An audit does not authorize its own proposal. Changed scope or protected rules r
 ## Useful combinations
 
 - [`writing-for-agents`](/skills/writing-for-agents) — The reader is an agent: you are authoring or revising skills, prompts, agent instructions, or their reference documents.
-- [`isolated-workspace`](/skills/isolated-workspace) — A repository change needs a separate Git worktree or Jujutsu workspace instead of writes in the primary checkout.
+- [`isolated-workspace`](/skills/isolated-workspace) — A modifying task needs a dedicated branch or bookmark and a choice between the current checkout and a separate workspace.
 
 These are optional companions, not extra declared requirements. Choose only what the task needs.
 
