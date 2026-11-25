@@ -21,6 +21,19 @@ Review the preview, then repeat without `--dry-run` to confirm interactively, or
 
 Existing selected destinations require `--overwrite`. Remote entries requiring semantic adaptation stop before installation rather than installing an unreviewed upstream substitute. The CLI does not build or approve semantic adaptations. See [installation and update instructions](docs/guide/install.md) for scope, conflicts, and recovery.
 
+### Custom skills directory
+
+To populate an existing Claude plugin without creating normal agent directories, point `--target` at the plugin root and use `--skills-dir skills`:
+
+```sh
+npx -y github:dragoscirjan/ai#<tag-or-commit> \
+  --target ./my-plugin --skills-dir skills --agent claude-code --dry-run
+```
+
+After confirmation, selected skills go directly into `my-plugin/skills/<name>/SKILL.md`, with supporting and legal files. The script verifies sources in a disposable workspace before copying them. It does not edit `.claude-plugin/plugin.json`, register the plugin, or add `.agents`/`.claude` directories to it.
+
+Relative output paths are resolved under `--target`; absolute output paths must also remain inside that project. Existing selected skill folders still need `--overwrite`. See [custom output and plugin packaging](docs/guide/install.md#copy-skills-into-a-plugin-or-custom-directory).
+
 ## Maintain agent instructions
 
 Invoke [`sync-my-agents`](.agents/skills/agentic-work/sync-my-agents/SKILL.md) explicitly to review `AGENTS.md` and the instruction documents it references, such as `CONTRIBUTING.md` and `VALIDATION.md`. It gathers evidence, asks about unresolved decisions, shows exact diffs, and applies only approved changes.

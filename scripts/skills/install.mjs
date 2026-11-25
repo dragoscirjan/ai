@@ -3,6 +3,7 @@ import {
   existsSync,
   lstatSync,
   mkdirSync,
+  mkdtempSync,
   readFileSync,
   readdirSync,
   readlinkSync,
@@ -10,7 +11,7 @@ import {
   rmSync,
   writeFileSync,
 } from "node:fs";
-import { homedir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import {
   dirname,
   isAbsolute,
@@ -19,6 +20,7 @@ import {
   parse as parsePath,
   relative,
   resolve,
+  sep,
 } from "node:path";
 import {
   CATALOG_PATH,
@@ -32,6 +34,7 @@ import {
   safeRelative,
 } from "./catalog.mjs";
 import { fetchBytes } from "./source.mjs";
+import { copySkill, skillsDirectory } from "./output.mjs";
 
 const absolute = (value, label) => {
   const path = resolve(value);
@@ -83,6 +86,7 @@ function assertDestination(path, canonical) {
 }
 export function buildPlan(options, catalog = loadCatalog(CATALOG_PATH), context = {}) {
   const target = absolute(options.target ?? process.cwd(), "Target");
+  const outputDirectory = skillsDirectory(target, options.skillsDir);
   const scope = options.scope ?? "project";
   check(["project", "personal"].includes(scope), "Scope must be project or personal");
   const agents = [...new Set(options.agents ?? [])];
@@ -153,16 +157,20 @@ export function buildPlan(options, catalog = loadCatalog(CATALOG_PATH), context 
         `${name}: requires reviewed semantic adaptation; deterministic upstream installation would discard the maintained workflow`,
       );
     if (entry.include?.length) blocked.push(`${name}: custom include rules are not supported`);
-    const paths = destinations(target, name, agents, scope, home, env);
+    const paths = outputDirectory
+      ? [join(outputDirectory, name)]
+      : destinations(target, name, agents, scope, home, env);
     const canonical = paths[0];
     for (const path of paths) {
       assertDestination(path, canonical);
+      if (outputDirectory && existing(path))
+        check(lstatSync(path).isDirectory(), "Existing skill destination is not a directory");
       if (existing(path) && !options.overwrite)
         blocked.push(
           `${name}: existing destination ${path}; review it and explicitly pass --overwrite to replace this selected skill`,
         );
     }
-    const argv = [...entry.install.argv];
+    const argv = entry.install.argv.filter((arg) => !outputDirectory || arg !== "--global");
     if (entry.source.type === "local")
       argv[4] = `${catalog.repository}/tree/${ref}/${entry.source.path}`;
     argv.push("--agent", ...agents, "--yes");
@@ -185,6 +193,7 @@ export function buildPlan(options, catalog = loadCatalog(CATALOG_PATH), context 
   });
   return {
     target,
+    skillsDir: outputDirectory,
     scope,
     agents,
     categories: options.categories ?? [],
@@ -206,6 +215,10 @@ export function quote(argument) {
 }
 export function printPlan(plan, output = console.log) {
   output(`Target: ${plan.target}\nScope: ${plan.scope}\nAgents: ${plan.agents.join(", ")}`);
+  if (plan.skillsDir)
+    output(
+      `Skills directory: ${plan.skillsDir}\nCustom output only. Acquisition commands run in a disposable workspace; no normal agent directories or plugin metadata are changed.`,
+    );
   if (plan.prerequisites.length) output(`Required skills added: ${plan.prerequisites.join(", ")}`);
   if (plan.excludedByScope.length)
     output(`Outside ${plan.scope} scope, unchanged: ${plan.excludedByScope.join(", ")}`);
@@ -237,12 +250,26 @@ function legalUrl(plan, entry, file) {
   const [owner, repo] = new URL(repository).pathname.slice(1).split("/");
   return `https://raw.githubusercontent.com/${owner}/${repo}/${ref.split("/").map(encodeURIComponent).join("/")}/${file.path.split("/").map(encodeURIComponent).join("/")}`;
 }
-function instructionSnapshot(target) {
+function instructionSnapshot(target, assetDirectories = []) {
   const result = new Map(),
-    pending = ["AGENTS.md", "CONTRIBUTING.md", "DOCUMENTATION.md", "VALIDATION.md", "CLAUDE.md"];
+    pending = [
+      "AGENTS.md",
+      "CONTRIBUTING.md",
+      "DOCUMENTATION.md",
+      "VALIDATION.md",
+      "CLAUDE.md",
+      ...(assetDirectories.length ? [".claude-plugin/plugin.json"] : []),
+    ];
   while (pending.length) {
     const name = pending.shift();
     if (result.has(name) || name.includes("/skills/")) continue;
+    if (
+      assetDirectories.some((directory) => {
+        const rel = relative(directory, resolve(target, name));
+        return !isAbsolute(rel) && rel !== ".." && !rel.startsWith(`..${sep}`);
+      })
+    )
+      continue;
     safeRelative(name);
     const path = join(target, name);
     noLinks(target, path);
@@ -306,13 +333,81 @@ function filterAndVerify(root, entry) {
     check(lstatSync(join(root, legal.target)).isFile(), `Missing legal file: ${legal.target}`);
   }
 }
+function finishSkill(folder, entry, plan, licenses) {
+  for (const file of entry.legal) {
+    const path = join(folder, file.target);
+    noLinks(folder, path);
+    mkdirSync(dirname(path), { recursive: true });
+    writeFileSync(path, licenses.get(legalUrl(plan, entry, file)));
+  }
+  filterAndVerify(folder, entry);
+}
+async function executeOutput(plan, invoke, licenses, instructions) {
+  skillsDirectory(plan.target, plan.skillsDir);
+  for (const entry of plan.entries) {
+    const destination = entry.destinations[0];
+    assertDestination(destination, destination);
+    check(
+      plan.overwrite || !existing(destination),
+      `Destination appeared after preview: ${entry.name}; review before retrying`,
+    );
+  }
+  const workspace = mkdtempSync(join(tmpdir(), "sync-skills-acquire-"));
+  const prepared = [],
+    completed = [];
+  let current = "acquisition";
+  try {
+    // Acquire and verify every source before changing any selected output folder.
+    for (const entry of plan.entries) {
+      current = entry.name;
+      await invoke(entry.argv, workspace);
+      verifySnapshot(plan.target, instructions);
+      const source = destinations(workspace, entry.name, plan.agents, "project")[0];
+      assertDestination(source, source);
+      check(existing(source), `Skills CLI did not create ${source}`);
+      finishSkill(source, entry, plan, licenses);
+      prepared.push({ entry, source });
+    }
+    verifySnapshot(plan.target, instructions);
+    skillsDirectory(plan.target, plan.skillsDir);
+    for (const { entry, source } of prepared) {
+      current = entry.name;
+      const destination = entry.destinations[0];
+      assertDestination(destination, destination);
+      copySkill(source, destination, { overwrite: plan.overwrite });
+      filterAndVerify(destination, entry);
+      verifySnapshot(plan.target, instructions);
+      completed.push(entry.name);
+    }
+    return completed;
+  } catch (error) {
+    throw new Error(
+      `Stopped at ${current}; completed: ${completed.join(", ") || "none"}. Inspect selected output before retrying. ${error.message}`,
+      { cause: error },
+    );
+  } finally {
+    rmSync(workspace, { recursive: true, force: true });
+  }
+}
 export async function executePlan(
   plan,
   { confirmed = false, run, fetcher = globalThis.fetch } = {},
 ) {
   check(confirmed, "Explicit confirmation is required");
   check(!plan.blocked.length, `Installation blocked:\n${plan.blocked.join("\n")}`);
-  const instructions = instructionSnapshot(plan.target);
+  const instructions = instructionSnapshot(
+    plan.target,
+    plan.skillsDir ? plan.entries.flatMap((entry) => entry.destinations) : [],
+  );
+  if (plan.skillsDir) {
+    for (const name of instructions.keys()) {
+      const rel = relative(resolve(plan.target, name), plan.skillsDir);
+      check(
+        isAbsolute(rel) || rel === ".." || rel.startsWith(`..${sep}`),
+        `Skills directory overlaps protected document: ${name}`,
+      );
+    }
+  }
   const licenses = new Map();
   // Fail source acquisition before any selected destination can be changed.
   for (const entry of plan.entries)
@@ -333,6 +428,7 @@ export async function executePlan(
       if (result.error) throw result.error;
       check(result.status === 0, `Skills CLI failed with status ${result.status ?? result.signal}`);
     });
+  if (plan.skillsDir) return executeOutput(plan, invoke, licenses, instructions);
   const completed = [];
   for (const entry of plan.entries) {
     for (const path of entry.destinations) {
@@ -354,13 +450,7 @@ export async function executePlan(
           folder === canonical || folder === destination,
           `Unexpected installed location: ${entry.name}`,
         );
-        for (const file of entry.legal) {
-          const path = join(folder, file.target);
-          noLinks(folder, path);
-          mkdirSync(dirname(path), { recursive: true });
-          writeFileSync(path, licenses.get(legalUrl(plan, entry, file)));
-        }
-        filterAndVerify(folder, entry);
+        finishSkill(folder, entry, plan, licenses);
       }
       completed.push(entry.name);
     } catch (error) {

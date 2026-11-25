@@ -18,6 +18,7 @@ Options:
   --skill NAME       Select an individual skill; prerequisites are included
   --agent NAME       pi, opencode, or claude-code; repeat or use commas
   --target PATH      Destination project root (default: current directory)
+  --skills-dir PATH  Copy verified skill folders here, within --target; no agent directories
   --scope SCOPE      project (default) or personal (explicit global installation)
   --ref REF          Source ref for this repository's skills (default: catalog ref)
   --dry-run          Print commands and destinations without fetching or installing
@@ -49,6 +50,7 @@ function parse(argv) {
       skill: { type: "string", multiple: true },
       agent: { type: "string", multiple: true },
       target: { type: "string" },
+      "skills-dir": { type: "string" },
       scope: { type: "string" },
       ref: { type: "string" },
       "source-root": { type: "string" },
@@ -71,6 +73,7 @@ function parse(argv) {
       skills: split(values.skill),
       agents: split(values.agent),
       target: values.target,
+      skillsDir: values["skills-dir"],
       scope: values.scope,
       ref: values.ref,
       overwrite: values.overwrite,
@@ -108,6 +111,7 @@ export async function main(argv = process.argv.slice(2), runtime = {}) {
         !values.overwrite &&
         !values["dry-run"] &&
         !values.target &&
+        values["skills-dir"] === undefined &&
         !values.scope &&
         !values.ref,
       "Installation options are not accepted by list",
@@ -233,7 +237,7 @@ export async function main(argv = process.argv.slice(2), runtime = {}) {
   }
   const completed = await (runtime.install ?? executePlan)(plan, { confirmed });
   output(
-    `\nVerified ${completed.length} skill(s): ${completed.join(", ")}. Project instructions were not changed.`,
+    `\nVerified ${completed.length} skill(s)${plan.skillsDir ? ` in ${plan.skillsDir}` : ""}: ${completed.join(", ")}. Project instructions were not changed.`,
   );
 }
 export function reportFailure(error, output = console.error) {

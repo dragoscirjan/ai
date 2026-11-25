@@ -33,6 +33,41 @@ Required prerequisites cannot be omitted while keeping a skill that needs them. 
 
 Use `--ref <ref>` to choose this repository's skill-source revision separately from the CLI revision. Without it, authored skill commands follow the catalog's configured ref. Upstream sources retain their catalogued immutable pins. Pinning the CLI alone does not pin a mutable authored-skill ref.
 
+## Copy skills into a plugin or custom directory
+
+Use `--skills-dir` when you want portable skill folders in an exact directory rather than normal agent installations. The owning project directory must already exist. For an existing Claude plugin, replace `my-plugin` with its root:
+
+```sh
+npx -y github:dragoscirjan/ai#<tag-or-commit> \
+  --target ./my-plugin --skills-dir skills --skill coding-with-rules --agent claude-code --dry-run
+```
+
+The preview targets this layout and includes the required `coding` skill:
+
+```text
+my-plugin/
+├── .claude-plugin/
+│   └── plugin.json                 unchanged, if present
+└── skills/
+    ├── coding/
+    │   ├── SKILL.md
+    │   └── LICENSE
+    └── coding-with-rules/
+        ├── SKILL.md
+        ├── references/
+        └── LICENSE
+```
+
+This matches [Claude's documented plugin skill layout](https://code.claude.com/docs/en/plugins/components). Do not put skills under `.claude-plugin/`; that directory contains plugin metadata. For another custom directory, choose its exact path and configure its consumer separately. This script never edits plugin manifests, loads or registers plugins, changes trust, or executes installed helpers.
+
+Relative `--skills-dir` paths resolve under `--target`, not the invocation directory. An absolute path must also be a subdirectory of `--target`. Paths outside that project, its root itself, Git metadata, symlink traversal, and overlaps with protected instruction documents are rejected. Point `--target` at the owning project rather than bypassing its scope. A missing output directory is created only after confirmation and successful source verification.
+
+Keep `--agent claude-code` to check the selected skills' catalogued Claude compatibility. In this mode, agent selection does not create harness-specific directories. Even personal catalog entries explicitly selected with `--scope personal` are copied only into this output directory, never installed globally.
+
+Review the dry run, then repeat without `--dry-run` to confirm or use `--yes` for a separately approved noninteractive run. All selected sources and legal files are acquired in a disposable workspace and verified before any output skill folder changes. Installation records stay in that temporary workspace; the plugin receives no normal `.agents`/`.claude` directories, new manager locks, or CLI lock changes.
+
+Unselected folders and project/plugin metadata remain unchanged. Existing selected folders require `--overwrite`; that approval replaces the complete selected folder, including obsolete files. Replacement is per skill, not an all-or-nothing transaction for the entire selection. A failed replacement restores the original when possible. If an unexpected concurrent write prevents restoration, the error identifies a preserved backup for inspection; do not delete that backup blindly.
+
 ## Confirm and verify
 
 Review the preview. Repeat the command without `--dry-run` to receive an interactive confirmation. For an already approved noninteractive run, add `--yes`:
@@ -45,7 +80,7 @@ The script runs the catalogued `npx -y skills@1.7.4 add` commands with explicit 
 
 Project skills use `.agents/skills/<name>/`. Selected Claude Code installations may use relative `.claude/skills/<name>` projections. The CLI verifies selected destinations and rejects unsafe symlink traversal. A successful run lists verified skills. It does not modify `AGENTS.md`, referenced instruction documents, personal command registration, or legacy manager locks.
 
-The external Skills CLI owns its own installation records. There is no new custom manager-owned lock, persistent apply-plan ID, or staging protocol.
+For normal agent installations, the external Skills CLI owns its own installation records. Custom-directory acquisition records exist only in the disposable workspace. There is no new custom manager-owned lock, persistent apply-plan ID, or staging protocol.
 
 ## Update selected skills
 

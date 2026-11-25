@@ -66,6 +66,7 @@ test("packed runtime executes its bin outside the checkout without development d
   const record = JSON.parse(packed.stdout)[0],
     files = record.files.map((file) => file.path);
   assert.ok(files.includes("scripts/skills/sync.mjs"));
+  assert.ok(files.includes("scripts/skills/output.mjs"));
   assert.ok(files.includes("catalog/skill-catalog.yaml"));
   assert.ok(files.includes("LICENSE"));
   assert.ok(
