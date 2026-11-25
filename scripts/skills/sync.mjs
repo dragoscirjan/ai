@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { realpathSync } from "node:fs";
-import { createInterface } from "node:readline/promises";
+import { checkbox, confirm } from "@inquirer/prompts";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { CATALOG_PATH, HARNESSES, check, loadCatalog } from "./catalog.mjs";
@@ -27,7 +27,8 @@ Options:
   --source-root PATH Validate catalog coverage in a source checkout (list only)
   --help             Show this help
 
-With no selection in an interactive terminal, choose categories and agents from menus.
+With no selection in an interactive terminal, choose categories and agents with checkboxes.
+Use arrow keys to move, Space to toggle, Enter to accept, and Ctrl+C to cancel.
 No files are installed until confirmation. Blocked prerequisites, adaptations, or
 conflicts stop execution before any installation. Existing instructions, skipped
 skills, legacy manager locks, and personal agent commands are never managed here.
@@ -73,22 +74,20 @@ function parse(argv) {
     },
   };
 }
-async function select(rl, title, entries) {
-  console.log(`\n${title}`);
-  entries.forEach((entry, index) =>
-    console.log(`  [ ] ${index + 1}. ${entry.title} (${entry.id})`),
-  );
-  const answer = await rl.question("Choose comma-separated numbers or names: ");
-  const selected = split([answer.trim()]).map((value) =>
-    /^\d+$/.test(value) ? entries[Number(value) - 1]?.id : value.trim(),
-  );
-  check(
-    selected.length && selected.every((id) => entries.some((entry) => entry.id === id)),
-    "Invalid or empty selection; no installation performed",
-  );
-  return selected;
+async function select(message, entries, prompt) {
+  return prompt({
+    message,
+    choices: entries.map((entry) => ({
+      name: entry.title,
+      value: entry.id,
+      ...(entry.summary ? { description: entry.summary } : {}),
+    })),
+    required: true,
+    pageSize: 12,
+    loop: false,
+  });
 }
-export async function main(argv = process.argv.slice(2)) {
+export async function main(argv = process.argv.slice(2), runtime = {}) {
   const { command, values, options } = parse(argv);
   if (values.help) {
     console.log(HELP);
@@ -136,61 +135,69 @@ export async function main(argv = process.argv.slice(2)) {
   }
   check(!values["source-root"], "--source-root is a list-only validation option");
   check(!values.json || values["dry-run"], "Use --json only with list or --dry-run");
-  const interactive = !!process.stdin.isTTY && !!process.stdout.isTTY;
-  let rl;
-  try {
-    if (interactive) rl = createInterface({ input: process.stdin, output: process.stdout });
-    if (!options.categories.length && !options.skills.length) {
-      check(
-        rl && !values.json,
-        "Choose --category or --skill explicitly outside an interactive terminal",
-      );
-      options.categories = await select(
-        rl,
-        "Skill categories",
-        Object.entries(catalog.groups).map(([id, group]) => ({ id, title: group.title })),
-      );
-    }
-    if (!options.agents.length) {
-      check(rl && !values.json, "Choose --agent explicitly outside an interactive terminal");
-      options.agents = await select(
-        rl,
-        "Target agents",
-        HARNESSES.map((id) => ({ id, title: id })),
-      );
-    }
-    const plan = buildPlan(options, catalog);
-    if (values.json) console.log(JSON.stringify(plan, null, 2));
-    else printPlan(plan);
-    if (values["dry-run"]) return;
+  const interactive = runtime.interactive ?? (!!process.stdin.isTTY && !!process.stdout.isTTY);
+  const prompts = runtime.prompts ?? { checkbox, confirm };
+  const output = runtime.output ?? console.log;
+  if (!options.categories.length && !options.skills.length) {
     check(
-      !plan.blocked.length,
-      "Resolve every blocked entry before installing; no installation started",
+      interactive && !values.json,
+      "Choose --category or --skill explicitly outside an interactive terminal",
     );
-    let confirmed = !!values.yes;
-    if (!confirmed) {
-      check(rl, "Use --yes only after reviewing a --dry-run outside an interactive terminal");
-      confirmed =
-        (
-          await rl.question(
-            "\nRun these commands and apply the displayed filtering/legal-file changes? [y/N] ",
-          )
-        )
-          .trim()
-          .toLowerCase() === "y";
-    }
-    if (!confirmed) {
-      console.log("Cancelled; no installation performed.");
-      return;
-    }
-    const completed = await executePlan(plan, { confirmed });
-    console.log(
-      `\nVerified ${completed.length} skill(s): ${completed.join(", ")}. Project instructions were not changed.`,
+    options.categories = await select(
+      "Skill categories",
+      Object.entries(catalog.groups).map(([id, group]) => ({
+        id,
+        title: group.title,
+        summary: group.summary,
+      })),
+      prompts.checkbox,
     );
-  } finally {
-    rl?.close();
   }
+  if (!options.agents.length) {
+    check(interactive && !values.json, "Choose --agent explicitly outside an interactive terminal");
+    options.agents = await select(
+      "Target agents",
+      HARNESSES.map((id) => ({ id, title: id })),
+      prompts.checkbox,
+    );
+  }
+  const plan = buildPlan(options, catalog);
+  if (values.json) output(JSON.stringify(plan, null, 2));
+  else printPlan(plan, output);
+  if (values["dry-run"]) return;
+  check(
+    !plan.blocked.length,
+    "Resolve every blocked entry before installing; no installation started",
+  );
+  let confirmed = !!values.yes;
+  if (!confirmed) {
+    check(
+      interactive,
+      "Use --yes only after reviewing a --dry-run outside an interactive terminal",
+    );
+    confirmed = await prompts.confirm({
+      message: "Run these commands and apply the displayed filtering/legal-file changes?",
+      default: false,
+    });
+  }
+  if (!confirmed) {
+    output("Cancelled; no installation performed.");
+    return;
+  }
+  const completed = await (runtime.install ?? executePlan)(plan, { confirmed });
+  output(
+    `\nVerified ${completed.length} skill(s): ${completed.join(", ")}. Project instructions were not changed.`,
+  );
 }
+export function reportFailure(error, output = console.error) {
+  if (["ExitPromptError", "AbortPromptError"].includes(error.name)) {
+    output("Cancelled; no installation performed.");
+    return 130;
+  }
+  output(`sync-skills: ${error.message}`);
+  return 1;
+}
+
 let isEntry = false;
 try {
   isEntry = !!process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
@@ -199,6 +206,5 @@ try {
 }
 if (isEntry)
   main().catch((error) => {
-    console.error(`sync-skills: ${error.message}`);
-    process.exitCode = 1;
+    process.exitCode = reportFailure(error);
   });

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import {
   cpSync,
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -16,12 +17,40 @@ import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { PACKAGE_ROOT } from "./catalog.mjs";
 
-const require = createRequire(import.meta.url);
-test("GitHub package has exactly one executable and a pinned production parser", () => {
+function copyProductionDependencies(packageRoot) {
+  const copied = new Map();
+  function copy(fromManifest, name, parentDestination) {
+    const lookup = createRequire(fromManifest);
+    const manifest = lookup.resolve
+      .paths(name)
+      .map((folder) => join(folder, name, "package.json"))
+      .find(existsSync);
+    assert.ok(manifest, `Missing already-installed production dependency: ${name}`);
+    const source = dirname(realpathSync(manifest));
+    if (copied.get(name) === source) return;
+    const destination = join(
+      copied.has(name) ? parentDestination : packageRoot,
+      "node_modules",
+      name,
+    );
+    copied.set(name, source);
+    mkdirSync(dirname(destination), { recursive: true });
+    cpSync(source, destination, { recursive: true });
+    const metadata = JSON.parse(readFileSync(join(source, "package.json"), "utf8"));
+    for (const dependency of Object.keys(metadata.dependencies ?? {}))
+      copy(join(source, "package.json"), dependency, destination);
+  }
+  const manifest = join(PACKAGE_ROOT, "package.json");
+  for (const name of Object.keys(JSON.parse(readFileSync(manifest, "utf8")).dependencies))
+    copy(manifest, name, packageRoot);
+  assert.equal(existsSync(join(packageRoot, "node_modules/vitepress")), false);
+  assert.equal(existsSync(join(packageRoot, "node_modules/eslint")), false);
+}
+test("GitHub package has exactly one executable and pinned production dependencies", () => {
   const manifest = JSON.parse(readFileSync(join(PACKAGE_ROOT, "package.json"), "utf8"));
   assert.deepEqual(manifest.bin, { "sync-skills": "scripts/skills/sync.mjs" });
   assert.equal(manifest.private, true);
-  assert.deepEqual(manifest.dependencies, { yaml: "2.9.1" });
+  assert.deepEqual(manifest.dependencies, { "@inquirer/prompts": "8.8.1", yaml: "2.9.1" });
   assert.equal(manifest.scripts.prepare, undefined);
   assert.ok(statSync(join(PACKAGE_ROOT, manifest.bin["sync-skills"])).mode & 0o111);
 });
@@ -53,13 +82,8 @@ test("packed runtime executes its bin outside the checkout without development d
   });
   assert.equal(extracted.status, 0, extracted.stderr);
   const packageRoot = join(directory, "package");
-  mkdirSync(join(packageRoot, "node_modules"));
-  // Use the already installed exact production dependency. This test never downloads packages.
-  cpSync(
-    dirname(realpathSync(require.resolve("yaml/package.json"))),
-    join(packageRoot, "node_modules/yaml"),
-    { recursive: true },
-  );
+  // Copy only the already-installed production closure; never download packages in tests.
+  copyProductionDependencies(packageRoot);
   const bin = join(directory, "sync-skills");
   symlinkSync(join(packageRoot, "scripts/skills/sync.mjs"), bin);
   const result = spawnSync(bin, ["list", "--json"], {

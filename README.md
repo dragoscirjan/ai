@@ -17,7 +17,7 @@ npx -y github:dragoscirjan/ai#<tag-or-commit> --skill coding-with-rules --agent 
 
 These changes must be published before a GitHub ref can run them. From a trusted checkout with its approved dependencies already available, use `node scripts/skills/sync.mjs` instead of the GitHub invocation.
 
-Review the preview, then repeat without `--dry-run` to confirm interactively, or add `--yes` for an explicitly approved noninteractive run. With no selection in a terminal, choose categories and agents from menus. Use `list` to see all six catalog categories. The CLI includes skill prerequisites, verifies output and legal files, filters unwanted metadata, and leaves project instructions and legacy locks unchanged.
+Review the preview, then repeat without `--dry-run` to confirm interactively, or add `--yes` for an explicitly approved noninteractive run. With no selection in a terminal, Inquirer offers category and agent checkboxes. Use the arrow keys to move, Space to toggle a choice, and Enter to accept. Ctrl+C cancels a prompt without installing skills. Use `list` to see all six catalog categories. The CLI includes skill prerequisites, verifies output and legal files, filters unwanted metadata, and leaves project instructions and legacy locks unchanged.
 
 Existing selected destinations require `--overwrite`. Remote entries requiring semantic adaptation stop before installation rather than installing an unreviewed upstream substitute. The CLI does not build or approve semantic adaptations. See [installation and update instructions](docs/guide/install.md) for scope, conflicts, and recovery.
 

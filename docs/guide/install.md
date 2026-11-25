@@ -4,7 +4,7 @@ Use the Node.js CLI to install skills. Use `sync-my-agents` only when you explic
 
 ## Run the Node.js CLI
 
-You need Node.js 24, npm/npx, Git, and a trusted destination project. Read that project's instructions and follow its branch/workspace rules before approving writes. GitHub-based `npx` downloads the executable and its declared runtime dependency into npm's cache; it does not publish an npm package.
+You need Node.js 24, npm/npx, Git, and a trusted destination project. Read that project's instructions and follow its branch/workspace rules before approving writes. GitHub-based `npx` downloads the executable and its declared runtime dependencies into npm's cache; it does not publish an npm package.
 
 Replace `<tag-or-commit>` with a reviewed GitHub ref that contains the new CLI. Unpublished local changes are not available through GitHub.
 
@@ -25,7 +25,7 @@ npx -y github:dragoscirjan/ai#<tag-or-commit> --skill coding-with-rules --agent 
 
 The preview lists `coding` before `coding-with-rules`, because it is a required skill. It shows exact installation argument arrays, destinations, legal-file changes, filtering, and any blockers. A preview performs no source downloads or target writes after the executable itself has been acquired.
 
-Use `--category coding` instead of `--skill` to select that category's project-scoped members. Repeat `--category`, `--skill`, or `--agent`, or provide comma-separated values. Supported agents are `pi`, `opencode`, and `claude-code`. With no selection in an interactive terminal, the CLI offers category and agent menus. Noninteractive runs must provide their selections explicitly.
+Use `--category coding` instead of `--skill` to select that category's project-scoped members. Repeat `--category`, `--skill`, or `--agent`, or provide comma-separated values. Supported agents are `pi`, `opencode`, and `claude-code`. With no selection in an interactive terminal, the CLI uses Inquirer category and agent checkboxes. Use the arrow keys to move, Space to select or clear a choice, and Enter to accept the selection. At least one choice is required. The final confirmation defaults to no; Ctrl+C cancels a prompt cleanly with exit code 130, before installation. Noninteractive runs must provide their selections explicitly.
 
 Use `--ref <ref>` to choose this repository's skill-source revision separately from the CLI revision. Without it, authored skill commands follow the catalog's configured ref. Upstream sources retain their catalogued immutable pins. Pinning the CLI alone does not pin a mutable authored-skill ref.
 
