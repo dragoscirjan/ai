@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/review-against-standards-and-spec.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "b5d9b17cf5de361eca28f628b3285f6c99d70fd8",
+      "revision": "492778f129f4de6e2651c94a736cda8392353d3d",
       "link_mode": "local-only"
     },
     "legend": {
