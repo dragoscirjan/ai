@@ -97,7 +97,7 @@
         "description": { "type": "string", "minLength": 1 },
         "source": { "$ref": "#/$defs/source" },
         "upstream": { "$ref": "#/$defs/source" },
-        "scope": { "enum": ["personal", "project"] },
+        "scope": { "enum": ["personal", "project", "both"] },
         "category": { "type": "string" },
         "selection": { "enum": ["optional", "recommended", "detected", "wrapper", "initializer"] },
         "safety": { "type": "string" },

@@ -50,7 +50,11 @@ test("GitHub package has exactly one executable and pinned production dependenci
   const manifest = JSON.parse(readFileSync(join(PACKAGE_ROOT, "package.json"), "utf8"));
   assert.deepEqual(manifest.bin, { "sync-skills": "scripts/skills/sync.mjs" });
   assert.equal(manifest.private, true);
-  assert.deepEqual(manifest.dependencies, { "@inquirer/prompts": "8.8.1", yaml: "2.9.1" });
+  assert.deepEqual(manifest.dependencies, {
+    "@inquirer/prompts": "8.8.1",
+    "mdast-util-from-markdown": "2.1.0",
+    yaml: "2.9.1",
+  });
   assert.equal(manifest.scripts.prepare, undefined);
   assert.ok(statSync(join(PACKAGE_ROOT, manifest.bin["sync-skills"])).mode & 0o111);
 });
@@ -67,6 +71,7 @@ test("packed runtime executes its bin outside the checkout without development d
     files = record.files.map((file) => file.path);
   assert.ok(files.includes("scripts/skills/sync.mjs"));
   assert.ok(files.includes("scripts/skills/output.mjs"));
+  assert.ok(files.includes("scripts/skills/links.mjs"));
   assert.ok(files.includes("catalog/skill-catalog.yaml"));
   assert.ok(files.includes("LICENSE"));
   assert.ok(

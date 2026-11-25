@@ -7,8 +7,10 @@
 Review the skill and use a published repository ref containing it. With Node.js and npm/npx available:
 
 ```sh
-npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-agents --skill sync-my-agents --global
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-agents --skill sync-my-agents
 ```
+
+This command installs into the project. Add `--global` only for an approved personal installation. With the repository CLI, use `--scope personal` for that explicit personal operation. Installation does not invoke the skill or authorize edits to instruction documents.
 
 Load the skill explicitly in your agent and identify the project. For example:
 

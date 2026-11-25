@@ -6,7 +6,7 @@ title: "sync-my-agents"
 
 Review AGENTS.md and referenced instruction documents, then apply only approved changes.
 
-**Group:** [Agentic work](/groups/agentic-work) · **Availability:** Authored here · **Scope:** personal
+**Group:** [Agentic work](/groups/agentic-work) · **Availability:** Authored here · **Scope:** project or personal
 
 ## When to choose it
 
@@ -16,10 +16,10 @@ You explicitly want to review AGENTS.md and its referenced instruction documents
 
 ## Install this skill
 
-You need Node.js 22.20 or newer, Git, and npm/npx. This is a personal installation. Invoke the skill explicitly; it does not register commands or install other skills.
+You need Node.js 22.20 or newer, Git, and npm/npx. This command installs into the project. For a personal installation, add --global to this direct command or use --scope personal with the repository CLI. Invoke the skill explicitly; installation does not authorize instruction edits.
 
 ```sh
-npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-agents --skill sync-my-agents --global
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-agents --skill sync-my-agents
 ```
 
 This command selects only `sync-my-agents`. It does not install the rest of the collection or the optional companions listed on this page.

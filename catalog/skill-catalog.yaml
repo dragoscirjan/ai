@@ -727,7 +727,7 @@ skills:
     source:
       type: local
       path: .agents/skills/agentic-work/sync-my-agents
-    scope: personal
+    scope: both
     category: agent-instructions
     selection: optional
     safety: project-write-with-confirmation
@@ -744,7 +744,6 @@ skills:
           https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-agents,
           --skill,
           sync-my-agents,
-          --global,
         ]
     legal:
       - path: LICENSE

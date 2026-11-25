@@ -53,14 +53,14 @@ test("published skill commands and source links match every catalog acquisition 
     );
   }
 });
-test("single-skill selection and the personal instruction-review scope remain explicit", () => {
+test("single-skill recipes remain project-local unless catalogued exclusively personal", () => {
   for (const entry of catalog().skills) {
     const argv = entry.install.argv;
     assert.deepEqual(argv.slice(0, 4), ["npx", "-y", "skills@1.7.4", "add"]);
     assert.equal(argv.filter((part) => part === "--skill").length, 1);
     assert.equal(argv[argv.indexOf("--skill") + 1], entry.name);
     assert.equal(argv.includes("--all"), false);
-    assert.equal(argv.includes("--global"), entry.name === "sync-my-agents");
+    assert.equal(argv.includes("--global"), entry.scope === "personal");
   }
 });
 

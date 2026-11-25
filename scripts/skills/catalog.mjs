@@ -244,6 +244,9 @@ function localSkillPaths(root) {
   }
   return result;
 }
+export function supportsScope(entry, scope) {
+  return entry.scope === "both" || entry.scope === scope;
+}
 export function loadCatalog(path = CATALOG_PATH, sourceRoot) {
   const data = parseYaml(readFileSync(path, "utf8"), "skill catalog");
   keys(
@@ -311,7 +314,7 @@ export function loadCatalog(path = CATALOG_PATH, sourceRoot) {
       "The combined manager is retired",
     );
     check(
-      definition.scope === undefined || ["project", "personal"].includes(definition.scope),
+      definition.scope === undefined || ["project", "personal", "both"].includes(definition.scope),
       "Invalid scope",
     );
     check(

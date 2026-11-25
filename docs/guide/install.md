@@ -84,6 +84,14 @@ The CLI verifies selected destinations and rejects unsafe symlink traversal. A s
 
 For normal agent installations, the external Skills CLI owns its own installation records. Custom-directory acquisition records exist only in the disposable workspace. There is no new custom manager-owned lock, persistent apply-plan ID, or staging protocol.
 
+## Relative Markdown links
+
+Source skills use category directories, but installed skills use flat names. Sync rebases Markdown links, images, and reference definitions against the original source paths and final installed layout. For example, cleanup's `../../unpolished/subagent-orchestration/SKILL.md` becomes `../subagent-orchestration/SKILL.md` when that skill is also selected.
+
+Same-skill links remain unchanged. Links to unselected skills and source-repository documents use GitHub URLs at the source ref instead of pointing into unrelated destination-project files. Image fallbacks use raw GitHub file URLs. Queries and fragments are preserved. This does not add dependencies or install referenced skills.
+
+Only destination URLs change. Prose, labels, frontmatter, code examples, and required legal files stay unchanged. This parser-based routine does not repair already-invalid source links or raw HTML attributes. It runs on freshly acquired files before custom output is published; it needs no LLM. Normal installs can still have partial writes if later verification fails.
+
 ## Update selected skills
 
 Existing selected destinations block installation by default, including unmanaged or locally edited copies. Inspect them first. Pass `--overwrite` only if you approve replacing the displayed selected skills, then preview again before confirming. Unselected/custom skill directories remain outside the operation.
@@ -113,10 +121,10 @@ This acquires only the named skill. Raw Skills CLI commands do not automatically
 Install the separate user-invoked skill only when wanted:
 
 ```sh
-npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-agents --skill sync-my-agents --global
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-agents --skill sync-my-agents
 ```
 
-Use a published ref containing that skill. Alternatively, the wrapper can install this personal skill with explicit `--skill sync-my-agents --scope personal --agent pi`. Personal scope is separate from project scope and is never inferred from a category selection.
+Use a published ref containing that skill. The command above installs into the project. The wrapper also includes `sync-my-agents` in the Agentic work checklist by default. To install personally, use explicit `--skill sync-my-agents --scope personal --agent pi` with the wrapper, or add `--global` to the direct command. Personal scope is never inferred from a category selection. Installing the skill does not invoke it, run setup, or authorize instruction edits.
 
 Invoke `sync-my-agents` and identify the project and requested instruction work. It follows relevant document references, inspects evidence, clarifies material unknowns, and presents exact diffs. Approve those diffs separately before editing. It preserves existing policy and custom instructions and does not impose a template bundle.
 

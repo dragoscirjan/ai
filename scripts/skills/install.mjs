@@ -32,8 +32,10 @@ import {
   loadCatalog,
   noLinks,
   safeRelative,
+  supportsScope,
 } from "./catalog.mjs";
 import { fetchBytes } from "./source.mjs";
+import { rebaseSkillLinks } from "./links.mjs";
 import { copySkill, projectSkill, projectionTarget, skillsDirectory } from "./output.mjs";
 
 const absolute = (value, label) => {
@@ -132,13 +134,13 @@ export function buildPlan(options, catalog = loadCatalog(CATALOG_PATH), context 
         Array.isArray(selected) &&
           new Set(selected).size === selected.length &&
           selected.every(
-            (name) => members.includes(name) && catalog.byName.get(name).scope === scope,
+            (name) => members.includes(name) && supportsScope(catalog.byName.get(name), scope),
           ),
         `Invalid skill selection for category: ${category}`,
       );
     }
     for (const name of members) {
-      if (catalog.byName.get(name).scope !== scope) excludedByScope.push(name);
+      if (!supportsScope(catalog.byName.get(name), scope)) excludedByScope.push(name);
       else if (selected === undefined || selected.includes(name)) requested.push(name);
     }
   }
@@ -158,7 +160,7 @@ export function buildPlan(options, catalog = loadCatalog(CATALOG_PATH), context 
   const entries = names.map((name) => {
     const entry = catalog.byName.get(name);
     check(
-      entry.scope === scope,
+      supportsScope(entry, scope),
       `Skill ${name} needs ${entry.scope} scope; select it in a separate run`,
     );
     check(
@@ -184,7 +186,8 @@ export function buildPlan(options, catalog = loadCatalog(CATALOG_PATH), context 
           `${name}: existing destination ${path}; review it and explicitly pass --overwrite to replace this selected skill`,
         );
     }
-    const argv = entry.install.argv.filter((arg) => !outputDirectory || arg !== "--global");
+    const argv = entry.install.argv.filter((arg) => arg !== "--global");
+    if (scope === "personal" && !outputDirectory) argv.push("--global");
     if (entry.source.type === "local")
       argv[4] = `${catalog.repository}/tree/${ref}/${entry.source.path}`;
     argv.push("--agent", ...agents, "--yes");
@@ -221,6 +224,7 @@ export function buildPlan(options, catalog = loadCatalog(CATALOG_PATH), context 
     ref,
     catalogHash: catalog.hash,
     repository: catalog.repository,
+    linkSources: catalog.skills.map(({ name, source }) => ({ name, source })),
     blocked,
     entries,
   };
@@ -236,6 +240,9 @@ export function printPlan(plan, output = console.log) {
     output(
       `Skills directory: ${plan.skillsDir}\nCustom output only. Acquisition commands run in a disposable workspace; no normal agent directories or plugin metadata are changed.`,
     );
+  output(
+    "Rebase source-relative Markdown links for the installed layout; use source-revision URLs for unselected skills and repository documents.",
+  );
   if (plan.prerequisites.length) output(`Required skills added: ${plan.prerequisites.join(", ")}`);
   if (plan.excludedByScope.length)
     output(`Outside ${plan.scope} scope, unchanged: ${plan.excludedByScope.join(", ")}`);
@@ -358,6 +365,7 @@ function finishSkill(folder, entry, plan, licenses) {
     writeFileSync(path, licenses.get(legalUrl(plan, entry, file)));
   }
   filterAndVerify(folder, entry);
+  rebaseSkillLinks(folder, entry, plan);
 }
 function prepareNative(paths, actual, entry, plan, licenses) {
   const canonical = paths[0];

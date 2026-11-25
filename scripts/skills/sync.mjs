@@ -3,7 +3,7 @@ import { realpathSync } from "node:fs";
 import { checkbox, confirm } from "@inquirer/prompts";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { CATALOG_PATH, HARNESSES, check, loadCatalog } from "./catalog.mjs";
+import { CATALOG_PATH, HARNESSES, check, loadCatalog, supportsScope } from "./catalog.mjs";
 import { buildPlan, executePlan, printPlan } from "./install.mjs";
 
 const HELP = `sync-skills — install catalogued skills without editing project instructions
@@ -171,7 +171,7 @@ export async function main(argv = process.argv.slice(2), runtime = {}) {
       const group = catalog.groups[category];
       const entries = group.skills
         .map((name) => catalog.byName.get(name))
-        .filter((entry) => entry.scope === scope);
+        .filter((entry) => supportsScope(entry, scope));
       if (!entries.length) {
         output(`${group.title}: no ${scope}-scoped skills; unchanged.`);
         options.categorySelections[category] = [];
@@ -227,7 +227,7 @@ export async function main(argv = process.argv.slice(2), runtime = {}) {
       "Use --yes only after reviewing a --dry-run outside an interactive terminal",
     );
     confirmed = await prompts.confirm({
-      message: "Run these commands and apply the displayed filtering/legal-file changes?",
+      message: "Run these commands and apply the displayed filtering/link/legal-file changes?",
       default: false,
     });
   }

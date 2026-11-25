@@ -28,7 +28,7 @@ test("catalog covers every tracked/local skill and six shared groups", () => {
   assert.equal(c.skills.length, 28);
   assert.equal(Object.keys(c.groups).length, 6);
   assert.equal(c.byName.has("sync-my-skills"), false);
-  assert.equal(c.byName.get("sync-my-agents").scope, "personal");
+  assert.equal(c.byName.get("sync-my-agents").scope, "both");
   assert.deepEqual(c.byName.get("sync-my-agents").prerequisites, []);
   assert.deepEqual(closure(["coding-with-rules"], c), ["coding", "coding-with-rules"]);
 });

@@ -158,6 +158,29 @@ test("projection replacement never follows an unapproved link", (t) => {
   );
   assert.equal(readlinkSync(destination), f.home);
 });
+test("custom output rebases acquired Markdown for its final flat layout without target metadata changes", async (t) => {
+  const f = fixture(t),
+    plan = planFor(f, { skills: ["cleanup-workspaces", "subagent-orchestration"] });
+  const run = installer(plan, []);
+  await executePlan(plan, {
+    confirmed: true,
+    fetcher,
+    run: async (argv, cwd) => {
+      await run(argv, cwd);
+      if (argv[argv.indexOf("--skill") + 1] === "cleanup-workspaces")
+        writeFileSync(
+          join(cwd, ".claude/skills/cleanup-workspaces/README.md"),
+          "[Delegate](../../unpolished/subagent-orchestration/SKILL.md)",
+        );
+    },
+  });
+  assert.equal(
+    readFileSync(join(f.target, "skills/cleanup-workspaces/README.md"), "utf8"),
+    "[Delegate](../subagent-orchestration/SKILL.md)",
+  );
+  assert.equal(existsSync(join(f.target, ".claude")), false);
+  assert.equal(existsSync(join(f.target, ".agents")), false);
+});
 test("custom output paths are exact and are resolved relative to --target", (t) => {
   const f = fixture(t),
     plan = planFor(f);

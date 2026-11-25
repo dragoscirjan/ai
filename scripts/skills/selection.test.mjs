@@ -69,13 +69,37 @@ test("selection cannot change a skill's scope", (t) => {
     () =>
       buildPlan(
         options(target(t), {
-          categories: ["agentic-work"],
-          categorySelections: { "agentic-work": ["sync-my-agents"] },
+          scope: "personal",
+          categories: ["coding"],
+          categorySelections: { coding: ["coding"] },
         }),
         catalog,
       ),
     /Invalid skill selection/,
   );
+});
+test("project checklist includes the user-only instruction maintenance skill checked by default", async (t) => {
+  let installed;
+  await main(["--target", target(t), "--category", "agentic-work", "--agent", "pi"], {
+    interactive: true,
+    output: () => {},
+    prompts: {
+      checkbox: async (config) => {
+        assert.equal(
+          config.choices.find((choice) => choice.value === "sync-my-agents").checked,
+          true,
+        );
+        return ["sync-my-agents"];
+      },
+      confirm: async () => true,
+    },
+    install: async (plan) => {
+      installed = plan;
+      return ["sync-my-agents"];
+    },
+  });
+  assert.deepEqual(installed.selected, ["sync-my-agents"]);
+  assert.equal(installed.entries[0].argv.includes("--global"), false);
 });
 test("each selected category gets its own checklist and unchecked skills stay out", async (t) => {
   const folder = target(t),

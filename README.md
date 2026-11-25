@@ -19,7 +19,7 @@ These changes must be published before a GitHub ref can run them. From a trusted
 
 Review the preview, then repeat without `--dry-run` to confirm interactively, or add `--yes` for an explicitly approved noninteractive run. In a terminal, Inquirer offers categories, a skill checklist for each chosen category, and agents. Every skill starts selected. Press A to toggle all, Space to toggle one, and Enter to accept; clear a checklist to skip that category. Required prerequisites still appear in the preview. Ctrl+C cancels a prompt without installing skills. Explicit `--yes`, JSON, and noninteractive category runs select all scoped members without opening skill checklists. Use `list` to see all six catalog categories. The CLI includes skill prerequisites, verifies output and legal files, filters unwanted metadata, and leaves project instructions and legacy locks unchanged.
 
-Existing selected destinations require `--overwrite`. The catalog now provides reviewed local `code-review`, `grill-me`, and `tdd` variants; `writing-for-agents` uses its unchanged pinned upstream source. Synchronization copies prepared files and needs no LLM, model API key, or generated instruction rewrite. Future unprepared adaptations remain blocked until reviewed sources are published. See [installation and update instructions](docs/guide/install.md) for scope, conflicts, and recovery.
+Existing selected destinations require `--overwrite`. The catalog now provides reviewed local `code-review`, `grill-me`, and `tdd` variants; `writing-for-agents` uses its unchanged pinned upstream source. Synchronization copies prepared content and rebases relative Markdown links for the installed layout. This mechanical URL correction needs no LLM, model API key, or generated instruction rewrite. Future unprepared adaptations remain blocked until reviewed sources are published. See [installation and update instructions](docs/guide/install.md) for scope, conflicts, and recovery.
 
 ### Custom skills directory
 
@@ -39,6 +39,8 @@ Relative output paths are resolved under `--target`; absolute output paths must 
 Invoke [`sync-my-agents`](.agents/skills/agentic-work/sync-my-agents/SKILL.md) explicitly to review `AGENTS.md` and the instruction documents it references, such as `CONTRIBUTING.md` and `VALIDATION.md`. It gathers evidence, asks about unresolved decisions, shows exact diffs, and applies only approved changes.
 
 Here, dependencies mean instruction documents, not skill prerequisites. The skill never installs skills or imposes a fixed document bundle. See its [setup and review guide](.agents/skills/agentic-work/sync-my-agents/README.md).
+
+`sync-my-agents` is available in project checklists and for explicit personal installation with `--scope personal`. Installing it never invokes it or authorizes instruction edits.
 
 The combined `sync-my-skills` manager is removed. Existing installations, personal command registrations, and legacy locks in other projects are not migrated or deleted automatically. The agreed split is tracked in [issue #95](https://github.com/dragoscirjan/ai/issues/95); merged [PR #96](https://github.com/dragoscirjan/ai/pull/96) describes the earlier implementation.
 

@@ -239,6 +239,30 @@ test("unsafe native Claude output cannot fall back to an old canonical copy", as
     "Old canonical survives rejection.",
   );
 });
+test("flattened installation rebases cross-category Markdown links without editing source instructions", async (t) => {
+  const f = fixture(t),
+    plan = buildPlan(
+      options(f.target, { skills: ["cleanup-workspaces", "subagent-orchestration"] }),
+      catalog,
+      f.context,
+    );
+  await executePlan(plan, {
+    confirmed: true,
+    fetcher,
+    run: async (argv) => {
+      await installer(plan)(argv);
+      if (argv[argv.indexOf("--skill") + 1] === "cleanup-workspaces")
+        writeFileSync(
+          join(f.target, ".agents/skills/cleanup-workspaces/README.md"),
+          "[Orchestration](../../unpolished/subagent-orchestration/SKILL.md#lanes)\n",
+        );
+    },
+  });
+  assert.equal(
+    readFileSync(join(f.target, ".agents/skills/cleanup-workspaces/README.md"), "utf8"),
+    "[Orchestration](../subagent-orchestration/SKILL.md#lanes)\n",
+  );
+});
 test("planning resolves prerequisite order and explicit agent commands without writes", (t) => {
   const f = fixture(t),
     plan = buildPlan(options(f.target), catalog, f.context);
@@ -251,18 +275,22 @@ test("planning resolves prerequisite order and explicit agent commands without w
   assert.deepEqual(plan.entries[0].argv.slice(-3), ["--agent", "pi", "--yes"]);
   assert.equal(existsSync(join(f.target, ".agents/skills")), false);
 });
-test("category expansion includes all scoped members and reports excluded personal entries", (t) => {
+test("category expansion includes project-compatible dual-scope instruction maintenance", (t) => {
   const f = fixture(t),
     plan = buildPlan(
       { target: f.target, categories: ["agentic-work"], agents: ["pi"] },
       catalog,
       f.context,
     );
-  assert.deepEqual(plan.excludedByScope, ["sync-my-agents"]);
-  assert.deepEqual(plan.selected, ["writing-for-agents"]);
+  assert.deepEqual(plan.excludedByScope, []);
+  assert.deepEqual(plan.selected, ["writing-for-agents", "sync-my-agents"]);
+  assert.equal(
+    plan.entries.find((entry) => entry.name === "sync-my-agents").argv.includes("--global"),
+    false,
+  );
   assert.deepEqual(plan.blocked, []);
 });
-test("personal scope is explicit and preserves the catalogued global argument", (t) => {
+test("personal scope explicitly adds global installation without changing default project scope", (t) => {
   const f = fixture(t),
     plan = buildPlan(
       { target: f.target, skills: ["sync-my-agents"], scope: "personal", agents: ["pi"] },
@@ -272,8 +300,9 @@ test("personal scope is explicit and preserves the catalogued global argument", 
   assert.ok(plan.entries[0].argv.includes("--global"));
   assert.deepEqual(plan.entries[0].destinations, [join(f.home, ".agents/skills/sync-my-agents")]);
   assert.throws(
-    () => buildPlan(options(f.target, { skills: ["sync-my-agents"] }), catalog, f.context),
-    /personal scope/,
+    () =>
+      buildPlan(options(f.target, { skills: ["coding"], scope: "personal" }), catalog, f.context),
+    /project scope/,
   );
 });
 for (const [label, extra] of [
