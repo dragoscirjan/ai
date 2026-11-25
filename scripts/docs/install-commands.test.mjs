@@ -53,14 +53,14 @@ test("published skill commands and source links match every catalog acquisition 
     );
   }
 });
-test("single-skill selection and the personal manager scope remain unchanged", () => {
+test("single-skill selection and the personal instruction-review scope remain explicit", () => {
   for (const entry of catalog().skills) {
     const argv = entry.install.argv;
     assert.deepEqual(argv.slice(0, 4), ["npx", "-y", "skills@1.7.4", "add"]);
     assert.equal(argv.filter((part) => part === "--skill").length, 1);
     assert.equal(argv[argv.indexOf("--skill") + 1], entry.name);
     assert.equal(argv.includes("--all"), false);
-    assert.equal(argv.includes("--global"), entry.name === "sync-my-skills");
+    assert.equal(argv.includes("--global"), entry.name === "sync-my-agents");
   }
 });
 
@@ -69,14 +69,18 @@ test("published direct-install examples use grouped URLs and npx consent flags",
     "AGENTS.md",
     "README.md",
     "docs/guide/install.md",
-    ".agents/skills/agentic-work/sync-my-skills/README.md",
+    ".agents/skills/agentic-work/sync-my-agents/README.md",
     ".agents/skills/coding/coding-with-rules/README.md",
     ".agents/skills/coding/init-project/README.md",
   ]) {
     const text = read(path);
     assert.doesNotMatch(text, /npx(?: -y)? skills@1\.7\.4 add dragoscirjan\/ai(?:\s|$)/);
     for (const command of text.matchAll(/^npx[^\n]+/gm))
-      assert.match(command[0], /^npx -y skills@1\.7\.4 add /, path);
+      assert.match(
+        command[0],
+        /^npx -y (?:skills@1\.7\.4 add |github:dragoscirjan\/ai#<tag-or-commit> )/,
+        path,
+      );
   }
   const coding = read(".agents/skills/coding/coding-with-rules/README.md");
   for (const name of ["coding", "coding-with-rules"])
@@ -85,22 +89,22 @@ test("published direct-install examples use grouped URLs and npx consent flags",
     );
 });
 
-test("no other skill depends on or hands off to the personal manager", () => {
+test("no other skill depends on or hands off to the personal instruction skill", () => {
   const pages = generatedPages();
-  for (const entry of catalog().skills.filter((item) => item.name !== "sync-my-skills")) {
-    assert.ok(!entry.prerequisites.includes("sync-my-skills"), entry.name);
-    assert.ok(!notes[entry.name].companions.includes("sync-my-skills"), entry.name);
-    assert.ok(!pages.get(`skills/${entry.name}.md`).includes("/skills/sync-my-skills"), entry.name);
+  for (const entry of catalog().skills.filter((item) => item.name !== "sync-my-agents")) {
+    assert.ok(!entry.prerequisites.includes("sync-my-agents"), entry.name);
+    assert.ok(!notes[entry.name].companions.includes("sync-my-agents"), entry.name);
+    assert.ok(!pages.get(`skills/${entry.name}.md`).includes("/skills/sync-my-agents"), entry.name);
   }
   for (const recipe of workflows)
     if (
-      recipe.steps.some((step) => step.skill === "sync-my-skills") ||
-      recipe.optional.includes("sync-my-skills")
+      recipe.steps.some((step) => step.skill === "sync-my-agents") ||
+      recipe.optional.includes("sync-my-agents")
     )
       assert.equal(
         recipe.id,
         "install-selected-skills",
-        "Manager use belongs only to its explicitly requested standalone workflow",
+        "Instruction review belongs only to its explicitly requested standalone workflow",
       );
   assert.deepEqual(catalog().byName.get("coding-with-rules").prerequisites, ["coding"]);
 });
@@ -122,9 +126,9 @@ test("startup and reader guidance hard-stop on missing instructions and require 
   );
   assert.match(
     policy,
-    /Do not add `sync-my-skills` as another skill's prerequisite, companion, handoff, or recovery step/,
+    /Do not add `sync-my-agents` as another skill's prerequisite, companion, handoff, or recovery step/,
   );
-  assert.match(policy, /Load or run it only when the user explicitly requests it/);
+  assert.match(policy, /Invoke it only when the user explicitly requests instruction maintenance/);
   assert.match(
     policy,
     /Before changing repository files for a new task, create a dedicated task branch/,

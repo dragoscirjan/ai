@@ -1,89 +1,86 @@
-# Install the skills you choose
+# Install skills and maintain instructions separately
 
-Each [skill profile](/skills/) has a command that selects only that skill. You do not need to install the whole collection or use the personal manager.
+Use the Node.js CLI to install skills. Use `sync-my-agents` only when you explicitly want instruction-document changes. Neither operation requires or automatically launches the other.
 
-## Before you start
+## Run the Node.js CLI
 
-All commands on this page need a working agent harness, Node.js 22.20 or newer, Git, and npm/npx. For the optional manager route below, the target project must also have at least one Git commit and worktree support. The catalogued workspace helper needs Bun before managed project writes.
+You need Node.js 24, npm/npx, Git, and a trusted destination project. Read that project's instructions and follow its branch/workspace rules before approving writes. GitHub-based `npx` downloads the executable and its declared runtime dependency into npm's cache; it does not publish an npm package.
 
-Installation downloads code and changes personal or project files. Review the source, destinations, and applicable approvals first. No credentials are required to inspect the public collection. Custom harness configuration directories need their own reviewed setup.
-
-## Install one skill
-
-Review the target project's instructions and the skill source first. Run the selected profile's command from the target project. For example, this command selects only `asd-ste100-technical`:
+Replace `<tag-or-commit>` with a reviewed GitHub ref that contains the new CLI. Unpublished local changes are not available through GitHub.
 
 ```sh
-npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/asd-ste100-technical --skill asd-ste100-technical
+npx -y github:dragoscirjan/ai#<tag-or-commit> --help
+npx -y github:dragoscirjan/ai#<tag-or-commit> list
 ```
 
-The URL names the actual grouped source directory. The installed skill keeps its ordinary name; the source category is not an installed namespace. The installer should report `asd-ste100-technical` as the selected skill. Follow its harness prompts and verify discovery in your chosen harness. Other profiles provide their own command, including pinned external sources where applicable.
+The root package's single `bin` entry invokes `scripts/skills/sync.mjs`. It reads `catalog/skill-catalog.yaml`; it is not a skill or a personal agent command. A checkout with approved runtime dependencies can run `node scripts/skills/sync.mjs` with the same arguments.
 
-Before using a skill, confirm that it and its declared instruction requirements are installed. If any are missing, the agent must stop, list the missing names, and ask you to install them. It must not install, synchronize, substitute, or continue without those instructions. Resume only after installation is confirmed and availability is verified.
+## Preview a selection
 
-Use each missing skill's own install command after reviewing its source and the target project's instructions. Direct Skills CLI installation does not install declared requirements automatically. Optional companions remain optional.
-
-## Optional reviewed selection manager
-
-`sync-my-skills` is a standalone personal tool for an explicitly requested project inspection and reviewed selection. No other skill needs it as a prerequisite, companion, handoff, or recovery step. Do not choose this route to repair a missing skill during another task; stop and ask the user for direct installation instead.
-
-### 1. Install the personal manager
-
-The following example selects Pi and the integrated repository source. It is a personal installation, not a project synchronization. The repository is still named `dragoscirjan/ai`; a planned rename is not an available source URL.
+From the destination project's root, preview an explicit selection:
 
 ```sh
-npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-skills \
-  --skill sync-my-skills --global --agent pi --yes
+npx -y github:dragoscirjan/ai#<tag-or-commit> --skill coding-with-rules --agent pi --target . --dry-run
 ```
 
-Expect exit code 0 and the canonical package under `~/.agents/skills/sync-my-skills`. For OpenCode or Claude Code, select `--agent opencode` or `--agent claude-code` instead. Review the [full manager guide](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/agentic-work/sync-my-skills/README.md) for the committed clean-export alternative and platform limits.
+The preview lists `coding` before `coding-with-rules`, because it is a required skill. It shows exact installation argument arrays, destinations, legal-file changes, filtering, and any blockers. A preview performs no source downloads or target writes after the executable itself has been acquired.
 
-Install the package's pinned parser without lifecycle scripts:
+Use `--category coding` instead of `--skill` to select that category's project-scoped members. Repeat `--category`, `--skill`, or `--agent`, or provide comma-separated values. Supported agents are `pi`, `opencode`, and `claude-code`. With no selection in an interactive terminal, the CLI offers category and agent menus. Noninteractive runs must provide their selections explicitly.
+
+Use `--ref <ref>` to choose this repository's skill-source revision separately from the CLI revision. Without it, authored skill commands follow the catalog's configured ref. Upstream sources retain their catalogued immutable pins. Pinning the CLI alone does not pin a mutable authored-skill ref.
+
+## Confirm and verify
+
+Review the preview. Repeat the command without `--dry-run` to receive an interactive confirmation. For an already approved noninteractive run, add `--yes`:
 
 ```sh
-MANAGER="$HOME/.agents/skills/sync-my-skills"
-npm ci --ignore-scripts --prefix "$MANAGER"
-node "$MANAGER/scripts/sync-my-skills.mjs" --help
+npx -y github:dragoscirjan/ai#<tag-or-commit> --skill coding-with-rules --agent pi --target . --yes
 ```
 
-The help must include `inspect`, `prepare`, `review`, `review-instructions`, `plan`, `apply`, `status`, and `setup`. If the package or `yaml` import is missing, resolve that setup before project inspection. Do not install target-project dependencies merely to detect its needs.
+The script runs the catalogued `npx -y skills@1.7.4 add` commands with explicit agent selection. It acquires required legal files before starting installations, verifies skill metadata and prerequisites, and removes catalogued unwanted metadata such as `agents/openai.yaml`. It never executes installed helpers or initializers.
 
-### 2. Plan command registration
+Project skills use `.agents/skills/<name>/`. Selected Claude Code installations may use relative `.claude/skills/<name>` projections. The CLI verifies selected destinations and rejects unsafe symlink traversal. A successful run lists verified skills. It does not modify `AGENTS.md`, referenced instruction documents, personal command registration, or legacy manager locks.
 
-Run this read-only planning command from a trusted directory:
+The external Skills CLI owns its own installation records. There is no new custom manager-owned lock, persistent apply-plan ID, or staging protocol.
+
+## Update selected skills
+
+Existing selected destinations block installation by default, including unmanaged or locally edited copies. Inspect them first. Pass `--overwrite` only if you approve replacing the displayed selected skills, then preview again before confirming. Unselected/custom skill directories remain outside the operation.
+
+A failed command or verification stops subsequent installations. Already completed writes are not rolled back automatically. The error names the stopped skill and completed skills. Inspect partial output before retrying; do not delete legacy locks or bypass conflicts to make a retry pass.
+
+## Unsupported semantic adaptations
+
+Some catalog entries are pinned upstream inputs that require semantic adaptation and review. The deterministic CLI cannot perform that work. It reports these entries as blocked before any installation rather than silently omitting them or substituting upstream behavior. `list` identifies them, and a dry run reports all blockers.
+
+Choose supported individual skills, or obtain a separately reviewed maintained adaptation and an approved catalog update. Do not remove adaptation requirements just to make a category install succeed. Missing runtime tools are reported as requirements, not installed by this script.
+
+## Install an individual skill directly
+
+After reviewing its source, you can use the external Skills CLI without the wrapper. For example:
 
 ```sh
-node "$MANAGER/scripts/sync-my-skills.mjs" setup --harnesses pi
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/isolated-workspace --skill isolated-workspace
 ```
 
-Review `actions`, exact destinations, command content, and `planId`. Only after approving that plan, replace the placeholder below with its current identifier:
+This acquires only the named skill. Raw Skills CLI commands do not automatically install the project's declared instruction requirements or apply its catalog filtering and legal-file rules. Missing required skills stop invocation until you explicitly arrange their setup. [Find a skill](/skills/) and check its requirements first.
+
+## Review AGENTS.md and its dependencies
+
+Install the separate user-invoked skill only when wanted:
 
 ```sh
-node "$MANAGER/scripts/sync-my-skills.mjs" setup --harnesses pi \
-  --apply --confirm --plan-id APPROVED_SETUP_PLAN_ID
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-agents --skill sync-my-agents --global
 ```
 
-Expect `mode: setup-applied` and `reloadRequired: true`. Reload Pi with `/reload`. OpenCode and Claude Code use their own registration and reload behavior; select the corresponding `--harnesses` value and verify actual discovery. Existing conflicting commands are preserved, not overwritten to make setup pass.
+Use a published ref containing that skill. Alternatively, the wrapper can install this personal skill with explicit `--skill sync-my-agents --scope personal --agent pi`. Personal scope is separate from project scope and is never inferred from a category selection.
 
-### 3. Inspect a project and choose both scopes
+Invoke `sync-my-agents` and identify the project and requested instruction work. It follows relevant document references, inspects evidence, clarifies material unknowns, and presents exact diffs. Approve those diffs separately before editing. It preserves existing policy and custom instructions and does not impose a template bundle.
 
-Start the selected harness in the trusted target project and run its registered `sync-my-skills` entry point. In the Pi example:
+Dependencies here mean instruction documents, not skill installation prerequisites. Missing required skills stop the affected phase; `sync-my-agents` never installs them. A review that finds no necessary change leaves documents untouched.
 
-```text
-/sync-my-skills
-```
+## Migrate from the combined manager
 
-The agent should inspect first, recommend a project-specific selection, and ask about every remaining active skill. It must assess optional instruction adoption separately. Declining either scope preserves its existing files; it does not override policy already active in the project.
+The source `sync-my-skills` skill, custom engine, command stubs, and manager-specific schemas are retired. Existing installations, command registrations, and `.agents/ai-assets.lock.json` files in other projects remain unchanged. Review any exact removal separately under that project's safeguards. Do not invoke the retired command expecting it to run this CLI.
 
-Normal runs refresh and pin a compatible catalog snapshot. `--bundled` is an explicit offline or review choice, not a silent fallback or manager-code update.
-
-### 4. Review the exact project change
-
-Before project mutation, approve the required isolated workspace. Review source acquisition, instruction requirements, semantic adaptations, legal files, target conflicts, and the final byte-bound plan. Approve only the exact current plan before apply.
-
-A missing requirement stops the affected phase. A stale plan, modified file, unsupported catalog, or unresolved policy conflict requires a new review, not a bypass. New toolchains, websites, personal setup, deprecated removals, commits, and publication keep their own approval boundaries.
-
-### 5. Verify the installation in the reported workspace
-
-The manager's status should report the selected managed files as clean. Start the harness in that workspace and check its resource discovery and project-trust decision. Static files and symlinks are not proof of live model compliance.
-
-Use the [first useful request](/guide/first-use) next. If the registered command or project skills are absent, check resource paths and reload behavior in the [manager recovery guide](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/agentic-work/sync-my-skills/README.md#recover-from-a-stopped-operation) before reinstalling or deleting anything.
+Instruction templates remain reusable assets, but they are not a mandatory instruction bundle for the new skill. Merging, publishing, tool setup, trust changes, and initializers remain separate permissions.

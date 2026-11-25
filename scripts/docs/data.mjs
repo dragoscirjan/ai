@@ -1,11 +1,10 @@
 import { fileURLToPath } from "node:url";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { loadCatalog } from "../../.agents/skills/agentic-work/sync-my-skills/scripts/sync-core.mjs";
+import { loadCatalog } from "../skills/catalog.mjs";
 
 export const root = fileURLToPath(new URL("../../", import.meta.url));
-export const catalogRelativePath =
-  ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml";
+export const catalogRelativePath = "catalog/skill-catalog.yaml";
 export const catalogPath = join(root, catalogRelativePath);
 export function catalog() {
   return loadCatalog(catalogPath, root);
@@ -18,70 +17,7 @@ export function docsBase(value = process.env.DOCS_BASE ?? "/") {
   }
   return value;
 }
-export const groups = [
-  {
-    id: "productivity",
-    title: "Productivity",
-    summary:
-      "Research questions, shape initiatives, specify behavior, plan tasks, and learn from results.",
-    skills: [
-      "initiative",
-      "research",
-      "specify",
-      "plan-tasks",
-      "retro",
-      "grill-me",
-      "grilling",
-      "wait-what",
-    ],
-  },
-  {
-    id: "coding",
-    title: "Coding",
-    summary: "Scaffold, implement, test, diagnose, simplify, and review code.",
-    skills: [
-      "coding",
-      "coding-with-rules",
-      "scaffold",
-      "code-review",
-      "systematic-debugging",
-      "tdd",
-      "debloat",
-    ],
-  },
-  {
-    id: "documentation",
-    title: "Documentation",
-    summary:
-      "Write technical documentation and explanations, or create editable and interactive diagrams.",
-    skills: [
-      "asd-ste100-technical",
-      "caveman",
-      "document-project",
-      "unslop",
-      "excalidraw",
-      "archify",
-    ],
-  },
-  {
-    id: "agentic-work",
-    title: "Agentic work",
-    summary: "Manage selected agent skills and write agent-facing instructions.",
-    skills: ["writing-for-agents", "sync-my-skills"],
-  },
-  {
-    id: "utility",
-    title: "Utility",
-    summary: "Initialize projects, isolate changes, and clean approved workspaces.",
-    skills: ["init-project", "isolated-workspace", "cleanup-workspaces"],
-  },
-  {
-    id: "unpolished",
-    title: "Unpolished",
-    summary: "Coordinate bounded agent work and audit instruction changes.",
-    skills: ["instruction-maintenance", "subagent-orchestration"],
-  },
-];
+export const groups = Object.entries(catalog().groups).map(([id, group]) => ({ id, ...group }));
 export function sourceUrl(entry, file = "SKILL.md") {
   const c = catalog();
   const repository = entry.source.repository ?? c.repository;

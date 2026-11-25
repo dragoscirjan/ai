@@ -82,8 +82,18 @@ export function checkDocs() {
     new Set(c.skills.map((entry) => entry.name)),
   );
   for (const recipe of workflows)
-    for (const name of [...recipe.steps.map((step) => step.skill), ...recipe.optional])
+    for (const name of [
+      ...recipe.steps.map((step) => step.skill).filter(Boolean),
+      ...recipe.optional,
+    ])
       assert.ok(c.byName.has(name), `Unknown workflow skill: ${name}`);
+  for (const recipe of workflows)
+    for (const step of recipe.steps)
+      assert.ok(
+        (step.skill && !step.tool && c.byName.has(step.skill)) ||
+          (!step.skill && step.tool === "sync-skills"),
+        "Unknown workflow step",
+      );
   const directory = join(root, "docs/diagrams");
   const manifest = verifyDiagrams(
     join(root, "docs/public/diagrams"),

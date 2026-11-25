@@ -36,9 +36,9 @@ Choose the intended harnesses rather than assuming a three-harness bundle. Revie
 
 The former `coding-<language>` and `coding-<extension>` skills are removed upstream, not automatically renamed or deleted in target projects.
 
-1. Run `/sync-my-skills` and review the explicit deprecated-name list. Select `coding-with-rules` when appropriate, with its `coding` prerequisite. Unknown custom names are not automatically remapped or classified as deprecated.
-2. Choose the exact legacy skills to retain or remove, including none. Review their locations, local changes, and replacement before approving the plan. A decline or missing catalog entry does not authorize deletion.
-3. Install the complete router and applicable harness projections only under the current approved plan in an isolated workspace. Existing local edits remain protected; do not hand-edit either lockfile.
-4. Verify only the approved legacy directories/projections were removed and reload the harness. Migration alone leaves root instructions untouched. Instruction-routing/template changes require selecting the separate bundle, reviewing project-specific drafts and policy changes, and approving the resulting plan.
+1. Review the catalog's explicit deprecated-name list. Preview the Node.js CLI selection of `coding-with-rules` and its `coding` prerequisite. Unknown custom names are not automatically remapped or classified as deprecated.
+2. Review exact legacy installations, local changes, and replacements. Retain them unless their removal is separately approved. The new CLI does not remove deprecated skills or migrate manager locks.
+3. Install the complete router and selected harness projections under the target project's task/workspace rules. Existing destinations need explicit overwrite approval. Do not hand-edit legacy lock data.
+4. Verify the approved installation and reload the agent. Skill installation leaves root instructions untouched. Request `sync-my-agents` separately for instruction review and approve its exact diffs.
 
 The original consolidation is recorded in [#56](https://github.com/dragoscirjan/ai/issues/56). Explicit, snapshot-bound deprecated removal and reviewed lock migration are provided by [#69](https://github.com/dragoscirjan/ai/issues/69); there is no automatic prefix-based deletion.

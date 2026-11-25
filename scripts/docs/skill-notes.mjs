@@ -1,13 +1,13 @@
 // Reader guidance keyed by catalog IDs. Sources, requirements, and runtime metadata stay in the catalog.
 export const notes = {
-  "sync-my-skills": {
-    when: "You want to choose project skills and review an optional instruction bundle without replacing custom policy blindly.",
+  "sync-my-agents": {
+    when: "You explicitly want to review AGENTS.md and its referenced instruction documents.",
     result:
-      "A reviewed selection and exact apply plan, followed by installed-state verification when you approve the writes.",
+      "Necessary instruction diffs, applied only after approval and checked against the existing project policy.",
     prompt:
-      "Use sync-my-skills to inspect this project. Let me choose categories, then skills through native checkboxes, with project-specific recommendations. Leave skipped categories unchanged. Assess instructions separately and confirm project understanding before drafting them. Do not apply changes yet.",
-    stop: "Inspection is not permission to install, remove old skills, adopt instructions, update manager code, or change personal configuration. The manager is a personal installation; selected project skills are a separate operation.",
-    companions: ["isolated-workspace", "instruction-maintenance"],
+      "Use sync-my-agents to review AGENTS.md and its referenced instruction documents. Inspect project evidence, clarify unresolved decisions, and show exact diffs before editing. Do not install skills or impose a template bundle.",
+    stop: "Instruction dependencies mean documents, not skill installation prerequisites. Missing required skills stop the affected phase. Do not install skills, tools, or dependencies, register commands, or publish changes.",
+    companions: [],
   },
   "init-project": {
     when: "You explicitly want a new project foundation or to adopt the supported TypeScript or Godot GDScript tooling.",

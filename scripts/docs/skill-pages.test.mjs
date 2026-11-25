@@ -34,7 +34,7 @@ const expected = {
     "excalidraw",
     "archify",
   ],
-  "agentic-work": ["writing-for-agents", "sync-my-skills"],
+  "agentic-work": ["writing-for-agents", "sync-my-agents"],
   utility: ["init-project", "isolated-workspace", "cleanup-workspaces"],
   unpolished: ["instruction-maintenance", "subagent-orchestration"],
 };
@@ -94,19 +94,19 @@ test("each skill page has exactly one command selecting only its own catalog ski
   }
 });
 
-test("the manager example requests category checkboxes and confirmed understanding before drafting", () => {
-  const page = generatedPages().get("skills/sync-my-skills.md");
-  assert.match(page, /choose categories, then skills through native checkboxes/);
-  assert.match(page, /Leave skipped categories unchanged/);
-  assert.match(page, /confirm project understanding before drafting/);
-  assert.doesNotMatch(page, /ask about the remaining entries/);
+test("instruction review is explicit, evidence-based, and separate from installation", () => {
+  const page = generatedPages().get("skills/sync-my-agents.md");
+  assert.match(page, /Inspect project evidence/);
+  assert.match(page, /show exact diffs before editing/);
+  assert.match(page, /Do not install skills or impose a template bundle/);
+  assert.match(page, /Missing required skills stop the affected phase/);
 });
 
 test("required instructions have separate install links instead of widening the selected command", () => {
   const pages = generatedPages();
   assert.match(pages.get("skills/coding-with-rules.md"), /\/skills\/coding#install-this-skill/);
   assert.match(pages.get("skills/research.md"), /\/skills\/grilling#install-this-skill/);
-  assert.match(pages.get("skills/sync-my-skills.md"), /personal installation/);
+  assert.match(pages.get("skills/sync-my-agents.md"), /personal installation/);
 });
 
 test("installation commands reject broadened selection and quote source arguments", () => {

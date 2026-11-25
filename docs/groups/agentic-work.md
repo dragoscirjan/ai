@@ -4,7 +4,7 @@ title: "Agentic work"
 
 # Agentic work
 
-Manage selected agent skills and write agent-facing instructions.
+Maintain project instructions and write agent-facing guidance.
 
 Choose by the task you have now. These are the collection's groups, including external recommendations. They are not a mandatory delivery pipeline.
 
@@ -14,11 +14,11 @@ Writing documents for agents. Use when creating or editing skills, or modifying 
 
 **Choose it when:** The reader is an agent: you are authoring or revising skills, prompts, agent instructions, or their reference documents.
 
-## [`sync-my-skills`](/skills/sync-my-skills)
+## [`sync-my-agents`](/skills/sync-my-agents)
 
-Synchronize project skills and agent instructions through a guided, approved plan.
+Review AGENTS.md and referenced instruction documents, then apply only approved changes.
 
-**Choose it when:** You want to choose project skills and review an optional instruction bundle without replacing custom policy blindly.
+**Choose it when:** You explicitly want to review AGENTS.md and its referenced instruction documents.
 
 ## Related procedures
 

@@ -48,10 +48,10 @@ Write technical documentation and explanations, or create editable and interacti
 
 ## [Agentic work](/groups/agentic-work)
 
-Manage selected agent skills and write agent-facing instructions.
+Maintain project instructions and write agent-facing guidance.
 
 - [`writing-for-agents`](/skills/writing-for-agents) — Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.
-- [`sync-my-skills`](/skills/sync-my-skills) — Synchronize project skills and agent instructions through a guided, approved plan.
+- [`sync-my-agents`](/skills/sync-my-agents) — Review AGENTS.md and referenced instruction documents, then apply only approved changes.
 
 ## [Utility](/groups/utility)
 

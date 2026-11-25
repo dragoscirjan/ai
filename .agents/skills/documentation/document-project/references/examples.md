@@ -12,10 +12,10 @@ A developer-focused how-to:
 
 ### Check the skill catalog
 
-Prerequisites: a trusted checkout of this repository, Node.js 22.20 or newer, and the manager's pinned parser dependency installed through [approved setup](../../../agentic-work/sync-my-skills/README.md). Do not install dependencies merely to perform this check. Run this command from the repository root:
+Prerequisites: a trusted checkout of this repository, Node.js 24 and the declared runtime dependencies available through [approved setup](../../../../../docs/maintenance/index.md). Do not install dependencies merely to perform this check. Run this command from the repository root:
 
 ```sh
-node .agents/skills/sync-my-skills/scripts/sync-my-skills.mjs catalog --source-root .
+node scripts/skills/sync.mjs list --source-root . --json
 ```
 
 The command exits with code 0 and prints JSON containing `schemaVersion`, `catalogHash`, `skills`, and `deprecations`. Check that `schemaVersion` is `2` and that `skills` includes `document-project` with `selection: recommended`. A recommendation does not authorize installation. This command reads the catalog and skill metadata; it does not install skills, create a documentation site, or modify the checkout.

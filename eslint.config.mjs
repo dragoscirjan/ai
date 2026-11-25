@@ -4,7 +4,12 @@ export default [
   { ignores: ["docs/.vitepress/cache/**", "docs/.vitepress/dist/**", "docs/public/**"] },
   {
     ...js.configs.recommended,
-    files: ["scripts/docs/**/*.mjs", "docs/.vitepress/**/*.mjs", "eslint.config.mjs"],
+    files: [
+      "scripts/docs/**/*.mjs",
+      "scripts/skills/**/*.mjs",
+      "docs/.vitepress/**/*.mjs",
+      "eslint.config.mjs",
+    ],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
@@ -14,6 +19,9 @@ export default [
         URL: "readonly",
         console: "readonly",
         fetch: "readonly",
+        AbortSignal: "readonly",
+        Response: "readonly",
+        structuredClone: "readonly",
         setTimeout: "readonly",
         clearTimeout: "readonly",
       },

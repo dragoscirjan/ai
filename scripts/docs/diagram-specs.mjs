@@ -30,6 +30,10 @@ export function identity() {
   return { url, revision, ...(url.startsWith("git@") ? { link_mode: "local-only" } : {}) };
 }
 function sources(name) {
+  if (name === "sync-skills")
+    return [
+      { path: "scripts/skills/sync.mjs", line: 1, label: "Node.js installation CLI, not a skill" },
+    ];
   const entry = catalog().byName.get(name);
   if (!entry) throw new Error(`Unknown diagram skill: ${name}`);
   if (entry.source.type === "local") {
@@ -201,9 +205,9 @@ export function workflowSpec(recipe, repository) {
     col: index,
     type: step.kind === "approval" ? "security" : "backend",
     label: step.label,
-    sublabel: step.skill,
+    sublabel: step.skill ?? step.tool,
     icon: step.kind === "approval" ? "decision" : "none",
-    sources: sources(step.skill),
+    sources: sources(step.skill ?? step.tool),
   }));
   const edges = recipe.steps.slice(1).map((step, index) => ({
     id: `next-${index}`,
@@ -227,7 +231,7 @@ export function workflowSpec(recipe, repository) {
       label: "Pause this branch",
       sublabel: "No approval, no writes",
       icon: "stop",
-      sources: sources(step.skill),
+      sources: sources(step.skill ?? step.tool),
     });
     edges.push({
       id: `decline-${index}`,
