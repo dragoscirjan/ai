@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/required-dependencies.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+      "revision": "d368a4ffafe5603072d785720939ee48d1a10e2a",
       "link_mode": "local-only"
     },
     "legend": {
@@ -123,9 +123,9 @@
       ],
       "sources": [
         {
-          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 288,
-          "end_line": 319,
+          "path": "catalog/skill-catalog.yaml",
+          "line": 405,
+          "end_line": 446,
           "label": "Pinned source and runtime record"
         }
       ]
@@ -145,9 +145,9 @@
       ],
       "sources": [
         {
-          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 220,
-          "end_line": 248,
+          "path": "catalog/skill-catalog.yaml",
+          "line": 319,
+          "end_line": 347,
           "label": "Pinned source and runtime record"
         }
       ]

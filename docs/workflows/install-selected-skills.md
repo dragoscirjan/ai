@@ -25,10 +25,10 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 ## Steps
 
 1. **Choose categories and agents.** [`sync-skills` CLI](/guide/install) performs this deterministic installation step.
-2. **Preview commands and prerequisites.** [`sync-skills` CLI](/guide/install) performs this deterministic installation step.
-3. **Confirm selected destinations.** [`sync-skills` CLI](/guide/install) owns this approval boundary; continue only when the applicable approval or existing approved setup is established.
-4. **Install and filter selected skills.** [`sync-skills` CLI](/guide/install) performs this deterministic installation step.
-5. **Verify files and legal notices.** [`sync-skills` CLI](/guide/install) performs this deterministic installation step.
+2. **Preview selected commands.** [`sync-skills` CLI](/guide/install) performs this deterministic installation step.
+3. **Approve selected paths.** [`sync-skills` CLI](/guide/install) owns this approval boundary; continue only when the applicable approval or existing approved setup is established.
+4. **Install selected skills.** [`sync-skills` CLI](/guide/install) performs this deterministic installation step.
+5. **Verify files and notices.** [`sync-skills` CLI](/guide/install) performs this deterministic installation step.
 
 ## Where to stop
 

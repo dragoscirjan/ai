@@ -145,7 +145,7 @@ test("all checked-in learning pages, six requirements, diagram sources, hashes a
   assert.equal(result.skills, 28);
   assert.equal(result.instructionEdges, 6);
   assert.equal(result.diagrams, 32);
-  assert.equal(result.pages, 77);
+  assert.equal(result.pages, 78);
 });
 test("raw legal-download links are checked alongside Markdown links", () => {
   assert.ok(checkMarkdownLinks([join(root, "docs/reference/notices.md")]).local >= 8);

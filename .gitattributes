@@ -1,0 +1,2 @@
+docs/public/diagrams/*.html whitespace=-blank-at-eol
+docs/public/diagrams/*.svg whitespace=-blank-at-eol

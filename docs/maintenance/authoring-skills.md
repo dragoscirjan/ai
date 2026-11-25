@@ -4,7 +4,7 @@ This setup is for contributors working in this repository. It is separate from t
 
 ## Review the installer
 
-Read [`scripts/install-dev-skills.sh`](../../scripts/install-dev-skills.sh) and the [catalog](../../catalog/skill-catalog.yaml) before approving downloads. The Bash script groups external authoring skills by source and installs them from upstream `main` branches. Those inputs are mutable. Review and trust the sources before running them.
+Read [`scripts/install-dev-skills.sh`](https://github.com/dragoscirjan/ai/blob/main/scripts/install-dev-skills.sh) and the [catalog](../../catalog/skill-catalog.yaml) before approving downloads. The Bash script groups external authoring skills by source and installs them from upstream `main` branches. Those inputs are mutable. Review and trust the sources before running them.
 
 You need Bash 4 or newer, Node.js 24, npm/npx, and Git. From the repository root, after approving this setup:
 

@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/debug-a-problem.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+      "revision": "d368a4ffafe5603072d785720939ee48d1a10e2a",
       "link_mode": "local-only"
     },
     "legend": {
@@ -179,9 +179,9 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 106,
-          "end_line": 145,
+          "path": "catalog/skill-catalog.yaml",
+          "line": 167,
+          "end_line": 217,
           "label": "Pinned source and runtime record"
         }
       ]
