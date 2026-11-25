@@ -6,7 +6,7 @@ title: "writing-for-agents"
 
 Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.
 
-**Group:** [Agentic work](/groups/agentic-work) · **Availability:** Pinned upstream input; adaptation required · **Scope:** project
+**Group:** [Agentic work](/groups/agentic-work) · **Availability:** Upstream-only; approved external setup · **Scope:** project
 
 ## When to choose it
 
@@ -46,9 +46,7 @@ Resolve required instructions in their declared order before applying the skill.
 
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
-Writing mechanics do not authorize policy changes. Existing instruction edits still need the project's audit, exact proposal, approval, and isolated-write process.
-
-This is pinned upstream input, not a reviewed installed adaptation. Follow the catalogued adaptation instructions and review the output and legal notices before use. A source link or install command does not perform that adaptation.
+Writing mechanics do not authorize policy changes. Existing instruction edits still need the project's audit, exact proposal, approval, and task-branch/workspace rules.
 
 ## Useful combinations
 
@@ -65,6 +63,6 @@ For focused procedures and utilities, see [supporting tools](/workflows/supporti
 
 The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the pinned upstream input](https://raw.githubusercontent.com/mattpocock/skills/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/productivity/writing-for-agents/SKILL.md). This link uses the immutable upstream revision `5863806dd4e15c63174bee4e7515a4256792ecfa`; there is no vendored copy here.
+[Read the authoritative skill instructions](https://raw.githubusercontent.com/mattpocock/skills/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/productivity/writing-for-agents/SKILL.md). This link uses the immutable upstream revision `5863806dd4e15c63174bee4e7515a4256792ecfa`; there is no vendored copy here.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

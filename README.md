@@ -19,7 +19,7 @@ These changes must be published before a GitHub ref can run them. From a trusted
 
 Review the preview, then repeat without `--dry-run` to confirm interactively, or add `--yes` for an explicitly approved noninteractive run. In a terminal, Inquirer offers categories, a skill checklist for each chosen category, and agents. Every skill starts selected. Press A to toggle all, Space to toggle one, and Enter to accept; clear a checklist to skip that category. Required prerequisites still appear in the preview. Ctrl+C cancels a prompt without installing skills. Explicit `--yes`, JSON, and noninteractive category runs select all scoped members without opening skill checklists. Use `list` to see all six catalog categories. The CLI includes skill prerequisites, verifies output and legal files, filters unwanted metadata, and leaves project instructions and legacy locks unchanged.
 
-Existing selected destinations require `--overwrite`. Remote entries requiring semantic adaptation stop before installation rather than installing an unreviewed upstream substitute. The CLI does not build or approve semantic adaptations. See [installation and update instructions](docs/guide/install.md) for scope, conflicts, and recovery.
+Existing selected destinations require `--overwrite`. The catalog now provides reviewed local `code-review`, `grill-me`, and `tdd` variants; `writing-for-agents` uses its unchanged pinned upstream source. Synchronization copies prepared files and needs no LLM, model API key, or generated instruction rewrite. Future unprepared adaptations remain blocked until reviewed sources are published. See [installation and update instructions](docs/guide/install.md) for scope, conflicts, and recovery.
 
 ### Custom skills directory
 

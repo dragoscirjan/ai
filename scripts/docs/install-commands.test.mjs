@@ -13,7 +13,7 @@ const read = (path) => readFileSync(join(root, path), "utf8");
 test("every local install URL names the actual grouped source directory and declared skill", () => {
   const c = catalog();
   const local = c.skills.filter((entry) => entry.source.type === "local");
-  assert.equal(local.length, 20);
+  assert.equal(local.length, 23);
   for (const entry of local) {
     const expected = `${c.repository}/tree/${c.ref}/${entry.source.path}`;
     assert.equal(entry.install.argv[4], expected, entry.name);
@@ -42,7 +42,7 @@ test("published skill commands and source links match every catalog acquisition 
     assert.ok(page.includes(installCommand(entry)), entry.name);
     assert.ok(page.includes(sourceUrl(entry)), entry.name);
   }
-  for (const name of ["code-review", "grill-me", "tdd", "writing-for-agents"]) {
+  for (const name of ["writing-for-agents"]) {
     const entry = c.byName.get(name);
     assert.equal(entry.source.type, "github", name);
     assert.equal(entry.source.repository, "https://github.com/mattpocock/skills", name);

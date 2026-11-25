@@ -12,10 +12,32 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, join, relative } from "node:path";
 import { test } from "node:test";
-import { PACKAGE_ROOT, loadCatalog } from "./catalog.mjs";
+import { parse } from "yaml";
+import { CATALOG_PATH, PACKAGE_ROOT, loadCatalog } from "./catalog.mjs";
 import { buildPlan, destinations, executePlan, printPlan, quote } from "./install.mjs";
 
 const catalog = loadCatalog();
+function unpreparedCatalog(t, name) {
+  const folder = mkdtempSync(join(tmpdir(), "unprepared-catalog-"));
+  t.after(() => rmSync(folder, { recursive: true, force: true }));
+  const data = parse(readFileSync(CATALOG_PATH, "utf8"));
+  const entry = data.skills[name];
+  entry.source = entry.upstream;
+  entry.adaptation.instructions = "Unprepared upstream content requires a reviewed variant.";
+  entry.install.argv = [
+    "npx",
+    "-y",
+    "skills@1.7.4",
+    "add",
+    `${entry.source.repository}/tree/${entry.source.revision}/${entry.source.path}`,
+    "--skill",
+    name,
+  ];
+  entry.legal = [{ path: "LICENSE", target: "LICENSE", spdx: "MIT" }];
+  const path = join(folder, "catalog.json");
+  writeFileSync(path, JSON.stringify(data));
+  return loadCatalog(path);
+}
 function fixture(t) {
   const directory = mkdtempSync(join(tmpdir(), "skill-install-"));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
@@ -79,7 +101,7 @@ test("category expansion includes all scoped members and reports excluded person
     );
   assert.deepEqual(plan.excludedByScope, ["sync-my-agents"]);
   assert.deepEqual(plan.selected, ["writing-for-agents"]);
-  assert.match(plan.blocked.join("\n"), /semantic adaptation/);
+  assert.deepEqual(plan.blocked, []);
 });
 test("personal scope is explicit and preserves the catalogued global argument", (t) => {
   const f = fixture(t),
@@ -184,7 +206,11 @@ test("unconfirmed or blocked operations never run commands or download sources",
     assert.fail("unexpected external action");
   };
   await assert.rejects(executePlan(plan, { run: never, fetcher: never }), /confirmation/);
-  const blocked = buildPlan(options(f.target, { skills: ["tdd"] }), catalog, f.context);
+  const blocked = buildPlan(
+    options(f.target, { skills: ["tdd"], overwrite: true }),
+    unpreparedCatalog(t, "tdd"),
+    f.context,
+  );
   await assert.rejects(
     executePlan(blocked, { confirmed: true, run: never, fetcher: never }),
     /blocked/,
@@ -259,7 +285,11 @@ test("unexpected instruction edits from an installer are detected", async (t) =>
 });
 test("display quotes arguments and reports prerequisites and blocked adaptations", (t) => {
   const f = fixture(t),
-    plan = buildPlan(options(f.target, { skills: ["grill-me"] }), catalog, f.context),
+    plan = buildPlan(
+      options(f.target, { skills: ["grill-me"] }),
+      unpreparedCatalog(t, "grill-me"),
+      f.context,
+    ),
     lines = [];
   printPlan(plan, (line) => lines.push(line));
   assert.match(lines.join("\n"), /Required skills added: grilling/);

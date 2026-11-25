@@ -92,10 +92,9 @@ test("each selected category gets its own checklist and unchecked skills stay ou
         assert.equal(config.shortcuts.all, "a");
         assert.ok(config.choices.every((choice) => choice.checked));
         if (config.message.includes("Coding")) {
-          assert.ok(
-            config.choices
-              .find((choice) => choice.value === "tdd")
-              .name.includes("adaptation required"),
+          assert.doesNotMatch(
+            config.choices.find((choice) => choice.value === "tdd").name,
+            /adaptation required/,
           );
           return ["coding-with-rules"];
         }

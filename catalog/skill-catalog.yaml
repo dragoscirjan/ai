@@ -172,10 +172,8 @@ skills:
       issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user
       wants to review a branch, a PR, work-in-progress changes, or asks to "review since X".'
     source:
-      type: github
-      repository: https://github.com/mattpocock/skills
-      revision: 59db609eb1e18aaf59b63284d0e52255aff0c63c
-      path: skills/engineering/code-review
+      type: local
+      path: .agents/skills/coding/code-review
     upstream:
       type: github
       repository: https://github.com/mattpocock/skills
@@ -198,16 +196,19 @@ skills:
           -y,
           skills@1.7.4,
           add,
-          https://github.com/mattpocock/skills/tree/59db609eb1e18aaf59b63284d0e52255aff0c63c/skills/engineering/code-review,
+          https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/code-review,
           --skill,
           code-review,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/coding/code-review/LICENSE
         target: LICENSE
         spdx: MIT
+      - path: .agents/skills/coding/code-review/LICENSE.project
+        target: LICENSE.project
+        spdx: MIT
     adaptation:
-      instructions:
+      instructions: Reviewed local variant; synchronization copies it without runtime adaptation.
         Preserve separate Standards and Spec reviews, read-only parallel reviewers, immutable Git endpoints, safe
         revision arguments, and the chosen comparison semantics. Reviewers must not mutate, publish, or delegate. Do not
         restore harness/model configuration.
@@ -406,10 +407,8 @@ skills:
     kind: adapted
     description: A relentless interview to sharpen a plan or design.
     source:
-      type: github
-      repository: https://github.com/mattpocock/skills
-      revision: fcf0071560d32913c9d4f820e0d7ca467c881619
-      path: skills/productivity/grill-me
+      type: local
+      path: .agents/skills/productivity/grill-me
     upstream:
       type: github
       repository: https://github.com/mattpocock/skills
@@ -428,16 +427,19 @@ skills:
           -y,
           skills@1.7.4,
           add,
-          https://github.com/mattpocock/skills/tree/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me,
+          https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/grill-me,
           --skill,
           grill-me,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/productivity/grill-me/LICENSE
         target: LICENSE
         spdx: MIT
+      - path: .agents/skills/productivity/grill-me/LICENSE.project
+        target: LICENSE.project
+        spdx: MIT
     adaptation:
-      instructions:
+      instructions: Reviewed local variant; synchronization copies it without runtime adaptation.
         Keep the maintained interview wrapper and its grilling prerequisite. Replace harness-specific Skill-tool
         calls with portable entry instructions. Do not add provider/model configuration.
       review:
@@ -795,10 +797,8 @@ skills:
       Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions
       "red-green-refactor", or wants integration tests.
     source:
-      type: github
-      repository: https://github.com/mattpocock/skills
-      revision: 4ae2317ddb22b046e26455e4f9c9b3aaaf62212d
-      path: skills/engineering/tdd
+      type: local
+      path: .agents/skills/coding/tdd
     upstream:
       type: github
       repository: https://github.com/mattpocock/skills
@@ -818,16 +818,19 @@ skills:
           -y,
           skills@1.7.4,
           add,
-          https://github.com/mattpocock/skills/tree/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d/skills/engineering/tdd,
+          https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/tdd,
           --skill,
           tdd,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/coding/tdd/LICENSE
         target: LICENSE
         spdx: MIT
+      - path: .agents/skills/coding/tdd/LICENSE.project
+        target: LICENSE.project
+        spdx: MIT
     adaptation:
-      instructions:
+      instructions: Reviewed local variant; synchronization copies it without runtime adaptation.
         Keep the maintained testing workflow, behavior-focused examples, module responsibilities and public test
         seams. Replace mandatory codebase-design/Skill-tool coupling with self-contained guidance. Preserve the
         red-before-green loop and its documented later review/refactoring stage. Do not introduce a model or provider
@@ -897,14 +900,9 @@ skills:
         target: LICENSE
         spdx: MIT
   writing-for-agents:
-    kind: adapted
+    kind: upstream
     description: Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.
     source:
-      type: github
-      repository: https://github.com/mattpocock/skills
-      revision: 5863806dd4e15c63174bee4e7515a4256792ecfa
-      path: skills/productivity/writing-for-agents
-    upstream:
       type: github
       repository: https://github.com/mattpocock/skills
       revision: 5863806dd4e15c63174bee4e7515a4256792ecfa
@@ -930,13 +928,6 @@ skills:
       - path: LICENSE
         target: LICENSE
         spdx: MIT
-    adaptation:
-      instructions:
-        Preserve the maintained writing guidance, context pointers, progressive disclosure, completion criteria,
-        and skill mechanics. Keep source attribution and the upstream legal notice. Omit provider configuration.
-      review:
-        - Keep all meaningful writing guidance and the linked skill mechanics.
-        - Explain consequential adaptations; preserve the original legal notice.
 deprecations:
   coding-bash:
     replacements: [coding-with-rules]

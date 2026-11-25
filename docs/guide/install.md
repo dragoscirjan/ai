@@ -90,9 +90,11 @@ A failed command or verification stops subsequent installations. Already complet
 
 ## Unsupported semantic adaptations
 
-Some catalog entries are pinned upstream inputs that require semantic adaptation and review. The deterministic CLI cannot perform that work. It reports these entries as blocked before any installation rather than silently omitting them or substituting upstream behavior. `list` identifies them, and a dry run reports all blockers.
+The current catalog contains no unprepared remote adaptations. `code-review`, `grill-me`, and `tdd` have reviewed local variants, with pinned upstream provenance and original/project licenses. Their portable instructions are committed source files, not generated during synchronization. `writing-for-agents` uses its unchanged pinned upstream instructions and support file. The script filters `agents/openai.yaml`; it does not remove unrelated OpenAPI documents.
 
-Deselect blocked entries in the category checklists, choose supported individual skills with `--skill`, or obtain a separately reviewed maintained adaptation and an approved catalog update. Do not remove adaptation requirements just to make a category install succeed. Missing runtime tools are reported as requirements, not installed by this script.
+Sync needs no LLM or model API credentials. It copies prepared content, includes declared skill prerequisites, preserves required support/legal files, and applies deterministic exclusions. Review and publish source upgrades separately; a future remote entry that still needs semantic changes remains blocked until a maintained variant is available. Do not disable that guard or relabel unreviewed content just to make installation succeed. Missing runtime tools are reported as requirements, not installed by this script.
+
+For a reviewed CLI commit or tag, pass the same value through `--ref` to select that revision's authored and maintained skill files. This is required for newly published source paths that are not yet on the catalog's default `main` ref. It also makes repeated runs select the same maintained source bytes.
 
 ## Install an individual skill directly
 

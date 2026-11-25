@@ -20,7 +20,9 @@ Catalogued upstream instructions are installation requirements only when selecte
 
 Use catalogued upstream sources for unchanged external skills. Do not silently edit ignored upstream copies and describe them as maintained source. Substantial adaptations need their own reviewed source and catalog provenance. Preserve supporting files and legal notices, and exclude unwanted provider metadata from managed outputs.
 
-The Node.js CLI stops for remote entries that require semantic adaptation. The authoring installer does not turn raw upstream inputs into approved target-project adaptations.
+The maintained `code-review`, `grill-me`, and `tdd` variants now live in the categorized source directories. The authoring installer keeps those sources rather than downloading replacements when no older ignored copy is present. If an older copy under `.agents/skills/external/` duplicates a maintained skill, inspect and preserve it outside discovery or approve its exact removal before reloading. Do not discard local changes or keep two discovered copies of the same name.
+
+The Node.js CLI copies reviewed variants directly; it does not adapt instructions or call an LLM during synchronization. New upstream versions need normal source review before a maintained update is published. The guard against future unprepared remote adaptations stays in place.
 
 ## Check and recover
 

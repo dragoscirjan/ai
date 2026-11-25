@@ -192,7 +192,7 @@ export const notes = {
       "Usable agent-facing instructions with clear triggers, actions, conditional references, and completion boundaries.",
     prompt:
       "Use writing-for-agents to review this instruction draft. Keep rules beside the action they constrain and distinguish required instructions from optional handoffs.",
-    stop: "Writing mechanics do not authorize policy changes. Existing instruction edits still need the project's audit, exact proposal, approval, and isolated-write process.",
+    stop: "Writing mechanics do not authorize policy changes. Existing instruction edits still need the project's audit, exact proposal, approval, and task-branch/workspace rules.",
     companions: ["instruction-maintenance", "asd-ste100-technical"],
   },
   archify: {

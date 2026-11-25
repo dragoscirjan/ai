@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { catalog, groups, localInstructions, root } from "./data.mjs";
-import { generatedPages, installCommand } from "./generate.mjs";
+import { availability, generatedPages, installCommand } from "./generate.mjs";
 import { workflowGuides, workflows } from "./workflows.mjs";
 
 const expected = {
@@ -131,19 +131,32 @@ test("installation commands reject broadened selection and quote source argument
   );
 });
 
-test("remote adaptations identify pinned inputs and require review rather than claiming a vendored copy", () => {
-  const pages = generatedPages();
-  for (const name of ["code-review", "grill-me", "tdd", "writing-for-agents"]) {
-    const entry = catalog().byName.get(name);
-    const page = pages.get(`skills/${name}.md`);
-    assert.match(page, /Pinned upstream input; adaptation required/);
-    assert.match(page, /not a reviewed installed adaptation/);
-    assert.match(page, /review the output and legal notices before use/);
-    assert.match(page, /Read the pinned upstream input/);
-    assert.ok(page.includes(entry.source.revision));
-    assert.doesNotMatch(page, /maintained local copy/);
-    assert.throws(() => localInstructions(name), /No local instructions/);
+test("reviewed variants identify maintained files while unchanged writing guidance stays upstream", () => {
+  const c = catalog(),
+    pages = generatedPages();
+  for (const name of ["code-review", "grill-me", "tdd"]) {
+    const entry = c.byName.get(name),
+      page = pages.get(`skills/${name}.md`);
+    assert.equal(entry.source.type, "local");
+    assert.match(entry.upstream.revision, /^[a-f0-9]{40}$/);
+    assert.match(page, /Upstream-derived; maintained here/);
+    assert.match(page, /Read the authoritative skill instructions/);
+    assert.match(page, /maintained local copy/);
+    assert.doesNotMatch(page, /not a reviewed installed adaptation/);
+    assert.match(localInstructions(name), new RegExp("^name: " + name + "$", "m"));
   }
+  const writing = c.byName.get("writing-for-agents");
+  assert.equal(writing.kind, "upstream");
+  assert.equal(writing.source.type, "github");
+  assert.equal(writing.adaptation, undefined);
+  assert.match(pages.get("skills/writing-for-agents.md"), /Upstream-only; approved external setup/);
+  assert.throws(() => localInstructions("writing-for-agents"), /No local instructions/);
+});
+test("future unprepared remote variants still show a review-required warning", () => {
+  assert.equal(
+    availability({ kind: "adapted", source: { type: "github" } }),
+    "Pinned upstream input; adaptation required",
+  );
 });
 
 test("native recipe labels fit the pinned renderer node budget", () => {
