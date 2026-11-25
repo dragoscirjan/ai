@@ -25,7 +25,11 @@ npx -y github:dragoscirjan/ai#<tag-or-commit> --skill coding-with-rules --agent 
 
 The preview lists `coding` before `coding-with-rules`, because it is a required skill. It shows exact installation argument arrays, destinations, legal-file changes, filtering, and any blockers. A preview performs no source downloads or target writes after the executable itself has been acquired.
 
-Use `--category coding` instead of `--skill` to select that category's project-scoped members. Repeat `--category`, `--skill`, or `--agent`, or provide comma-separated values. Supported agents are `pi`, `opencode`, and `claude-code`. With no selection in an interactive terminal, the CLI uses Inquirer category and agent checkboxes. Use the arrow keys to move, Space to select or clear a choice, and Enter to accept the selection. At least one choice is required. The final confirmation defaults to no; Ctrl+C cancels a prompt cleanly with exit code 130, before installation. Noninteractive runs must provide their selections explicitly.
+Use `--category coding` instead of `--skill` to review that category's project-scoped members. Repeat `--category`, `--skill`, or `--agent`, or provide comma-separated values. Supported agents are `pi`, `opencode`, and `claude-code`. In an interactive terminal, choose categories, then individual skills within each selected category, then agents. Each category's skill checklist starts with all eligible skills checked. Use the arrow keys to move, Space to toggle one choice, A to select or clear all, and Enter to accept. You can clear a category completely to skip it. Clearing every category cancels without installing anything. Category and agent selection still require at least one choice.
+
+Required prerequisites cannot be omitted while keeping a skill that needs them. The preview identifies any required skills added back, even if you unchecked them. Explicit `--skill` selections are also retained. Deselecting an installed skill never removes it.
+
+`--yes`, `--json`, and noninteractive category runs bypass these skill checklists and retain the existing all-members behavior. Use explicit `--skill` flags for exact scripted subsets. The final confirmation defaults to no; Ctrl+C cancels a prompt cleanly with exit code 130, before installation. Noninteractive runs must provide their selections explicitly.
 
 Use `--ref <ref>` to choose this repository's skill-source revision separately from the CLI revision. Without it, authored skill commands follow the catalog's configured ref. Upstream sources retain their catalogued immutable pins. Pinning the CLI alone does not pin a mutable authored-skill ref.
 
@@ -53,7 +57,7 @@ A failed command or verification stops subsequent installations. Already complet
 
 Some catalog entries are pinned upstream inputs that require semantic adaptation and review. The deterministic CLI cannot perform that work. It reports these entries as blocked before any installation rather than silently omitting them or substituting upstream behavior. `list` identifies them, and a dry run reports all blockers.
 
-Choose supported individual skills, or obtain a separately reviewed maintained adaptation and an approved catalog update. Do not remove adaptation requirements just to make a category install succeed. Missing runtime tools are reported as requirements, not installed by this script.
+Deselect blocked entries in the category checklists, choose supported individual skills with `--skill`, or obtain a separately reviewed maintained adaptation and an approved catalog update. Do not remove adaptation requirements just to make a category install succeed. Missing runtime tools are reported as requirements, not installed by this script.
 
 ## Install an individual skill directly
 

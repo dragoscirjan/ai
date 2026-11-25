@@ -27,8 +27,11 @@ Options:
   --source-root PATH Validate catalog coverage in a source checkout (list only)
   --help             Show this help
 
-With no selection in an interactive terminal, choose categories and agents with checkboxes.
-Use arrow keys to move, Space to toggle, Enter to accept, and Ctrl+C to cancel.
+Choose categories, then individual skills in each category, then agents with checkboxes.
+Each category's skills start selected. A toggles all, Space toggles one, Enter accepts.
+Clear a category to skip it; required prerequisites are included in the preview.
+--yes, --json, and noninteractive category runs select all scoped members without a checklist.
+Use arrow keys to move and Ctrl+C to cancel.
 No files are installed until confirmation. Blocked prerequisites, adaptations, or
 conflicts stop execution before any installation. Existing instructions, skipped
 skills, legacy manager locks, and personal agent commands are never managed here.
@@ -74,15 +77,17 @@ function parse(argv) {
     },
   };
 }
-async function select(message, entries, prompt) {
+async function select(message, entries, prompt, { required = true, checked = false } = {}) {
   return prompt({
     message,
     choices: entries.map((entry) => ({
       name: entry.title,
       value: entry.id,
+      ...(checked ? { checked: true } : {}),
       ...(entry.summary ? { description: entry.summary } : {}),
     })),
-    required: true,
+    required,
+    shortcuts: { all: "a", invert: "i" },
     pageSize: 12,
     loop: false,
   });
@@ -152,6 +157,48 @@ export async function main(argv = process.argv.slice(2), runtime = {}) {
       })),
       prompts.checkbox,
     );
+  }
+  if (interactive && !values.json && !values.yes && options.categories.length) {
+    const scope = options.scope ?? "project";
+    check(["project", "personal"].includes(scope), "Scope must be project or personal");
+    options.categorySelections = {};
+    for (const category of options.categories) {
+      check(Object.hasOwn(catalog.groups, category), `Unknown category: ${category}`);
+      const group = catalog.groups[category];
+      const entries = group.skills
+        .map((name) => catalog.byName.get(name))
+        .filter((entry) => entry.scope === scope);
+      if (!entries.length) {
+        output(`${group.title}: no ${scope}-scoped skills; unchanged.`);
+        options.categorySelections[category] = [];
+        continue;
+      }
+      options.categorySelections[category] = await select(
+        `Skills in ${group.title} (A: all/none)`,
+        entries.map((entry) => ({
+          id: entry.name,
+          title:
+            entry.name +
+            (entry.kind === "adapted" && entry.source.type !== "local"
+              ? " [adaptation required]"
+              : ""),
+          summary:
+            entry.description +
+            (entry.prerequisites.length
+              ? ` Required skills: ${entry.prerequisites.join(", ")}.`
+              : ""),
+        })),
+        prompts.checkbox,
+        { required: false, checked: true },
+      );
+    }
+    if (
+      !options.skills.length &&
+      !Object.values(options.categorySelections).some((names) => names.length)
+    ) {
+      output("No skills selected; no installation performed.");
+      return;
+    }
   }
   if (!options.agents.length) {
     check(interactive && !values.json, "Choose --agent explicitly outside an interactive terminal");

@@ -95,12 +95,34 @@ export function buildPlan(options, catalog = loadCatalog(CATALOG_PATH), context 
     "Select at least one category or skill",
   );
   const requested = [...(options.skills ?? [])];
+  const selections = options.categorySelections === undefined ? {} : options.categorySelections;
+  check(
+    selections !== null && typeof selections === "object" && !Array.isArray(selections),
+    "Invalid category selections",
+  );
+  check(
+    Object.keys(selections).every((category) => options.categories?.includes(category)),
+    "Selection supplied for an unselected category",
+  );
   const excludedByScope = [];
   for (const category of options.categories ?? []) {
     check(Object.hasOwn(catalog.groups, category), `Unknown category: ${category}`);
-    for (const name of catalog.groups[category].skills) {
-      if (catalog.byName.get(name).scope === scope) requested.push(name);
-      else excludedByScope.push(name);
+    const members = catalog.groups[category].skills;
+    const hasSelection = Object.hasOwn(selections, category);
+    const selected = hasSelection ? selections[category] : undefined;
+    if (hasSelection) {
+      check(
+        Array.isArray(selected) &&
+          new Set(selected).size === selected.length &&
+          selected.every(
+            (name) => members.includes(name) && catalog.byName.get(name).scope === scope,
+          ),
+        `Invalid skill selection for category: ${category}`,
+      );
+    }
+    for (const name of members) {
+      if (catalog.byName.get(name).scope !== scope) excludedByScope.push(name);
+      else if (selected === undefined || selected.includes(name)) requested.push(name);
     }
   }
   const names = closure([...new Set(requested)], catalog);

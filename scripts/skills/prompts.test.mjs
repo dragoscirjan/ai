@@ -21,7 +21,7 @@ test("interactive selection uses required Inquirer checkboxes and defaults confi
     prompts: {
       checkbox: async (config) => {
         calls.push(config);
-        assert.equal(config.required, true);
+        assert.equal(config.required, !config.message.startsWith("Skills in "));
         assert.equal(config.loop, false);
         if (config.message === "Skill categories") {
           assert.deepEqual(
@@ -30,6 +30,11 @@ test("interactive selection uses required Inquirer checkboxes and defaults confi
           );
           assert.ok(config.choices.every((choice) => choice.description));
           return ["utility"];
+        }
+        if (config.message.startsWith("Skills in ")) {
+          assert.ok(config.choices.every((choice) => choice.checked));
+          assert.equal(config.shortcuts.all, "a");
+          return config.choices.map((choice) => choice.value);
         }
         assert.equal(config.message, "Target agents");
         assert.deepEqual(
@@ -46,7 +51,7 @@ test("interactive selection uses required Inquirer checkboxes and defaults confi
     },
     install: () => assert.fail("Declining must not install"),
   });
-  assert.equal(calls.length, 3);
+  assert.equal(calls.length, 4);
   assert.match(output.at(-1), /Cancelled; no installation performed/);
   assert.equal(existsSync(join(folder, ".agents")), false);
 });
