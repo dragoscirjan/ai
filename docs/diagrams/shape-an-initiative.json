@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/shape-an-initiative.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "d368a4ffafe5603072d785720939ee48d1a10e2a",
+      "revision": "35a50b646cbec399b71195bdcab262e4f4a2e93b",
       "link_mode": "local-only"
     },
     "legend": {
@@ -66,8 +66,8 @@
       "sources": [
         {
           "path": "catalog/skill-catalog.yaml",
-          "line": 319,
-          "end_line": 347,
+          "line": 320,
+          "end_line": 348,
           "label": "Pinned source and runtime record"
         }
       ]

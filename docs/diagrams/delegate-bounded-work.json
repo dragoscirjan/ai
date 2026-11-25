@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/delegate-bounded-work.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "d368a4ffafe5603072d785720939ee48d1a10e2a",
+      "revision": "35a50b646cbec399b71195bdcab262e4f4a2e93b",
       "link_mode": "local-only"
     },
     "legend": {
