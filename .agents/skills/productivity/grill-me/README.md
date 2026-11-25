@@ -1,7 +1,11 @@
 # grill-me
 
-This is a reviewed, portable adaptation of [the pinned upstream skill](https://github.com/mattpocock/skills/tree/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me).
+Challenge a plan or design through a focused interview that exposes assumptions and resolves missing decisions.
 
-The upstream revision is `fcf0071560d32913c9d4f820e0d7ca467c881619`. Its MIT license is preserved in [LICENSE](LICENSE). Local changes use the repository's MIT license, included in [LICENSE.project](LICENSE.project).
+## Dependencies
 
-Read [SKILL.md](SKILL.md) for the interview workflow and its declared `grilling` requirement.
+Requires `grilling` for the interview process.
+
+## Origin
+
+Adapted from [grill-me](https://github.com/mattpocock/skills/tree/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me) at revision `fcf0071560d32913c9d4f820e0d7ca467c881619`.

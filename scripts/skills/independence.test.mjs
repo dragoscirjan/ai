@@ -67,7 +67,7 @@ for (const body of [
 ])
   test(`ordinary technical wording is not a skill dependency: ${body.slice(0, 35)}`, (t) => {
     const f = fixture(t);
-    verifyMarkdownIndependence(body, f.entry, f.plan, "README.md");
+    verifyMarkdownIndependence(body, f.entry, f.plan, "notes.md");
   });
 test("frontmatter compatibility cannot hide a skill invocation", (t) => {
   const f = fixture(t);
@@ -88,7 +88,7 @@ test("declared dependencies are permitted in names, instruction links, and insta
     "Load `coding`. [Base](../coding/SKILL.md)\n\n```sh\nnpx -y skills@1.7.4 add source --skill coding\n```",
     f.entry,
     f.plan,
-    "README.md",
+    "usage.md",
   );
 });
 test("source category names do not create a coding dependency", (t) => {
@@ -97,7 +97,7 @@ test("source category names do not create a coding dependency", (t) => {
     "[Own source](https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/init-project)\n\n```sh\nnpx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/init-project --skill init-project\n```",
     f.entry,
     f.plan,
-    "README.md",
+    "usage.md",
   );
 });
 test("self upstream provenance does not become an external prerequisite", (t) => {
@@ -167,6 +167,94 @@ test("invalid instruction text and symlinks stop validation", (t) => {
   rmSync(join(root, "README.md"));
   symlinkSync(join(f.target, "private"), join(root, "outside.md"));
   assert.throws(() => verifySkillIndependence(root, f.entry, f.plan), /Symlink/);
+});
+for (const [label, body] of [
+  ["Claude deployment", "# coding\n\nClaude Code uses `.claude/skills/coding`."],
+  ["installation command", "# coding\n\n```sh\nnpx -y skills@1.7.4 add source --skill coding\n```"],
+  ["usage section", "# coding\n\n## Usage\n\nDescribe the task to the agent."],
+  ["workflow steps", "# coding\n\n1. Review the input.\n2. Make the change."],
+  ["license reference", "# coding\n\nSee [LICENSE](LICENSE)."],
+  ["encoded legal-file reference", "# coding\n\nSee [source](LICEN%53E)."],
+  [
+    "procedural attribution",
+    "# coding\n\n## Origin\n\nInspired by [scaffold](../scaffold/SKILL.md). Use it before starting.",
+  ],
+])
+  test(`overview rejects ${label}`, (t) => {
+    const f = fixture(t);
+    assert.throws(
+      () => verifyMarkdownIndependence(body, f.entry, f.plan, "README.md"),
+      /overview/i,
+    );
+  });
+test("overview permits factual inspiration without adding a dependency", (t) => {
+  const f = fixture(t);
+  verifyMarkdownIndependence(
+    "# coding\n\nDevelop code under project conventions.\n\n## Inspiration\n\nInspired by [scaffold](../scaffold/SKILL.md) and [an external source](https://example.com/skills/other-skill/SKILL.md).",
+    f.entry,
+    f.plan,
+    "README.md",
+  );
+  assert.deepEqual(f.entry.prerequisites, []);
+  assert.deepEqual(
+    f.plan.entries.map((entry) => entry.name),
+    ["coding"],
+  );
+});
+test("factual attribution does not require a fixed heading template", (t) => {
+  const f = fixture(t);
+  verifyMarkdownIndependence(
+    "# coding\n\nDevelop code.\n\nInspired by [scaffold](../scaffold/SKILL.md).",
+    f.entry,
+    f.plan,
+    "README.md",
+  );
+});
+test("attribution reference definitions cannot hide an operational reference", (t) => {
+  const f = fixture(t);
+  verifyMarkdownIndependence(
+    "# coding\n\nDevelop code.\n\n## Origin\n\nInspired by [scaffold][origin].\n\n[origin]: ../scaffold/SKILL.md",
+    f.entry,
+    f.plan,
+    "README.md",
+  );
+  assert.throws(
+    () =>
+      verifyMarkdownIndependence(
+        "# coding\n\nLoad [scaffold][origin].\n\n## Origin\n\nInspired by [scaffold][origin].\n\n[origin]: ../scaffold/SKILL.md",
+        f.entry,
+        f.plan,
+        "README.md",
+      ),
+    /Undeclared skill reference/,
+  );
+});
+test("attribution permission does not leak into supporting documents or dependency sections", (t) => {
+  const f = fixture(t),
+    body = "## Origin\n\nInspired by [scaffold](../scaffold/SKILL.md).";
+  assert.throws(
+    () => verifyMarkdownIndependence(body, f.entry, f.plan, "references.md"),
+    /Undeclared skill reference/,
+  );
+  assert.throws(
+    () =>
+      verifyMarkdownIndependence(
+        "## Dependencies\n\n[scaffold](../scaffold/SKILL.md)",
+        f.entry,
+        f.plan,
+        "README.md",
+      ),
+    /Undeclared skill reference/,
+  );
+});
+test("overview rule leaves nested technical READMEs unchanged", (t) => {
+  const f = fixture(t);
+  verifyMarkdownIndependence(
+    "# Renderer\n\n## Usage\n\n```js\nrender(scene);\n```",
+    f.entry,
+    f.plan,
+    "renderers/README.md",
+  );
 });
 test("all 23 local packages are independent with exactly the six approved requirement edges", (t) => {
   const f = fixture(t),

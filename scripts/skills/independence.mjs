@@ -102,7 +102,7 @@ function targetName(href, context, helper = false) {
 }
 function reference(href, context, helper = false) {
   const name = targetName(href, context, helper);
-  if (name) named(name, context);
+  if (name && !context.attribution) named(name, context);
 }
 function invocations(text, context) {
   for (const match of text.matchAll(
@@ -154,6 +154,7 @@ function invocations(text, context) {
 }
 function markupText(text, context) {
   invocations(text, context);
+  if (context.attribution) return;
   for (const name of context.names)
     if (
       name.includes("-") &&
@@ -161,8 +162,92 @@ function markupText(text, context) {
     )
       named(name, context);
 }
+const overviewAttribution = new Set(["origin", "source", "inspiration"]);
+function overviewText(node, prose = false) {
+  if (prose && ["link", "linkReference", "inlineCode"].includes(node.type)) return "";
+  return node.value ?? node.children?.map((child) => overviewText(child, prose)).join("") ?? "";
+}
+function overviewSections(tree) {
+  const sections = new Map(),
+    references = new Map();
+  let section = "intent";
+  for (const block of tree.children) {
+    if (block.type === "heading")
+      section = block.depth === 1 ? "intent" : overviewText(block).toLowerCase().trim();
+    const attribution =
+      block.type === "paragraph" &&
+      /^(?:(?:adapted|derived) from|inspired by|based on|source:)\s/i.test(overviewText(block));
+    const blockSection = attribution ? "origin" : section;
+    const pending = [block];
+    while (pending.length) {
+      const node = pending.pop();
+      sections.set(node, blockSection);
+      if (node.type === "linkReference")
+        references.set(
+          node.identifier,
+          (references.get(node.identifier) ?? true) && overviewAttribution.has(blockSection),
+        );
+      if (node.children) pending.push(...node.children);
+    }
+  }
+  for (const node of sections.keys())
+    if (node.type === "definition")
+      sections.set(node, references.get(node.identifier) ? "origin" : "dependencies");
+  return sections;
+}
+function verifyOverview(sections, context) {
+  const allowed = new Set(["intent", "purpose", "dependencies", ...overviewAttribution]);
+  const invalid = (reason) =>
+    `Invalid skill overview: ${context.entry.name}/${context.file} (${reason})`;
+  for (const [node, section] of sections) {
+    check(
+      allowed.has(section),
+      invalid("section must describe intent, dependencies, or origin/inspiration"),
+    );
+    check(
+      !["code", "html", "image", "imageReference", "blockquote", "thematicBreak", "table"].includes(
+        node.type,
+      ),
+      invalid(node.type),
+    );
+    check(!(node.type === "list" && node.ordered), invalid("workflow steps"));
+    if (node.type === "link" || node.type === "definition")
+      check(
+        !legalName.test(posix.basename(decode(node.url.split(/[?#]/)[0], context))),
+        invalid("license reference"),
+      );
+    if (node.type !== "paragraph") continue;
+    const text = overviewText(node),
+      prose = overviewText(node, true);
+    check(
+      !/\.(?:claude|opencode|agents|pi)(?:\/|\b)|\bClaude Code\b|\bnpx\b|--(?:agent|skills-dir|global|scope)\b/i.test(
+        text,
+      ),
+      invalid("deployment guidance"),
+    );
+    check(!/\blicen[cs](?:es?|ing)\b/i.test(text), invalid("license material"));
+    check(!/\/skill:|--skill\b|\bSkill\s*\(/.test(text), invalid("invocation example"));
+    check(
+      !/\b(?:for example|to use this skill|load the installed|run the following|before you start)\b|\b(?:first|then|next)\s+(?:run|load|use|read|install|check|make|execute|apply|ask|write)\b/i.test(
+        prose,
+      ),
+      invalid("usage or workflow guidance"),
+    );
+    if (overviewAttribution.has(section))
+      check(
+        !/\b(?:use|load|run|invoke|call|install|follow|adapt|apply|combine|activate|fetch|execute|requires?)\s+/i.test(
+          prose,
+        ),
+        invalid("attribution must be factual, not procedural"),
+      );
+  }
+}
 function checkMarkdown(text, context) {
   const { tree } = parseMarkdown(text),
+    sections =
+      !context.profile && /^README(?:\.[^/.]+)?$/i.test(context.file)
+        ? overviewSections(tree)
+        : null,
     pending = [tree];
   if (context.file === "SKILL.md") {
     const values = [frontmatter(text, context.entry.name)],
@@ -177,24 +262,29 @@ function checkMarkdown(text, context) {
     }
   }
   while (pending.length) {
-    const node = pending.pop();
-    if (node.type === "text") markupText(node.value, context);
+    const node = pending.pop(),
+      current =
+        sections && overviewAttribution.has(sections.get(node))
+          ? { ...context, attribution: true }
+          : context;
+    if (node.type === "text") markupText(node.value, current);
     if (node.type === "inlineCode") {
-      if (context.names.has(node.value)) named(node.value, context);
-      invocations(node.value, context);
+      if (!current.attribution && current.names.has(node.value)) named(node.value, current);
+      invocations(node.value, current);
     }
-    if (["link", "image", "definition"].includes(node.type)) reference(node.url, context);
+    if (["link", "image", "definition"].includes(node.type)) reference(node.url, current);
     if (node.type === "code") {
-      invocations(node.value, context);
-      for (const match of node.value.matchAll(importPaths)) reference(match[1], context);
+      invocations(node.value, current);
+      for (const match of node.value.matchAll(importPaths)) reference(match[1], current);
     }
     if (node.type === "html") {
-      invocations(node.value, context);
+      invocations(node.value, current);
       for (const match of node.value.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi))
-        reference(match[1], context);
+        reference(match[1], current);
     }
     if (node.children) for (const child of node.children) pending.push(child);
   }
+  if (sections) verifyOverview(sections, context);
 }
 export function verifyMarkdownIndependence(text, entry, plan, file, { profile = false } = {}) {
   const context = contextFor(entry, plan, file, profile);
@@ -229,7 +319,7 @@ export function verifySkillIndependence(root, entry, plan) {
         );
         continue;
       }
-      if (/\.(?:md|mdx|txt)$/i.test(item.name) || /^readme$/i.test(item.name))
+      if (/\.(?:md|mdx|txt)$/i.test(item.name) || /^readme(?:\.|$)/i.test(item.name))
         verifyMarkdownIndependence(text, entry, plan, file);
       else {
         const context = contextFor(entry, plan, file, false);

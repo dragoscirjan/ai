@@ -65,14 +65,7 @@ test("single-skill recipes remain project-local unless catalogued exclusively pe
 });
 
 test("published direct-install examples use grouped URLs and npx consent flags", () => {
-  for (const path of [
-    "AGENTS.md",
-    "README.md",
-    "docs/guide/install.md",
-    ".agents/skills/agentic-work/sync-my-agents/README.md",
-    ".agents/skills/coding/coding-with-rules/README.md",
-    ".agents/skills/coding/init-project/README.md",
-  ]) {
+  for (const path of ["AGENTS.md", "README.md", "docs/guide/install.md"]) {
     const text = read(path);
     assert.doesNotMatch(text, /npx(?: -y)? skills@1\.7\.4 add dragoscirjan\/ai(?:\s|$)/);
     for (const command of text.matchAll(/^npx[^\n]+/gm))
@@ -82,11 +75,17 @@ test("published direct-install examples use grouped URLs and npx consent flags",
         path,
       );
   }
+});
+
+test("skill overviews describe prerequisites without setup commands", () => {
   const coding = read(".agents/skills/coding/coding-with-rules/README.md");
-  for (const name of ["coding", "coding-with-rules"])
-    assert.ok(
-      coding.includes(`/tree/main/.agents/skills/coding/${name} --skill ${name} --agent pi`),
-    );
+  assert.match(coding, /Requires `coding`/);
+  for (const path of [
+    ".agents/skills/agentic-work/sync-my-agents/README.md",
+    ".agents/skills/coding/coding-with-rules/README.md",
+    ".agents/skills/coding/init-project/README.md",
+  ])
+    assert.doesNotMatch(read(path), /\bnpx\b|\.claude\/|##\s+(?:Usage|Install)/i, path);
 });
 
 test("no other skill depends on or hands off to the personal instruction skill", () => {

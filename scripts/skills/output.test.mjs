@@ -187,32 +187,68 @@ test("custom output rebases acquired Markdown for its final flat layout without 
   assert.equal(existsSync(join(f.target, ".claude")), false);
   assert.equal(existsSync(join(f.target, ".agents")), false);
 });
-test("undeclared acquired references stop before any custom skill publication", async (t) => {
+for (const [label, body, expected] of [
+  [
+    "undeclared acquired references",
+    "[Review](../code-review/SKILL.md)",
+    /Undeclared skill reference.*code-review/,
+  ],
+  [
+    "acquired README deployment guidance",
+    "# coding-with-rules\n\nClaude Code uses `.claude/skills/coding-with-rules`.",
+    /Invalid skill overview/,
+  ],
+])
+  test(`${label} stop before any custom skill publication`, async (t) => {
+    const f = fixture(t),
+      plan = planFor(f),
+      run = installer(plan, []);
+    const manifest = readFileSync(join(f.target, ".claude-plugin/plugin.json"), "utf8");
+    await assert.rejects(
+      executePlan(plan, {
+        confirmed: true,
+        fetcher,
+        run: async (argv, cwd) => {
+          await run(argv, cwd);
+          if (argv[argv.indexOf("--skill") + 1] === "coding-with-rules")
+            writeFileSync(join(cwd, ".claude/skills/coding-with-rules/README.md"), body);
+        },
+      }),
+      expected,
+    );
+    assert.equal(existsSync(join(f.target, "skills/coding")), false);
+    assert.equal(existsSync(join(f.target, "skills/coding-with-rules")), false);
+    assert.equal(readFileSync(join(f.target, ".claude-plugin/plugin.json"), "utf8"), manifest);
+    assert.equal(
+      readFileSync(join(f.target, "skills/custom/SKILL.md"), "utf8"),
+      "Custom skill, not selected.\n",
+    );
+  });
+test("factual inspiration is retained and rebased without installing its source skill", async (t) => {
   const f = fixture(t),
     plan = planFor(f),
     run = installer(plan, []);
-  const manifest = readFileSync(join(f.target, ".claude-plugin/plugin.json"), "utf8");
-  await assert.rejects(
-    executePlan(plan, {
-      confirmed: true,
-      fetcher,
-      run: async (argv, cwd) => {
-        await run(argv, cwd);
-        if (argv[argv.indexOf("--skill") + 1] === "coding-with-rules")
-          writeFileSync(
-            join(cwd, ".claude/skills/coding-with-rules/README.md"),
-            "[Review](../code-review/SKILL.md)",
-          );
-      },
-    }),
-    /Undeclared skill reference.*code-review/,
+  await executePlan(plan, {
+    confirmed: true,
+    fetcher,
+    run: async (argv, cwd) => {
+      await run(argv, cwd);
+      if (argv[argv.indexOf("--skill") + 1] === "coding-with-rules")
+        writeFileSync(
+          join(cwd, ".claude/skills/coding-with-rules/README.md"),
+          "# coding-with-rules\n\nSelect language guidance.\n\n## Origin\n\nInspired by [scaffold](../scaffold/SKILL.md).",
+        );
+    },
+  });
+  assert.deepEqual(
+    plan.entries.map((entry) => entry.name),
+    ["coding", "coding-with-rules"],
   );
-  assert.equal(existsSync(join(f.target, "skills/coding")), false);
-  assert.equal(existsSync(join(f.target, "skills/coding-with-rules")), false);
-  assert.equal(readFileSync(join(f.target, ".claude-plugin/plugin.json"), "utf8"), manifest);
-  assert.equal(
-    readFileSync(join(f.target, "skills/custom/SKILL.md"), "utf8"),
-    "Custom skill, not selected.\n",
+  assert.equal(existsSync(join(f.target, "skills/scaffold")), false);
+  assert.ok(
+    readFileSync(join(f.target, "skills/coding-with-rules/README.md"), "utf8").includes(
+      `https://github.com/dragoscirjan/ai/blob/${plan.ref}/.agents/skills/coding/scaffold/SKILL.md`,
+    ),
   );
 });
 test("custom output paths are exact and are resolved relative to --target", (t) => {

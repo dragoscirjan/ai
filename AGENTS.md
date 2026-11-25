@@ -15,6 +15,7 @@ Load only the instructions required for the current phase. When several rows mat
 | Before changing repository files | Follow the task-branch and working-location policy below. |
 | Before designing, changing, testing, or reviewing source code | Read `coding-with-rules` and follow its language and extension reference selection. Resolve its declared requirements first. |
 | During implementation, and before creating or revising project documentation | Read and follow `document-project`, `asd-ste100-technical`, and `unslop`. Assess documentation impact and update affected documentation in the same change. |
+| Before creating or revising a skill overview README | Read and follow the skill overview README rule in `CONTRIBUTING.md`. |
 | Before delegating work to child agents | Read and follow `.agents/skills/unpolished/subagent-orchestration/SKILL.md`. |
 | Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
 | Before auditing or removing old workspaces | Read and follow `.agents/skills/utility/cleanup-workspaces/SKILL.md`. |

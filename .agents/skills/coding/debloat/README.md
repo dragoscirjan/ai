@@ -1,13 +1,3 @@
-# Debloat
+# debloat
 
-An original engineering workflow for preventing unnecessary mechanisms and simplifying existing ones. It compares maintenance burden against real requirements, not deletion counts. It does not compress prose.
-
-## Usage
-
-- Prevent: "Use debloat to compare this proposed registry with direct construction before implementation."
-- Simplify: "Use debloat to simplify this module while preserving its public behavior."
-- Review only: "Use debloat to audit these dependencies without changing files. Report keep, simplify, or defer with evidence."
-
-[`SKILL.md`](SKILL.md) contains the workflow. [Decision examples](references/decision-examples.md) cover justified complexity and unsafe shortcuts.
-
-Project instructions or the user supply coding, workspace, and validation guidance. Missing required instructions block their phase; nothing is installed automatically. Use the project's approved tools and execution environment.
+Prevent unnecessary complexity and simplify code, configuration, or dependencies while preserving required behavior, contracts, security, and operational needs.

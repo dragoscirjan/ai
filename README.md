@@ -38,7 +38,7 @@ Relative output paths are resolved under `--target`; absolute output paths must 
 
 Invoke [`sync-my-agents`](.agents/skills/agentic-work/sync-my-agents/SKILL.md) explicitly to review `AGENTS.md` and the instruction documents it references, such as `CONTRIBUTING.md` and `VALIDATION.md`. It gathers evidence, asks about unresolved decisions, shows exact diffs, and applies only approved changes.
 
-Here, dependencies mean instruction documents, not skill prerequisites. The skill never installs skills or imposes a fixed document bundle. See its [setup and review guide](.agents/skills/agentic-work/sync-my-agents/README.md).
+Here, dependencies mean instruction documents, not skill prerequisites. The skill never installs skills or imposes a fixed document bundle. See its [skill overview](.agents/skills/agentic-work/sync-my-agents/README.md).
 
 `sync-my-agents` is available in project checklists and for explicit personal installation with `--scope personal`. Installing it never invokes it or authorizes instruction edits.
 
@@ -46,7 +46,7 @@ The combined `sync-my-skills` manager is removed. Existing installations, person
 
 ## Use a skill today
 
-Each portable skill package and individual skill profile refers only to itself and its declared required skills. Same-package references, source attribution, legal notices, and runtime/API documentation remain available. Collection setup and migration guidance stay in repository documentation; they are not prerequisites for using a skill.
+Operational references in each portable skill package and individual profile refer only to self and declared required skills. Skill overview READMEs contain only intent, real dependencies, and factual origin or inspiration. Same-package references, source attribution, separate legal files, and runtime/API documentation remain available. Collection setup and migration guidance stay in repository documentation; they are not prerequisites for using a skill.
 
 Individual skills remain available independently of the planned synchronization tools. Browse the [skill catalog](docs/reference/catalog.md), [workflow guides](docs/guide/start.md), or [skill requirements](docs/reference/relationships.md).
 

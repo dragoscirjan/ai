@@ -265,6 +265,24 @@ test("flattened installation rebases cross-category Markdown links without editi
     "[Base](../coding/SKILL.md#rules)\n",
   );
 });
+test("verification rejects a deployment manual in a freshly acquired overview", async (t) => {
+  const f = fixture(t),
+    plan = buildPlan(options(f.target, { skills: ["coding"] }), catalog, f.context);
+  await assert.rejects(
+    executePlan(plan, {
+      confirmed: true,
+      fetcher,
+      run: async (argv) => {
+        await installer(plan)(argv);
+        writeFileSync(
+          join(f.target, ".agents/skills/coding/README.md"),
+          "# coding\n\nClaude Code uses `.claude/skills/coding`.",
+        );
+      },
+    }),
+    /Invalid skill overview.*coding\/README.md/,
+  );
+});
 test("verification rejects an undeclared skill recommendation in a freshly acquired README", async (t) => {
   const f = fixture(t),
     plan = buildPlan(options(f.target, { skills: ["coding"] }), catalog, f.context);
