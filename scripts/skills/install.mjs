@@ -34,7 +34,7 @@ import {
   safeRelative,
 } from "./catalog.mjs";
 import { fetchBytes } from "./source.mjs";
-import { copySkill, skillsDirectory } from "./output.mjs";
+import { copySkill, projectSkill, projectionTarget, skillsDirectory } from "./output.mjs";
 
 const absolute = (value, label) => {
   const path = resolve(value);
@@ -83,6 +83,19 @@ function assertDestination(path, canonical) {
     );
     noLinks(dirname(canonical), canonical);
   } else noLinks(dirname(path), path);
+}
+function nativeDestinations(target, name, agents, scope, home = homedir(), env = process.env) {
+  const canonical = join(scope === "personal" ? home : target, ".agents/skills", name);
+  // Skills CLI 1.7.4 overrides globalSkillsDir for universal Pi/OpenCode agents.
+  return [
+    ...new Set(
+      agents.map((agent) =>
+        agent === "claude-code"
+          ? destinations(target, name, [agent], scope, home, env).at(-1)
+          : canonical,
+      ),
+    ),
+  ];
 }
 export function buildPlan(options, catalog = loadCatalog(CATALOG_PATH), context = {}) {
   const target = absolute(options.target ?? process.cwd(), "Target");
@@ -161,6 +174,7 @@ export function buildPlan(options, catalog = loadCatalog(CATALOG_PATH), context 
       ? [join(outputDirectory, name)]
       : destinations(target, name, agents, scope, home, env);
     const canonical = paths[0];
+    for (const path of paths.slice(1)) projectionTarget(canonical, path);
     for (const path of paths) {
       assertDestination(path, canonical);
       if (outputDirectory && existing(path))
@@ -184,6 +198,9 @@ export function buildPlan(options, catalog = loadCatalog(CATALOG_PATH), context 
       name,
       argv,
       destinations: paths,
+      nativeDestinations: outputDirectory
+        ? undefined
+        : nativeDestinations(target, name, agents, scope, home, env),
       source: entry.source,
       runtime: entry.runtime ?? [],
       prerequisites: entry.prerequisites,
@@ -342,6 +359,23 @@ function finishSkill(folder, entry, plan, licenses) {
   }
   filterAndVerify(folder, entry);
 }
+function prepareNative(paths, actual, entry, plan, licenses) {
+  const canonical = paths[0];
+  check(
+    actual.length && actual.every((path) => paths.includes(path)),
+    "Unexpected native skill destination",
+  );
+  const verified = new Set();
+  for (const path of actual) {
+    assertDestination(path, canonical);
+    check(existing(path), `Skills CLI did not create ${path}`);
+    const folder = realpathSync(path);
+    check(folder === canonical || folder === path, `Unexpected installed location: ${entry.name}`);
+    if (!verified.has(folder)) finishSkill(folder, entry, plan, licenses);
+    verified.add(folder);
+  }
+  return realpathSync(actual[0]);
+}
 async function executeOutput(plan, invoke, licenses, instructions) {
   skillsDirectory(plan.target, plan.skillsDir);
   for (const entry of plan.entries) {
@@ -362,10 +396,9 @@ async function executeOutput(plan, invoke, licenses, instructions) {
       current = entry.name;
       await invoke(entry.argv, workspace);
       verifySnapshot(plan.target, instructions);
-      const source = destinations(workspace, entry.name, plan.agents, "project")[0];
-      assertDestination(source, source);
-      check(existing(source), `Skills CLI did not create ${source}`);
-      finishSkill(source, entry, plan, licenses);
+      const paths = destinations(workspace, entry.name, plan.agents, "project");
+      const actual = nativeDestinations(workspace, entry.name, plan.agents, "project");
+      const source = prepareNative(paths, actual, entry, plan, licenses);
       prepared.push({ entry, source });
     }
     verifySnapshot(plan.target, instructions);
@@ -442,16 +475,20 @@ export async function executePlan(
       await invoke(entry.argv, plan.target);
       verifySnapshot(plan.target, instructions);
       const canonical = entry.destinations[0];
-      for (const destination of entry.destinations) {
+      const source = prepareNative(
+        entry.destinations,
+        entry.nativeDestinations,
+        entry,
+        plan,
+        licenses,
+      );
+      if (source !== canonical) copySkill(source, canonical, { overwrite: plan.overwrite });
+      filterAndVerify(canonical, entry);
+      for (const destination of entry.destinations.slice(1)) {
         assertDestination(destination, canonical);
-        check(existing(destination), `Skills CLI did not create ${destination}`);
-        const folder = realpathSync(destination);
-        check(
-          folder === canonical || folder === destination,
-          `Unexpected installed location: ${entry.name}`,
-        );
-        finishSkill(folder, entry, plan, licenses);
+        projectSkill(canonical, destination, { overwrite: true });
       }
+      verifySnapshot(plan.target, instructions);
       completed.push(entry.name);
     } catch (error) {
       throw new Error(

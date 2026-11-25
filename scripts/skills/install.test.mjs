@@ -5,6 +5,7 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  readlinkSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -80,6 +81,164 @@ function installer(plan, { symlink = false, undeclared = false, omit = false } =
     }
   };
 }
+function nativeInstaller(plan, roots, setup) {
+  return async (argv) => {
+    for (const root of roots) {
+      const nativePlan = {
+        ...plan,
+        entries: plan.entries.map((entry) => ({
+          ...entry,
+          destinations: [join(root, entry.name)],
+        })),
+      };
+      const name = argv[argv.indexOf("--skill") + 1];
+      rmSync(join(root, name), { recursive: true, force: true });
+      await installer(nativePlan, setup)(argv);
+    }
+  };
+}
+for (const [agent, scope, root] of [
+  ["claude-code", "project", (f) => join(f.target, ".claude/skills")],
+  ["claude-code", "personal", (f) => join(f.home, ".claude/skills")],
+  ["opencode", "personal", (f) => join(f.home, ".agents/skills")],
+])
+  for (const stale of [false, true])
+    test(`native ${agent} ${scope} output normalizes safely with stale canonical=${stale}`, async (t) => {
+      const f = fixture(t),
+        name = scope === "personal" ? "sync-my-agents" : "coding";
+      const plan = buildPlan(
+        options(f.target, { skills: [name], agents: [agent], scope, overwrite: stale }),
+        catalog,
+        f.context,
+      );
+      const canonical = plan.entries[0].destinations[0],
+        projection = plan.entries[0].destinations[1];
+      if (stale) {
+        mkdirSync(canonical, { recursive: true });
+        writeFileSync(
+          join(canonical, "SKILL.md"),
+          `---\nname: ${name}\ndescription: Stale canonical.\n---\nOld content.\n`,
+        );
+        writeFileSync(join(canonical, "stale-only.txt"), "Remove this selected old file.");
+      }
+      await executePlan(plan, { confirmed: true, run: nativeInstaller(plan, [root(f)]), fetcher });
+      assert.match(readFileSync(join(canonical, "SKILL.md"), "utf8"), /Fixture skill/);
+      assert.equal(existsSync(join(canonical, "stale-only.txt")), false);
+      assert.equal(readlinkSync(projection), relative(dirname(projection), canonical));
+      assert.equal(
+        readFileSync(join(projection, "SKILL.md"), "utf8"),
+        readFileSync(join(canonical, "SKILL.md"), "utf8"),
+      );
+    });
+test("mixed personal agents distinguish universal output from customized final projections", async (t) => {
+  const f = fixture(t),
+    env = {
+      CLAUDE_CONFIG_DIR: join(f.home, "custom-claude"),
+      XDG_CONFIG_HOME: join(f.home, "custom-config"),
+    };
+  const plan = buildPlan(
+    options(f.target, {
+      skills: ["sync-my-agents"],
+      scope: "personal",
+      agents: ["opencode", "claude-code"],
+    }),
+    catalog,
+    { home: f.home, env },
+  );
+  const canonical = join(f.home, ".agents/skills/sync-my-agents"),
+    claude = join(env.CLAUDE_CONFIG_DIR, "skills/sync-my-agents"),
+    opencode = join(env.XDG_CONFIG_HOME, "opencode/skills/sync-my-agents");
+  assert.deepEqual(plan.entries[0].nativeDestinations, [canonical, claude]);
+  await executePlan(plan, {
+    confirmed: true,
+    run: nativeInstaller(plan, [
+      join(f.home, ".agents/skills"),
+      join(env.CLAUDE_CONFIG_DIR, "skills"),
+    ]),
+    fetcher,
+  });
+  for (const path of [claude, opencode])
+    assert.equal(readlinkSync(path), relative(dirname(path), canonical));
+});
+test("a native projection inside the canonical folder is blocked before any installation", (t) => {
+  const f = fixture(t),
+    env = { CLAUDE_CONFIG_DIR: join(f.home, ".agents/skills/sync-my-agents") };
+  assert.throws(
+    () =>
+      buildPlan(
+        options(f.target, {
+          skills: ["sync-my-agents"],
+          scope: "personal",
+          agents: ["claude-code"],
+          overwrite: true,
+        }),
+        catalog,
+        { home: f.home, env },
+      ),
+    /projection overlaps/,
+  );
+  assert.equal(existsSync(join(f.home, ".agents")), false);
+});
+test("a custom Claude directory equal to the canonical root needs no self-projection", async (t) => {
+  const f = fixture(t),
+    env = { CLAUDE_CONFIG_DIR: join(f.home, ".agents") };
+  const plan = buildPlan(
+    options(f.target, { skills: ["sync-my-agents"], scope: "personal", agents: ["claude-code"] }),
+    catalog,
+    { home: f.home, env },
+  );
+  assert.equal(plan.entries[0].destinations.length, 1);
+  await executePlan(plan, {
+    confirmed: true,
+    run: nativeInstaller(plan, [join(f.home, ".agents/skills")]),
+    fetcher,
+  });
+  assert.match(
+    readFileSync(join(plan.entries[0].destinations[0], "SKILL.md"), "utf8"),
+    /Fixture skill/,
+  );
+});
+test("multiple native copies become exact relative projections of the verified canonical folder", async (t) => {
+  const f = fixture(t),
+    plan = buildPlan(
+      options(f.target, { skills: ["coding"], agents: ["pi", "claude-code"] }),
+      catalog,
+      f.context,
+    );
+  await executePlan(plan, {
+    confirmed: true,
+    run: nativeInstaller(plan, [
+      join(f.target, ".agents/skills"),
+      join(f.target, ".claude/skills"),
+    ]),
+    fetcher,
+  });
+  const [canonical, projection] = plan.entries[0].destinations;
+  assert.equal(readlinkSync(projection), relative(dirname(projection), canonical));
+});
+test("unsafe native Claude output cannot fall back to an old canonical copy", async (t) => {
+  const f = fixture(t),
+    plan = buildPlan(
+      options(f.target, { skills: ["coding"], agents: ["claude-code"], overwrite: true }),
+      catalog,
+      f.context,
+    );
+  const canonical = plan.entries[0].destinations[0];
+  mkdirSync(canonical, { recursive: true });
+  writeFileSync(join(canonical, "keep.txt"), "Old canonical survives rejection.");
+  await assert.rejects(
+    executePlan(plan, {
+      confirmed: true,
+      run: nativeInstaller(plan, [join(f.target, ".claude/skills")], { symlink: true }),
+      fetcher,
+    }),
+    /Symlink in installed/,
+  );
+  assert.equal(
+    readFileSync(join(canonical, "keep.txt"), "utf8"),
+    "Old canonical survives rejection.",
+  );
+});
 test("planning resolves prerequisite order and explicit agent commands without writes", (t) => {
   const f = fixture(t),
     plan = buildPlan(options(f.target), catalog, f.context);

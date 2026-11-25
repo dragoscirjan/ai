@@ -64,7 +64,7 @@ Relative `--skills-dir` paths resolve under `--target`, not the invocation direc
 
 Keep `--agent claude-code` to check the selected skills' catalogued Claude compatibility. In this mode, agent selection does not create harness-specific directories. Even personal catalog entries explicitly selected with `--scope personal` are copied only into this output directory, never installed globally.
 
-Review the dry run, then repeat without `--dry-run` to confirm or use `--yes` for a separately approved noninteractive run. All selected sources and legal files are acquired in a disposable workspace and verified before any output skill folder changes. Installation records stay in that temporary workspace; the plugin receives no normal `.agents`/`.claude` directories, new manager locks, or CLI lock changes.
+Review the dry run, then repeat without `--dry-run` to confirm or use `--yes` for a separately approved noninteractive run. All selected sources and legal files are acquired in a disposable workspace and verified before any output skill folder changes. Acquisition follows the selected harness's native layout, including Claude's `.claude/skills`; only verified flat skill folders are published. Installation records stay in that temporary workspace; the plugin receives no normal `.agents`/`.claude` directories, new manager locks, or CLI lock changes.
 
 Unselected folders and project/plugin metadata remain unchanged. Existing selected folders require `--overwrite`; that approval replaces the complete selected folder, including obsolete files. Replacement is per skill, not an all-or-nothing transaction for the entire selection. A failed replacement restores the original when possible. If an unexpected concurrent write prevents restoration, the error identifies a preserved backup for inspection; do not delete that backup blindly.
 
@@ -78,7 +78,9 @@ npx -y github:dragoscirjan/ai#<tag-or-commit> --skill coding-with-rules --agent 
 
 The script runs the catalogued `npx -y skills@1.7.4 add` commands with explicit agent selection. It acquires required legal files before starting installations, verifies skill metadata and prerequisites, and removes catalogued unwanted metadata such as `agents/openai.yaml`. It never executes installed helpers or initializers.
 
-Project skills use `.agents/skills/<name>/`. Selected Claude Code installations may use relative `.claude/skills/<name>` projections. The CLI verifies selected destinations and rejects unsafe symlink traversal. A successful run lists verified skills. It does not modify `AGENTS.md`, referenced instruction documents, personal command registration, or legacy manager locks.
+Normal installations keep a verified canonical folder at `.agents/skills/<name>` under the project, or under your home for personal scope. Selected Claude destinations and personal OpenCode config destinations use exact relative symlink projections to that folder. Native Skills CLI 1.7.4 writes Pi/OpenCode assets to the canonical directory, but Claude writes its own directory. The wrapper verifies those actual native outputs before normalizing the final layout; it does not mistake an older canonical copy for fresh Claude output.
+
+The CLI verifies selected destinations and rejects unsafe symlink traversal. A successful run lists verified skills. It does not modify `AGENTS.md`, referenced instruction documents, personal command registration, or legacy manager locks.
 
 For normal agent installations, the external Skills CLI owns its own installation records. Custom-directory acquisition records exist only in the disposable workspace. There is no new custom manager-owned lock, persistent apply-plan ID, or staging protocol.
 

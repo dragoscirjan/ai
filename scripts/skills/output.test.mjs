@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import {
+  cpSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
   readdirSync,
+  readlinkSync,
   renameSync,
   rmSync,
   statSync,
@@ -17,7 +19,7 @@ import { basename, dirname, join, relative } from "node:path";
 import { test } from "node:test";
 import { PACKAGE_ROOT, loadCatalog } from "./catalog.mjs";
 import { buildPlan, executePlan, printPlan } from "./install.mjs";
-import { copySkill, skillsDirectory } from "./output.mjs";
+import { copySkill, projectSkill, skillsDirectory } from "./output.mjs";
 
 const catalog = loadCatalog();
 function fixture(t) {
@@ -69,7 +71,11 @@ function installer(
       entry = plan.entries.find((entry) => entry.name === name);
     if (name === failAt) throw new Error("Acquisition failed");
     if (omit) return;
-    const folder = join(cwd, ".agents/skills", name);
+    const folder = join(
+      cwd,
+      argv.includes("pi") || argv.includes("opencode") ? ".agents/skills" : ".claude/skills",
+      name,
+    );
     mkdirSync(folder, { recursive: true });
     writeFileSync(
       join(folder, "SKILL.md"),
@@ -79,14 +85,79 @@ function installer(
     mkdirSync(join(folder, "agents"));
     writeFileSync(join(folder, "agents/openai.yaml"), "Excluded metadata.\n");
     const projection = join(cwd, ".claude/skills", name);
-    mkdirSync(dirname(projection), { recursive: true });
-    symlinkSync(relative(dirname(projection), folder), projection, "dir");
+    if (argv.includes("claude-code") && projection !== folder) {
+      mkdirSync(dirname(projection), { recursive: true });
+      cpSync(folder, projection, { recursive: true });
+    }
     writeFileSync(join(cwd, "skills-lock.json"), "Disposable acquisition lock.\n");
     if (symlink) symlinkSync(join(plan.target, "CONTRIBUTING.md"), join(folder, "unsafe.md"));
     if (alterManifest)
       writeFileSync(join(plan.target, ".claude-plugin/plugin.json"), "Changed unexpectedly.\n");
   };
 }
+test("native projection replacement uses exact relative links and retains the canonical data", (t) => {
+  const f = fixture(t),
+    source = join(f.target, ".agents/skills/example"),
+    destination = join(f.target, ".claude/skills/example");
+  mkdirSync(source, { recursive: true });
+  writeFileSync(join(source, "SKILL.md"), "Verified canonical.");
+  mkdirSync(destination, { recursive: true });
+  writeFileSync(join(destination, "old.txt"), "Native copy.");
+  projectSkill(source, destination, { overwrite: true });
+  assert.equal(readlinkSync(destination), relative(dirname(destination), source));
+  assert.equal(readFileSync(join(destination, "SKILL.md"), "utf8"), "Verified canonical.");
+  projectSkill(source, destination, { overwrite: true });
+  assert.equal(readFileSync(join(source, "SKILL.md"), "utf8"), "Verified canonical.");
+});
+test("failed projection publication restores the original native folder", (t) => {
+  const f = fixture(t),
+    source = join(f.target, ".agents/skills/example"),
+    destination = join(f.target, ".claude/skills/example");
+  mkdirSync(source, { recursive: true });
+  writeFileSync(join(source, "SKILL.md"), "Verified canonical.");
+  mkdirSync(destination, { recursive: true });
+  writeFileSync(join(destination, "old.txt"), "Preserve native output.");
+  let calls = 0;
+  assert.throws(
+    () =>
+      projectSkill(source, destination, {
+        overwrite: true,
+        rename: (from, to) => {
+          if (++calls === 2) throw new Error("Projection publication failed");
+          renameSync(from, to);
+        },
+      }),
+    /Projection publication failed/,
+  );
+  assert.equal(readFileSync(join(destination, "old.txt"), "utf8"), "Preserve native output.");
+  assert.equal(readFileSync(join(source, "SKILL.md"), "utf8"), "Verified canonical.");
+});
+test("projection publication cannot replace its own ancestor or add a recursive child", (t) => {
+  const f = fixture(t),
+    source = join(f.target, "canonical");
+  mkdirSync(source);
+  writeFileSync(join(source, "SKILL.md"), "Keep canonical bytes.");
+  for (const destination of [f.target, join(source, "nested/projection")])
+    assert.throws(
+      () => projectSkill(source, destination, { overwrite: true }),
+      /projection overlaps/,
+    );
+  assert.equal(readFileSync(join(source, "SKILL.md"), "utf8"), "Keep canonical bytes.");
+});
+test("projection replacement never follows an unapproved link", (t) => {
+  const f = fixture(t),
+    source = join(f.target, ".agents/skills/example"),
+    destination = join(f.target, ".claude/skills/example");
+  mkdirSync(source, { recursive: true });
+  writeFileSync(join(source, "SKILL.md"), "Verified canonical.");
+  mkdirSync(dirname(destination), { recursive: true });
+  symlinkSync(f.home, destination, "dir");
+  assert.throws(
+    () => projectSkill(source, destination, { overwrite: true }),
+    /Unsafe skill projection/,
+  );
+  assert.equal(readlinkSync(destination), f.home);
+});
 test("custom output paths are exact and are resolved relative to --target", (t) => {
   const f = fixture(t),
     plan = planFor(f);

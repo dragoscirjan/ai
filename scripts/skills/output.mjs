@@ -1,4 +1,14 @@
-import { cpSync, existsSync, lstatSync, mkdirSync, mkdtempSync, renameSync, rmSync } from "node:fs";
+import {
+  cpSync,
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readlinkSync,
+  renameSync,
+  rmSync,
+  symlinkSync,
+} from "node:fs";
 import { dirname, isAbsolute, join, parse, relative, resolve, sep } from "node:path";
 import { check, noLinks, safeRelative } from "./catalog.mjs";
 
@@ -27,13 +37,46 @@ export function skillsDirectory(target, input) {
   return directory;
 }
 
+export function projectionTarget(source, destination) {
+  const outside = (path) => isAbsolute(path) || path === ".." || path.startsWith(`..${sep}`);
+  check(
+    outside(relative(source, destination)) && outside(relative(destination, source)),
+    "Skill projection overlaps its canonical folder",
+  );
+  const target = relative(dirname(destination), source);
+  check(
+    !isAbsolute(target),
+    "Skill projection requires a relative path on the same filesystem root",
+  );
+  return target;
+}
 // Replace one explicitly selected skill only. Unselected siblings and plugin metadata stay untouched.
-export function copySkill(source, destination, { overwrite, rename = renameSync }) {
+function replaceSkill(source, destination, { overwrite, rename = renameSync }, projection) {
   const parent = dirname(destination);
+  const link = projection ? projectionTarget(source, destination) : null;
   const validate = () => {
-    noLinks(parse(resolve(parent)).root, destination);
-    if (existsSync(destination)) {
-      check(lstatSync(destination).isDirectory(), "Existing skill destination is not a directory");
+    const root = parse(resolve(parent)).root;
+    if (projection) {
+      noLinks(root, source);
+      check(
+        resolve(source) !== resolve(destination) && lstatSync(source).isDirectory(),
+        "Invalid canonical skill folder",
+      );
+    }
+    const info = lstatSync(destination, { throwIfNoEntry: false });
+    if (projection && info?.isSymbolicLink()) {
+      noLinks(root, parent);
+      const link = readlinkSync(destination);
+      check(
+        !isAbsolute(link) && resolve(parent, link) === resolve(source),
+        "Unsafe skill projection",
+      );
+    } else noLinks(root, destination);
+    if (info) {
+      check(
+        info.isDirectory() || (projection && info.isSymbolicLink()),
+        "Existing skill destination is not a directory",
+      );
       check(overwrite, "Existing skill destination requires --overwrite");
     }
   };
@@ -46,12 +89,14 @@ export function copySkill(source, destination, { overwrite, rename = renameSync 
   let backup = false,
     installed = false;
   try {
-    cpSync(source, ready, {
-      recursive: true,
-      dereference: false,
-      force: false,
-      errorOnExist: true,
-    });
+    if (projection) symlinkSync(link, ready, "dir");
+    else
+      cpSync(source, ready, {
+        recursive: true,
+        dereference: false,
+        force: false,
+        errorOnExist: true,
+      });
     validate();
     if (existsSync(destination)) {
       rename(destination, previous);
@@ -78,4 +123,11 @@ export function copySkill(source, destination, { overwrite, rename = renameSync 
     // Never discard a backup if an unexpected concurrent write prevents restoration.
     if (!backup || installed) rmSync(temporary, { recursive: true, force: true });
   }
+}
+export function copySkill(source, destination, options) {
+  return replaceSkill(source, destination, options, false);
+}
+// The caller has already authorized/created this selected native output.
+export function projectSkill(source, destination, options) {
+  return replaceSkill(source, destination, options, true);
 }
