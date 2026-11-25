@@ -61,6 +61,7 @@ for (const body of [
   "Use coding standards from the project. Review the existing scaffold as input.",
   "Invoke the Excalidraw CLI with the `@excalidraw/cli` package and a `.excalidraw` file.",
   "[Runtime docs](https://docs.excalidraw.com/docs/codebase) and [Own instructions](SKILL.md).",
+  "The local [code-review.js](scripts/code-review.js) module is a same-package file, not another skill.",
   "The harness syntax is `/skill:name`. Example: `/skill:coding`.",
   "A task may specify its own scope. No initiative document is needed as input.",
 ])

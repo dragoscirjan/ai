@@ -155,7 +155,10 @@ function invocations(text, context) {
 function markupText(text, context) {
   invocations(text, context);
   for (const name of context.names)
-    if (name.includes("-") && new RegExp(`(?<![a-z0-9-])${escape(name)}(?![a-z0-9-])`).test(text))
+    if (
+      name.includes("-") &&
+      new RegExp(`(?<![a-z0-9-])${escape(name)}(?![a-z0-9-]|\\.[a-z0-9])`).test(text)
+    )
       named(name, context);
 }
 function checkMarkdown(text, context) {
