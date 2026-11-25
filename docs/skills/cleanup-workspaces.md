@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/cleanup-workspaces --skill cleanup-workspaces
 ```
 
-This command selects only `cleanup-workspaces`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `cleanup-workspaces`.
 
 Required instruction packages: [`isolated-workspace`](/skills/isolated-workspace#install-this-skill). If any are missing, the agent must stop and ask you to install them before continuing. The command above does not install these requirements.
 
@@ -49,17 +49,6 @@ Resolve required instructions in their declared order before applying the skill.
 - Requires Bun and either Git with worktree support or Jujutsu 0.38 or newer with workspace support.
 
 Resolve isolated-workspace first. Dirty, uncertain, or unproven lanes remain protected; audit permission is not removal permission. Never infer integration from a similar or squash-shaped diff alone.
-
-## Useful combinations
-
-- [`subagent-orchestration`](/skills/subagent-orchestration) — The operator has authorized bounded specialist, independent-review, or parallel work.
-- [`retro`](/skills/retro) — A bounded completed work period has enough evidence to review what helped, failed, or should change.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

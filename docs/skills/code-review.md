@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/code-review --skill code-review
 ```
 
-This command selects only `code-review`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `code-review`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -47,18 +47,6 @@ Resolve required instructions in their declared order before applying the skill.
 - Requires Git and a harness that can run two read-only subagents in parallel.
 
 The workflow needs the harness's authorized subagent capability. A review is not permission to fix findings, spawn writers, merge, or release.
-
-## Useful combinations
-
-- [`subagent-orchestration`](/skills/subagent-orchestration) — The operator has authorized bounded specialist, independent-review, or parallel work.
-- [`coding-with-rules`](/skills/coding-with-rules) — Code or toolchain work needs the base coding workflow plus rules for its actual languages and extensions.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-- [Implement a planned task](/workflows/implement-a-task)
-- [Debloat a project](/workflows/debloat-a-project)
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

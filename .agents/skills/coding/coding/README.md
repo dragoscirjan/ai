@@ -14,11 +14,9 @@ The security guidance uses these references:
 
 The duplicate-code fallback is [jscpd](https://jscpd.dev/), which supports more than 200 languages. Existing project tooling still takes precedence.
 
-## Independent guidance and composition
+## Independent guidance
 
-`coding` is an independent base skill. [`coding-with-rules`](../coding-with-rules/SKILL.md) is the language-aware entry point and declares `requires: ["coding"]`. Their source directories are siblings under `.agents/skills/coding/`, discovered recursively by Pi. Synchronization installs them as flat siblings under a target's `.agents/skills/`, with relative `.claude/skills/` projections only when Claude Code is selected. This source repository has no Claude skill projections.
-
-This repository's `AGENTS.md` selects the composition for code work. Project routing resolves `coding` first, then the composition selects task-relevant language and extension documents from its `references/` directory. Those documents are supporting files, not separate skills. Shared-code dependencies remain distinct from instruction requirements. No native harness dependency loader is assumed.
+Use this skill for the shared engineering workflow, security baseline, tests, quality gates, and result reporting. Follow the target project's conventions and approval rules. Missing required project instructions or tools stop the affected phase for approved setup.
 
 ## Quality gates
 
@@ -51,8 +49,6 @@ OpenCode exposes this skill as `/coding` because its frontmatter sets `metadata.
 ```text
 /coding Implement the approved change and run the applicable project gates.
 ```
-
-For language-specific work, select `coding-with-rules` and its declared `coding` requirement. See its [usage and migration guide](../coding-with-rules/README.md).
 
 ## Files
 

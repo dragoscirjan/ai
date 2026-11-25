@@ -5,6 +5,8 @@ import { test } from "node:test";
 import { catalog, groups, localInstructions, root } from "./data.mjs";
 import { availability, generatedPages, installCommand } from "./generate.mjs";
 import { workflowGuides, workflows } from "./workflows.mjs";
+import { verifyMarkdownIndependence } from "../skills/independence.mjs";
+import { notes } from "./skill-notes.mjs";
 
 const expected = {
   productivity: [
@@ -90,7 +92,7 @@ test("each skill page has exactly one command selecting only its own catalog ski
     assert.ok(!argv[selector + 2] || argv[selector + 2].startsWith("--"));
     assert.equal(argv.includes("--all"), false);
     assert.match(page, /## Install this skill/);
-    assert.match(page, /does not install the rest of the collection/);
+    assert.ok(page.includes(`This command selects only \`${entry.name}\``));
   }
 });
 
@@ -102,6 +104,17 @@ test("instruction review is explicit, evidence-based, and separate from installa
   assert.match(page, /Missing required skills stop the affected phase/);
 });
 
+test("every individual profile contains only self and declared required-skill references", () => {
+  const c = catalog(),
+    pages = generatedPages(),
+    plan = { repository: c.repository, ref: c.ref, linkSources: c.skills };
+  for (const entry of c.skills) {
+    const page = pages.get(`skills/${entry.name}.md`);
+    assert.equal(Object.hasOwn(notes[entry.name], "companions"), false);
+    assert.doesNotMatch(page, /Useful combinations|optional companions|\/workflows\//);
+    verifyMarkdownIndependence(page, entry, plan, `skills/${entry.name}.md`, { profile: true });
+  }
+});
 test("required instructions have separate install links instead of widening the selected command", () => {
   const pages = generatedPages();
   assert.match(pages.get("skills/coding-with-rules.md"), /\/skills\/coding#install-this-skill/);

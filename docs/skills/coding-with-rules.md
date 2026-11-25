@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/coding-with-rules --skill coding-with-rules
 ```
 
-This command selects only `coding-with-rules`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `coding-with-rules`.
 
 Required instruction packages: [`coding`](/skills/coding#install-this-skill). If any are missing, the agent must stop and ask you to install them before continuing. The command above does not install these requirements.
 
@@ -49,20 +49,6 @@ Resolve required instructions in their declared order before applying the skill.
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
 Missing or conflicting required references block the affected phase. Do not recreate removed language skills or load every language merely because it exists somewhere in the repository.
-
-## Useful combinations
-
-- [`tdd`](/skills/tdd) — You explicitly want test-first feature or bug work, or integration-test slices through public behavior.
-- [`systematic-debugging`](/skills/systematic-debugging) — A bug, regression, failing test, flaky result, or unexpected behavior needs a root cause rather than a guessed patch.
-- [`debloat`](/skills/debloat) — A design risks unnecessary machinery or existing code and configuration have complexity that no longer earns its cost.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-- [Implement a planned task](/workflows/implement-a-task)
-- [Debug an application problem](/workflows/debug-a-problem)
-- [Debloat a project](/workflows/debloat-a-project)
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/coding --skill coding
 ```
 
-This command selects only `coding`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `coding`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -46,18 +46,7 @@ Resolve required instructions in their declared order before applying the skill.
 
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
-Tool installation, baseline changes, unsafe scope expansion, and owner-controlled operations still need approval. This base workflow is language-neutral; select coding-with-rules when language references are needed.
-
-## Useful combinations
-
-- [`coding-with-rules`](/skills/coding-with-rules) — Code or toolchain work needs the base coding workflow plus rules for its actual languages and extensions.
-- [`document-project`](/skills/document-project) — Implementation changes how readers use the project, or existing documentation blocks a real developer task.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-- [Implement a planned task](/workflows/implement-a-task)
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
+Tool installation, baseline changes, unsafe scope expansion, and owner-controlled operations still need approval. This base workflow is language-neutral; follow the target project's language-specific standards.
 
 ## Source and harness support
 

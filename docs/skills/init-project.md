@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/init-project --skill init-project
 ```
 
-This command selects only `init-project`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `init-project`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -47,17 +47,6 @@ Resolve required instructions in their declared order before applying the skill.
 - Requires Git, mise, and Bun with Bun.TOML.parse. Initialized targets require an approved Node 24-or-newer/pnpm control plane; GDScript also needs an explicitly selected compatible Godot toolchain. Installation and lockfile updates require approval.
 
 An inspection or coding request does not authorize initialization. Stop for baseline and installation approval; do not turn a documentation-only project into an application.
-
-## Useful combinations
-
-- [`isolated-workspace`](/skills/isolated-workspace) — A modifying task needs a dedicated branch or bookmark and a choice between the current checkout and a separate workspace.
-- [`document-project`](/skills/document-project) — Implementation changes how readers use the project, or existing documentation blocks a real developer task.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

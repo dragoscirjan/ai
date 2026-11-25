@@ -86,9 +86,9 @@ For normal agent installations, the external Skills CLI owns its own installatio
 
 ## Relative Markdown links
 
-Source skills use category directories, but installed skills use flat names. Sync rebases Markdown links, images, and reference definitions against the original source paths and final installed layout. For example, cleanup's `../../unpolished/subagent-orchestration/SKILL.md` becomes `../subagent-orchestration/SKILL.md` when that skill is also selected.
+Source skills use category directories, but installed skills use flat names. Sync rebases Markdown links, images, and reference definitions against the original source paths and final installed layout. A reference to a declared dependency resolves against that dependency's catalogued source and installed location.
 
-Same-skill links remain unchanged. Links to unselected skills and source-repository documents use GitHub URLs at the source ref instead of pointing into unrelated destination-project files. Image fallbacks use raw GitHub file URLs. Queries and fragments are preserved. This does not add dependencies or install referenced skills.
+Portable packages may reference only themselves and declared required skills. Verification rejects undeclared skill references, optional or reverse recommendations, and collection/sync-tool guidance rather than adding dependencies to justify them. Same-skill links remain unchanged. Source-attribution and technical-reference links can use source-ref GitHub URLs, with raw file URLs for fallback images. Queries and fragments are preserved. The link routine does not add dependencies or install referenced skills.
 
 Only destination URLs change. Prose, labels, frontmatter, code examples, and required legal files stay unchanged. This parser-based routine does not repair already-invalid source links or raw HTML attributes. It runs on freshly acquired files before custom output is published; it needs no LLM. Normal installs can still have partial writes if later verification fails.
 

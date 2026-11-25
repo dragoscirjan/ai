@@ -1,6 +1,6 @@
 # Cleanup workspaces
 
-`cleanup-workspaces` is the destructive companion to [`isolated-workspace`](../isolated-workspace/SKILL.md). It plans and safely removes clean integrated workspaces and prunes safe stale registrations after explicit confirmation. It also has exact-target cleanup for a temporary lane created under [`subagent-orchestration`](../../unpolished/subagent-orchestration/SKILL.md).
+`cleanup-workspaces` is the destructive companion to [`isolated-workspace`](../isolated-workspace/SKILL.md). It plans and safely removes clean integrated workspaces and prunes safe stale registrations after explicit confirmation. It also supports exact-target cleanup for an explicitly authorized temporary lane.
 
 ## Automation
 

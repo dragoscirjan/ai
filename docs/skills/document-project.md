@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/document-project --skill document-project
 ```
 
-This command selects only `document-project`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `document-project`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -47,20 +47,6 @@ Resolve required instructions in their declared order before applying the skill.
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
 A documentation request does not implicitly authorize a website, migration, plugin, new toolchain, or deployment. Approve that baseline before creating it.
-
-## Useful combinations
-
-- [`asd-ste100-technical`](/skills/asd-ste100-technical) — Technical instructions or explanations need plain language without losing conditions, risks, or precise identifiers.
-- [`unslop`](/skills/unslop) — A draft contains generic phrasing, repetitive structure, filler, or claims that do not help the reader act.
-- [`archify`](/skills/archify) — You need an explorable standalone HTML diagram for relationships, workflows, states, schemas, or other supported structures.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-- [Implement a planned task](/workflows/implement-a-task)
-- [Document a project](/workflows/document-a-project)
-- [Debloat a project](/workflows/debloat-a-project)
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

@@ -44,7 +44,7 @@ test("primary navigation exposes the five guides and keeps utilities separate", 
   );
 });
 
-test("generation preserves authored journeys and keeps every existing recipe URL", () => {
+test("generation preserves standalone journeys and recipe URLs without adding profile handoffs", () => {
   const pages = generatedPages();
   for (const id of [...ids, "supporting-tools"])
     assert.equal(pages.has(`workflows/${id}.md`), false);
@@ -54,8 +54,8 @@ test("generation preserves authored journeys and keeps every existing recipe URL
     const guide = workflowGuides.find((item) => item.recipes.includes(recipe.id));
     assert.ok(page.includes(`/workflows/${guide?.id ?? "supporting-tools"}`));
   }
-  assert.match(pages.get("skills/research.md"), /\/workflows\/plan-a-project/);
-  assert.match(pages.get("skills/debloat.md"), /\/workflows\/debloat-a-project/);
+  assert.doesNotMatch(pages.get("skills/research.md"), /\/workflows\//);
+  assert.doesNotMatch(pages.get("skills/debloat.md"), /\/workflows\//);
 });
 
 test("guides explain examples and handoffs without putting utilities in product flows", () => {

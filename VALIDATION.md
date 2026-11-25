@@ -22,6 +22,8 @@ When a change adds or modifies a skill:
 - Verify that Pi discovers the changed source skill recursively from `.agents/skills/<category>/<name>/`.
 - Verify that synchronized installations remain flat under `.agents/skills/<name>/` and are discoverable in each selected harness. For Claude Code, check exact relative destination-project `.claude/skills/<name>` projections. This source repository has no Claude skill projections.
 - Check relative references, supporting files, and command examples.
+- Run the skill-independence checks on portable packages and generated skill-profile bodies. Cross-skill names, instruction links, helper imports, and invocation examples must refer only to self or declared `requires`; reject optional or reverse recommendations and collection/sync-tool guidance. Preserve same-package files, source attribution, legal notices, software prerequisites, and ordinary discipline/product names. Do not add dependencies merely to make this check pass.
+- Apply the same fail-closed independence check to freshly acquired packages before custom output publication. Normal native installs may already have partial writes when verification fails; report the stopped skill and preserve the existing safety and recovery rules.
 - Confirm that harness-specific behavior is explicit and does not masquerade as portable Agent Skills behavior.
 
 ## Skill synchronization changes

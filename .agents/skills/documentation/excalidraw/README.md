@@ -9,7 +9,7 @@ Use this skill for a simple project-structure image, component diagram, or workf
 - Have Chrome, Chromium, Edge, or Firefox installed. Rendering runs the browser headlessly with a temporary profile.
 - Use the official `@excalidraw/cli` package at version 0.3.0.
 
-Pi and OpenCode use the canonical skill directory. Claude Code uses the corresponding relative `.claude/skills/excalidraw` symlink supplied by this repository. Runtime dependencies are separate from skill installation.
+Install the skill where the selected harness discovers skills. Runtime dependencies require separate, approved setup.
 
 Check the installed versions:
 

@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. This command installs into th
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/agentic-work/sync-my-agents --skill sync-my-agents
 ```
 
-This command selects only `sync-my-agents`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `sync-my-agents`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -47,16 +47,6 @@ Resolve required instructions in their declared order before applying the skill.
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
 Instruction dependencies mean documents, not skill installation prerequisites. Missing required skills stop the affected phase. Do not install skills, tools, or dependencies, register commands, or publish changes.
-
-## Useful combinations
-
-
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

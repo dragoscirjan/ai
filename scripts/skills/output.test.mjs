@@ -44,7 +44,7 @@ function fixture(t) {
   writeFileSync(join(target, "skills/custom/SKILL.md"), "Custom skill, not selected.\n");
   return { directory, target, home };
 }
-function planFor(f, extra = {}) {
+function planFor(f, extra = {}, inventory = catalog) {
   return buildPlan(
     {
       target: f.target,
@@ -53,7 +53,7 @@ function planFor(f, extra = {}) {
       skillsDir: "skills",
       ...extra,
     },
-    catalog,
+    inventory,
     { home: f.home, env: {} },
   );
 }
@@ -160,26 +160,60 @@ test("projection replacement never follows an unapproved link", (t) => {
 });
 test("custom output rebases acquired Markdown for its final flat layout without target metadata changes", async (t) => {
   const f = fixture(t),
-    plan = planFor(f, { skills: ["cleanup-workspaces", "subagent-orchestration"] });
+    skills = catalog.skills.map((entry) =>
+      entry.name === "coding"
+        ? { ...entry, source: { type: "local", path: ".agents/skills/shared/coding" } }
+        : entry,
+    ),
+    inventory = { ...catalog, skills, byName: new Map(skills.map((entry) => [entry.name, entry])) },
+    plan = planFor(f, {}, inventory);
   const run = installer(plan, []);
   await executePlan(plan, {
     confirmed: true,
     fetcher,
     run: async (argv, cwd) => {
       await run(argv, cwd);
-      if (argv[argv.indexOf("--skill") + 1] === "cleanup-workspaces")
+      if (argv[argv.indexOf("--skill") + 1] === "coding-with-rules")
         writeFileSync(
-          join(cwd, ".claude/skills/cleanup-workspaces/README.md"),
-          "[Delegate](../../unpolished/subagent-orchestration/SKILL.md)",
+          join(cwd, ".claude/skills/coding-with-rules/README.md"),
+          "[Base](../../shared/coding/SKILL.md)",
         );
     },
   });
   assert.equal(
-    readFileSync(join(f.target, "skills/cleanup-workspaces/README.md"), "utf8"),
-    "[Delegate](../subagent-orchestration/SKILL.md)",
+    readFileSync(join(f.target, "skills/coding-with-rules/README.md"), "utf8"),
+    "[Base](../coding/SKILL.md)",
   );
   assert.equal(existsSync(join(f.target, ".claude")), false);
   assert.equal(existsSync(join(f.target, ".agents")), false);
+});
+test("undeclared acquired references stop before any custom skill publication", async (t) => {
+  const f = fixture(t),
+    plan = planFor(f),
+    run = installer(plan, []);
+  const manifest = readFileSync(join(f.target, ".claude-plugin/plugin.json"), "utf8");
+  await assert.rejects(
+    executePlan(plan, {
+      confirmed: true,
+      fetcher,
+      run: async (argv, cwd) => {
+        await run(argv, cwd);
+        if (argv[argv.indexOf("--skill") + 1] === "coding-with-rules")
+          writeFileSync(
+            join(cwd, ".claude/skills/coding-with-rules/README.md"),
+            "[Review](../code-review/SKILL.md)",
+          );
+      },
+    }),
+    /Undeclared skill reference.*code-review/,
+  );
+  assert.equal(existsSync(join(f.target, "skills/coding")), false);
+  assert.equal(existsSync(join(f.target, "skills/coding-with-rules")), false);
+  assert.equal(readFileSync(join(f.target, ".claude-plugin/plugin.json"), "utf8"), manifest);
+  assert.equal(
+    readFileSync(join(f.target, "skills/custom/SKILL.md"), "utf8"),
+    "Custom skill, not selected.\n",
+  );
 });
 test("custom output paths are exact and are resolved relative to --target", (t) => {
   const f = fixture(t),

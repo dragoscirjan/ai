@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/unpolished/instruction-maintenance --skill instruction-maintenance
 ```
 
-This command selects only `instruction-maintenance`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `instruction-maintenance`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -47,17 +47,6 @@ Resolve required instructions in their declared order before applying the skill.
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
 An audit does not authorize its own proposal. Changed scope or protected rules require renewed approval; never weaken security or owner-authority gates to unblock the work.
-
-## Useful combinations
-
-- [`writing-for-agents`](/skills/writing-for-agents) — The reader is an agent: you are authoring or revising skills, prompts, agent instructions, or their reference documents.
-- [`isolated-workspace`](/skills/isolated-workspace) — A modifying task needs a dedicated branch or bookmark and a choice between the current checkout and a separate workspace.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

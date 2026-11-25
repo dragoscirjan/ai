@@ -241,26 +241,46 @@ test("unsafe native Claude output cannot fall back to an old canonical copy", as
 });
 test("flattened installation rebases cross-category Markdown links without editing source instructions", async (t) => {
   const f = fixture(t),
-    plan = buildPlan(
-      options(f.target, { skills: ["cleanup-workspaces", "subagent-orchestration"] }),
-      catalog,
-      f.context,
-    );
+    skills = catalog.skills.map((entry) =>
+      entry.name === "coding"
+        ? { ...entry, source: { type: "local", path: ".agents/skills/shared/coding" } }
+        : entry,
+    ),
+    inventory = { ...catalog, skills, byName: new Map(skills.map((entry) => [entry.name, entry])) },
+    plan = buildPlan(options(f.target), inventory, f.context);
   await executePlan(plan, {
     confirmed: true,
     fetcher,
     run: async (argv) => {
       await installer(plan)(argv);
-      if (argv[argv.indexOf("--skill") + 1] === "cleanup-workspaces")
+      if (argv[argv.indexOf("--skill") + 1] === "coding-with-rules")
         writeFileSync(
-          join(f.target, ".agents/skills/cleanup-workspaces/README.md"),
-          "[Orchestration](../../unpolished/subagent-orchestration/SKILL.md#lanes)\n",
+          join(f.target, ".agents/skills/coding-with-rules/README.md"),
+          "[Base](../../shared/coding/SKILL.md#rules)\n",
         );
     },
   });
   assert.equal(
-    readFileSync(join(f.target, ".agents/skills/cleanup-workspaces/README.md"), "utf8"),
-    "[Orchestration](../subagent-orchestration/SKILL.md#lanes)\n",
+    readFileSync(join(f.target, ".agents/skills/coding-with-rules/README.md"), "utf8"),
+    "[Base](../coding/SKILL.md#rules)\n",
+  );
+});
+test("verification rejects an undeclared skill recommendation in a freshly acquired README", async (t) => {
+  const f = fixture(t),
+    plan = buildPlan(options(f.target, { skills: ["coding"] }), catalog, f.context);
+  await assert.rejects(
+    executePlan(plan, {
+      confirmed: true,
+      fetcher,
+      run: async (argv) => {
+        await installer(plan)(argv);
+        writeFileSync(
+          join(plan.entries[0].destinations[0], "README.md"),
+          "Next run `sync-my-agents`.",
+        );
+      },
+    }),
+    /Undeclared skill reference.*sync-my-agents/,
   );
 });
 test("planning resolves prerequisite order and explicit agent commands without writes", (t) => {

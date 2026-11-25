@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/95249b0b49782349740fd9b8c6ce32b4e59e497a/skills/productivity/grilling --skill grilling
 ```
 
-This command selects only `grilling`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `grilling`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -47,17 +47,6 @@ Resolve required instructions in their declared order before applying the skill.
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
 This is an upstream-only entry, not a local vendored skill. Install the catalog-pinned source through an approved setup before relying on it.
-
-## Useful combinations
-
-- [`research`](/skills/research) — A decision depends on facts, alternatives, feasibility, or evidence that you do not yet have.
-- [`wait-what`](/skills/wait-what) — The last answer is hard to understand or omits context needed to follow the current proposal.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-- [Plan a project or feature](/workflows/plan-a-project)
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

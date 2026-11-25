@@ -69,4 +69,4 @@ Run the tests from the repository root:
 bun test ./.agents/skills/utility/isolated-workspace/scripts/create.test.ts
 ```
 
-See [`SKILL.md`](SKILL.md) for the complete agent workflow and safety contract. Cleanup is handled separately by [`cleanup-workspaces`](../cleanup-workspaces/SKILL.md).
+See [`SKILL.md`](SKILL.md) for the complete agent workflow and safety contract.

@@ -46,6 +46,8 @@ The combined `sync-my-skills` manager is removed. Existing installations, person
 
 ## Use a skill today
 
+Each portable skill package and individual skill profile refers only to itself and its declared required skills. Same-package references, source attribution, legal notices, and runtime/API documentation remain available. Collection setup and migration guidance stay in repository documentation; they are not prerequisites for using a skill.
+
 Individual skills remain available independently of the planned synchronization tools. Browse the [skill catalog](docs/reference/catalog.md), [workflow guides](docs/guide/start.md), or [skill requirements](docs/reference/relationships.md).
 
 Review a skill and its supporting files before installing it. With Node.js and npm/npx available, run an explicit installation command from the destination project's root. For example:

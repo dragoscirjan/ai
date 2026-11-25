@@ -14,7 +14,7 @@ const reviewed = {
   ".agents/skills/productivity/grill-me/SKILL.md":
     "7b5d02ef44ddb09516a0513094c76288b3332d439b256aff7ff2ee0eba728c3d",
   ".agents/skills/coding/tdd/SKILL.md":
-    "48be0eb848c1735d835d69ba227ed1fe10b65018d801ee6e582e9e0fef1422ea",
+    "fe3d44d8cc29830dc7d6aa4fd9896f3e5e4ff00756fdd4c7de087e260e015d7b",
   ".agents/skills/coding/tdd/mocking.md":
     "3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef",
   ".agents/skills/coding/tdd/tests.md":

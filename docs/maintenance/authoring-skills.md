@@ -24,6 +24,10 @@ The maintained `code-review`, `grill-me`, and `tdd` variants now live in the cat
 
 The Node.js CLI copies reviewed variants directly; it does not adapt instructions or call an LLM during synchronization. New upstream versions need normal source review before a maintained update is published. The guard against future unprepared remote adaptations stays in place.
 
+## Check skill independence
+
+Review each complete portable package, not only its SKILL.md. Cross-skill names, links, helper imports, and invocation examples must refer only to self or declared requirements. Keep source attribution, legal notices, same-package references, and relevant software/runtime documentation. Collection setup and migration history belong in repository documentation, not skill packages or individual profiles. Do not add dependencies merely to keep a recommendation. Source checks and acquired-package verification enforce this boundary.
+
 ## Check and recover
 
 Run the network-free installer tests from the repository root:

@@ -41,7 +41,9 @@ When another workflow needs hosted-repository identity, query project-scoped mem
 
 ## Independent skills and explicit composition
 
-Keep each leaf skill useful on its own: state its scope, real prerequisites, and operation-specific safeguards. Project instructions or the user select additional skills; do not make leaves load them implicitly.
+Keep each leaf skill useful on its own: state its scope, real prerequisites, and operation-specific safeguards. A portable skill package may name or link its own skill and only the skills declared in its `requires` array. Apply this rule to `SKILL.md`, READMEs, supporting documents, examples, and helper references. Keep valid same-package references, self/upstream attribution, legal notices, and software/runtime documentation; ordinary discipline or product names are not skill dependencies.
+
+Keep optional companions, next-skill recommendations, reverse links to dependent callers, and negated "not a dependency" name-dropping out of portable packages and individual skill profiles. Do not expand `requires` merely to retain a recommendation. Keep collection-specific setup, catalogs, sync tools, and migration history in repository-level documentation rather than portable packages.
 
 Declare instruction dependencies only for thin, intentional compositions or individually owner-approved exceptions. For example:
 
@@ -51,7 +53,7 @@ requires: ["grilling"]
 
 Omit the field when no skills are required. When present, use exactly one unquoted top-level `requires` key with a nonempty, single-line JSON-compatible array of unique skill names. Multiline lists, unquoted items, anchors, and trailing comments are unsupported for this property. Names must resolve to local or installed external skills identified by the YAML catalog; self-references and cycles are invalid. A catalogued but uninstalled requirement is a setup stop, not permission to fetch it. The former `require` spelling is rejected. Rename it to `requires` and do not declare both.
 
-The declaration is the sole source of mandatory skill-to-skill instruction dependencies. Resolve requirements recursively in array order, loading each skill once before its caller. The composition body defines execution sequence, handoffs, and stops; do not repeat loading procedures or component instructions. A skill may conditionally load its own supporting documents, such as language reference files. Those documents are not separately discoverable skills or `requires` targets, and must not hide undeclared skill dependencies. An optional reference is not a requirement.
+The declaration is the sole source of mandatory skill-to-skill instruction dependencies. Resolve requirements recursively in array order, loading each skill once before its caller. The composition body defines execution sequence, handoffs between declared components, and stops; do not repeat loading procedures or component instructions. A skill may conditionally load its own supporting documents, such as language reference files. Those documents are not separately discoverable skills or `requires` targets, and must not hide undeclared skill dependencies. Cross-skill references require a declared dependency; optional recommendations do not create an exception. Separate repository workflow guides may describe skills explicitly selected by a user or project, but those guides are not part of an individual skill's package or profile.
 
 Keep catalog `prerequisites` (installation closure), `capabilities` (harness features), and `runtime` (tools/runtime requirements) distinct. Local frontmatter instruction requirements must be represented in the catalog's prerequisite closure; catalog validation checks this when a complete source checkout is supplied. Upstream skills may omit the project-specific frontmatter field. Do not interpret a harness capability as a skill name or duplicate source inventories.
 

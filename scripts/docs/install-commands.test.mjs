@@ -93,7 +93,7 @@ test("no other skill depends on or hands off to the personal instruction skill",
   const pages = generatedPages();
   for (const entry of catalog().skills.filter((item) => item.name !== "sync-my-agents")) {
     assert.ok(!entry.prerequisites.includes("sync-my-agents"), entry.name);
-    assert.ok(!notes[entry.name].companions.includes("sync-my-agents"), entry.name);
+    assert.equal(Object.hasOwn(notes[entry.name], "companions"), false, entry.name);
     assert.ok(!pages.get(`skills/${entry.name}.md`).includes("/skills/sync-my-agents"), entry.name);
   }
   for (const recipe of workflows)

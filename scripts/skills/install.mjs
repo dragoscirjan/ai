@@ -36,6 +36,7 @@ import {
 } from "./catalog.mjs";
 import { fetchBytes } from "./source.mjs";
 import { rebaseSkillLinks } from "./links.mjs";
+import { verifySkillIndependence } from "./independence.mjs";
 import { copySkill, projectSkill, projectionTarget, skillsDirectory } from "./output.mjs";
 
 const absolute = (value, label) => {
@@ -224,7 +225,7 @@ export function buildPlan(options, catalog = loadCatalog(CATALOG_PATH), context 
     ref,
     catalogHash: catalog.hash,
     repository: catalog.repository,
-    linkSources: catalog.skills.map(({ name, source }) => ({ name, source })),
+    linkSources: catalog.skills.map(({ name, source, upstream }) => ({ name, source, upstream })),
     blocked,
     entries,
   };
@@ -365,6 +366,7 @@ function finishSkill(folder, entry, plan, licenses) {
     writeFileSync(path, licenses.get(legalUrl(plan, entry, file)));
   }
   filterAndVerify(folder, entry);
+  verifySkillIndependence(folder, entry, plan);
   rebaseSkillLinks(folder, entry, plan);
 }
 function prepareNative(paths, actual, entry, plan, licenses) {

@@ -18,7 +18,7 @@ const safeSuffix = (value) =>
       c.charCodeAt(0) <= 32 || c.charCodeAt(0) === 127 || "\\<>\"'()`".includes(c) ? encode(c) : c,
     )
     .join("");
-function origin(source, plan) {
+export function sourceOrigin(source, plan) {
   return source.type === "local"
     ? { repository: plan.repository, ref: plan.ref, path: source.path }
     : { repository: source.repository, ref: source.revision, path: source.path };
@@ -30,7 +30,7 @@ function sourceUrl(source, path, suffix, image, directory) {
     : `${repository}/${directory ? "tree" : "blob"}`;
   return `${base}/${encode(source.ref)}/${urlPath(path)}${safeSuffix(suffix)}`;
 }
-export function rewriteMarkdown(text, { entry, plan, file }) {
+export function parseMarkdown(text) {
   const offset = text.match(/^\uFEFF?---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/)?.[0].length ?? 0;
   const body = text.slice(offset),
     spans = [];
@@ -47,6 +47,10 @@ export function rewriteMarkdown(text, { entry, plan, file }) {
       { enter: { resourceDestinationString: capture, definitionDestinationString: capture } },
     ],
   });
+  return { tree, spans, offset };
+}
+export function rewriteMarkdown(text, { entry, plan, file }) {
+  const { tree, spans } = parseMarkdown(text);
   const imageReferences = new Set(),
     pending = [tree];
   while (pending.length) {
@@ -54,11 +58,11 @@ export function rewriteMarkdown(text, { entry, plan, file }) {
     if (node.type === "imageReference") imageReferences.add(node.identifier);
     if (node.children) for (const child of node.children) pending.push(child);
   }
-  const current = origin(entry.source, plan);
+  const current = sourceOrigin(entry.source, plan);
   const sourceFile = posix.join(current.path, file);
   const destinationFile = join(entry.destinations[0], ...file.split("/"));
   const sources = plan.linkSources.map((candidate) => ({
-    ...origin(candidate.source, plan),
+    ...sourceOrigin(candidate.source, plan),
     name: candidate.name,
   }));
   const changes = [];

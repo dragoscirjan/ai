@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/tt-a1i/archify/tree/a7ed6fd6657da90414831d1d42cf95987188750c/archify --skill archify
 ```
 
-This command selects only `archify`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `archify`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -47,17 +47,6 @@ Resolve required instructions in their declared order before applying the skill.
 - Node.js 18 or newer; Chrome/Chromium or Microsoft Edge for required browser verification. The package is self-contained; missing tools require separately approved setup.
 
 The external package and runtime/browser setup need approval. A rendered HTML file alone is not proof that delivery and browser gates passed; visual inspection is a separate claim.
-
-## Useful combinations
-
-- [`document-project`](/skills/document-project) — Implementation changes how readers use the project, or existing documentation blocks a real developer task.
-- [`asd-ste100-technical`](/skills/asd-ste100-technical) — Technical instructions or explanations need plain language without losing conditions, risks, or precise identifiers.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-- [Document a project](/workflows/document-a-project)
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

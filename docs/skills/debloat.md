@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/coding/debloat --skill debloat
 ```
 
-This command selects only `debloat`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `debloat`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -47,18 +47,6 @@ Resolve required instructions in their declared order before applying the skill.
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
 Simplicity is not permission to remove requirements, security controls, compatibility, or useful operational behavior. Keep unrelated cleanup outside the change.
-
-## Useful combinations
-
-- [`coding-with-rules`](/skills/coding-with-rules) — Code or toolchain work needs the base coding workflow plus rules for its actual languages and extensions.
-- [`code-review`](/skills/code-review) — You want changes since a fixed commit, branch, tag, or merge-base checked against both standards and the originating specification.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-- [Implement a planned task](/workflows/implement-a-task)
-- [Debloat a project](/workflows/debloat-a-project)
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

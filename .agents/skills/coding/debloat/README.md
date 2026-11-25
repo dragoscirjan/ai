@@ -10,6 +10,4 @@ An original engineering workflow for preventing unnecessary mechanisms and simpl
 
 [`SKILL.md`](SKILL.md) contains the workflow. [Decision examples](references/decision-examples.md) cover justified complexity and unsafe shortcuts.
 
-Project instructions or the user supply coding, workspace, and validation guidance. Missing required instructions block their phase; nothing is installed automatically. Debloat does not require scaffold, a particular harness, or new tooling.
-
-The source skill directory is `.agents/skills/coding/debloat/`, with matching `name: debloat` frontmatter for recursive Pi discovery. Synchronization installs it flat at `.agents/skills/debloat/` in the target, with a relative Claude projection only when selected. This source repository has no Claude skill projections.
+Project instructions or the user supply coding, workspace, and validation guidance. Missing required instructions block their phase; nothing is installed automatically. Use the project's approved tools and execution environment.

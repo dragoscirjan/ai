@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/caveman --skill caveman
 ```
 
-This command selects only `caveman`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `caveman`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -47,17 +47,6 @@ Resolve required instructions in their declared order before applying the skill.
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
 This mode drops articles and uses fragments. It is an alternative to ASD and Unslop whole-sentence guidance, not a finishing pass after them. Disable Caveman before returning to a whole-sentence route. Never use style to override project policy or omit safety details.
-
-## Useful combinations
-
-- [`plan-tasks`](/skills/plan-tasks) — The scope or specification is clear enough to divide into bounded pieces of work.
-- [`retro`](/skills/retro) — A bounded completed work period has enough evidence to review what helped, failed, or should change.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

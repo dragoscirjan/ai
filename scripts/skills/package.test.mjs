@@ -72,6 +72,7 @@ test("packed runtime executes its bin outside the checkout without development d
   assert.ok(files.includes("scripts/skills/sync.mjs"));
   assert.ok(files.includes("scripts/skills/output.mjs"));
   assert.ok(files.includes("scripts/skills/links.mjs"));
+  assert.ok(files.includes("scripts/skills/independence.mjs"));
   assert.ok(files.includes("catalog/skill-catalog.yaml"));
   assert.ok(files.includes("LICENSE"));
   assert.ok(
