@@ -77,15 +77,25 @@ test("published direct-install examples use grouped URLs and npx consent flags",
   }
 });
 
-test("skill overviews describe prerequisites without setup commands", () => {
+test("all maintained overviews have usage and independent pinned install examples", () => {
   const coding = read(".agents/skills/coding/coding-with-rules/README.md");
   assert.match(coding, /Requires `coding`/);
-  for (const path of [
-    ".agents/skills/agentic-work/sync-my-agents/README.md",
-    ".agents/skills/coding/coding-with-rules/README.md",
-    ".agents/skills/coding/init-project/README.md",
-  ])
-    assert.doesNotMatch(read(path), /\bnpx\b|\.claude\/|##\s+(?:Usage|Install)/i, path);
+  const own = catalog().skills.filter((entry) => entry.source.type === "local");
+  assert.equal(own.length, 23);
+  for (const entry of own) {
+    const path = `${entry.source.path}/README.md`,
+      text = read(path);
+    assert.match(text, /## Usage\n/);
+    assert.match(text, /## Install\n/);
+    assert.match(text, /ref="<published-tag-or-commit>"/);
+    assert.deepEqual(
+      [...text.matchAll(/^npx[^\n]+/gm)].map((match) => match[0]),
+      [
+        `npx -y skills@1.7.4 add "https://github.com/dragoscirjan/ai/tree/$ref/${entry.source.path}" --skill ${entry.name}`,
+      ],
+    );
+    assert.doesNotMatch(text, /\.claude\/|sync-skills|sync-my-skills|LICENSE|## Uninstall/i, path);
+  }
 });
 
 test("no other skill depends on or hands off to the personal instruction skill", () => {

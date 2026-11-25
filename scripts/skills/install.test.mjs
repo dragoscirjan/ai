@@ -409,7 +409,10 @@ test("execution preserves instructions, legacy locks, custom skills, legal and s
     },
   });
   assert.deepEqual(completed, ["coding", "coding-with-rules"]);
-  assert.equal(downloads, 1);
+  assert.equal(
+    downloads,
+    new Set(plan.entries.flatMap((entry) => entry.legal.map((file) => file.path))).size,
+  );
   assert.equal(readFileSync(join(f.target, "RULES.md"), "utf8"), "Do not change my rules.\n");
   assert.equal(
     readFileSync(join(f.target, ".agents/ai-assets.lock.json"), "utf8"),

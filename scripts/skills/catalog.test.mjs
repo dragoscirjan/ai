@@ -14,6 +14,22 @@ import {
   safeRelative,
 } from "./catalog.mjs";
 
+test("maintained packages contain their own complete legal files for standalone acquisition", () => {
+  const c = loadCatalog(CATALOG_PATH, PACKAGE_ROOT),
+    own = c.skills.filter((entry) => entry.source.type === "local");
+  assert.equal(own.length, 23);
+  for (const entry of own) {
+    assert.ok(
+      readFileSync(join(PACKAGE_ROOT, entry.source.path, "README.md"), "utf8").includes("## Usage"),
+    );
+    for (const file of entry.legal ?? []) {
+      assert.deepEqual(
+        readFileSync(join(PACKAGE_ROOT, file.path)),
+        readFileSync(join(PACKAGE_ROOT, entry.source.path, file.target)),
+      );
+    }
+  }
+});
 function changed(t, mutate) {
   const directory = mkdtempSync(join(tmpdir(), "skill-catalog-"));
   t.after(() => rmSync(directory, { recursive: true, force: true }));

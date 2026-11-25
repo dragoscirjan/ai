@@ -45,16 +45,16 @@ test("prepared variants preserve upstream provenance and both original and proje
     assert.match(entry.upstream.revision, /^[a-f0-9]{40}$/);
     assert.equal(entry.upstream.repository, "https://github.com/mattpocock/skills");
     assert.equal(
-      digest(readFileSync(join(directory, "LICENSE"))),
+      digest(readFileSync(join(directory, "LICENSE.upstream"))),
       "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5",
     );
     assert.equal(
-      readFileSync(join(directory, "LICENSE.project"), "utf8"),
+      readFileSync(join(directory, "LICENSE"), "utf8"),
       readFileSync(join(PACKAGE_ROOT, "LICENSE"), "utf8"),
     );
     assert.deepEqual(
       entry.legal.map((file) => file.target),
-      ["LICENSE", "LICENSE.project"],
+      ["LICENSE.upstream", "LICENSE"],
     );
     assert.equal(existsSync(join(directory, "agents/openai.yaml")), false);
     assert.ok(readFileSync(join(directory, "README.md"), "utf8").includes(entry.upstream.revision));

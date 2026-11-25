@@ -46,7 +46,7 @@ The combined `sync-my-skills` manager is removed. Existing installations, person
 
 ## Use a skill today
 
-Operational references in each portable skill package and individual profile refer only to self and declared required skills. Skill overview READMEs contain only intent, real dependencies, and factual origin or inspiration. Same-package references, source attribution, separate legal files, and runtime/API documentation remain available. Collection setup and migration guidance stay in repository documentation; they are not prerequisites for using a skill.
+Operational references in each portable skill package and individual profile refer only to self and declared required skills. Skill overview READMEs describe intent, real dependencies, and factual origin or inspiration, with short usage examples and optional standalone install instructions. Same-package references, source attribution, separate legal files, and runtime/API documentation remain available. Collection setup and migration guidance stay in repository documentation; they are not prerequisites for using a skill.
 
 Individual skills remain available independently of the planned synchronization tools. Browse the [skill catalog](docs/reference/catalog.md), [workflow guides](docs/guide/start.md), or [skill requirements](docs/reference/relationships.md).
 

@@ -147,7 +147,9 @@ function invocations(text, context) {
       continue;
     if (
       match[2] ||
-      (context.names.has(name) && /^(?:require[sd]?|invoke|call|load|select)\b/i.test(match[0]))
+      (context.names.has(name) &&
+        (/^(?:require[sd]?|invoke|call|load|select)\b/i.test(match[0]) ||
+          (context.usage && /^use\b/i.test(match[0]))))
     )
       named(name, context);
   }
@@ -195,17 +197,77 @@ function overviewSections(tree) {
       sections.set(node, references.get(node.identifier) ? "origin" : "dependencies");
   return sections;
 }
+function verifyStandaloneInstall(node, context, invalid) {
+  check(
+    ["sh", "bash", "shell"].includes(node.lang),
+    invalid("install examples must use shell syntax"),
+  );
+  let ref = null,
+    commands = 0;
+  for (const line of node.value
+    .split(/\r?\n/)
+    .map((value) => value.trim())
+    .filter(Boolean)) {
+    const assignment = line.match(
+      /^ref="(<published-tag-or-commit>|[A-Za-z0-9][A-Za-z0-9._/-]*)"$/,
+    );
+    if (assignment) {
+      check(ref === null, invalid("duplicate source revision"));
+      ref = assignment[1];
+      continue;
+    }
+    const command = line.match(
+      /^npx -y skills@1\.7\.4 add (?:"([^"\n]+)"|'([^'\n]+)'|(\S+)) --skill ([a-z][a-z0-9-]*)$/,
+    );
+    check(command, invalid("use the pinned standalone acquisition command only"));
+    const name = command[4],
+      url = command[1] ?? command[2] ?? command[3];
+    check(context.allowed.has(name), invalid("installation selects an unrelated skill"));
+    const source = context.plan.linkSources.find((entry) => entry.name === name)?.source;
+    check(source, invalid("unknown installation source"));
+    const origin = sourceOrigin(source, context.plan),
+      prefix = `${origin.repository}/tree/`,
+      suffix = `/${origin.path}`;
+    check(
+      url.startsWith(prefix) && url.endsWith(suffix),
+      invalid("installation source does not match the selected skill"),
+    );
+    const revision = url.slice(prefix.length, -suffix.length);
+    check(
+      (ref !== null && ["$ref", "${ref}"].includes(revision)) || /^[a-f0-9]{40}$/.test(revision),
+      invalid("identify a published tag or commit"),
+    );
+    if (source.type === "github")
+      check(
+        revision === source.revision ||
+          (ref === source.revision && ["$ref", "${ref}"].includes(revision)),
+        invalid("preserve the upstream source pin"),
+      );
+    commands++;
+  }
+  check(commands > 0, invalid("missing standalone installation command"));
+}
 function verifyOverview(sections, context) {
-  const allowed = new Set(["intent", "purpose", "dependencies", ...overviewAttribution]);
+  const allowed = new Set([
+    "intent",
+    "purpose",
+    "dependencies",
+    "usage",
+    "install",
+    "installation",
+    ...overviewAttribution,
+  ]);
   const invalid = (reason) =>
     `Invalid skill overview: ${context.entry.name}/${context.file} (${reason})`;
   for (const [node, section] of sections) {
     check(
       allowed.has(section),
-      invalid("section must describe intent, dependencies, or origin/inspiration"),
+      invalid(
+        "section must describe this skill, its usage, standalone install, dependencies, or attribution",
+      ),
     );
     check(
-      !["code", "html", "image", "imageReference", "blockquote", "thematicBreak", "table"].includes(
+      !["html", "image", "imageReference", "blockquote", "thematicBreak", "table"].includes(
         node.type,
       ),
       invalid(node.type),
@@ -216,23 +278,35 @@ function verifyOverview(sections, context) {
         !legalName.test(posix.basename(decode(node.url.split(/[?#]/)[0], context))),
         invalid("license reference"),
       );
-    if (node.type !== "paragraph") continue;
+    if (node.type === "code") {
+      if (["install", "installation"].includes(section)) {
+        verifyStandaloneInstall(node, context, invalid);
+        continue;
+      }
+      check(
+        section === "usage" && [null, "text", "plaintext"].includes(node.lang),
+        invalid("code examples belong only to Usage or Install"),
+      );
+    }
+    if (!["paragraph", "code"].includes(node.type)) continue;
     const text = overviewText(node),
       prose = overviewText(node, true);
     check(
-      !/\.(?:claude|opencode|agents|pi)(?:\/|\b)|\bClaude Code\b|\bnpx\b|--(?:agent|skills-dir|global|scope)\b/i.test(
+      !/\.(?:claude|opencode|agents|pi)(?:\/|\b)|\bClaude Code\b|--(?:agent|skills-dir|global|scope)\b/i.test(
         text,
-      ),
+      ) &&
+        (["install", "installation"].includes(section) || !/\bnpx\b/i.test(text)),
       invalid("deployment guidance"),
     );
     check(!/\blicen[cs](?:es?|ing)\b/i.test(text), invalid("license material"));
-    check(!/\/skill:|--skill\b|\bSkill\s*\(/.test(text), invalid("invocation example"));
-    check(
-      !/\b(?:for example|to use this skill|load the installed|run the following|before you start)\b|\b(?:first|then|next)\s+(?:run|load|use|read|install|check|make|execute|apply|ask|write)\b/i.test(
-        prose,
-      ),
-      invalid("usage or workflow guidance"),
-    );
+    check(!/\/skill:|--skill\b|\bSkill\s*\(/.test(text), invalid("harness-specific invocation"));
+    if (!["usage", "install", "installation"].includes(section))
+      check(
+        !/\b(?:for example|to use this skill|load the installed|run the following|before you start)\b|\b(?:first|then|next)\s+(?:run|load|use|read|install|check|make|execute|apply|ask|write)\b/i.test(
+          prose,
+        ),
+        invalid("usage or workflow guidance outside its section"),
+      );
     if (overviewAttribution.has(section))
       check(
         !/\b(?:use|load|run|invoke|call|install|follow|adapt|apply|combine|activate|fetch|execute|requires?)\s+/i.test(
@@ -266,7 +340,9 @@ function checkMarkdown(text, context) {
       current =
         sections && overviewAttribution.has(sections.get(node))
           ? { ...context, attribution: true }
-          : context;
+          : sections?.get(node) === "usage"
+            ? { ...context, usage: true }
+            : context;
     if (node.type === "text") markupText(node.value, current);
     if (node.type === "inlineCode") {
       if (!current.attribution && current.names.has(node.value)) named(node.value, current);
@@ -274,7 +350,8 @@ function checkMarkdown(text, context) {
     }
     if (["link", "image", "definition"].includes(node.type)) reference(node.url, current);
     if (node.type === "code") {
-      invocations(node.value, current);
+      if (current.usage) markupText(node.value, current);
+      else invocations(node.value, current);
       for (const match of node.value.matchAll(importPaths)) reference(match[1], current);
     }
     if (node.type === "html") {

@@ -47,9 +47,9 @@ Keep optional companions, next-skill recommendations, reverse links to dependent
 
 ### Skill overview READMEs
 
-A skill overview README is the README at the root of a skill package. Include only the skill's intent, its real instruction or runtime dependencies, and verified origin or inspiration. State origin and inspiration as factual attribution, not advice to load, install, invoke, or combine another skill. Attribution does not create a dependency or authorize fetching its source.
+A skill overview README is the README at the root of a skill package. Include the skill's intent, its real instruction or runtime dependencies, and verified origin or inspiration. A short Usage section and an optional Install section are also allowed. Usage gives a concrete request or example for this skill without duplicating its full operating procedure. Installation must work independently of the repository sync CLI, use the existing pinned acquisition tool, identify the source revision, and select only this skill or its real declared dependencies. State when dependencies require separate installation. State origin and inspiration as factual attribution, not advice to load, install, invoke, or combine another skill. Attribution does not create a dependency or authorize fetching its source.
 
-Do not include installation or invocation commands, usage examples, workflows, harness configuration or paths, license text or links, collection setup, or companion/caller recommendations. Keep operating instructions in `SKILL.md` and task-specific supporting documents. Keep required legal files intact and separate. Keep repository-level installation and maintenance guidance in repository documentation. Nested technical READMEs and repository-level READMEs are outside this overview rule.
+Keep complete operating workflows in `SKILL.md` and task-specific supporting documents. Do not include harness-specific configuration or paths, license text or links, collection setup, sync-script instructions, or companion/caller recommendations. Keep required legal files intact and separate, including inside independently installable skill folders. Keep repository-level installation and maintenance guidance in repository documentation. Nested technical READMEs and repository-level READMEs are outside this overview rule.
 
 ### Instruction dependencies
 

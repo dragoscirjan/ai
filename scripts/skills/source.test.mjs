@@ -54,6 +54,29 @@ test("pinned source acquisition verifies blobs, supporting files, legal files, a
   assert.equal(readFileSync(join(f.directory, "LICENSE"), "utf8"), "MIT fixture.\n");
   assert.equal(existsSync(join(f.directory, "agents/openai.yaml")), false);
 });
+test("an in-folder legal record agrees with the selected source instead of colliding", async (t) => {
+  const f = fixture(t, (tree, content) => {
+    content["skill/LICENSE"] = content.LICENSE;
+    tree.tree.push({
+      ...tree.tree.find((entry) => entry.path === "LICENSE"),
+      path: "skill/LICENSE",
+    });
+  });
+  f.legal = [{ path: "skill/LICENSE", target: "LICENSE" }];
+  await downloadSource(f);
+  assert.equal(readFileSync(join(f.directory, "LICENSE"), "utf8"), "MIT fixture.\n");
+});
+test("different legal source paths still conflict even when their bytes are identical", async (t) => {
+  const f = fixture(t, (tree, content) => {
+    content["skill/LICENSE"] = content.LICENSE;
+    tree.tree.push({
+      ...tree.tree.find((entry) => entry.path === "LICENSE"),
+      path: "skill/LICENSE",
+    });
+  });
+  await assert.rejects(downloadSource(f), /Conflicting source\/legal target/);
+  assert.equal(existsSync(f.directory), false);
+});
 for (const [label, mutate] of [
   [
     "truncated trees",

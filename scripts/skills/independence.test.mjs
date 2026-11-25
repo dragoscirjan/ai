@@ -171,7 +171,8 @@ test("invalid instruction text and symlinks stop validation", (t) => {
 for (const [label, body] of [
   ["Claude deployment", "# coding\n\nClaude Code uses `.claude/skills/coding`."],
   ["installation command", "# coding\n\n```sh\nnpx -y skills@1.7.4 add source --skill coding\n```"],
-  ["usage section", "# coding\n\n## Usage\n\nDescribe the task to the agent."],
+  ["operating workflow section", "# coding\n\n## Workflow\n\nDescribe each operating step."],
+  ["uninstall section", "# coding\n\n## Uninstall\n\nRemove the installed folder."],
   ["workflow steps", "# coding\n\n1. Review the input.\n2. Make the change."],
   ["license reference", "# coding\n\nSee [LICENSE](LICENSE)."],
   ["encoded legal-file reference", "# coding\n\nSee [source](LICEN%53E)."],
@@ -187,6 +188,92 @@ for (const [label, body] of [
       /overview/i,
     );
   });
+test("overview permits a short skill-specific usage request", (t) => {
+  const f = fixture(t);
+  verifyMarkdownIndependence(
+    "# coding\n\nDevelop code.\n\n## Usage\n\nExample request:\n\n```text\nUse coding to implement this approved change.\n```",
+    f.entry,
+    f.plan,
+    "README.md",
+  );
+});
+test("overview permits standalone installation without the sync script", (t) => {
+  const f = fixture(t);
+  const body =
+    '# coding\n\nDevelop code.\n\n## Install\n\n```sh\nref="<published-tag-or-commit>"\nnpx -y skills@1.7.4 add "https://github.com/dragoscirjan/ai/tree/$ref/.agents/skills/coding/coding" --skill coding\n```';
+  verifyMarkdownIndependence(body, f.entry, f.plan, "README.md");
+});
+for (const [label, command] of [
+  [
+    "unpinned installer",
+    'npx -y skills@latest add "https://github.com/dragoscirjan/ai/tree/$ref/.agents/skills/coding/coding" --skill coding',
+  ],
+  [
+    "wrong source for the same name",
+    'npx -y skills@1.7.4 add "https://github.com/other/repo/tree/$ref/skills/coding" --skill coding',
+  ],
+  [
+    "additional shell execution",
+    'npx -y skills@1.7.4 add "https://github.com/dragoscirjan/ai/tree/$ref/.agents/skills/coding/coding" --skill coding; touch /tmp/unwanted',
+  ],
+  [
+    "harness-specific installation",
+    'npx -y skills@1.7.4 add "https://github.com/dragoscirjan/ai/tree/$ref/.agents/skills/coding/coding" --skill coding --agent claude-code',
+  ],
+])
+  test(`standalone README installation rejects ${label}`, (t) => {
+    const f = fixture(t),
+      body =
+        '# coding\n\nDevelop code.\n\n## Install\n\n```sh\nref="<published-tag-or-commit>"\n' +
+        command +
+        "\n```";
+    assert.throws(
+      () => verifyMarkdownIndependence(body, f.entry, f.plan, "README.md"),
+      /overview/i,
+    );
+  });
+test("source revision assignment cannot execute a command", (t) => {
+  const f = fixture(t);
+  assert.throws(
+    () =>
+      verifyMarkdownIndependence(
+        '# coding\n\n## Install\n\n```sh\nref="$(printenv)"\nnpx -y skills@1.7.4 add "https://github.com/dragoscirjan/ai/tree/$ref/.agents/skills/coding/coding" --skill coding\n```',
+        f.entry,
+        f.plan,
+        "README.md",
+      ),
+    /overview/i,
+  );
+});
+test("usage cannot invoke an undeclared skill", (t) => {
+  const f = fixture(t);
+  assert.throws(
+    () =>
+      verifyMarkdownIndependence(
+        "# coding\n\n## Usage\n\n```text\nUse scaffold before making changes.\n```",
+        f.entry,
+        f.plan,
+        "README.md",
+      ),
+    /Undeclared skill reference/,
+  );
+});
+test("install permission does not leak into attribution or executable usage", (t) => {
+  const f = fixture(t);
+  for (const section of ["Origin", "Usage"])
+    assert.throws(
+      () =>
+        verifyMarkdownIndependence(
+          "# coding\n\n## " +
+            section +
+            '\n\n```sh\nref="<published-tag-or-commit>"\nnpx -y skills@1.7.4 add "https://github.com/dragoscirjan/ai/tree/$ref/.agents/skills/coding/coding" --skill coding\n```',
+          f.entry,
+          f.plan,
+          "README.md",
+        ),
+      /overview/i,
+    );
+});
 test("overview permits factual inspiration without adding a dependency", (t) => {
   const f = fixture(t);
   verifyMarkdownIndependence(

@@ -104,7 +104,7 @@ skills:
           asd-ste100-technical,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/documentation/asd-ste100-technical/LICENSE
         target: LICENSE
         spdx: MIT
   caveman:
@@ -132,7 +132,7 @@ skills:
           caveman,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/documentation/caveman/LICENSE
         target: LICENSE
         spdx: MIT
   cleanup-workspaces:
@@ -161,7 +161,7 @@ skills:
           cleanup-workspaces,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/utility/cleanup-workspaces/LICENSE
         target: LICENSE
         spdx: MIT
   code-review:
@@ -201,11 +201,11 @@ skills:
           code-review,
         ]
     legal:
+      - path: .agents/skills/coding/code-review/LICENSE.upstream
+        target: LICENSE.upstream
+        spdx: MIT
       - path: .agents/skills/coding/code-review/LICENSE
         target: LICENSE
-        spdx: MIT
-      - path: .agents/skills/coding/code-review/LICENSE.project
-        target: LICENSE.project
         spdx: MIT
     adaptation:
       instructions: Reviewed local variant; synchronization copies it without runtime adaptation.
@@ -259,7 +259,7 @@ skills:
           coding,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/coding/coding/LICENSE
         target: LICENSE
         spdx: MIT
   coding-with-rules:
@@ -286,7 +286,7 @@ skills:
           coding-with-rules,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/coding/coding-with-rules/LICENSE
         target: LICENSE
         spdx: MIT
   debloat:
@@ -314,7 +314,7 @@ skills:
           debloat,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/coding/debloat/LICENSE
         target: LICENSE
         spdx: MIT
   grilling:
@@ -370,7 +370,7 @@ skills:
           document-project,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/documentation/document-project/LICENSE
         target: LICENSE
         spdx: MIT
   excalidraw:
@@ -400,7 +400,7 @@ skills:
     runtime:
       - "Requires Node.js 22 or newer, the official @excalidraw/cli 0.3.0 package, and an installed Chrome, Chromium, Edge, or Firefox."
     legal:
-      - path: LICENSE
+      - path: .agents/skills/documentation/excalidraw/LICENSE
         target: LICENSE
         spdx: MIT
   grill-me:
@@ -432,11 +432,11 @@ skills:
           grill-me,
         ]
     legal:
+      - path: .agents/skills/productivity/grill-me/LICENSE.upstream
+        target: LICENSE.upstream
+        spdx: MIT
       - path: .agents/skills/productivity/grill-me/LICENSE
         target: LICENSE
-        spdx: MIT
-      - path: .agents/skills/productivity/grill-me/LICENSE.project
-        target: LICENSE.project
         spdx: MIT
     adaptation:
       instructions: Reviewed local variant; synchronization copies it without runtime adaptation.
@@ -484,7 +484,7 @@ skills:
           init-project,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/coding/init-project/LICENSE
         target: LICENSE
         spdx: MIT
   initiative:
@@ -535,7 +535,7 @@ skills:
           instruction-maintenance,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/unpolished/instruction-maintenance/LICENSE
         target: LICENSE
         spdx: MIT
   isolated-workspace:
@@ -564,7 +564,7 @@ skills:
           isolated-workspace,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/utility/isolated-workspace/LICENSE
         target: LICENSE
         spdx: MIT
   plan-tasks:
@@ -664,7 +664,7 @@ skills:
           scaffold,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/coding/scaffold/LICENSE
         target: LICENSE
         spdx: MIT
   specify:
@@ -718,7 +718,7 @@ skills:
           subagent-orchestration,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/unpolished/subagent-orchestration/LICENSE
         target: LICENSE
         spdx: MIT
   sync-my-agents:
@@ -777,7 +777,7 @@ skills:
           systematic-debugging,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/coding/systematic-debugging/LICENSE
         target: LICENSE
         spdx: MIT
     adaptation:
@@ -822,11 +822,11 @@ skills:
           tdd,
         ]
     legal:
+      - path: .agents/skills/coding/tdd/LICENSE.upstream
+        target: LICENSE.upstream
+        spdx: MIT
       - path: .agents/skills/coding/tdd/LICENSE
         target: LICENSE
-        spdx: MIT
-      - path: .agents/skills/coding/tdd/LICENSE.project
-        target: LICENSE.project
         spdx: MIT
     adaptation:
       instructions: Reviewed local variant; synchronization copies it without runtime adaptation.

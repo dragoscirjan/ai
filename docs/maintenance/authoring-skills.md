@@ -26,7 +26,7 @@ The Node.js CLI copies reviewed variants directly; it does not adapt instruction
 
 ## Check skill independence
 
-Review each complete portable package, not only its SKILL.md. Operational cross-skill names, links, helper imports, and invocation examples must refer only to self or declared requirements. Keep skill overview READMEs limited to intent, real dependencies, and verified factual origin or inspiration. An attribution is not a handoff or dependency. Keep operating instructions in SKILL.md and supporting documents, legal files separate, and collection setup in repository documentation. Nested technical READMEs are not skill overviews. Do not add dependencies merely to keep a recommendation. Source checks and acquired-package verification enforce this boundary.
+Review each complete portable package, not only its SKILL.md. Operational cross-skill names, links, helper imports, and invocation examples must refer only to self or declared requirements. Keep skill overview READMEs focused on intent, real dependencies, and verified factual origin or inspiration. Short usage examples and optional standalone install instructions are allowed. Install instructions use the pinned acquisition tool without the sync CLI and preserve the complete skill folder, including required supporting and legal files. An attribution is not a handoff or dependency. Keep operating instructions in SKILL.md and supporting documents, legal files separate, and collection setup in repository documentation. Nested technical READMEs are not skill overviews. Do not add dependencies merely to keep a recommendation. Source checks and acquired-package verification enforce this boundary.
 
 ## Check and recover
 
