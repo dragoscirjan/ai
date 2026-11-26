@@ -96,6 +96,8 @@ Only destination URLs change. Prose, labels, frontmatter, code examples, and req
 
 Existing selected destinations block installation by default, including unmanaged or locally edited copies. Inspect them first. Pass `--overwrite` only if you approve replacing the displayed selected skills, then preview again before confirming. Unselected/custom skill directories remain outside the operation.
 
+A destination without its own `SKILL.md` that contains child skill folders is a collection, not one installed skill. The CLI refuses to replace it, even with `--overwrite`. Choose a separate destination project or output directory to preserve the authored sources.
+
 A failed command or verification stops subsequent installations. Already completed writes are not rolled back automatically. The error names the stopped skill and completed skills. Inspect partial output before retrying; do not delete legacy locks or bypass conflicts to make a retry pass.
 
 ## Unsupported semantic adaptations

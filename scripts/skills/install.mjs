@@ -86,6 +86,15 @@ function assertDestination(path, canonical) {
     );
     noLinks(dirname(canonical), canonical);
   } else noLinks(dirname(path), path);
+  if (existing(path) && lstatSync(path).isDirectory() && !existsSync(join(path, "SKILL.md"))) {
+    const collection = readdirSync(path, { withFileTypes: true }).some(
+      (entry) => entry.isDirectory() && existsSync(join(path, entry.name, "SKILL.md")),
+    );
+    check(
+      !collection,
+      `Refusing to replace a skill collection: ${path}; choose a different destination`,
+    );
+  }
 }
 function nativeDestinations(target, name, agents, scope, home = homedir(), env = process.env) {
   const canonical = join(scope === "personal" ? home : target, ".agents/skills", name);
@@ -438,6 +447,8 @@ export async function executePlan(
 ) {
   check(confirmed, "Explicit confirmation is required");
   check(!plan.blocked.length, `Installation blocked:\n${plan.blocked.join("\n")}`);
+  for (const entry of plan.entries)
+    for (const path of entry.destinations) assertDestination(path, entry.destinations[0]);
   const instructions = instructionSnapshot(
     plan.target,
     plan.skillsDir ? plan.entries.flatMap((entry) => entry.destinations) : [],

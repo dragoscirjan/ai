@@ -97,6 +97,69 @@ function nativeInstaller(plan, roots, setup) {
     }
   };
 }
+for (const custom of [false, true]) {
+  test(`skill collections cannot be overwritten, custom=${custom}`, (t) => {
+    const f = fixture(t);
+    const skillsDir = custom ? join(f.target, "plugin/skills") : undefined;
+    const collection = join(skillsDir ?? join(f.target, ".agents/skills"), "coding");
+    const unselected = join(collection, "init-project/SKILL.md");
+    mkdirSync(dirname(unselected), { recursive: true });
+    writeFileSync(unselected, "Unselected authored skill.\n");
+    assert.throws(
+      () =>
+        buildPlan(
+          options(f.target, { skills: ["coding"], skillsDir, overwrite: true }),
+          catalog,
+          f.context,
+        ),
+      /Refusing to replace a skill collection/,
+    );
+    assert.equal(readFileSync(unselected, "utf8"), "Unselected authored skill.\n");
+  });
+
+  test(`skill collections appearing after preview stop before acquisition, custom=${custom}`, async (t) => {
+    const f = fixture(t);
+    const skillsDir = custom ? join(f.target, "plugin/skills") : undefined;
+    const plan = buildPlan(
+      options(f.target, { skills: ["coding"], skillsDir, overwrite: true }),
+      catalog,
+      f.context,
+    );
+    const unselected = join(plan.entries[0].destinations[0], "init-project/SKILL.md");
+    mkdirSync(dirname(unselected), { recursive: true });
+    writeFileSync(unselected, "Unselected authored skill.\n");
+    let acquisitions = 0;
+    let commands = 0;
+    await assert.rejects(
+      executePlan(plan, {
+        confirmed: true,
+        fetcher: async () => {
+          acquisitions++;
+          return fetcher();
+        },
+        run: async () => {
+          commands++;
+        },
+      }),
+      /Refusing to replace a skill collection/,
+    );
+    assert.equal(acquisitions, 0);
+    assert.equal(commands, 0);
+    assert.equal(readFileSync(unselected, "utf8"), "Unselected authored skill.\n");
+  });
+}
+
+test("a selected skill may contain its own nested skill examples", (t) => {
+  const f = fixture(t);
+  const folder = join(f.target, ".agents/skills/coding");
+  mkdirSync(join(folder, "example"), { recursive: true });
+  writeFileSync(join(folder, "SKILL.md"), "---\nname: coding\ndescription: Existing skill.\n---\n");
+  writeFileSync(join(folder, "example/SKILL.md"), "Example owned by the selected skill.\n");
+  assert.doesNotThrow(() =>
+    buildPlan(options(f.target, { skills: ["coding"], overwrite: true }), catalog, f.context),
+  );
+});
+
 for (const [agent, scope, root] of [
   ["claude-code", "project", (f) => join(f.target, ".claude/skills")],
   ["claude-code", "personal", (f) => join(f.home, ".claude/skills")],
