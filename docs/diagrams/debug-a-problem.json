@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/debug-a-problem.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "7b68c9123c32fcca4b3ac28baabad880606a853d",
+      "revision": "a600462a55504957019400d0b8c8f39fca58373c",
       "link_mode": "local-only"
     },
     "legend": {
