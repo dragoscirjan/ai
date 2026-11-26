@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/challenge-a-design.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "e272a685537fd28ee3c9f9d5d6f5babae5072907",
+      "revision": "7b68c9123c32fcca4b3ac28baabad880606a853d",
       "link_mode": "local-only"
     },
     "legend": {
@@ -48,10 +48,10 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/productivity/grill-me/SKILL.md",
-          "line": 1,
-          "end_line": 8,
-          "label": "Authoritative skill instructions"
+          "path": "catalog/skill-catalog.yaml",
+          "line": 406,
+          "end_line": 436,
+          "label": "Pinned source and runtime record"
         }
       ]
     },
