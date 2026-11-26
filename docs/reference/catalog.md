@@ -26,7 +26,7 @@ The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/catalog/skill-ca
 | [`grilling`](/skills/grilling) | Upstream-only; approved external setup | optional |
 | [`document-project`](/skills/document-project) | Authored here | recommended |
 | [`excalidraw`](/skills/excalidraw) | Authored here | optional |
-| [`grill-me`](/skills/grill-me) | Upstream-derived; maintained here | optional |
+| [`grill-me`](/skills/grill-me) | Upstream-only; approved external setup | optional |
 | [`init-project`](/skills/init-project) | Authored here | initializer |
 | [`initiative`](/skills/initiative) | Authored here | optional |
 | [`instruction-maintenance`](/skills/instruction-maintenance) | Authored here | optional |

@@ -10,10 +10,23 @@ import { workflows } from "./workflows.mjs";
 
 const read = (path) => readFileSync(join(root, path), "utf8");
 
+test("external grill-me installs its exact upstream pin and not a local adaptation", () => {
+  const entry = catalog().byName.get("grill-me");
+  assert.equal(
+    installCommand(entry),
+    "npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me --skill grill-me",
+  );
+  assert.equal(
+    sourceUrl(entry),
+    "https://raw.githubusercontent.com/mattpocock/skills/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me/SKILL.md",
+  );
+  assert.deepEqual(entry.prerequisites, ["grilling"]);
+  assert.throws(() => localInstructions("grill-me"), /No local instructions/);
+});
 test("every local install URL names the actual grouped source directory and declared skill", () => {
   const c = catalog();
   const local = c.skills.filter((entry) => entry.source.type === "local");
-  assert.equal(local.length, 23);
+  assert.equal(local.length, 22);
   for (const entry of local) {
     const expected = `${c.repository}/tree/${c.ref}/${entry.source.path}`;
     assert.equal(entry.install.argv[4], expected, entry.name);
@@ -81,7 +94,7 @@ test("all maintained overviews have usage and independent pinned install example
   const coding = read(".agents/skills/coding/coding-with-rules/README.md");
   assert.match(coding, /Requires `coding`/);
   const own = catalog().skills.filter((entry) => entry.source.type === "local");
-  assert.equal(own.length, 23);
+  assert.equal(own.length, 22);
   for (const entry of own) {
     const path = `${entry.source.path}/README.md`,
       text = read(path);

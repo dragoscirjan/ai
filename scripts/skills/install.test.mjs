@@ -515,8 +515,8 @@ test("unexpected instruction edits from an installer are detected", async (t) =>
 test("display quotes arguments and reports prerequisites and blocked adaptations", (t) => {
   const f = fixture(t),
     plan = buildPlan(
-      options(f.target, { skills: ["grill-me"] }),
-      unpreparedCatalog(t, "grill-me"),
+      options(f.target, { skills: ["tdd", "research"] }),
+      unpreparedCatalog(t, "tdd"),
       f.context,
     ),
     lines = [];

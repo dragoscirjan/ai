@@ -4,7 +4,7 @@ title: "Find a skill"
 
 # Find a skill
 
-The catalog contains **28 skills**: 23 local entries and 5 remote-source entries. Search by an exact skill name or start with your task.
+The catalog contains **28 skills**: 22 local entries and 6 remote-source entries. Search by an exact skill name or start with your task.
 
 ![The collection's six groups include local and external skills; grouping is not a runtime dependency.](/diagrams/skill-groups.svg)
 

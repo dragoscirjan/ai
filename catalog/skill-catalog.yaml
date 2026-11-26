@@ -404,12 +404,9 @@ skills:
         target: LICENSE
         spdx: MIT
   grill-me:
-    kind: adapted
-    description: A relentless interview to sharpen a plan or design.
+    kind: upstream
+    description: "A relentless interview to sharpen a plan or design."
     source:
-      type: local
-      path: .agents/skills/productivity/grill-me
-    upstream:
       type: github
       repository: https://github.com/mattpocock/skills
       revision: fcf0071560d32913c9d4f820e0d7ca467c881619
@@ -427,25 +424,16 @@ skills:
           -y,
           skills@1.7.4,
           add,
-          https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/grill-me,
+          https://github.com/mattpocock/skills/tree/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me,
           --skill,
           grill-me,
         ]
+    runtime:
+      - "The unchanged upstream instruction calls the Skill tool for grilling. A compatible skill-invocation mechanism is required; no local portability rewrite is applied. Live invocation in each listed harness remains unverified."
     legal:
-      - path: .agents/skills/productivity/grill-me/LICENSE.upstream
-        target: LICENSE.upstream
-        spdx: MIT
-      - path: .agents/skills/productivity/grill-me/LICENSE
+      - path: LICENSE
         target: LICENSE
         spdx: MIT
-    adaptation:
-      instructions: Reviewed local variant; synchronization copies it without runtime adaptation.
-        Keep the maintained interview wrapper and its grilling prerequisite. Replace harness-specific Skill-tool
-        calls with portable entry instructions. Do not add provider/model configuration.
-      review:
-        - Preserve substantive behavior and all mandatory prerequisites.
-        - Show the diff and explain any target-specific change.
-        - Keep required legal notices unchanged; omit agents/openai.yaml.
   init-project:
     kind: authored
     description: "Initialize or adopt project foundations, TypeScript tooling, or Godot GDScript tooling only when explicitly requested."

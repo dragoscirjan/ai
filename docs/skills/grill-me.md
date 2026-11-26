@@ -6,11 +6,11 @@ title: "grill-me"
 
 A relentless interview to sharpen a plan or design.
 
-**Group:** [Productivity](/groups/productivity) · **Availability:** Upstream-derived; maintained here · **Scope:** project
+**Group:** [Productivity](/groups/productivity) · **Availability:** Upstream-only; approved external setup · **Scope:** project
 
 ## When to choose it
 
-You want to explicitly start the grilling interview through a small local composition.
+You want to explicitly start the grilling interview through the unchanged upstream wrapper.
 
 **Expected result:** An interview that pressures unresolved decisions until the direction is clearer.
 
@@ -19,7 +19,7 @@ You want to explicitly start the grilling interview through a small local compos
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/grill-me --skill grill-me
+npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me --skill grill-me
 ```
 
 This command selects only `grill-me`.
@@ -46,14 +46,14 @@ Resolve required instructions in their declared order before applying the skill.
 
 **Runtime and setup:**
 
-No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
+- The unchanged upstream instruction calls the Skill tool for grilling. A compatible skill-invocation mechanism is required; no local portability rewrite is applied. Live invocation in each listed harness remains unverified.
 
-This entry is explicitly invoked, not automatically model-invoked. It requires the separately installed grilling instructions; the wrapper does not contain the interview itself.
+This unchanged upstream entry is explicitly invoked. It calls the Skill tool for the separately installed grilling instructions; the wrapper does not contain the interview itself. A compatible skill-invocation mechanism is required, and live harness invocation remains unverified.
 
 ## Source and harness support
 
 The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/productivity/grill-me/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
+[Read the authoritative skill instructions](https://raw.githubusercontent.com/mattpocock/skills/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me/SKILL.md). This link uses the immutable upstream revision `fcf0071560d32913c9d4f820e0d7ca467c881619`; there is no vendored copy here.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

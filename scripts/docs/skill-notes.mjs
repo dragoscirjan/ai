@@ -56,11 +56,11 @@ export const notes = {
     stop: "A task list does not authorize execution or delegation. Do not manufacture dependencies merely to make the list linear.",
   },
   "grill-me": {
-    when: "You want to explicitly start the grilling interview through a small local composition.",
+    when: "You want to explicitly start the grilling interview through the unchanged upstream wrapper.",
     result: "An interview that pressures unresolved decisions until the direction is clearer.",
     prompt:
       "Use grill-me to start an explicit interview about this plan before I commit to it. Work through the uncertain decisions with me.",
-    stop: "This entry is explicitly invoked, not automatically model-invoked. It requires the separately installed grilling instructions; the wrapper does not contain the interview itself.",
+    stop: "This unchanged upstream entry is explicitly invoked. It calls the Skill tool for the separately installed grilling instructions; the wrapper does not contain the interview itself. A compatible skill-invocation mechanism is required, and live harness invocation remains unverified.",
   },
   grilling: {
     when: "A plan or design needs a focused interview rather than another polished document built on assumptions.",

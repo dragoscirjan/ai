@@ -4,15 +4,13 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:f
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { CATALOG_PATH, PACKAGE_ROOT, digest, frontmatter, loadCatalog } from "./catalog.mjs";
+import { CATALOG_PATH, PACKAGE_ROOT, digest, loadCatalog } from "./catalog.mjs";
 import { buildPlan } from "./install.mjs";
 
 const catalog = loadCatalog(CATALOG_PATH, PACKAGE_ROOT);
 const reviewed = {
   ".agents/skills/coding/code-review/SKILL.md":
     "1ba39478807f2a0bb73e93cfe7728b3dba2f36ea8aba9e57931ec20d970b853e",
-  ".agents/skills/productivity/grill-me/SKILL.md":
-    "7b5d02ef44ddb09516a0513094c76288b3332d439b256aff7ff2ee0eba728c3d",
   ".agents/skills/coding/tdd/SKILL.md":
     "fe3d44d8cc29830dc7d6aa4fd9896f3e5e4ff00756fdd4c7de087e260e015d7b",
   ".agents/skills/coding/tdd/mocking.md":
@@ -25,8 +23,8 @@ for (const [path, sha] of Object.entries(reviewed))
     assert.equal(digest(readFileSync(join(PACKAGE_ROOT, path))), sha);
   });
 test("every current catalogue entry has a concrete installable source, with no runtime semantic adaptation", () => {
-  assert.equal(catalog.skills.filter((entry) => entry.source.type === "local").length, 23);
-  assert.equal(catalog.skills.filter((entry) => entry.source.type !== "local").length, 5);
+  assert.equal(catalog.skills.filter((entry) => entry.source.type === "local").length, 22);
+  assert.equal(catalog.skills.filter((entry) => entry.source.type !== "local").length, 6);
   assert.deepEqual(
     catalog.skills.filter((entry) => entry.kind === "adapted" && entry.source.type !== "local"),
     [],
@@ -37,7 +35,7 @@ test("every current catalogue entry has a concrete installable source, with no r
   );
 });
 test("prepared variants preserve upstream provenance and both original and project licenses", () => {
-  for (const name of ["code-review", "grill-me", "tdd"]) {
+  for (const name of ["code-review", "tdd"]) {
     const entry = catalog.byName.get(name),
       directory = join(PACKAGE_ROOT, entry.source.path);
     assert.equal(entry.kind, "adapted");
@@ -60,12 +58,23 @@ test("prepared variants preserve upstream provenance and both original and proje
     assert.ok(readFileSync(join(directory, "README.md"), "utf8").includes(entry.upstream.revision));
   }
 });
-test("grill-me explicitly requires grilling without relying on a named Skill tool", () => {
-  const entry = catalog.byName.get("grill-me"),
-    text = readFileSync(join(PACKAGE_ROOT, entry.source.path, "SKILL.md"), "utf8");
-  assert.deepEqual(frontmatter(text, "grill-me").requires, ["grilling"]);
+test("grill-me uses unchanged pinned upstream input and retains grilling installation closure", () => {
+  const entry = catalog.byName.get("grill-me");
+  assert.equal(entry.kind, "upstream");
+  assert.deepEqual(entry.source, {
+    type: "github",
+    repository: "https://github.com/mattpocock/skills",
+    revision: "fcf0071560d32913c9d4f820e0d7ca467c881619",
+    path: "skills/productivity/grill-me",
+  });
+  assert.equal(entry.upstream, undefined);
+  assert.equal(entry.adaptation, undefined);
   assert.deepEqual(entry.prerequisites, ["grilling"]);
-  assert.doesNotMatch(text, /Call the Skill tool/);
+  assert.deepEqual(entry.legal, [{ path: "LICENSE", target: "LICENSE", spdx: "MIT" }]);
+  assert.ok(
+    entry.runtime.some((item) => item.includes("Skill tool") && item.includes("unverified")),
+  );
+  assert.equal(existsSync(join(PACKAGE_ROOT, ".agents/skills/productivity/grill-me")), false);
 });
 test("tdd is self-contained and preserves its test and mocking references", () => {
   const entry = catalog.byName.get("tdd"),

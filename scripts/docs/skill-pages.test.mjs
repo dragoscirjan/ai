@@ -144,10 +144,10 @@ test("installation commands reject broadened selection and quote source argument
   );
 });
 
-test("reviewed variants identify maintained files while unchanged writing guidance stays upstream", () => {
+test("reviewed variants identify maintained files while unchanged interview and writing guidance stay upstream", () => {
   const c = catalog(),
     pages = generatedPages();
-  for (const name of ["code-review", "grill-me", "tdd"]) {
+  for (const name of ["code-review", "tdd"]) {
     const entry = c.byName.get(name),
       page = pages.get(`skills/${name}.md`);
     assert.equal(entry.source.type, "local");
@@ -158,6 +158,16 @@ test("reviewed variants identify maintained files while unchanged writing guidan
     assert.doesNotMatch(page, /not a reviewed installed adaptation/);
     assert.match(localInstructions(name), new RegExp("^name: " + name + "$", "m"));
   }
+  const grill = c.byName.get("grill-me");
+  assert.equal(grill.kind, "upstream");
+  assert.equal(grill.source.type, "github");
+  assert.equal(grill.adaptation, undefined);
+  assert.match(pages.get("skills/grill-me.md"), /Upstream-only; approved external setup/);
+  assert.match(
+    pages.get("skills/grill-me.md"),
+    /fcf0071560d32913c9d4f820e0d7ca467c881619\/skills\/productivity\/grill-me --skill grill-me/,
+  );
+  assert.throws(() => localInstructions("grill-me"), /No local instructions/);
   const writing = c.byName.get("writing-for-agents");
   assert.equal(writing.kind, "upstream");
   assert.equal(writing.source.type, "github");
