@@ -13,7 +13,7 @@ AI tools that I have encountered and find useful.
 ## Skills
 
 - [Curated YAML catalog](catalog/skill-catalog.yaml): sources, commands, adaptations, and deprecations for local and upstream skills.
-- https://github.com/mattpocock/skills (including the upstream `grilling` and `wait-what` skills)
+- https://github.com/mattpocock/skills (including upstream `grilling` and the source of the maintained `wait-what` adaptation)
 - https://github.com/cursor/plugins/tree/main/pstack/skills/unslop
 - https://github.com/vercel-labs/skills (Skills CLI)
 

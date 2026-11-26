@@ -41,7 +41,7 @@ The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/catalog/skill-ca
 | [`systematic-debugging`](/skills/systematic-debugging) | Upstream-derived; maintained here | optional |
 | [`tdd`](/skills/tdd) | Upstream-derived; maintained here | optional |
 | [`unslop`](/skills/unslop) | Upstream-only; approved external setup | recommended |
-| [`wait-what`](/skills/wait-what) | Upstream-only; approved external setup | optional |
+| [`wait-what`](/skills/wait-what) | Upstream-derived; maintained here | optional |
 | [`writing-for-agents`](/skills/writing-for-agents) | Upstream-only; approved external setup | optional |
 
 A recommended default is not approval. A declined skill stays unchanged; policy already active in the target project still applies. Read each profile for runtime setup and its authoritative source.

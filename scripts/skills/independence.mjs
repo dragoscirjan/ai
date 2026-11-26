@@ -52,7 +52,9 @@ function ownerAt(path, repository, context) {
 }
 function targetName(href, context, helper = false) {
   if (!href || href.startsWith("#") || href.startsWith("?")) return;
-  const value = decode(href.split(/[?#]/)[0], context);
+  const target = href.split(/[?#]/)[0];
+  // Helper file names may contain literal percent signs; document URLs remain strict.
+  const value = decode(helper ? target.replace(/%(?![a-f0-9]{2})/gi, "%25") : target, context);
   if (context.profile) {
     const profile = value.match(/^\/skills\/([a-z][a-z0-9-]*)(?:[/.]|$)/);
     if (profile) return profile[1];

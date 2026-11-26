@@ -121,7 +121,7 @@ test("catalog groups are an exact partition, not a replacement inventory", () =>
   const names = groups.flatMap((group) => group.skills);
   assert.equal(names.length, new Set(names).size);
   assert.deepEqual(new Set(names), new Set(catalog().skills.map((skill) => skill.name)));
-  assert.equal(catalog().skills.filter((skill) => skill.source.type !== "local").length, 6);
+  assert.equal(catalog().skills.filter((skill) => skill.source.type !== "local").length, 5);
 });
 test("every catalog entry and recipe has one generated page and a meaningful stopping boundary", () => {
   const pages = generatedPages();

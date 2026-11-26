@@ -8,6 +8,8 @@ Repository-backed diagrams cite committed source bytes. Obtain owner approval to
 
 Complete the [mise setup](/maintenance/) and approve any missing tools. Archify is an upstream-only catalog entry, not a vendored skill or registered live-agent installation. The setup task acquires the catalog-pinned package into an external `ai-skills-docs` tool cache under `XDG_CACHE_HOME` or the standard user cache. It does not change personal agent discovery paths or install a browser.
 
+Source acquisition preserves the complete pinned package, including its vendored Code Analysis libraries. The 12 MiB per-file bound accommodates the bundled TypeScript parser; the 64 MiB aggregate package bound, blob-hash checks, and source safety rules still apply.
+
 You need Node.js and an existing Chrome, Chromium, or Edge compatible with Archify. This project's browser helper defaults to `chromium`; set `ARCHIFY_CHROME` to a reviewed executable path when needed. An invalid explicit path fails rather than silently choosing another browser. The helper uses an isolated disposable profile and a private DevTools pipe, not a personal browser profile.
 
 ```sh

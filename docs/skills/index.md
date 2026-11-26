@@ -4,7 +4,7 @@ title: "Find a skill"
 
 # Find a skill
 
-The catalog contains **28 skills**: 22 local entries and 6 remote-source entries. Search by an exact skill name or start with your task.
+The catalog contains **28 skills**: 23 local entries and 5 remote-source entries. Search by an exact skill name or start with your task.
 
 ![The collection's six groups include local and external skills; grouping is not a runtime dependency.](/diagrams/skill-groups.svg)
 
@@ -44,7 +44,7 @@ Write technical documentation and explanations, or create editable and interacti
 - [`document-project`](/skills/document-project) — Maintain task-based developer documentation during implementation; create or refactor VitePress/MkDocs documentation within approved scope.
 - [`unslop`](/skills/unslop) — Remove AI-generated prose patterns while preserving meaning.
 - [`excalidraw`](/skills/excalidraw) — Generate PNG or SVG diagrams with local Excalidraw rendering. Use for project structure, component relationships, workflows, or revisions to an existing diagram. Retain scene JSON as editable source and deliver images first.
-- [`archify`](/skills/archify) — Generate validated interactive HTML diagrams or one-page explainers with Archify, including architecture, workflows, Mermaid input, and image/SVG/WebM exports.
+- [`archify`](/skills/archify) — Create validated diagrams, explainers, stories, and source-backed Code Analysis workbenches with Archify 3.3.2, including image/SVG/WebM exports.
 
 ## [Agentic work](/groups/agentic-work)
 

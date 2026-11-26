@@ -72,10 +72,10 @@ export const notes = {
   "wait-what": {
     when: "The last answer is hard to understand or omits context needed to follow the current proposal.",
     result:
-      "A clearer explanation with the missing context, plain technical language, and the project's existing vocabulary.",
+      "A clearer explanation with the missing context, plain technical language, and project vocabulary or the bundled default.",
     prompt:
       "Use wait-what to explain your last answer again. Start with the missing context, use plain technical language and existing glossary terms, and ask about unavailable context. Do not edit files.",
-    stop: "This explicitly invoked upstream entry requests clarification, not adversarial design review. Use GLOSSARY.md and GLOSSARY-MAP.md to resolve project vocabulary; ask about missing context rather than inventing it. Do not create a glossary or implement changes as a side effect.",
+    stop: "This explicitly invoked skill requests clarification, not adversarial design review. Prefer the project's root GLOSSARY.md, accept GLOSARY.md when absent, and follow GLOSSARY-MAP.md when needed. Use the bundled generic glossary only when no project glossary is available. Ask about missing context rather than inventing it. Do not create a project glossary or implement changes as a side effect.",
   },
   coding: {
     when: "You are designing, implementing, refactoring, reviewing, or testing source code under project conventions.",
@@ -174,12 +174,12 @@ export const notes = {
     stop: "Writing mechanics do not authorize policy changes. Existing instruction edits still need the project's audit, exact proposal, approval, and task-branch/workspace rules.",
   },
   archify: {
-    when: "You need an explorable standalone HTML diagram for relationships, workflows, states, schemas, or other supported structures.",
+    when: "A supported native diagram, structured explanation, local repository Code Analysis workbench, or story/video export is needed.",
     result:
-      "An editable native candidate and standalone HTML that passes its required validation, artifact, and real-browser gates.",
+      "A retained native candidate, explainer, or analysis workbench with the delivery and browser checks required by its mode.",
     prompt:
       "Use archify for a source-backed diagram of this workflow. Keep required dependencies separate from suggested handoffs, retain the candidate, and run the required finalize gates.",
-    stop: "The external package and runtime/browser setup need approval. A rendered HTML file alone is not proof that delivery and browser gates passed; visual inspection is a separate claim.",
+    stop: "The external package and runtime/browser setup need approval. Upstream 3.3 may produce explainer pages for complex work by default; honor the user's selected mode and existing project rules. Do not change global agent rules during setup. A rendered HTML file alone is not proof that delivery and browser gates passed; visual inspection is a separate claim.",
   },
   excalidraw: {
     when: "You want an editable Excalidraw scene with a PNG or SVG for a project structure, workflow, or component explanation.",

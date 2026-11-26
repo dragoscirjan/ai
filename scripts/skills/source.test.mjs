@@ -146,8 +146,30 @@ test("HTTP errors and oversized source files fail", async () => {
   await assert.rejects(
     fetchBytes(
       "https://example.invalid",
-      async () => new Response(new Uint8Array(8 * 1024 * 1024 + 1)),
+      async () => new Response(new Uint8Array(12 * 1024 * 1024 + 1)),
     ),
     /size limit/,
   );
+});
+test("reviewed source bundles up to 12 MiB remain acquirable", async () => {
+  for (const size of [9_938_268, 12 * 1024 * 1024]) {
+    const bytes = await fetchBytes(
+      "https://example.invalid",
+      async () => new Response(new Uint8Array(size)),
+    );
+    assert.equal(bytes.length, size);
+  }
+});
+test("the 64 MiB aggregate package limit still fails before publishing a cache", async (t) => {
+  const content = "x".repeat(11 * 1024 * 1024),
+    sha = createHash("sha1").update(`blob ${content.length}\0${content}`).digest("hex"),
+    f = fixture(t, (tree, files) => {
+      for (let i = 0; i < 6; i++) {
+        const path = `skill/vendor-${i}.cjs`;
+        files[path] = content;
+        tree.tree.push({ path, type: "blob", mode: "100644", sha });
+      }
+    });
+  await assert.rejects(downloadSource(f), /Source package exceeds the size limit/);
+  assert.equal(existsSync(f.directory), false);
 });

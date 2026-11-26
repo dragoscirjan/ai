@@ -6,20 +6,20 @@ title: "wait-what"
 
 Explain the current proposal again with simpler language and missing context.
 
-**Group:** [Productivity](/groups/productivity) · **Availability:** Upstream-only; approved external setup · **Scope:** project
+**Group:** [Productivity](/groups/productivity) · **Availability:** Upstream-derived; maintained here · **Scope:** project
 
 ## When to choose it
 
 The last answer is hard to understand or omits context needed to follow the current proposal.
 
-**Expected result:** A clearer explanation with the missing context, plain technical language, and the project's existing vocabulary.
+**Expected result:** A clearer explanation with the missing context, plain technical language, and project vocabulary or the bundled default.
 
 ## Install this skill
 
 You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the target project after reviewing its instructions and the skill source.
 
 ```sh
-npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/d80fa0f4ebe0c5714af0adf8670336065233ecc6/skills/productivity/wait-what --skill wait-what
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/wait-what --skill wait-what
 ```
 
 This command selects only `wait-what`.
@@ -46,12 +46,12 @@ Resolve required instructions in their declared order before applying the skill.
 
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
-This explicitly invoked upstream entry requests clarification, not adversarial design review. Use GLOSSARY.md and GLOSSARY-MAP.md to resolve project vocabulary; ask about missing context rather than inventing it. Do not create a glossary or implement changes as a side effect.
+This explicitly invoked skill requests clarification, not adversarial design review. Prefer the project's root GLOSSARY.md, accept GLOSARY.md when absent, and follow GLOSSARY-MAP.md when needed. Use the bundled generic glossary only when no project glossary is available. Ask about missing context rather than inventing it. Do not create a project glossary or implement changes as a side effect.
 
 ## Source and harness support
 
 The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the authoritative skill instructions](https://raw.githubusercontent.com/mattpocock/skills/d80fa0f4ebe0c5714af0adf8670336065233ecc6/skills/productivity/wait-what/SKILL.md). This link uses the immutable upstream revision `d80fa0f4ebe0c5714af0adf8670336065233ecc6`; there is no vendored copy here.
+[Read the authoritative skill instructions](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/productivity/wait-what/SKILL.md). This link follows the source repository's configured catalog ref; the maintained local copy is the documented entry.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.
