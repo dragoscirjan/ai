@@ -72,10 +72,10 @@ export const notes = {
   "wait-what": {
     when: "The last answer is hard to understand or omits context needed to follow the current proposal.",
     result:
-      "A clearer explanation with the missing context, plain technical language, and the project's existing vocabulary.",
+      "A clearer explanation with the missing context, plain technical language, and project vocabulary or the bundled default.",
     prompt:
       "Use wait-what to explain your last answer again. Start with the missing context, use plain technical language and existing glossary terms, and ask about unavailable context. Do not edit files.",
-    stop: "This explicitly invoked upstream entry requests clarification, not adversarial design review. Use GLOSSARY.md and GLOSSARY-MAP.md to resolve project vocabulary; ask about missing context rather than inventing it. Do not create a glossary or implement changes as a side effect.",
+    stop: "This explicitly invoked skill requests clarification, not adversarial design review. Prefer the project's root GLOSSARY.md, accept GLOSARY.md when absent, and follow GLOSSARY-MAP.md when needed. Use the bundled generic glossary only when no project glossary is available. Ask about missing context rather than inventing it. Do not create a project glossary or implement changes as a side effect.",
   },
   coding: {
     when: "You are designing, implementing, refactoring, reviewing, or testing source code under project conventions.",

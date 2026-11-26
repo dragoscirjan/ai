@@ -9,6 +9,10 @@ import { buildPlan } from "./install.mjs";
 
 const catalog = loadCatalog(CATALOG_PATH, PACKAGE_ROOT);
 const reviewed = {
+  ".agents/skills/productivity/wait-what/SKILL.md":
+    "ca487a0f94ca71d7794b31b5a57ebcf59a18f81f0b1176394982a41ec1e376ab",
+  ".agents/skills/productivity/wait-what/GLOSSARY.md":
+    "2e90a6e51d556f6f2053951fc5032919f0005456384114e780f94c26f998c384",
   ".agents/skills/coding/code-review/SKILL.md":
     "1ba39478807f2a0bb73e93cfe7728b3dba2f36ea8aba9e57931ec20d970b853e",
   ".agents/skills/coding/tdd/SKILL.md":
@@ -23,8 +27,8 @@ for (const [path, sha] of Object.entries(reviewed))
     assert.equal(digest(readFileSync(join(PACKAGE_ROOT, path))), sha);
   });
 test("every current catalogue entry has a concrete installable source, with no runtime semantic adaptation", () => {
-  assert.equal(catalog.skills.filter((entry) => entry.source.type === "local").length, 22);
-  assert.equal(catalog.skills.filter((entry) => entry.source.type !== "local").length, 6);
+  assert.equal(catalog.skills.filter((entry) => entry.source.type === "local").length, 23);
+  assert.equal(catalog.skills.filter((entry) => entry.source.type !== "local").length, 5);
   assert.deepEqual(
     catalog.skills.filter((entry) => entry.kind === "adapted" && entry.source.type !== "local"),
     [],
@@ -35,7 +39,7 @@ test("every current catalogue entry has a concrete installable source, with no r
   );
 });
 test("prepared variants preserve upstream provenance and both original and project licenses", () => {
-  for (const name of ["code-review", "tdd"]) {
+  for (const name of ["code-review", "tdd", "wait-what"]) {
     const entry = catalog.byName.get(name),
       directory = join(PACKAGE_ROOT, entry.source.path);
     assert.equal(entry.kind, "adapted");
@@ -75,6 +79,28 @@ test("grill-me uses unchanged pinned upstream input and retains grilling install
     entry.runtime.some((item) => item.includes("Skill tool") && item.includes("unverified")),
   );
   assert.equal(existsSync(join(PACKAGE_ROOT, ".agents/skills/productivity/grill-me")), false);
+});
+test("wait-what prefers project terminology before its packaged generic glossary", () => {
+  const entry = catalog.byName.get("wait-what"),
+    directory = join(PACKAGE_ROOT, entry.source.path),
+    text = readFileSync(join(directory, "SKILL.md"), "utf8"),
+    glossary = readFileSync(join(directory, "GLOSSARY.md"), "utf8");
+  assert.equal(entry.upstream.revision, "d80fa0f4ebe0c5714af0adf8670336065233ecc6");
+  assert.deepEqual(entry.prerequisites, []);
+  assert.match(text, /disable-model-invocation: true/);
+  assert.match(text, /project's root `GLOSSARY\.md` \(`GLOSARY\.md` if absent/);
+  assert.match(text, /follow `GLOSSARY-MAP\.md`/);
+  assert.match(
+    text,
+    /If no project glossary is available, use \[the bundled glossary\]\(GLOSSARY\.md\)/,
+  );
+  assert.match(text, /talk in ASD-STE100 Simplified Technical English/);
+  assert.ok(text.indexOf("project's root") < text.indexOf("the bundled glossary"));
+  assert.match(glossary, /\*\*Issue tracker\*\*/);
+  assert.doesNotMatch(
+    glossary,
+    /setup-matt-pocock-skills|to-tickets|to-spec|wayfinder|docs\/agents\//,
+  );
 });
 test("tdd is self-contained and preserves its test and mocking references", () => {
   const entry = catalog.byName.get("tdd"),

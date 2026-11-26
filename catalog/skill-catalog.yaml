@@ -857,13 +857,22 @@ skills:
         target: LICENSE
         spdx: MIT
   wait-what:
-    kind: upstream
+    kind: adapted
     description: Explain the current proposal again with simpler language and missing context.
     source:
+      type: local
+      path: .agents/skills/productivity/wait-what
+    upstream:
       type: github
       repository: https://github.com/mattpocock/skills
       revision: d80fa0f4ebe0c5714af0adf8670336065233ecc6
       path: skills/productivity/wait-what
+    adaptation:
+      instructions: Reviewed local variant; synchronization copies it without runtime adaptation. Preserve the user-invoked re-pitch wording, plain technical language, and glossary-map handling. Prefer the project's root glossary and include a generic default derived from the pinned upstream glossary. Do not introduce skill prerequisites or model-provider requirements.
+      review:
+        - Preserve the upstream frontmatter and all wording outside glossary selection.
+        - Keep project terminology ahead of the bundled fallback and retain glossary-map handling.
+        - Remove repository-specific setup and skill references from the default glossary; preserve source attribution and legal notices.
     category: communication-wrapper
     selection: optional
     safety: read-only-guidance
@@ -878,12 +887,15 @@ skills:
           -y,
           skills@1.7.4,
           add,
-          https://github.com/mattpocock/skills/tree/d80fa0f4ebe0c5714af0adf8670336065233ecc6/skills/productivity/wait-what,
+          https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/wait-what,
           --skill,
           wait-what,
         ]
     legal:
-      - path: LICENSE
+      - path: .agents/skills/productivity/wait-what/LICENSE.upstream
+        target: LICENSE.upstream
+        spdx: MIT
+      - path: .agents/skills/productivity/wait-what/LICENSE
         target: LICENSE
         spdx: MIT
   writing-for-agents:

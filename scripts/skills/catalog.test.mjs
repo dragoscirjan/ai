@@ -17,7 +17,7 @@ import {
 test("maintained packages contain their own complete legal files for standalone acquisition", () => {
   const c = loadCatalog(CATALOG_PATH, PACKAGE_ROOT),
     own = c.skills.filter((entry) => entry.source.type === "local");
-  assert.equal(own.length, 22);
+  assert.equal(own.length, 23);
   for (const entry of own) {
     assert.ok(
       readFileSync(join(PACKAGE_ROOT, entry.source.path, "README.md"), "utf8").includes("## Usage"),

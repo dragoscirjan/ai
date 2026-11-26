@@ -343,7 +343,7 @@ test("overview rule leaves nested technical READMEs unchanged", (t) => {
     "renderers/README.md",
   );
 });
-test("all 22 local packages are independent with exactly the six approved requirement edges", (t) => {
+test("all 23 local packages are independent with exactly the six approved requirement edges", (t) => {
   const f = fixture(t),
     plan = buildPlan(
       { target: f.target, categories: Object.keys(catalog.groups), agents: ["pi"] },
@@ -364,7 +364,7 @@ test("all 22 local packages are independent with exactly the six approved requir
     ],
   );
   const local = plan.entries.filter((entry) => entry.source.type === "local");
-  assert.equal(local.length, 22);
+  assert.equal(local.length, 23);
   for (const entry of local)
     verifySkillIndependence(join(PACKAGE_ROOT, entry.source.path), entry, plan);
 });
