@@ -89,7 +89,7 @@ This adaptation workflow covers instruction routes, deferred policy documents, d
 
 ## Environment contract
 
-This repository has no runtime environment variables or executable application configuration.
+The skill-sync CLI reads `CLAUDE_CONFIG_DIR` and `XDG_CONFIG_HOME` for personal installation paths. The documentation build reads `DOCS_BASE` for its site base path.
 
 - Document any future environment input beside the asset that consumes it.
 - Reject partial or unknown configuration when a future tool defines a complete, closed input contract.
