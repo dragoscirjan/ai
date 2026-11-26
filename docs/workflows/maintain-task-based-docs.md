@@ -36,7 +36,7 @@ Use a diagram only when it answers a relationship question. A new site or toolch
 
 ## Optional branches
 
-- Choose [`archify`](/skills/archify) when you need an explorable standalone HTML diagram for relationships, workflows, states, schemas, or other supported structures.
+- Choose [`archify`](/skills/archify) when a supported native diagram, structured explanation, local repository Code Analysis workbench, or story/video export is needed.
 - Choose [`excalidraw`](/skills/excalidraw) when you want an editable Excalidraw scene with a PNG or SVG for a project structure, workflow, or component explanation.
 
 Optional branches are not prerequisites or permission to launch another phase. You can omit them or stop at the stated result. See [relationship types](/reference/relationships) for the distinction.

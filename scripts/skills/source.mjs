@@ -10,7 +10,7 @@ export async function fetchBytes(url, fetcher = globalThis.fetch) {
   let size = 0;
   for await (const chunk of response.body) {
     size += chunk.length;
-    check(size <= 8 * 1024 * 1024, "Source file exceeds the size limit");
+    check(size <= 12 * 1024 * 1024, "Source file exceeds the size limit");
     chunks.push(Buffer.from(chunk));
   }
   return Buffer.concat(chunks);

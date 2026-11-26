@@ -44,7 +44,7 @@ Write technical documentation and explanations, or create editable and interacti
 - [`document-project`](/skills/document-project) — Maintain task-based developer documentation during implementation; create or refactor VitePress/MkDocs documentation within approved scope.
 - [`unslop`](/skills/unslop) — Remove AI-generated prose patterns while preserving meaning.
 - [`excalidraw`](/skills/excalidraw) — Generate PNG or SVG diagrams with local Excalidraw rendering. Use for project structure, component relationships, workflows, or revisions to an existing diagram. Retain scene JSON as editable source and deliver images first.
-- [`archify`](/skills/archify) — Generate validated interactive HTML diagrams or one-page explainers with Archify, including architecture, workflows, Mermaid input, and image/SVG/WebM exports.
+- [`archify`](/skills/archify) — Create validated diagrams, explainers, stories, and source-backed Code Analysis workbenches with Archify 3.3.2, including image/SVG/WebM exports.
 
 ## [Agentic work](/groups/agentic-work)
 

@@ -141,6 +141,56 @@ test("helper imports may cross packages only through a declared dependency", (t)
   );
   assert.throws(() => verifySkillIndependence(root, f.entry, f.plan), /Undeclared skill reference/);
 });
+for (const [label, body] of [
+  ["literal percent in a local helper", 'require("./value%file.cjs");\n'],
+  [
+    "generated import with a modulo expression",
+    'const source = `import "./f${(i + 1) % 22}.mjs";`;\n',
+  ],
+])
+  test(`helper path normalization accepts ${label}`, (t) => {
+    const f = fixture(t),
+      root = join(f.target, "acquired");
+    mkdirSync(root);
+    writeFileSync(join(root, "helper.cjs"), body);
+    assert.doesNotThrow(() => verifySkillIndependence(root, f.entry, f.plan));
+  });
+for (const [label, body, error] of [
+  [
+    "literal percent in another skill",
+    'require("../coding-with-rules/helper%file.cjs");\n',
+    /Undeclared skill reference/,
+  ],
+  [
+    "encoded package traversal",
+    'require("./%2e%2e/coding-with-rules/helper.cjs");\n',
+    /Undeclared skill reference/,
+  ],
+  [
+    "encoded traversal mixed with a literal percent",
+    'require("./%2e%2e/coding-with-rules/helper%file.cjs");\n',
+    /Undeclared skill reference/,
+  ],
+  [
+    "unknown external helper with a literal percent",
+    'require("../../../outside/helper%file.cjs");\n',
+    /Helper import leaves the independent package/,
+  ],
+])
+  test(`helper path normalization still rejects ${label}`, (t) => {
+    const f = fixture(t),
+      root = join(f.target, "acquired");
+    mkdirSync(root);
+    writeFileSync(join(root, "helper.cjs"), body);
+    assert.throws(() => verifySkillIndependence(root, f.entry, f.plan), error);
+  });
+test("malformed percent encoding remains invalid in Markdown URLs", (t) => {
+  const f = fixture(t);
+  assert.throws(
+    () => verifyMarkdownIndependence("[Data](./value%file.md)", f.entry, f.plan, "support.md"),
+    /Invalid reference encoding/,
+  );
+});
 test("NUL-containing executable text is inspected, while binary data and legal bytes are preserved", (t) => {
   const f = fixture(t),
     root = join(f.target, "acquired");

@@ -56,6 +56,45 @@ for (const [label, text] of [
   ["unsafe keys", '"__proto__": value'],
 ])
   test(`YAML rejects ${label}`, () => assert.throws(() => parseYaml(text)));
+test("Archify 3.3.2 is pinned with complete legal records and no extra skill dependency", () => {
+  const c = loadCatalog(),
+    entry = c.byName.get("archify");
+  assert.equal(entry.kind, "upstream");
+  assert.deepEqual(entry.source, {
+    type: "github",
+    repository: "https://github.com/tt-a1i/archify",
+    revision: "a0199aab7bc1e87821c286f9b297afb8f98894ec",
+    path: "archify",
+  });
+  assert.ok(
+    entry.install.argv.includes(
+      "https://github.com/tt-a1i/archify/tree/a0199aab7bc1e87821c286f9b297afb8f98894ec/archify",
+    ),
+  );
+  assert.deepEqual(entry.prerequisites, []);
+  assert.equal(c.byName.has("archify-pr"), false);
+  assert.deepEqual(
+    entry.legal.map((file) => file.target),
+    [
+      "LICENSE",
+      "LICENSE-MIT",
+      "NOTICE",
+      "THIRD_PARTY_NOTICES.md",
+      "assets/JetBrainsMono-OFL.txt",
+      "explainer/vendor/pele/LICENSE",
+      "modules/code-analysis/LICENSE",
+      "modules/code-analysis/NOTICE",
+      "modules/code-analysis/extract/py/upstream/LICENSE.txt",
+      "modules/code-analysis/import/vendor/CODEQL-LICENSE.txt",
+      "modules/code-analysis/import/vendor/OASIS-LICENSE.md",
+      "modules/code-analysis/overlay/vendor/THREE-LICENSE.txt",
+      "modules/code-analysis/test/fixtures/vue-2532.LICENSE",
+      "modules/code-analysis/vendor/LICENSES.txt",
+      "story/vendor/entities-LICENSE.txt",
+      "story/vendor/parse5-LICENSE.txt",
+    ],
+  );
+});
 test("instruction maintenance remains user-only with no skill prerequisites", () => {
   const text = readFileSync(
     join(PACKAGE_ROOT, ".agents/skills/agentic-work/sync-my-agents/SKILL.md"),

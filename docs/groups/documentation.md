@@ -40,9 +40,9 @@ Generate PNG or SVG diagrams with local Excalidraw rendering. Use for project st
 
 ## [`archify`](/skills/archify)
 
-Generate validated interactive HTML diagrams or one-page explainers with Archify, including architecture, workflows, Mermaid input, and image/SVG/WebM exports.
+Create validated diagrams, explainers, stories, and source-backed Code Analysis workbenches with Archify 3.3.2, including image/SVG/WebM exports.
 
-**Choose it when:** You need an explorable standalone HTML diagram for relationships, workflows, states, schemas, or other supported structures.
+**Choose it when:** A supported native diagram, structured explanation, local repository Code Analysis workbench, or story/video export is needed.
 
 ## Related procedures
 
