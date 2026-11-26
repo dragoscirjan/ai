@@ -3,8 +3,10 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { catalog, groups, localInstructions, root } from "./data.mjs";
-import { generatedPages, installCommand } from "./generate.mjs";
+import { availability, generatedPages, installCommand } from "./generate.mjs";
 import { workflowGuides, workflows } from "./workflows.mjs";
+import { verifyMarkdownIndependence } from "../skills/independence.mjs";
+import { notes } from "./skill-notes.mjs";
 
 const expected = {
   productivity: [
@@ -34,7 +36,7 @@ const expected = {
     "excalidraw",
     "archify",
   ],
-  "agentic-work": ["writing-for-agents", "sync-my-skills"],
+  "agentic-work": ["writing-for-agents", "sync-my-agents"],
   utility: ["init-project", "isolated-workspace", "cleanup-workspaces"],
   unpolished: ["instruction-maintenance", "subagent-orchestration"],
 };
@@ -90,23 +92,34 @@ test("each skill page has exactly one command selecting only its own catalog ski
     assert.ok(!argv[selector + 2] || argv[selector + 2].startsWith("--"));
     assert.equal(argv.includes("--all"), false);
     assert.match(page, /## Install this skill/);
-    assert.match(page, /does not install the rest of the collection/);
+    assert.ok(page.includes(`This command selects only \`${entry.name}\``));
   }
 });
 
-test("the manager example requests category checkboxes and confirmed understanding before drafting", () => {
-  const page = generatedPages().get("skills/sync-my-skills.md");
-  assert.match(page, /choose categories, then skills through native checkboxes/);
-  assert.match(page, /Leave skipped categories unchanged/);
-  assert.match(page, /confirm project understanding before drafting/);
-  assert.doesNotMatch(page, /ask about the remaining entries/);
+test("instruction review is explicit, evidence-based, and separate from installation", () => {
+  const page = generatedPages().get("skills/sync-my-agents.md");
+  assert.match(page, /Inspect project evidence/);
+  assert.match(page, /show exact diffs before editing/);
+  assert.match(page, /Do not install skills or impose a template bundle/);
+  assert.match(page, /Missing required skills stop the affected phase/);
 });
 
+test("every individual profile contains only self and declared required-skill references", () => {
+  const c = catalog(),
+    pages = generatedPages(),
+    plan = { repository: c.repository, ref: c.ref, linkSources: c.skills };
+  for (const entry of c.skills) {
+    const page = pages.get(`skills/${entry.name}.md`);
+    assert.equal(Object.hasOwn(notes[entry.name], "companions"), false);
+    assert.doesNotMatch(page, /Useful combinations|optional companions|\/workflows\//);
+    verifyMarkdownIndependence(page, entry, plan, `skills/${entry.name}.md`, { profile: true });
+  }
+});
 test("required instructions have separate install links instead of widening the selected command", () => {
   const pages = generatedPages();
   assert.match(pages.get("skills/coding-with-rules.md"), /\/skills\/coding#install-this-skill/);
   assert.match(pages.get("skills/research.md"), /\/skills\/grilling#install-this-skill/);
-  assert.match(pages.get("skills/sync-my-skills.md"), /personal installation/);
+  assert.match(pages.get("skills/sync-my-agents.md"), /personal installation/);
 });
 
 test("installation commands reject broadened selection and quote source arguments", () => {
@@ -131,19 +144,42 @@ test("installation commands reject broadened selection and quote source argument
   );
 });
 
-test("remote adaptations identify pinned inputs and require review rather than claiming a vendored copy", () => {
-  const pages = generatedPages();
-  for (const name of ["code-review", "grill-me", "tdd", "writing-for-agents"]) {
-    const entry = catalog().byName.get(name);
-    const page = pages.get(`skills/${name}.md`);
-    assert.match(page, /Pinned upstream input; adaptation required/);
-    assert.match(page, /not a reviewed installed adaptation/);
-    assert.match(page, /review the output and legal notices before use/);
-    assert.match(page, /Read the pinned upstream input/);
-    assert.ok(page.includes(entry.source.revision));
-    assert.doesNotMatch(page, /maintained local copy/);
-    assert.throws(() => localInstructions(name), /No local instructions/);
+test("reviewed variants identify maintained files while unchanged interview and writing guidance stay upstream", () => {
+  const c = catalog(),
+    pages = generatedPages();
+  for (const name of ["code-review", "tdd"]) {
+    const entry = c.byName.get(name),
+      page = pages.get(`skills/${name}.md`);
+    assert.equal(entry.source.type, "local");
+    assert.match(entry.upstream.revision, /^[a-f0-9]{40}$/);
+    assert.match(page, /Upstream-derived; maintained here/);
+    assert.match(page, /Read the authoritative skill instructions/);
+    assert.match(page, /maintained local copy/);
+    assert.doesNotMatch(page, /not a reviewed installed adaptation/);
+    assert.match(localInstructions(name), new RegExp("^name: " + name + "$", "m"));
   }
+  const grill = c.byName.get("grill-me");
+  assert.equal(grill.kind, "upstream");
+  assert.equal(grill.source.type, "github");
+  assert.equal(grill.adaptation, undefined);
+  assert.match(pages.get("skills/grill-me.md"), /Upstream-only; approved external setup/);
+  assert.match(
+    pages.get("skills/grill-me.md"),
+    /fcf0071560d32913c9d4f820e0d7ca467c881619\/skills\/productivity\/grill-me --skill grill-me/,
+  );
+  assert.throws(() => localInstructions("grill-me"), /No local instructions/);
+  const writing = c.byName.get("writing-for-agents");
+  assert.equal(writing.kind, "upstream");
+  assert.equal(writing.source.type, "github");
+  assert.equal(writing.adaptation, undefined);
+  assert.match(pages.get("skills/writing-for-agents.md"), /Upstream-only; approved external setup/);
+  assert.throws(() => localInstructions("writing-for-agents"), /No local instructions/);
+});
+test("future unprepared remote variants still show a review-required warning", () => {
+  assert.equal(
+    availability({ kind: "adapted", source: { type: "github" } }),
+    "Pinned upstream input; adaptation required",
+  );
 });
 
 test("native recipe labels fit the pinned renderer node budget", () => {

@@ -23,12 +23,12 @@ test("whole-sentence shortening never ends with Caveman fragment mode", () => {
   assert.equal(recipe.steps.at(-1).label, "Check complete sentences");
   assert.match(recipe.limit, /separate fragment-style alternative/);
   assert.match(recipe.limit, /explicitly disable/);
-  assert.equal(notes["asd-ste100-technical"].companions.includes("caveman"), false);
-  assert.equal(notes.caveman.companions.includes("unslop"), false);
+  assert.equal(Object.hasOwn(notes["asd-ste100-technical"], "companions"), false);
+  assert.equal(Object.hasOwn(notes.caveman, "companions"), false);
   assert.match(notes.caveman.result, /until you explicitly disable/);
 });
 test("plain-language re-pitching does not compose a conflicting fragment pass", () => {
-  assert.equal(notes["wait-what"].companions.includes("caveman"), false);
+  assert.equal(Object.hasOwn(notes["wait-what"], "companions"), false);
   assert.equal(
     workflows.find((item) => item.id === "re-pitch-an-explanation").optional.includes("caveman"),
     false,

@@ -15,6 +15,7 @@ Load only the instructions required for the current phase. When several rows mat
 | Before changing repository files | Follow the task-branch and working-location policy below. |
 | Before designing, changing, testing, or reviewing source code | Read `coding-with-rules` and follow its language and extension reference selection. Resolve its declared requirements first. |
 | During implementation, and before creating or revising project documentation | Read and follow `document-project`, `asd-ste100-technical`, and `unslop`. Assess documentation impact and update affected documentation in the same change. |
+| Before creating or revising a skill overview README | Follow the README rule in `CONTRIBUTING.md`. Short Usage and optional standalone Install sections are allowed; installation must not depend on the repository sync CLI. |
 | Before delegating work to child agents | Read and follow `.agents/skills/unpolished/subagent-orchestration/SKILL.md`. |
 | Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
 | Before auditing or removing old workspaces | Read and follow `.agents/skills/utility/cleanup-workspaces/SKILL.md`. |
@@ -22,9 +23,9 @@ Load only the instructions required for the current phase. When several rows mat
 
 Stop before the gated phase if a required document or skill is unavailable. Do not recreate missing instructions from memory.
 
-Use skill frontmatter descriptions to select task-specific skills; do not preload every skill. Before applying a selected skill, inspect its frontmatter and resolve its `requires` skills recursively in array order, then apply the selected skill. Names may resolve to local skills or installed external skills registered in `.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml`. A catalog entry identifies a source; it does not count as an installed requirement or authorize fetching it. Stop on cycles. If a selected skill or one of its declared requirements is not installed, stop the task. List the missing skills and ask the user to install them. Do not fetch, install, synchronize, substitute, or continue without those instructions. Resume only after the user confirms installation and availability is verified. Requirements load instructions, not authority to act. The declaration format is defined in `CONTRIBUTING.md`.
+Use skill frontmatter descriptions to select task-specific skills; do not preload every skill. Before applying a selected skill, inspect its frontmatter and resolve its `requires` skills recursively in array order, then apply the selected skill. Names may resolve to local skills or installed external skills registered in `catalog/skill-catalog.yaml`. A catalog entry identifies a source; it does not count as an installed requirement or authorize fetching it. Stop on cycles. If a selected skill or one of its declared requirements is not installed, stop the task. List the missing skills and ask the user to install them. Do not fetch, install, synchronize, substitute, or continue without those instructions. Resume only after the user confirms installation and availability is verified. Requirements load instructions, not authority to act. The declaration format is defined in `CONTRIBUTING.md`.
 
-Do not add `sync-my-skills` as another skill's prerequisite, companion, handoff, or recovery step. Load or run it only when the user explicitly requests it. The catalog's storage location does not create a skill dependency.
+Skill installation is a separate, explicitly requested CLI operation. Do not add `sync-my-agents` as another skill's prerequisite, companion, handoff, or recovery step. Invoke it only when the user explicitly requests instruction maintenance. The catalog's storage location does not create a skill dependency.
 
 ## Skill discovery
 

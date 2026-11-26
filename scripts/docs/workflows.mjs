@@ -49,17 +49,17 @@ export const workflows = [
     group: "agentic-work",
     when: "An existing project needs useful skills, not an automatic copy of the entire collection.",
     outcome:
-      "A verified installation of only the approved skills and separately selected instructions.",
+      "A verified installation of the approved skill selection, with project instructions unchanged.",
     steps: [
-      work("sync-my-skills", "Inspect the project"),
-      gate("sync-my-skills", "Choose each scope"),
-      work("isolated-workspace", "Prepare approved isolation"),
-      gate("sync-my-skills", "Approve exact apply plan"),
-      work("sync-my-skills", "Apply and verify status"),
+      { tool: "sync-skills", label: "Choose categories and agents", kind: "work" },
+      { tool: "sync-skills", label: "Preview selected commands", kind: "work" },
+      { tool: "sync-skills", label: "Approve selected paths", kind: "approval" },
+      { tool: "sync-skills", label: "Install selected skills", kind: "work" },
+      { tool: "sync-skills", label: "Verify files and notices", kind: "work" },
     ],
-    optional: ["instruction-maintenance"],
+    optional: ["isolated-workspace", "sync-my-agents", "instruction-maintenance"],
     limit:
-      "Keep personal manager setup separate. Declined entries and unknown custom skills remain unchanged; a stale plan requires a new review.",
+      "Use the Node.js CLI for installation. Existing destinations require explicit overwrite approval; unsupported semantic adaptations stop installation. Instruction review is a separate, explicitly requested sync-my-agents operation, not an installation step.",
   },
   {
     id: "initialize-a-project",

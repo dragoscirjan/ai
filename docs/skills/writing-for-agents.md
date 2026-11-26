@@ -6,7 +6,7 @@ title: "writing-for-agents"
 
 Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.
 
-**Group:** [Agentic work](/groups/agentic-work) · **Availability:** Pinned upstream input; adaptation required · **Scope:** project
+**Group:** [Agentic work](/groups/agentic-work) · **Availability:** Upstream-only; approved external setup · **Scope:** project
 
 ## When to choose it
 
@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/productivity/writing-for-agents --skill writing-for-agents
 ```
 
-This command selects only `writing-for-agents`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `writing-for-agents`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -46,25 +46,12 @@ Resolve required instructions in their declared order before applying the skill.
 
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
-Writing mechanics do not authorize policy changes. Existing instruction edits still need the project's audit, exact proposal, approval, and isolated-write process.
-
-This is pinned upstream input, not a reviewed installed adaptation. Follow the catalogued adaptation instructions and review the output and legal notices before use. A source link or install command does not perform that adaptation.
-
-## Useful combinations
-
-- [`instruction-maintenance`](/skills/instruction-maintenance) — Instruction routing, dependencies, metadata, or policy documents appear missing, stale, conflicting, or unsuitable.
-- [`asd-ste100-technical`](/skills/asd-ste100-technical) — Technical instructions or explanations need plain language without losing conditions, risks, or precise identifiers.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
+Writing mechanics do not authorize policy changes. Existing instruction edits still need the project's audit, exact proposal, approval, and task-branch/workspace rules.
 
 ## Source and harness support
 
 The catalog records this entry as **optional**, not as automatically selected for every project.
 
-[Read the pinned upstream input](https://raw.githubusercontent.com/mattpocock/skills/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/productivity/writing-for-agents/SKILL.md). This link uses the immutable upstream revision `5863806dd4e15c63174bee4e7515a4256792ecfa`; there is no vendored copy here.
+[Read the authoritative skill instructions](https://raw.githubusercontent.com/mattpocock/skills/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/productivity/writing-for-agents/SKILL.md). This link uses the immutable upstream revision `5863806dd4e15c63174bee4e7515a4256792ecfa`; there is no vendored copy here.
 
 Supported catalog harnesses: `pi`, `opencode`, `claude-code`. Runtime availability and actual discovery must still be checked in your chosen harness.

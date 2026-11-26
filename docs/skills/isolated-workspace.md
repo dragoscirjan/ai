@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/isolated-workspace --skill isolated-workspace
 ```
 
-This command selects only `isolated-workspace`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `isolated-workspace`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -47,18 +47,6 @@ Resolve required instructions in their declared order before applying the skill.
 - Requires Git or Jujutsu 0.38 or newer. The isolated path also requires Bun.
 
 Create a task ref before edits in either location. Preserve unrelated work and existing refs. An isolated setup still needs its exact plan approval; a failed setup does not authorize switching locations.
-
-## Useful combinations
-
-- [`coding-with-rules`](/skills/coding-with-rules) — Code or toolchain work needs the base coding workflow plus rules for its actual languages and extensions.
-- [`cleanup-workspaces`](/skills/cleanup-workspaces) — You want to audit integrated workspaces, stale registrations, or explicitly authorized temporary lanes.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-- [Implement a planned task](/workflows/implement-a-task)
-- [Debloat a project](/workflows/debloat-a-project)
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

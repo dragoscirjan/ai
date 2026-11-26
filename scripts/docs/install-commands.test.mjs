@@ -10,10 +10,23 @@ import { workflows } from "./workflows.mjs";
 
 const read = (path) => readFileSync(join(root, path), "utf8");
 
+test("external grill-me installs its exact upstream pin and not a local adaptation", () => {
+  const entry = catalog().byName.get("grill-me");
+  assert.equal(
+    installCommand(entry),
+    "npx -y skills@1.7.4 add https://github.com/mattpocock/skills/tree/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me --skill grill-me",
+  );
+  assert.equal(
+    sourceUrl(entry),
+    "https://raw.githubusercontent.com/mattpocock/skills/fcf0071560d32913c9d4f820e0d7ca467c881619/skills/productivity/grill-me/SKILL.md",
+  );
+  assert.deepEqual(entry.prerequisites, ["grilling"]);
+  assert.throws(() => localInstructions("grill-me"), /No local instructions/);
+});
 test("every local install URL names the actual grouped source directory and declared skill", () => {
   const c = catalog();
   const local = c.skills.filter((entry) => entry.source.type === "local");
-  assert.equal(local.length, 20);
+  assert.equal(local.length, 22);
   for (const entry of local) {
     const expected = `${c.repository}/tree/${c.ref}/${entry.source.path}`;
     assert.equal(entry.install.argv[4], expected, entry.name);
@@ -42,7 +55,7 @@ test("published skill commands and source links match every catalog acquisition 
     assert.ok(page.includes(installCommand(entry)), entry.name);
     assert.ok(page.includes(sourceUrl(entry)), entry.name);
   }
-  for (const name of ["code-review", "grill-me", "tdd", "writing-for-agents"]) {
+  for (const name of ["writing-for-agents"]) {
     const entry = c.byName.get(name);
     assert.equal(entry.source.type, "github", name);
     assert.equal(entry.source.repository, "https://github.com/mattpocock/skills", name);
@@ -53,54 +66,67 @@ test("published skill commands and source links match every catalog acquisition 
     );
   }
 });
-test("single-skill selection and the personal manager scope remain unchanged", () => {
+test("single-skill recipes remain project-local unless catalogued exclusively personal", () => {
   for (const entry of catalog().skills) {
     const argv = entry.install.argv;
     assert.deepEqual(argv.slice(0, 4), ["npx", "-y", "skills@1.7.4", "add"]);
     assert.equal(argv.filter((part) => part === "--skill").length, 1);
     assert.equal(argv[argv.indexOf("--skill") + 1], entry.name);
     assert.equal(argv.includes("--all"), false);
-    assert.equal(argv.includes("--global"), entry.name === "sync-my-skills");
+    assert.equal(argv.includes("--global"), entry.scope === "personal");
   }
 });
 
 test("published direct-install examples use grouped URLs and npx consent flags", () => {
-  for (const path of [
-    "AGENTS.md",
-    "README.md",
-    "docs/guide/install.md",
-    ".agents/skills/agentic-work/sync-my-skills/README.md",
-    ".agents/skills/coding/coding-with-rules/README.md",
-    ".agents/skills/coding/init-project/README.md",
-  ]) {
+  for (const path of ["AGENTS.md", "README.md", "docs/guide/install.md"]) {
     const text = read(path);
     assert.doesNotMatch(text, /npx(?: -y)? skills@1\.7\.4 add dragoscirjan\/ai(?:\s|$)/);
     for (const command of text.matchAll(/^npx[^\n]+/gm))
-      assert.match(command[0], /^npx -y skills@1\.7\.4 add /, path);
+      assert.match(
+        command[0],
+        /^npx -y (?:skills@1\.7\.4 add |github:dragoscirjan\/ai#<tag-or-commit> )/,
+        path,
+      );
   }
-  const coding = read(".agents/skills/coding/coding-with-rules/README.md");
-  for (const name of ["coding", "coding-with-rules"])
-    assert.ok(
-      coding.includes(`/tree/main/.agents/skills/coding/${name} --skill ${name} --agent pi`),
-    );
 });
 
-test("no other skill depends on or hands off to the personal manager", () => {
+test("all maintained overviews have usage and independent pinned install examples", () => {
+  const coding = read(".agents/skills/coding/coding-with-rules/README.md");
+  assert.match(coding, /Requires `coding`/);
+  const own = catalog().skills.filter((entry) => entry.source.type === "local");
+  assert.equal(own.length, 22);
+  for (const entry of own) {
+    const path = `${entry.source.path}/README.md`,
+      text = read(path);
+    assert.match(text, /## Usage\n/);
+    assert.match(text, /## Install\n/);
+    assert.match(text, /ref="<published-tag-or-commit>"/);
+    assert.deepEqual(
+      [...text.matchAll(/^npx[^\n]+/gm)].map((match) => match[0]),
+      [
+        `npx -y skills@1.7.4 add "https://github.com/dragoscirjan/ai/tree/$ref/${entry.source.path}" --skill ${entry.name}`,
+      ],
+    );
+    assert.doesNotMatch(text, /\.claude\/|sync-skills|sync-my-skills|LICENSE|## Uninstall/i, path);
+  }
+});
+
+test("no other skill depends on or hands off to the personal instruction skill", () => {
   const pages = generatedPages();
-  for (const entry of catalog().skills.filter((item) => item.name !== "sync-my-skills")) {
-    assert.ok(!entry.prerequisites.includes("sync-my-skills"), entry.name);
-    assert.ok(!notes[entry.name].companions.includes("sync-my-skills"), entry.name);
-    assert.ok(!pages.get(`skills/${entry.name}.md`).includes("/skills/sync-my-skills"), entry.name);
+  for (const entry of catalog().skills.filter((item) => item.name !== "sync-my-agents")) {
+    assert.ok(!entry.prerequisites.includes("sync-my-agents"), entry.name);
+    assert.equal(Object.hasOwn(notes[entry.name], "companions"), false, entry.name);
+    assert.ok(!pages.get(`skills/${entry.name}.md`).includes("/skills/sync-my-agents"), entry.name);
   }
   for (const recipe of workflows)
     if (
-      recipe.steps.some((step) => step.skill === "sync-my-skills") ||
-      recipe.optional.includes("sync-my-skills")
+      recipe.steps.some((step) => step.skill === "sync-my-agents") ||
+      recipe.optional.includes("sync-my-agents")
     )
       assert.equal(
         recipe.id,
         "install-selected-skills",
-        "Manager use belongs only to its explicitly requested standalone workflow",
+        "Instruction review belongs only to its explicitly requested standalone workflow",
       );
   assert.deepEqual(catalog().byName.get("coding-with-rules").prerequisites, ["coding"]);
 });
@@ -122,9 +148,9 @@ test("startup and reader guidance hard-stop on missing instructions and require 
   );
   assert.match(
     policy,
-    /Do not add `sync-my-skills` as another skill's prerequisite, companion, handoff, or recovery step/,
+    /Do not add `sync-my-agents` as another skill's prerequisite, companion, handoff, or recovery step/,
   );
-  assert.match(policy, /Load or run it only when the user explicitly requests it/);
+  assert.match(policy, /Invoke it only when the user explicitly requests instruction maintenance/);
   assert.match(
     policy,
     /Before changing repository files for a new task, create a dedicated task branch/,

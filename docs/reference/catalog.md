@@ -4,7 +4,7 @@ title: "Catalog reference"
 
 # Catalog reference
 
-The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml) owns names, sources, selection defaults, runtime notes, installation mechanisms, and legal records. This site adds learning prose and presentation groups; it does not replace that inventory.
+The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/catalog/skill-catalog.yaml) owns names, sources, selection defaults, runtime notes, installation mechanisms, and legal records. This site adds learning prose and presentation groups; it does not replace that inventory.
 
 ## Availability
 
@@ -19,14 +19,14 @@ The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/a
 | [`asd-ste100-technical`](/skills/asd-ste100-technical) | Authored here | recommended |
 | [`caveman`](/skills/caveman) | Authored here | optional |
 | [`cleanup-workspaces`](/skills/cleanup-workspaces) | Authored here | optional |
-| [`code-review`](/skills/code-review) | Pinned upstream input; adaptation required | optional |
+| [`code-review`](/skills/code-review) | Upstream-derived; maintained here | optional |
 | [`coding`](/skills/coding) | Authored here | detected |
 | [`coding-with-rules`](/skills/coding-with-rules) | Authored here | optional |
 | [`debloat`](/skills/debloat) | Authored here | optional |
 | [`grilling`](/skills/grilling) | Upstream-only; approved external setup | optional |
 | [`document-project`](/skills/document-project) | Authored here | recommended |
 | [`excalidraw`](/skills/excalidraw) | Authored here | optional |
-| [`grill-me`](/skills/grill-me) | Pinned upstream input; adaptation required | optional |
+| [`grill-me`](/skills/grill-me) | Upstream-only; approved external setup | optional |
 | [`init-project`](/skills/init-project) | Authored here | initializer |
 | [`initiative`](/skills/initiative) | Authored here | optional |
 | [`instruction-maintenance`](/skills/instruction-maintenance) | Authored here | optional |
@@ -37,12 +37,12 @@ The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/.agents/skills/a
 | [`scaffold`](/skills/scaffold) | Authored here | optional |
 | [`specify`](/skills/specify) | Authored here | optional |
 | [`subagent-orchestration`](/skills/subagent-orchestration) | Authored here | optional |
-| [`sync-my-skills`](/skills/sync-my-skills) | Authored here | optional |
+| [`sync-my-agents`](/skills/sync-my-agents) | Authored here | optional |
 | [`systematic-debugging`](/skills/systematic-debugging) | Upstream-derived; maintained here | optional |
-| [`tdd`](/skills/tdd) | Pinned upstream input; adaptation required | optional |
+| [`tdd`](/skills/tdd) | Upstream-derived; maintained here | optional |
 | [`unslop`](/skills/unslop) | Upstream-only; approved external setup | recommended |
 | [`wait-what`](/skills/wait-what) | Upstream-only; approved external setup | optional |
-| [`writing-for-agents`](/skills/writing-for-agents) | Pinned upstream input; adaptation required | optional |
+| [`writing-for-agents`](/skills/writing-for-agents) | Upstream-only; approved external setup | optional |
 
 A recommended default is not approval. A declined skill stays unchanged; policy already active in the target project still applies. Read each profile for runtime setup and its authoritative source.
 

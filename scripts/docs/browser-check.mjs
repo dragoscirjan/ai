@@ -127,7 +127,7 @@ export async function checkBrowser(mode = "preview") {
         "skills/scaffold.html",
         "skills/coding-with-rules.html",
         "skills/archify.html",
-        "skills/sync-my-skills.html",
+        "skills/sync-my-agents.html",
         "skills/init-project.html",
         "skills/grilling.html",
         ...groups.map((group) => `groups/${group.id}.html`),

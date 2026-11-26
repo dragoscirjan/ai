@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/unpolished/subagent-orchestration --skill subagent-orchestration
 ```
 
-This command selects only `subagent-orchestration`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `subagent-orchestration`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -47,17 +47,6 @@ Resolve required instructions in their declared order before applying the skill.
 - Requires a harness with child-agent support; writable parallel lanes also need owner-approved workspace creation and exact-lane cleanup procedures.
 
 Complexity alone is not delegation authority. Read-only agents must remain read-only; concurrent writers need separate owned lanes, and child success does not replace integration checks.
-
-## Useful combinations
-
-- [`code-review`](/skills/code-review) — You want changes since a fixed commit, branch, tag, or merge-base checked against both standards and the originating specification.
-- [`isolated-workspace`](/skills/isolated-workspace) — A modifying task needs a dedicated branch or bookmark and a choice between the current checkout and a separate workspace.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-- [Plan a project or feature](/workflows/plan-a-project)
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

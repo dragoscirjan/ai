@@ -2,175 +2,100 @@
 
 This repository contains reusable skills, instructions, configuration assets, and references for AI agents in coding and non-coding projects. The assets target Pi, OpenCode, and Claude Code, while portable skills follow the Agent Skills format.
 
-## Documentation website
+## Synchronize skills
 
-The VitePress site explains five project workflows: planning, task implementation, debugging, documentation, and debloating. Each guide covers skill handoffs, optional branches, and rework loops. The skill reference and focused procedures remain available separately. Start with the [documentation source](docs/index.md) or [choose your workflow](docs/guide/start.md).
+The Node.js CLI installs skills. The separate `sync-my-agents` skill maintains project instructions. Neither operation launches the other.
 
-After reviewing the project configuration and completing the [project-scoped mise setup](docs/maintenance/index.md):
+The root `package.json` maps the `sync-skills` executable to [`scripts/skills/sync.mjs`](scripts/skills/sync.mjs). It reads the [shared catalog](catalog/skill-catalog.yaml) and runs its pinned Skills CLI commands. Node.js 24, npm/npx, and Git are required.
+
+Run directly from a reviewed GitHub ref containing this implementation, without npm registry publication. Replace `<tag-or-commit>` with that ref:
+
+```sh
+npx -y github:dragoscirjan/ai#<tag-or-commit> --help
+npx -y github:dragoscirjan/ai#<tag-or-commit> --skill coding-with-rules --agent pi --target . --dry-run
+```
+
+These changes must be published before a GitHub ref can run them. From a trusted checkout with its approved dependencies already available, use `node scripts/skills/sync.mjs` instead of the GitHub invocation.
+
+Review the preview, then repeat without `--dry-run` to confirm interactively, or add `--yes` for an explicitly approved noninteractive run. In a terminal, Inquirer offers categories, a skill checklist for each chosen category, and agents. Every skill starts selected. Press A to toggle all, Space to toggle one, and Enter to accept; clear a checklist to skip that category. Required prerequisites still appear in the preview. Ctrl+C cancels a prompt without installing skills. Explicit `--yes`, JSON, and noninteractive category runs select all scoped members without opening skill checklists. Use `list` to see all six catalog categories. The CLI includes skill prerequisites, verifies output and legal files, filters unwanted metadata, and leaves project instructions and legacy locks unchanged.
+
+Existing selected destinations require `--overwrite`. The catalog provides reviewed local `code-review` and `tdd` variants. `grill-me` and `writing-for-agents` use unchanged pinned upstream sources. The external `grill-me` source retains its original Skill-tool instruction and its catalogued `grilling` installation prerequisite. Synchronization copies prepared content and rebases relative Markdown links for the installed layout. This mechanical URL correction needs no LLM, model API key, or generated instruction rewrite. Future unprepared adaptations remain blocked until reviewed sources are published. See [installation and update instructions](docs/guide/install.md) for scope, conflicts, and recovery.
+
+### Custom skills directory
+
+To populate an existing Claude plugin without creating normal agent directories, point `--target` at the plugin root and use `--skills-dir skills`:
+
+```sh
+npx -y github:dragoscirjan/ai#<tag-or-commit> \
+  --target ./my-plugin --skills-dir skills --agent claude-code --dry-run
+```
+
+After confirmation, selected skills go directly into `my-plugin/skills/<name>/SKILL.md`, with supporting and legal files. The script verifies sources in a disposable workspace before copying them. It does not edit `.claude-plugin/plugin.json`, register the plugin, or add `.agents`/`.claude` directories to it.
+
+Relative output paths are resolved under `--target`; absolute output paths must also remain inside that project. Existing selected skill folders still need `--overwrite`. See [custom output and plugin packaging](docs/guide/install.md#copy-skills-into-a-plugin-or-custom-directory).
+
+## Maintain agent instructions
+
+Invoke [`sync-my-agents`](.agents/skills/agentic-work/sync-my-agents/SKILL.md) explicitly to review `AGENTS.md` and the instruction documents it references, such as `CONTRIBUTING.md` and `VALIDATION.md`. It gathers evidence, asks about unresolved decisions, shows exact diffs, and applies only approved changes.
+
+Here, dependencies mean instruction documents, not skill prerequisites. The skill never installs skills or imposes a fixed document bundle. See its [skill overview](.agents/skills/agentic-work/sync-my-agents/README.md).
+
+`sync-my-agents` is available in project checklists and for explicit personal installation with `--scope personal`. Installing it never invokes it or authorizes instruction edits.
+
+The combined `sync-my-skills` manager is removed. Existing installations, personal command registrations, and legacy locks in other projects are not migrated or deleted automatically. The agreed split is tracked in [issue #95](https://github.com/dragoscirjan/ai/issues/95); merged [PR #96](https://github.com/dragoscirjan/ai/pull/96) describes the earlier implementation.
+
+## Use a skill today
+
+Operational references in each portable skill package and individual profile refer only to self and declared required skills. Skill overview READMEs describe intent, real dependencies, and factual origin or inspiration, with short usage examples and optional standalone install instructions. Same-package references, source attribution, separate legal files, and runtime/API documentation remain available. Collection setup and migration guidance stay in repository documentation; they are not prerequisites for using a skill.
+
+Individual skills remain available independently of the planned synchronization tools. Browse the [skill catalog](docs/reference/catalog.md), [workflow guides](docs/guide/start.md), or [skill requirements](docs/reference/relationships.md).
+
+Review a skill and its supporting files before installing it. With Node.js and npm/npx available, run an explicit installation command from the destination project's root. For example:
+
+```sh
+npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/isolated-workspace --skill isolated-workspace
+```
+
+The Skills CLI acquires the named skill and offers its installation choices. Inspect the selected destination before invoking the skill. This example follows `main`; use a reviewed commit or tag when you need a fixed source.
+
+Some skills declare instruction requirements through the project's `requires` convention. The external Skills CLI does not automatically install these requirements or apply the catalog's filtering rules. Install and review missing requirements separately before invoking a skill that needs them. See the [dependency contract](CONTRIBUTING.md#independent-skills-and-explicit-composition).
+
+Source skills are grouped under `.agents/skills/<category>/<name>/`. Project installations use flat skill names rather than category namespaces. Upstream-only skills come from their catalogued repositories, not nonexistent source directories here.
+
+## Find a workflow
+
+Start at the point that matches your task. You do not need to run every skill.
+
+- Use `research` to investigate missing facts or compare options.
+- Use `initiative` and `specify` to agree on outcomes and expected behavior.
+- Use `plan-tasks` when the work needs to be divided into bounded tasks.
+- Use `coding-with-rules` for implementation under the relevant language rules. Select `tdd` separately when a test-first workflow is wanted.
+- Use `systematic-debugging` to investigate failures before proposing a fix.
+- Use `document-project`, `asd-ste100-technical`, and `unslop` for affected documentation.
+- Use `code-review` and `retro` for review and process improvements when selected.
+
+The [workflow guides](docs/guide/start.md) explain handoffs, shorter paths, and rework. The [relationship reference](docs/reference/relationships.md) distinguishes instruction dependencies from execution order. A documented handoff does not authorize the next step automatically.
+
+## Documentation and local development
+
+Start with the [documentation overview](docs/index.md), [first-use guide](docs/guide/first-use.md), or [site maintenance instructions](docs/maintenance/index.md).
+
+For authoring this repository, use Node.js 24 and npm/npx. After reviewing the project configuration and completing the [project-scoped mise setup](docs/maintenance/index.md), run these commands from the repository root:
 
 ```sh
 mise run deps:sync
 mise run docs:serve
 ```
 
-Use `mise run docs` for a production build and `mise run docs:check` for catalog coverage, requirements, recipe, diagram, and local-link checks. Independent runs use `/`; hosted builds use `DOCS_BASE=/projects/ai-skills/`. See [site maintenance](docs/maintenance/index.md), [diagram regeneration](docs/maintenance/diagrams.md), and [publication](docs/maintenance/publication.md). Every push to `main` builds the documentation and opens a destination PR when the output changes. Manual reruns on `main` need no publish argument. The publisher does not merge or deploy.
+The first command synchronizes development dependencies. The second starts the local VitePress site and prints its address. Use `mise run docs:check` for documentation checks and `mise run docs` for a production build.
 
-## Install this repository's authoring dependencies
+Optional authoring skills have a separate [Bash installer](scripts/install-dev-skills.sh). Review it and its external sources before running it with Bash 4 or newer. It installs authoring dependencies into this checkout's ignored `.agents/skills/external/<name>/` directory. It is not the proposed cross-project Node.js CLI and does not synchronize instructions. See [authoring dependency setup](docs/maintenance/authoring-skills.md).
 
-Use Bash 4 or newer, Node.js 24, and npm/npx. This command downloads packages and upstream skills from `main`. Run it only after you review the script and trust the external skill sources.
-
-From this repository's root, run:
-
-```sh
-bash scripts/install-dev-skills.sh
-```
-
-The plain Bash script groups skills by source and uses `for` loops to install from upstream `main` branches, then moves the installed directories into this checkout's ignored `.agents/skills/external/<name>/` folder. Existing flat installations move there without reinstalling. Existing categorized adaptations and external-folder copies remain unchanged. There is no embedded Node code, YAML parsing, parser setup, global installation, or instruction synchronization. Run `/reload` in Pi afterward.
-
-See [external authoring dependencies](.agents/skills/agentic-work/sync-my-skills/references/external-skills.md) for the dependency list, local modification rules, and troubleshooting. Run `node --test scripts/install-dev-skills.test.mjs` for the network-free installer tests.
-
-## Skills
-
-| Skill | Purpose |
-|---|---|
-| [`cleanup-workspaces`](.agents/skills/utility/cleanup-workspaces/SKILL.md) | Plan and safely remove integrated Git/Jujutsu workspaces and stale registrations. |
-| [`asd-ste100-technical`](.agents/skills/documentation/asd-ste100-technical/SKILL.md) | Apply ASD-STE100-inspired plain language to developer-facing prose without losing technical precision. |
-| [`code-review`](.agents/skills/coding/code-review/SKILL.md) | Review a diff against repository standards and its originating issue or specification with separate read-only subagents. |
-| [`coding`](.agents/skills/coding/coding/SKILL.md) | Apply project-first design, security, testing, and quality gates to code changes in any language. |
-| [`debloat`](.agents/skills/coding/debloat/SKILL.md) | Prevent overengineering and simplify existing mechanisms with evidence while preserving required behavior and boundaries. |
-| [`document-project`](.agents/skills/documentation/document-project/SKILL.md) | Create or improve task-based documentation that a developer new to the project can follow, and keep it current during implementation. |
-| [`excalidraw`](.agents/skills/documentation/excalidraw/SKILL.md) | Generate PNG/SVG diagrams locally with the official CLI and retain scene JSON for revisions. See the [first-use guide](.agents/skills/documentation/excalidraw/README.md). |
-| [`coding-with-rules`](.agents/skills/coding/coding-with-rules/SKILL.md) | Combine the `coding` workflow with on-demand language and extension reference files. |
-| [`init-project`](.agents/skills/coding/init-project/SKILL.md) | Initialize the shared foundation or TypeScript/Godot GDScript tooling through on-demand setup references. |
-| [`grill-me`](.agents/skills/productivity/grill-me/SKILL.md) | Start an explicit grilling interview. |
-| [`isolated-workspace`](.agents/skills/utility/isolated-workspace/SKILL.md) | Create or reuse a protected change workspace before repository mutation. |
-| [`instruction-maintenance`](.agents/skills/unpolished/instruction-maintenance/SKILL.md) | Diagnose instruction drift, propose an exact adaptation, and wait for human approval before mutation. |
-| [`initiative`](.agents/skills/productivity/initiative/SKILL.md) | Turn an idea and evidence into an outcome-level brief, using the required grilling interview. |
-| [`plan-tasks`](.agents/skills/productivity/plan-tasks/SKILL.md) | Divide agreed scope into bounded tasks with completion evidence and genuine dependencies. |
-| [`research`](.agents/skills/productivity/research/SKILL.md) | Research a question or idea using relevant sources, with or without an existing project. |
-| [`retro`](.agents/skills/productivity/retro/SKILL.md) | Propose small process improvements from evidence about a work period. |
-| [`specify`](.agents/skills/productivity/specify/SKILL.md) | Record agreed behavior, acceptance criteria, constraints, and test boundaries. |
-| [`scaffold`](.agents/skills/coding/scaffold/SKILL.md) | Create reviewable source skeleton files with fail-fast placeholders and stop before implementing behavior. |
-| [`subagent-orchestration`](.agents/skills/unpolished/subagent-orchestration/SKILL.md) | Bound child-agent workers and reviewers, coordinate isolated write lanes, and clean integrated temporary lanes. |
-| [`systematic-debugging`](.agents/skills/coding/systematic-debugging/SKILL.md) | Diagnose failures through evidence, root-cause tracing, controlled experiments, and project-owned verification. |
-| [`sync-my-skills`](.agents/skills/agentic-work/sync-my-skills/SKILL.md) | Investigate a project, choose skills and an optional instruction bundle, grill unresolved decisions, and apply one approved plan. |
-| [`tdd`](.agents/skills/coding/tdd/SKILL.md) | Build features and fix bugs test-first through agreed public interfaces, one red → green slice at a time. |
-| [`writing-for-agents`](.agents/skills/agentic-work/writing-for-agents/SKILL.md) | Write and refine instructions for agents, skills, prompts, and other agent-facing documents. |
-
-The [YAML catalog](.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml) is the single inventory for authored, upstream, and adapted skills. Upstream-only `archify`, `grilling`, `wait-what`, and `unslop` are listed there without vendored copies. It records sources, pinned revisions, installation commands, exclusions, legal files, prerequisites, and semantic adaptation intent.
-
-## Independent skills and compositions
-
-Skills load other instructions only through declared requirements. Leaves normally omit them; `cleanup-workspaces` explicitly requires `isolated-workspace` as an owner-approved exception. Select combinations explicitly, or use a thin composition such as `grill-me`, which declares `requires: ["grilling"]`. For code work, `coding-with-rules` declares `requires: ["coding"]` and selects its own language and extension reference files on demand. The former language and extension skills are replaced by those plain documents; see the [migration guide](.agents/skills/coding/coding-with-rules/README.md#migrate-existing-installations). Project instructions resolve requirements before applying the composition; its body defines the workflow. A requirement may resolve to an installed upstream skill identified by the YAML catalog. Stop and request approved setup when it is unavailable; do not download it implicitly.
-
-`requires` is a project extension, not a native harness loader or standard Agent Skills field. External Skills CLI commands do not automatically install its requirements. See [the declaration and compatibility contract](CONTRIBUTING.md#independent-skills-and-explicit-composition). Shared helper-code dependencies remain distinct.
-
-## Development flow
-
-Start where you need help. If the goal is unclear, work through an initiative. If facts are missing, research them. If the work is already understood, go straight to a specification, task, or implementation. You do not need to run every skill.
-
-During implementation, `document-project`, `asd-ste100-technical`, and `unslop` guide documentation updates in the same change. Improve unclear affected pages rather than append repetitive sections. Required documentation is part of completing the work; a new site, broad cleanup, migration, or deployment still needs its applicable approval.
-
-`research` also works on its own for general questions and new ideas. It does not require a repository, an initiative, or an implementation decision. It clarifies the request when needed and delivers findings where the user chooses.
-
-`initiative` accepts research findings, a direct request, or both. It reuses available context, investigates missing facts, and uses `grilling` to settle initiative-level decisions before writing. Research recommendations count as agreed decisions only after the user accepts them. Once the initiative is defined, it resolves where and how to save an agreement record, saves and verifies it, and reports the path or URL.
-
-### Usual order and feedback
-
-```mermaid
-flowchart TD
-    R["research<br/>Gather evidence"] --> I["initiative<br/>Agree on the outcome"]
-    U["Direct user request"] --> I
-    I -->|Agreement record| S["specify<br/>Define expected behavior"]
-    S -->|Specification| P["plan-tasks<br/>Split the work"]
-    P -->|Tasks| N
-    subgraph TASKS["Implementation: repeat for each task"]
-        N["Pick a ready task"] --> F["scaffold<br/>Prepare this task's structure"]
-        F --> C["coding-with-rules<br/>Implement; use tdd when selected"]
-        C --> K{"Task checks pass?"}
-        K -->|No| C
-        K -->|Yes| M{"More tasks?"}
-        M -->|Yes| N
-    end
-    M -->|No| V["code-review<br/>Check standards and the spec"]
-    V --> T["retro<br/>Propose improvements"]
-    V -. Code needs work .-> N
-    V -. Requirements need work .-> S
-    I -. Missing evidence .-> R
-```
-
-Solid arrows show the usual hand-offs, not automatic execution. Dotted arrows show where missing evidence or review findings send work back. Research can happen at any point, and a retro can help during a long effort as well as afterward.
-
-Scaffold at the start of each task, after the tasks have been planned. Prepare the files, signatures, and contracts for that task, then implement and verify it before moving to the next. Preserve working code; do not replace it with placeholders.
-
-The standalone `scaffold` skill still stops at its handoff. Continuing into implementation requires a separate explicit instruction; the arrows do not grant that permission.
-
-Each skill answers a different question:
-
-| Skill | Question | Output |
-|---|---|---|
-| `research` | What do we know, and what is still uncertain? | Findings with sources |
-| `initiative` | Why do this, and what outcome matters? | Saved agreement record |
-| `specify` | What must the solution do? | Saved specification with behavior, acceptance criteria, and test boundaries |
-| `plan-tasks` | What work can we execute and verify? | Bounded tasks with dependencies and completion evidence |
-| `scaffold` | What structure does this task need? | Source files, types, signatures, and explicit placeholders |
-| `retro` | What should we improve next time? | Evidence-backed recommendations |
-
-One initiative can lead to several specifications, each with several tasks. That does not require a separate file or issue for every level. Reuse what already exists, and implement and review one task at a time when that fits the work.
-
-### Shorter paths
-
-- **Small fix:** `systematic-debugging` if the cause is unknown → `scaffold` for the task → `coding-with-rules`, with `tdd` when selected → `code-review`.
-- **Clear feature:** `specify` → `plan-tasks` if splitting the work helps → the scaffold, implementation, and verification loop above → `code-review`. No new initiative is needed if the outcome is already agreed.
-- **Unclear direction:** move between `research` and `initiative` until the direction is settled, then write the specification. Return to research if new questions appear.
-
-### Dependencies are not workflow order
-
-These arrows mean **requires the target's instructions**, not **run this next**:
-
-```mermaid
-flowchart LR
-    I["initiative"] -->|requires| G["grilling"]
-    R["research"] -->|requires| G
-    S["specify"] -->|requires| G
-    W["coding-with-rules"] -->|requires| C["coding"]
-```
-
-`initiative` uses the required interview to settle open decisions. `research` uses it only when the question, scope, or expected result is unclear. A clear research request skips the interview, although the required instructions still load. `specify` also uses `grilling` when detailed requirements or test boundaries need clarification, then records the confirmed answers. `coding-with-rules` adds language and extension guidance to the base coding workflow. Project routing loads each requirement before its caller. If a selected skill or required instructions are missing, the agent stops and asks the user to install them. No skill needs `sync-my-skills` to be selected or used.
-
-`plan-tasks` and `retro` have no declared skill dependencies. For example, `plan-tasks` can work from clear direct scope without first running `specify`. Select `tdd` and `code-review` separately; placing them in a workflow diagram does not make them declared requirements.
-
-### Where the output goes
-
-`initiative` and `specify` resolve delivery after clarifying their contents. They save at the agreed destination, verify the saved content, and return the actual path or URL. If saving is blocked, they provide prepared content marked "not saved".
-
-For project work, document-generating skills consult `AGENTS.md` and `CONTRIBUTING.md` for destination and format. If those instructions leave this unclear, or there is no project context, ask the user where and how to deliver the output. Do not assume chat, a local file, or a tracker issue.
-
-Agreeing on a document does not automatically authorize the next stage, delegation, or publication. Existing project gates still apply. Keep local, committed, pushed, and PR state separate: reviewed code is not necessarily published code.
-
-## Use the skills
-
-This repository groups source skills by purpose under `.agents/skills/<category>/<name>/`. Pi discovers those directories recursively. The categories are `productivity`, `coding`, `documentation`, `agentic-work`, `utility`, and `unpolished`; they do not create skill-name namespaces. Skill names remain globally unique.
-
-`sync-my-skills` installs selected skills flat under a destination project's `.agents/skills/<name>/`, without category folders. Pi and OpenCode use those canonical installations. When Claude Code is selected, the manager creates relative `.claude/skills/<name>` projections there. This source repository has no Claude skill symlinks; its [`CLAUDE.md`](CLAUDE.md) still imports its own instruction graph. Synchronizing another project's skills does **not** copy that graph or change its root documents.
-
-Install a local skill with an explicit command after reviewing it:
-
-```sh
-npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/isolated-workspace --skill isolated-workspace
-```
-
-Upstream-only skills are obtained from their catalogued sources, not from nonexistent directories in this repository. Raw Skills CLI installation alone does not guarantee prerequisite closure or OpenAI-metadata filtering.
-
-For cross-project synchronization, follow [Sync skills in a project](.agents/skills/agentic-work/sync-my-skills/README.md). It starts with a clean export from a reviewed committed checkout, installs the personal manager and pinned parser, and registers the literal `/sync-my-skills` command. It also explains the repository-source alternative once this implementation is available upstream. The manager and all three harnesses are not forced into every project. Normal runs refresh compatible catalog data into a commit-pinned snapshot; offline/review use of the installed catalog is an explicit choice, not a silent fallback.
-
-The LLM investigates the project's purpose and existing instructions, explains recommendations, asks about every remaining active catalog skill and exact deprecated removals, and offers instruction changes separately. For a selected bundle, it grills unresolved implementation/policy choices, drafts against the canonical templates, preserves existing rules, and obtains explicit policy and file-plan approval. It stages sources and semantic adaptations, presents one plan, and writes only after approval in an isolated Git worktree. Unrelated custom skills and local edits remain protected. Root instruction templates are reserved for [#68](https://github.com/dragoscirjan/ai/issues/68).
-
-`sync-agent-assets` has been converted, not retained as a second compatibility skill. Existing lock data can migrate through an approved plan. The new command offers removal of old project installations; it never removes them automatically.
+See [diagram maintenance](docs/maintenance/diagrams.md) and [documentation publication](docs/maintenance/publication.md) for their separate procedures. Hosted documentation uses `DOCS_BASE=/projects/ai-skills/`; local builds use `/`. Pushes to `main` can open a documentation destination PR, but do not merge or deploy it.
 
 ## Releases
 
-After this workflow is merged, open **Actions → Version and release → Run workflow** on `main`. Choose `patch` (default), `minor`, or `major`. You can also trigger it with:
+With explicit owner approval to release, open **Actions → Version and release → Run workflow** on `main`. Choose `patch` (default), `minor`, or `major`. You can also trigger it with:
 
 ```sh
 gh workflow run version.yml --ref main -f bump=patch
@@ -216,7 +141,8 @@ python3 -B -m unittest discover -s .github/scripts -p 'test_*.py' -v
 
 ## Repository map
 
-- [`.agents/skills/`](.agents/skills/) contains portable Agent Skills.
+- [`.agents/skills/`](.agents/skills/) contains categorized skill sources.
+- [`docs/`](docs/index.md) contains task guides, catalog references, and maintenance instructions.
 - [`templates/`](templates/README.md) contains reusable project instruction templates and their population contract.
 - [`AGENTS.md`](AGENTS.md) contains the small startup routing and safety contract for agents.
 - [`CLAUDE.md`](CLAUDE.md) imports `AGENTS.md` for Claude Code.

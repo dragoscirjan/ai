@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/protect-a-change.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+      "revision": "7b68c9123c32fcca4b3ac28baabad880606a853d",
       "link_mode": "local-only"
     },
     "legend": {

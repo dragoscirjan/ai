@@ -121,7 +121,7 @@ test("catalog groups are an exact partition, not a replacement inventory", () =>
   const names = groups.flatMap((group) => group.skills);
   assert.equal(names.length, new Set(names).size);
   assert.deepEqual(new Set(names), new Set(catalog().skills.map((skill) => skill.name)));
-  assert.equal(catalog().skills.filter((skill) => skill.source.type !== "local").length, 8);
+  assert.equal(catalog().skills.filter((skill) => skill.source.type !== "local").length, 6);
 });
 test("every catalog entry and recipe has one generated page and a meaningful stopping boundary", () => {
   const pages = generatedPages();
@@ -145,7 +145,7 @@ test("all checked-in learning pages, six requirements, diagram sources, hashes a
   assert.equal(result.skills, 28);
   assert.equal(result.instructionEdges, 6);
   assert.equal(result.diagrams, 32);
-  assert.equal(result.pages, 77);
+  assert.equal(result.pages, 78);
 });
 test("raw legal-download links are checked alongside Markdown links", () => {
   assert.ok(checkMarkdownLinks([join(root, "docs/reference/notices.md")]).local >= 8);

@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/initiative --skill initiative
 ```
 
-This command selects only `initiative`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `initiative`.
 
 Required instruction packages: [`grilling`](/skills/grilling#install-this-skill). If any are missing, the agent must stop and ask you to install them before continuing. The command above does not install these requirements.
 
@@ -49,17 +49,6 @@ Resolve required instructions in their declared order before applying the skill.
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
 A brief is not a specification, task plan, or implementation authorization. Resolve grilling first and stop when the outcome-level agreement is complete.
-
-## Useful combinations
-
-- [`research`](/skills/research) — A decision depends on facts, alternatives, feasibility, or evidence that you do not yet have.
-- [`specify`](/skills/specify) — The direction is agreed but observable behavior, acceptance criteria, constraints, or test boundaries remain unclear.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-- [Plan a project or feature](/workflows/plan-a-project)
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

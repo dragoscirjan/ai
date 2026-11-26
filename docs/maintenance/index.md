@@ -66,16 +66,16 @@ The dependency notice download preserves the theme's MIT license and TypeScript'
 
 ## Change content at its source
 
-| Content                                                                         | Edit here                                                                                                            |
-| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Names, sources, selection defaults, prerequisites, runtime notes, legal records | `.agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml`, through its applicable skill-change process. |
-| Reader-oriented groups                                                          | `scripts/docs/data.mjs`                                                                                              |
-| Per-skill guidance and sample prompts                                           | `scripts/docs/skill-notes.mjs`                                                                                       |
-| Primary workflow titles and related procedure IDs; focused recipe data          | `scripts/docs/workflows.mjs`                                                                                         |
-| Five end-to-end workflow guides and supporting tools                            | The authored `docs/workflows/` pages listed below                                                                    |
-| Diagram layout and source citations                                             | `scripts/docs/diagram-specs.mjs`                                                                                     |
-| Start, installation, first-use, and maintenance procedures                      | Their Markdown files under `docs/`                                                                                   |
-| Navigation and theme                                                            | `docs/.vitepress/`                                                                                                   |
+| Content                                                                         | Edit here                                                                  |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Names, sources, selection defaults, prerequisites, runtime notes, legal records | `catalog/skill-catalog.yaml`, through its applicable skill-change process. |
+| Reader-oriented groups                                                          | The `groups` mapping in `catalog/skill-catalog.yaml`                       |
+| Per-skill guidance and sample prompts                                           | `scripts/docs/skill-notes.mjs`                                             |
+| Primary workflow titles and related procedure IDs; focused recipe data          | `scripts/docs/workflows.mjs`                                               |
+| Five end-to-end workflow guides and supporting tools                            | The authored `docs/workflows/` pages listed below                          |
+| Diagram layout and source citations                                             | `scripts/docs/diagram-specs.mjs`                                           |
+| Start, installation, first-use, and maintenance procedures                      | Their Markdown files under `docs/`                                         |
+| Navigation and theme                                                            | `docs/.vitepress/`                                                         |
 
 The generator owns `docs/skills/`, `docs/groups/`, the workflow index and focused recipe pages, and the catalog/relationship reference pages. Do not hand-edit those generated pages or treat them as another inventory.
 

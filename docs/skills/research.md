@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/productivity/research --skill research
 ```
 
-This command selects only `research`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `research`.
 
 Required instruction packages: [`grilling`](/skills/grilling#install-this-skill). If any are missing, the agent must stop and ask you to install them before continuing. The command above does not install these requirements.
 
@@ -49,17 +49,6 @@ Resolve required instructions in their declared order before applying the skill.
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
 Research does not grant installation or implementation authority. Resolve the declared grilling requirement before using this composition.
-
-## Useful combinations
-
-- [`initiative`](/skills/initiative) — An idea needs an agreed problem, outcome, scope, constraints, and success measures before solution work.
-- [`wait-what`](/skills/wait-what) — The last answer is hard to understand or omits context needed to follow the current proposal.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-- [Plan a project or feature](/workflows/plan-a-project)
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

@@ -22,31 +22,32 @@ When a change adds or modifies a skill:
 - Verify that Pi discovers the changed source skill recursively from `.agents/skills/<category>/<name>/`.
 - Verify that synchronized installations remain flat under `.agents/skills/<name>/` and are discoverable in each selected harness. For Claude Code, check exact relative destination-project `.claude/skills/<name>` projections. This source repository has no Claude skill projections.
 - Check relative references, supporting files, and command examples.
+- Run the skill-independence checks on portable packages and generated skill-profile bodies. Operational cross-skill names, instruction links, helper imports, and invocation examples must refer only to self or declared `requires`; reject optional or reverse recommendations and collection/sync-tool guidance. Allow verified factual origin or inspiration in a skill overview README without treating it as an instruction dependency. Preserve same-package files, source attribution, legal notices, software prerequisites, and ordinary discipline/product names. Do not add dependencies merely to make this check pass.
+- Check every skill overview README against the `CONTRIBUTING.md` overview rule. Allow intent, real dependencies, factual origin or inspiration, short skill-specific usage, and optional standalone installation. Verify install commands use the pinned acquisition tool, identify a published source revision, select only self or declared dependencies, preserve complete supporting/legal files, and do not call the sync CLI. Reject complete operating workflows, harness-specific paths/configuration, license prose/links, and companion guidance. Preserve separate legal files and nested technical documentation.
+- Apply the same fail-closed independence check to freshly acquired packages before custom output publication. Normal native installs may already have partial writes when verification fails; report the stopped skill and preserve the existing safety and recovery rules.
 - Confirm that harness-specific behavior is explicit and does not masquerade as portable Agent Skills behavior.
 
 ## Skill synchronization changes
 
-When a change modifies `sync-my-skills` or its catalog:
+When a change modifies the Node.js CLI or shared catalog:
 
-- Use the approved pinned parser setup (`npm ci --ignore-scripts` in the manager package); never install dependencies merely for target detection.
-- Run `node --test .agents/skills/agentic-work/sync-my-skills/scripts/sync-my-skills.test.mjs` and syntax checks for its `.mjs` helpers.
-- Run `catalog --source-root <repository-root>` and confirm every local skill is represented exactly once, alongside valid catalog-only upstream entries.
-- Test strict YAML parsing, duplicate keys, unsafe paths/tags/aliases, source revisions, unknown entries, missing requirements, and cycles. Every `npx` argument array must start with `npx, -y`.
-- Test default catalog refresh, newly added entries, explicit bundled/local modes, unsupported-schema/owner stops, byte-bound catalog provenance, shared authored-source commits, and stage invalidation when only the catalog source pin changes. Never claim a manager self-update or silent offline fallback.
-- Check [interaction scenarios](.agents/skills/agentic-work/sync-my-skills/references/interaction-checks.md) for category-first native checkboxes, menus larger than the tool capacity, prior declines, unchanged skipped content, and explicit cross-category prerequisites. Report a live conversational walkthrough separately from static tests; an unrun walkthrough remains a validation gap.
-- Verify owner confirmation of the project-understanding read-back before instruction drafting. Keep understanding confirmation, instruction-policy approval, and apply-plan approval separate.
-- Test context evidence, non-coding projects, every-remaining-skill decision coverage, previously declined entries, unknown/custom installations, and explicit harness subsets. Verify the documentation trio is recommended without language signals, may be declined entirely, and never initializes a site or installs automatically.
-- Test authored/upstream/adapted preparation, complete supporting/legal files, OpenAI-metadata exclusion, output-bound adaptation review, unchanged-result reuse, and changed-source/rule/target stops.
-- Test local/unmanaged conflicts, missing files, upstream removals, exact deprecated choices, complete removal snapshots, stale plans, path/symlink escapes, and primary-checkout protection.
-- Confirm plan mode does not mutate the target and apply requires an isolated Git worktree plus `--apply --confirm --plan-id <approved-id>`.
-- Test version-1/2 lock migration: legacy instruction records stay historical and files remain byte-identical until explicit bundle adoption. Test version-3 ownership and retention when later instruction changes are declined.
-- Test selectable instruction scope: the complete four-file bundle and optional Claude import; existing/custom rules, fixed template prose, required guidance, resolved fields, consistent project names, exact-path resolutions, and separate policy approval. Reject arbitrary root paths, partial bundles, hidden fixed rules, and unsupported destinations.
-- Test unchanged template inputs, pinned source acquisition, target binding, evidence/prerequisite changes, edited outputs, and stale plans. Verify skill/deferred-document actions precede startup imports and the lock is last. Static checks do not prove semantic preservation or command execution.
-- Confirm the lock contains no absolute machine paths, credentials, temporary paths, or secrets. Preserve its provenance, approved decisions, and local-change baseline.
-- Confirm `skills-lock.json` remains Skills CLI-owned and `.agents/ai-assets.lock.json` remains synchronization-owned.
-- Test personal command setup in disposable home directories, including collisions and stale approvals. Do not mutate live personal configuration during tests. For Pi runtime discovery, distinguish global command loading from project skills and document the native project-trust requirement; any test-only approval must remain confined to the reviewed disposable fixture.
-- Verify recursive source inventory, exact catalog source-path coverage, duplicate-name rejection, category symlink rejection, and flat destination paths with complete supporting/legal files. Verify Pi/OpenCode destination discovery and only the selected destination-project Claude relative projections. Distinguish static adapter/reference checks from live harness validation and model compliance. For populated instructions, verify active imports and the complete reference graph separately.
-- Confirm there is only one manager skill, no old-name compatibility package, and no automatic commit, push, publication, merge, or release.
+- Run the CLI tests, syntax checks, documentation/catalog checks, and the production documentation build.
+- Verify the root package exposes one executable `sync-skills` bin, includes its runtime files and catalog, and declares runtime dependencies. Test execution from a packed or Git-installed package, not only a checkout.
+- Verify GitHub-based `npx` execution without npm registry publication. Distinguish a live remote run from a local Git/packed-package smoke test; unrun live checks remain gaps.
+- Check strict YAML parsing, schema version, duplicate keys, safe paths, source pins, complete local source coverage, prerequisites, and cycles.
+- Keep the six documentation/selection groups and their membership in the YAML catalog. Documentation and CLI selection must read the same inventory.
+- Test category selection, explicit skill/harness scope, prerequisite closure, command previews, confirmation, non-interactive input, and unsupported inputs. Every install argument array must start with `npx, -y`.
+- Test filtering, required legal/supporting files, and maintained adaptations. Stop rather than silently omit unsupported requirements. Do not run source initializers or installed code.
+- Verify skipped skills, unrelated/custom content, existing instructions, and legacy locks remain unchanged. Existing destination conflicts require explicit overwrite approval, and failures stop the operation.
+- Verify the CLI never edits `AGENTS.md` or referenced instruction documents, never registers personal agent commands, and creates no custom manager-owned lock or apply-plan protocol.
+- Keep documentation renderer caching and provenance validation independent of the removed manager. Test unsafe source paths, links, and incomplete downloads without network access.
+
+When a change modifies `sync-my-agents`:
+
+- Verify user-only invocation, no declared skill dependencies, and instruction-document-only scope.
+- Verify evidence gathering, unresolved-decision clarification, exact diff approval, preservation of existing policy, and explicit handling of missing referenced documents.
+- Verify it never installs skills, assumes a fixed document bundle, or automatically runs setup, trust changes, commits, or publication.
+- Review instruction-graph changes for missing targets, stale references, cycles, and unauthorized policy changes. Report live instruction-review walkthroughs separately from static checks.
 
 ## Coding-family changes
 

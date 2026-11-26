@@ -42,7 +42,7 @@ Review a bounded work period for evidence-backed process improvements, including
 
 A relentless interview to sharpen a plan or design.
 
-**Choose it when:** You want to explicitly start the grilling interview through a small local composition.
+**Choose it when:** You want to explicitly start the grilling interview through the unchanged upstream wrapper.
 
 ## [`grilling`](/skills/grilling)
 

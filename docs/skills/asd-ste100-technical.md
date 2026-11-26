@@ -22,7 +22,7 @@ You need Node.js 22.20 or newer, Git, and npm/npx. Run this command from the tar
 npx -y skills@1.7.4 add https://github.com/dragoscirjan/ai/tree/main/.agents/skills/documentation/asd-ste100-technical --skill asd-ste100-technical
 ```
 
-This command selects only `asd-ste100-technical`. It does not install the rest of the collection or the optional companions listed on this page.
+This command selects only `asd-ste100-technical`.
 
 Before applying a skill, the agent must verify that it and its declared requirements are installed. Missing instructions stop the task. The agent must ask you to install them rather than fetch, synchronize, substitute, or continue automatically.
 
@@ -47,17 +47,6 @@ Resolve required instructions in their declared order before applying the skill.
 No additional runtime is recorded in the catalog. Check the authoritative instructions and target project before use.
 
 Plain language is not a license to simplify away technical meaning. This is STE-inspired guidance, not a claim of certification or a fixed approved-word list.
-
-## Useful combinations
-
-- [`document-project`](/skills/document-project) — Implementation changes how readers use the project, or existing documentation blocks a real developer task.
-- [`unslop`](/skills/unslop) — A draft contains generic phrasing, repetitive structure, filler, or claims that do not help the reader act.
-
-These are optional companions, not extra declared requirements. Choose only what the task needs.
-
-- [Document a project](/workflows/document-a-project)
-
-For focused procedures and utilities, see [supporting tools](/workflows/supporting-tools).
 
 ## Source and harness support
 

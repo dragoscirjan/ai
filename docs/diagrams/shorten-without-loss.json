@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/shorten-without-loss.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "ae266fed04e31a327960cf7313c4edddc6e59701",
+      "revision": "7b68c9123c32fcca4b3ac28baabad880606a853d",
       "link_mode": "local-only"
     },
     "legend": {
@@ -82,9 +82,9 @@
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/agentic-work/sync-my-skills/assets/skill-catalog.yaml",
-          "line": 593,
-          "end_line": 622,
+          "path": "catalog/skill-catalog.yaml",
+          "line": 829,
+          "end_line": 858,
           "label": "Pinned source and runtime record"
         }
       ]

@@ -11,7 +11,7 @@ import {
 } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, relative, resolve, sep } from "node:path";
-import { prepareSkills } from "../../.agents/skills/agentic-work/sync-my-skills/scripts/sync-core.mjs";
+import { downloadSource } from "../skills/source.mjs";
 import { catalog, root } from "./data.mjs";
 
 const sha = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -67,23 +67,20 @@ export async function setupTool() {
     throw new Error("The external tool cache must not use symlinked ancestors");
   const stage = join(location.base, `stage-${randomUUID()}`);
   try {
-    await prepareSkills({
-      catalog: catalog(),
-      names: ["archify"],
-      stage,
-      sourceRoot: root,
-      allowFetch: true,
+    const record = await downloadSource({
+      source: location.entry.source,
+      directory: stage,
+      legal: location.entry.legal,
+      exclude: catalog().defaults.exclude,
     });
-    const manifest = JSON.parse(readFileSync(join(stage, "manifest.json"), "utf8"));
-    const record = manifest.skills.archify;
-    renameSync(join(stage, "skills/archify"), location.directory);
+    renameSync(stage, location.directory);
     writeFileSync(
       location.receipt,
       JSON.stringify(
         {
-          repository: record.origin.repository,
-          revision: record.origin.revision,
-          files: record.sourceFiles,
+          repository: record.repository,
+          revision: record.revision,
+          files: record.files,
         },
         null,
         2,

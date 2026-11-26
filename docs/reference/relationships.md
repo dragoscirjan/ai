@@ -1,8 +1,8 @@
 ---
-title: "Requirements, companions, and handoffs"
+title: "Skill dependencies and project workflows"
 ---
 
-# Requirements, companions, and handoffs
+# Skill dependencies and project workflows
 
 A line between two skill names can mean different things. Treating every useful combination as a prerequisite produces unnecessary installations and unsafe automatic follow-up work.
 
@@ -33,9 +33,9 @@ These are things that must exist before installation or use: an approved source,
 
 A skill can need Bun, Node.js, a local browser, a rendering CLI, or authorized subagent tools without requiring another skill. The profile's runtime section comes from the catalog; the linked authoritative instructions define the complete contract. A supported harness name does not prove those capabilities are present.
 
-## Optional companions
+## Project-selected workflows
 
-A companion helps under a stated condition. For example, choose `tdd` when the owner wants test-first work, or a diagram skill when the reader needs a visual relationship explanation. Do not install or run every companion automatically.
+Portable skill packages and individual profiles name only their declared required skills. A user or project may select additional standalone skills in a separate workflow guide. Such a choice does not change a skill's dependency declaration or authorize later work.
 
 ## Phase handoffs and owner decisions
 
