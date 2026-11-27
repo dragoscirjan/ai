@@ -1065,22 +1065,22 @@ opened. The complete license is preserved in
         <text x="900" y="99" class="t-muted" font-size="10.5" text-anchor="middle">2 catalogued skills</text>
         </g>
 
-        <g id="node-utility" data-node-id="utility" data-node-label="Utility" tabindex="0" role="button" aria-label="Focus Utility, 3 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="3 catalogued skills" data-node-context="Architecture component">
-          <title>Utility · 3 catalogued skills · Architecture component</title>
+        <g id="node-utility" data-node-id="utility" data-node-label="Utility" tabindex="0" role="button" aria-label="Focus Utility, 4 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="4 catalogued skills" data-node-context="Architecture component">
+          <title>Utility · 4 catalogued skills · Architecture component</title>
           <rect x="780" y="270" width="240" height="90" rx="8" class="c-mask"/>
           <rect x="780" y="270" width="240" height="90" rx="8" class="c-backend" data-animate="node" style="--step: 5; --flow-node-name: archify-relay-node-5;" stroke-width="1.5"/>
           
           <text data-node-label="" x="900" y="313" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Utility</text>
-        <text x="900" y="329" class="t-muted" font-size="10.5" text-anchor="middle">3 catalogued skills</text>
+        <text x="900" y="329" class="t-muted" font-size="10.5" text-anchor="middle">4 catalogued skills</text>
         </g>
 
-        <g id="node-unpolished" data-node-id="unpolished" data-node-label="Unpolished" tabindex="0" role="button" aria-label="Focus Unpolished, 2 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="2 catalogued skills" data-node-context="Architecture component">
-          <title>Unpolished · 2 catalogued skills · Architecture component</title>
+        <g id="node-unpolished" data-node-id="unpolished" data-node-label="Unpolished" tabindex="0" role="button" aria-label="Focus Unpolished, 1 catalogued skills, Architecture component" aria-pressed="false" data-node-kind="backend" data-node-sublabel="1 catalogued skills" data-node-context="Architecture component">
+          <title>Unpolished · 1 catalogued skills · Architecture component</title>
           <rect x="780" y="500" width="240" height="90" rx="8" class="c-mask"/>
           <rect x="780" y="500" width="240" height="90" rx="8" class="c-backend" data-animate="node" style="--step: 6; --flow-node-name: archify-relay-node-6;" stroke-width="1.5"/>
           
           <text data-node-label="" x="900" y="543" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Unpolished</text>
-        <text x="900" y="559" class="t-muted" font-size="10.5" text-anchor="middle">2 catalogued skills</text>
+        <text x="900" y="559" class="t-muted" font-size="10.5" text-anchor="middle">1 catalogued skills</text>
         </g>
 
         <!-- Connection labels -->

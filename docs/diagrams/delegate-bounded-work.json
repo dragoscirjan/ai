@@ -2,13 +2,13 @@
   "schema_version": 2,
   "diagram_type": "workflow",
   "meta": {
-    "title": "Delegate only the work that was authorized",
+    "title": "Delegate authorized work in the background",
     "locale": "en",
     "quality_profile": "showcase",
     "output": ".docs-artifacts/archify/delegate-bounded-work.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "a600462a55504957019400d0b8c8f39fca58373c",
+      "revision": "8b7884ff6b1437d7fa24dccbb08a4d66297a1527",
       "link_mode": "local-only"
     },
     "legend": {
@@ -44,13 +44,13 @@
       "col": 0,
       "type": "backend",
       "label": "Confirm authority and lanes",
-      "sublabel": "subagent-orchestration",
+      "sublabel": "background-agents",
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/unpolished/subagent-orchestration/SKILL.md",
+          "path": ".agents/skills/utility/background-agents/SKILL.md",
           "line": 1,
-          "end_line": 47,
+          "end_line": 65,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -61,13 +61,13 @@
       "col": 1,
       "type": "backend",
       "label": "Bound child handoffs",
-      "sublabel": "subagent-orchestration",
+      "sublabel": "background-agents",
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/unpolished/subagent-orchestration/SKILL.md",
+          "path": ".agents/skills/utility/background-agents/SKILL.md",
           "line": 1,
-          "end_line": 47,
+          "end_line": 65,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -78,13 +78,13 @@
       "col": 2,
       "type": "backend",
       "label": "Run authorized child work",
-      "sublabel": "subagent-orchestration",
+      "sublabel": "background-agents",
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/unpolished/subagent-orchestration/SKILL.md",
+          "path": ".agents/skills/utility/background-agents/SKILL.md",
           "line": 1,
-          "end_line": 47,
+          "end_line": 65,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -95,13 +95,13 @@
       "col": 3,
       "type": "backend",
       "label": "Integrate and validate",
-      "sublabel": "subagent-orchestration",
+      "sublabel": "background-agents",
       "icon": "none",
       "sources": [
         {
-          "path": ".agents/skills/unpolished/subagent-orchestration/SKILL.md",
+          "path": ".agents/skills/utility/background-agents/SKILL.md",
           "line": 1,
-          "end_line": 47,
+          "end_line": 65,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -140,14 +140,14 @@
       "dot": "cyan",
       "title": "Expected outcome",
       "items": [
-        "Bounded child results integrated and validated by the parent."
+        "Bounded worker results assessed by the parent, with progress inspection and verification evidence."
       ]
     },
     {
       "dot": "amber",
       "title": "Scope and stopping point",
       "items": [
-        "Read-only children do not need write lanes. Authorized concurrent writers do, and temporary-lane cleanup has its own ownership and approval rules.",
+        "Confirm background execution and completion delivery before launch. Read-only workers do not need write lanes. Writable workers need isolated owned lanes. Report unsupported monitoring or steering, and preserve cleanup and acceptance gates.",
         "Suggested handoffs are not declared instruction dependencies or permission for another phase."
       ]
     }
