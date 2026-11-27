@@ -1,18 +1,18 @@
 ---
-title: "Delegate only the work that was authorized"
+title: "Delegate authorized work in the background"
 ---
 
-# Delegate only the work that was authorized
+# Delegate authorized work in the background
 
 This is a focused procedure. For its place in a larger workflow, see [Supporting tools and additional workflows](/workflows/supporting-tools).
 
-The operator explicitly asks for specialists, independent review, or parallel work.
+The operator or project authorizes background workers while the main conversation stays available.
 
-**Finish with:** Bounded child results integrated and validated by the parent.
+**Finish with:** Bounded worker results assessed by the parent, with progress inspection and verification evidence.
 
 ## Read the diagram
 
-![Delegate only the work that was authorized: suggested skill handoffs with approval stops where applicable.](/diagrams/delegate-bounded-work.svg)
+![Delegate authorized work in the background: suggested skill handoffs with approval stops where applicable.](/diagrams/delegate-bounded-work.svg)
 
 [Open interactive diagram](/diagrams/delegate-bounded-work.html){class="vp-raw"} · [Download SVG](/diagrams/delegate-bounded-work.svg) · [Editable candidate](/diagram-sources/delegate-bounded-work.json)
 
@@ -24,14 +24,14 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 
 ## Steps
 
-1. **Confirm authority and lanes.** [`subagent-orchestration`](/skills/subagent-orchestration) provides the guidance for this step.
-2. **Bound child handoffs.** [`subagent-orchestration`](/skills/subagent-orchestration) provides the guidance for this step.
-3. **Run authorized child work.** [`subagent-orchestration`](/skills/subagent-orchestration) provides the guidance for this step.
-4. **Integrate and validate.** [`subagent-orchestration`](/skills/subagent-orchestration) provides the guidance for this step.
+1. **Confirm authority and lanes.** [`background-agents`](/skills/background-agents) provides the guidance for this step.
+2. **Bound child handoffs.** [`background-agents`](/skills/background-agents) provides the guidance for this step.
+3. **Run authorized child work.** [`background-agents`](/skills/background-agents) provides the guidance for this step.
+4. **Integrate and validate.** [`background-agents`](/skills/background-agents) provides the guidance for this step.
 
 ## Where to stop
 
-Read-only children do not need write lanes. Authorized concurrent writers do, and temporary-lane cleanup has its own ownership and approval rules.
+Confirm background execution and completion delivery before launch. Read-only workers do not need write lanes. Writable workers need isolated owned lanes. Report unsupported monitoring or steering, and preserve cleanup and acceptance gates.
 
 ## Optional branches
 

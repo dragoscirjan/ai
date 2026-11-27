@@ -36,7 +36,7 @@ The [YAML catalog](https://github.com/dragoscirjan/ai/blob/main/catalog/skill-ca
 | [`retro`](/skills/retro) | Authored here | optional |
 | [`scaffold`](/skills/scaffold) | Authored here | optional |
 | [`specify`](/skills/specify) | Authored here | optional |
-| [`subagent-orchestration`](/skills/subagent-orchestration) | Authored here | optional |
+| [`background-agents`](/skills/background-agents) | Authored here | optional |
 | [`sync-my-agents`](/skills/sync-my-agents) | Authored here | optional |
 | [`systematic-debugging`](/skills/systematic-debugging) | Upstream-derived; maintained here | optional |
 | [`tdd`](/skills/tdd) | Upstream-derived; maintained here | optional |

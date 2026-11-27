@@ -42,11 +42,13 @@ Use [`wait-what`](/skills/wait-what) when an explanation needs simpler language 
 
 ## Authorized delegation
 
-Use [`subagent-orchestration`](/skills/subagent-orchestration) when the operator authorizes specialists, independent review, or parallel work. Define bounded tasks, ownership, allowed writes, integration checks, and capacity limits.
+Use [`background-agents`](/skills/background-agents) when the operator or project authorizes background delegation. Assign substantial work to task-scoped, general-purpose workers while the main agent handles conversation, coordination, and acceptance. Workers can run sequentially; delegation does not require parallel work or a specialist roster.
 
-Delegation is an execution choice, not a mandatory step between planning and coding. A task list alone does not authorize launching workers.
+Confirm asynchronous execution and completion notification before launching. Keep a durable task record and return concise handoffs with evidence and artifact paths. Tell the user how to inspect, steer, or stop workers using the installed runtime. A live observer is not an interactive worker session. The skill documents Pi and Claude Code capabilities; other runtimes need capability checks, not invented commands.
 
-See [delegate bounded work](/workflows/delegate-bounded-work) or [coordinate read-only review](/workflows/coordinate-read-only-review). Keep direct execution as an available route.
+Delegation is an execution choice, not a mandatory step between planning and coding. A task list or skill installation alone does not authorize launching workers. If background support is unavailable or launch fails, report it and ask for an execution-mode decision rather than silently blocking the main conversation.
+
+See [delegate bounded work](/workflows/delegate-bounded-work) or [coordinate read-only review](/workflows/coordinate-read-only-review). Direct execution remains available when background delegation is not active or the owner approves changing mode.
 
 ## Review an existing change
 

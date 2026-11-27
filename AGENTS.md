@@ -16,7 +16,7 @@ Load only the instructions required for the current phase. When several rows mat
 | Before designing, changing, testing, or reviewing source code | Read `coding-with-rules` and follow its language and extension reference selection. Resolve its declared requirements first. |
 | During implementation, and before creating or revising project documentation | Read and follow `document-project`, `asd-ste100-technical`, and `unslop`. Assess documentation impact and update affected documentation in the same change. |
 | Before creating or revising a skill overview README | Follow the README rule in `CONTRIBUTING.md`. Short Usage and optional standalone Install sections are allowed; installation must not depend on the repository sync CLI. |
-| Before delegating work to child agents | Read and follow `.agents/skills/unpolished/subagent-orchestration/SKILL.md`. |
+| Before delegating work to child agents | Read and follow `.agents/skills/utility/background-agents/SKILL.md`. |
 | Before validating, committing, pushing, or publishing | Read and follow `VALIDATION.md`. |
 | Before auditing or removing old workspaces | Read and follow `.agents/skills/utility/cleanup-workspaces/SKILL.md`. |
 | When instructions, their relationships, or skill routing metadata appear missing, stale, conflicting, duplicated, or unsuitable for the observed workflow | Read and follow `.agents/skills/unpolished/instruction-maintenance/SKILL.md`. It permits a read-only audit and exact proposal; do not mutate instructions before explicit human approval of that proposal. |

@@ -156,7 +156,7 @@ export const workflows = [
       work("plan-tasks", "Check dependencies"),
       work("plan-tasks", "Hand off the task plan"),
     ],
-    optional: ["specify", "subagent-orchestration"],
+    optional: ["specify", "background-agents"],
     limit:
       "Planning stops before execution. Delegation is optional and needs separate authorization; a dependency diagram must not manufacture a fixed order.",
   },
@@ -269,7 +269,7 @@ export const workflows = [
       work("code-review", "Integrate backed findings"),
       work("code-review", "Report without fixing"),
     ],
-    optional: ["subagent-orchestration"],
+    optional: ["background-agents"],
     limit:
       "Confirm authorized subagent support before starting. Do not create writer lanes, edit findings away, merge, or release as part of review.",
   },
@@ -358,31 +358,32 @@ export const workflows = [
   },
   {
     id: "delegate-bounded-work",
-    title: "Delegate only the work that was authorized",
-    group: "unpolished",
-    when: "The operator explicitly asks for specialists, independent review, or parallel work.",
-    outcome: "Bounded child results integrated and validated by the parent.",
+    title: "Delegate authorized work in the background",
+    group: "utility",
+    when: "The operator or project authorizes background workers while the main conversation stays available.",
+    outcome:
+      "Bounded worker results assessed by the parent, with progress inspection and verification evidence.",
     steps: [
-      work("subagent-orchestration", "Confirm authority and lanes"),
-      work("subagent-orchestration", "Bound child handoffs"),
-      work("subagent-orchestration", "Run authorized child work"),
-      work("subagent-orchestration", "Integrate and validate"),
+      work("background-agents", "Confirm authority and lanes"),
+      work("background-agents", "Bound child handoffs"),
+      work("background-agents", "Run authorized child work"),
+      work("background-agents", "Integrate and validate"),
     ],
     optional: ["isolated-workspace", "code-review"],
     limit:
-      "Read-only children do not need write lanes. Authorized concurrent writers do, and temporary-lane cleanup has its own ownership and approval rules.",
+      "Confirm background execution and completion delivery before launch. Read-only workers do not need write lanes. Writable workers need isolated owned lanes. Report unsupported monitoring or steering, and preserve cleanup and acceptance gates.",
   },
   {
     id: "coordinate-read-only-review",
     title: "Coordinate independent review without writers",
-    group: "unpolished",
+    group: "utility",
     when: "You want independent assessment but all changes must stay with the parent.",
     outcome: "Fresh-context read-only findings with evidence and an owner-controlled fix decision.",
     steps: [
-      work("subagent-orchestration", "Assign read-only questions"),
+      work("background-agents", "Assign read-only questions"),
       work("code-review", "Review standards + spec"),
-      work("subagent-orchestration", "Verify + integrate findings"),
-      work("subagent-orchestration", "Owner decides next step"),
+      work("background-agents", "Verify + integrate findings"),
+      work("background-agents", "Owner decides next step"),
     ],
     optional: ["coding-with-rules"],
     limit:

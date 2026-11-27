@@ -37,8 +37,8 @@ const expected = {
     "archify",
   ],
   "agentic-work": ["writing-for-agents", "sync-my-agents"],
-  utility: ["init-project", "isolated-workspace", "cleanup-workspaces"],
-  unpolished: ["instruction-maintenance", "subagent-orchestration"],
+  utility: ["init-project", "isolated-workspace", "cleanup-workspaces", "background-agents"],
+  unpolished: ["instruction-maintenance"],
 };
 
 test("documentation uses the owner's six groups, external memberships and utility initializer", () => {
@@ -52,6 +52,27 @@ test("documentation uses the owner's six groups, external memberships and utilit
   const documented = groups.flatMap((group) => group.skills);
   assert.equal(documented.length, new Set(documented).size);
   assert.deepEqual(new Set(documented), new Set(catalog().skills.map((entry) => entry.name)));
+});
+
+test("background workers replace orchestration routing without requiring specialist definitions", () => {
+  const text = localInstructions("background-agents");
+  assert.match(text, /launch asynchronously/i);
+  assert.match(text, /yield the turn/i);
+  assert.match(text, /general-purpose workers/i);
+  assert.match(text, /at most three workers and two reviewers/);
+  assert.match(text, /Prohibit child delegation/);
+  assert.match(text, /durable task/);
+  assert.match(text, /inspection/);
+  assert.match(text, /failed launch is a blocker/i);
+  assert.match(text, /final acceptance/);
+  assert.doesNotMatch(text, /^requires:/m);
+  const routing = readFileSync(join(root, "AGENTS.md"), "utf8");
+  assert.match(routing, /\.agents\/skills\/utility\/background-agents\/SKILL\.md/);
+  assert.doesNotMatch(routing, /subagent-orchestration/);
+  assert.equal(catalog().byName.has("subagent-orchestration"), false);
+  const page = generatedPages().get("skills/background-agents.md");
+  assert.match(page, /asynchronous runtime support/);
+  assert.match(page, /unsupported inspection or steering/);
 });
 
 test("goal-based navigation keeps every existing recipe reachable without changing its URL", () => {

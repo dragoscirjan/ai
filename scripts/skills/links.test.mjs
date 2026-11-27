@@ -14,7 +14,7 @@ function fixture(t, options = {}) {
   const plan = buildPlan(
     {
       target,
-      skills: ["cleanup-workspaces", "subagent-orchestration"],
+      skills: ["cleanup-workspaces", "background-agents"],
       agents: ["pi"],
       ref,
       ...options,
@@ -26,33 +26,33 @@ function fixture(t, options = {}) {
     plan.entries.find((entry) => entry.name === "cleanup-workspaces") ?? plan.entries[0];
   return { target, plan, entry };
 }
-const old = "../../unpolished/subagent-orchestration/SKILL.md";
+const old = "../../utility/background-agents/SKILL.md";
 for (const [label, before, after] of [
   [
     "inline link with title",
     `[Delegate](${old}#lanes "Keep title")`,
-    '[Delegate](../subagent-orchestration/SKILL.md#lanes "Keep title")',
+    '[Delegate](../background-agents/SKILL.md#lanes "Keep title")',
   ],
-  ["image", `![Delegate](${old})`, "![Delegate](../subagent-orchestration/SKILL.md)"],
+  ["image", `![Delegate](${old})`, "![Delegate](../background-agents/SKILL.md)"],
   [
     "reference definition",
     `[Delegate][ref]\n\n[ref]: <${old}> 'Keep title'`,
-    "[Delegate][ref]\n\n[ref]: <../subagent-orchestration/SKILL.md> 'Keep title'",
+    "[Delegate][ref]\n\n[ref]: <../background-agents/SKILL.md> 'Keep title'",
   ],
   [
     "UTF-16 offsets and CRLF",
     `😃 [Delegate](${old})\r\n`,
-    "😃 [Delegate](../subagent-orchestration/SKILL.md)\r\n",
+    "😃 [Delegate](../background-agents/SKILL.md)\r\n",
   ],
   [
     "encoded filename and suffix",
     `[Asset](${old.replace("SKILL.md", "assets/My%20file%20%281%29.md")}?raw=1#section)`,
-    "[Asset](../subagent-orchestration/assets/My%20file%20%281%29.md?raw=1#section)",
+    "[Asset](../background-agents/assets/My%20file%20%281%29.md?raw=1#section)",
   ],
   [
     "directory trailing slash",
     `[Files](${old.replace("SKILL.md", "references/")}#rules)`,
-    "[Files](../subagent-orchestration/references/#rules)",
+    "[Files](../background-agents/references/#rules)",
   ],
   [
     "same-skill links",
@@ -82,11 +82,11 @@ for (const [label, before, after] of [
 test("nested supporting Markdown rebases against its own source and destination directories", (t) => {
   const f = fixture(t);
   assert.equal(
-    rewriteMarkdown("[Delegate](../../../unpolished/subagent-orchestration/SKILL.md)", {
+    rewriteMarkdown("[Delegate](../../../utility/background-agents/SKILL.md)", {
       ...f,
       file: "references/lanes.md",
     }).text,
-    "[Delegate](../../subagent-orchestration/SKILL.md)",
+    "[Delegate](../../background-agents/SKILL.md)",
   );
 });
 test("frontmatter stays byte-for-byte unchanged while body links are rebased", (t) => {
@@ -94,17 +94,17 @@ test("frontmatter stays byte-for-byte unchanged while body links are rebased", (
     header = `---\nname: cleanup-workspaces\ndescription: '[Example](${old})'\n---\n`;
   assert.equal(
     rewriteMarkdown(header + `[Delegate](${old})`, { ...f, file: "SKILL.md" }).text,
-    header + "[Delegate](../subagent-orchestration/SKILL.md)",
+    header + "[Delegate](../background-agents/SKILL.md)",
   );
 });
 test("unselected skill links use source-ref URLs without adding dependencies", (t) => {
   const f = fixture(t, { skills: ["cleanup-workspaces"] });
   assert.equal(
     rewriteMarkdown(`[Delegate](${old})`, { ...f, file: "README.md" }).text,
-    `[Delegate](https://github.com/dragoscirjan/ai/blob/${ref}/.agents/skills/unpolished/subagent-orchestration/SKILL.md)`,
+    `[Delegate](https://github.com/dragoscirjan/ai/blob/${ref}/.agents/skills/utility/background-agents/SKILL.md)`,
   );
   assert.equal(
-    f.plan.entries.some((entry) => entry.name === "subagent-orchestration"),
+    f.plan.entries.some((entry) => entry.name === "background-agents"),
     false,
   );
 });
@@ -142,7 +142,7 @@ test("custom and personal outputs use their actual destination layouts", (t) => 
     const f = fixture(t, options);
     assert.equal(
       rewriteMarkdown(`[Delegate](${old})`, { ...f, file: "README.md" }).text,
-      "[Delegate](../subagent-orchestration/SKILL.md)",
+      "[Delegate](../background-agents/SKILL.md)",
     );
   }
   const f = fixture(t, { skills: ["sync-my-agents"], scope: "personal" });
@@ -163,7 +163,7 @@ test("rebasing preserves required legal bytes and never follows source symlinks"
   assert.equal(readFileSync(join(root, "NOTICE.md"), "utf8"), text);
   assert.equal(
     readFileSync(join(root, "README.md"), "utf8"),
-    "[Delegate](../subagent-orchestration/SKILL.md)",
+    "[Delegate](../background-agents/SKILL.md)",
   );
   symlinkSync(join(f.target, "private.md"), join(root, "unsafe.md"));
   assert.throws(() => rebaseSkillLinks(root, entry, f.plan), /Symlink/);

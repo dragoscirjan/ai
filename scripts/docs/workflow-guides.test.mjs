@@ -71,7 +71,7 @@ test("guides explain examples and handoffs without putting utilities in product 
     assert.ok(flowHeading >= 0 && flowHeading < prerequisites, `${id}: show the flow first`);
     assert.ok(prerequisites < text.indexOf("## Steps"), `${id}: prerequisites precede actions`);
     for (const [, flow] of text.matchAll(/```text\n([\s\S]*?)```/g))
-      assert.doesNotMatch(flow, /isolated-workspace|cleanup-workspaces|subagent-orchestration/);
+      assert.doesNotMatch(flow, /isolated-workspace|cleanup-workspaces|background-agents/);
   }
   assert.match(guideText("plan-a-project"), /declare `grilling` as required instructions/);
   assert.match(guideText("implement-a-task"), /separate explicit instruction before implementing/);

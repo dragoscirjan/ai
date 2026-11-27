@@ -40,7 +40,7 @@ test("five primary journeys join the native diagram set with cited skill nodes",
       assert.ok(node.sources.length > 0, node.id);
       assert.doesNotMatch(
         JSON.stringify(node),
-        /isolated-workspace|cleanup-workspaces|subagent-orchestration/,
+        /isolated-workspace|cleanup-workspaces|background-agents/,
       );
     }
     for (const item of diagram.edges.filter((item) => item.role === "return"))

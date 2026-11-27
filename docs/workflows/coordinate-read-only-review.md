@@ -24,10 +24,10 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 
 ## Steps
 
-1. **Assign read-only questions.** [`subagent-orchestration`](/skills/subagent-orchestration) provides the guidance for this step.
+1. **Assign read-only questions.** [`background-agents`](/skills/background-agents) provides the guidance for this step.
 2. **Review standards + spec.** [`code-review`](/skills/code-review) provides the guidance for this step.
-3. **Verify + integrate findings.** [`subagent-orchestration`](/skills/subagent-orchestration) provides the guidance for this step.
-4. **Owner decides next step.** [`subagent-orchestration`](/skills/subagent-orchestration) provides the guidance for this step.
+3. **Verify + integrate findings.** [`background-agents`](/skills/background-agents) provides the guidance for this step.
+4. **Owner decides next step.** [`background-agents`](/skills/background-agents) provides the guidance for this step.
 
 ## Where to stop
 
