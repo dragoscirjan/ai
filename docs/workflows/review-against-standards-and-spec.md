@@ -35,6 +35,6 @@ Confirm authorized subagent support before starting. Do not create writer lanes,
 
 ## Optional branches
 
-- Choose [`subagent-orchestration`](/skills/subagent-orchestration) when the operator has authorized bounded specialist, independent-review, or parallel work.
+- Choose [`background-agents`](/skills/background-agents) when you authorize background workers for substantial work while keeping the main conversation available.
 
 Optional branches are not prerequisites or permission to launch another phase. You can omit them or stop at the stated result. See [relationship types](/reference/relationships) for the distinction.

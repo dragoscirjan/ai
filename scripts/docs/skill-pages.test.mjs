@@ -37,8 +37,8 @@ const expected = {
     "archify",
   ],
   "agentic-work": ["writing-for-agents", "sync-my-agents"],
-  utility: ["init-project", "isolated-workspace", "cleanup-workspaces"],
-  unpolished: ["instruction-maintenance", "subagent-orchestration"],
+  utility: ["init-project", "isolated-workspace", "cleanup-workspaces", "background-agents"],
+  unpolished: ["instruction-maintenance"],
 };
 
 test("documentation uses the owner's six groups, external memberships and utility initializer", () => {
@@ -52,6 +52,57 @@ test("documentation uses the owner's six groups, external memberships and utilit
   const documented = groups.flatMap((group) => group.skills);
   assert.equal(documented.length, new Set(documented).size);
   assert.deepEqual(new Set(documented), new Set(catalog().skills.map((entry) => entry.name)));
+});
+
+test("background workers replace orchestration routing without requiring specialist definitions", () => {
+  const text = localInstructions("background-agents");
+  assert.match(text, /launch asynchronously/i);
+  assert.match(text, /yield the turn/i);
+  assert.match(text, /general-purpose workers/i);
+  assert.match(text, /at most three workers and two reviewers/);
+  assert.match(text, /Prohibit child delegation/);
+  assert.match(text, /durable task/);
+  assert.match(text, /inspection/);
+  assert.match(text, /failed launch is a blocker/i);
+  assert.match(text, /final acceptance/);
+  assert.doesNotMatch(text, /^requires:/m);
+  const routing = readFileSync(join(root, "AGENTS.md"), "utf8");
+  assert.match(routing, /\.agents\/skills\/utility\/background-agents\/SKILL\.md/);
+  assert.doesNotMatch(routing, /subagent-orchestration/);
+  assert.equal(catalog().byName.has("subagent-orchestration"), false);
+  const page = generatedPages().get("skills/background-agents.md");
+  assert.match(page, /asynchronous runtime support/);
+  assert.match(page, /unsupported inspection or steering/);
+});
+
+test("background writers use parent-owned current-worktree assignments", () => {
+  const text = localInstructions("background-agents");
+  assert.match(text, /The parent assigns the current worktree, branch, and exact writable paths/);
+  assert.match(text, /Workers must not create, switch, or remove worktrees or branches/);
+  assert.match(text, /references\/write-ownership\.md/);
+  const directory = join(root, ".agents/skills/utility/background-agents");
+  const ownership = readFileSync(join(directory, "references/write-ownership.md"), "utf8");
+  assert.match(ownership, /one active writer per working directory/i);
+  assert.match(ownership, /Tests, builds, formatters, and generators that write/);
+  assert.match(ownership, /The parent owns commits/);
+  assert.match(ownership, /before assigning the next writer/);
+  assert.doesNotMatch(
+    text + ownership,
+    /one isolated sibling workspace|--lane-|temporary-lane cleanup/,
+  );
+  const harnesses = readFileSync(join(directory, "references/harnesses.md"), "utf8");
+  assert.match(harnesses, /worktree: false/);
+  assert.match(harnesses, /Do not request `isolation: worktree`/);
+  const entry = catalog().byName.get("background-agents");
+  assert.equal(entry.safety, "bounded-child-agents-and-parent-owned-writes");
+  assert.ok(
+    entry.runtime.includes(
+      "Writable workers require a parent-assigned working directory and exclusive write ownership.",
+    ),
+  );
+  const page = generatedPages().get("skills/background-agents.md");
+  assert.match(page, /parent-assigned paths/);
+  assert.doesNotMatch(page, /Writable lanes require|isolated write ownership/);
 });
 
 test("goal-based navigation keeps every existing recipe reachable without changing its URL", () => {

@@ -55,17 +55,17 @@ Maintain project instructions and write agent-facing guidance.
 
 ## [Utility](/groups/utility)
 
-Initialize projects, isolate changes, and clean approved workspaces.
+Run background agents, initialize projects, isolate changes, and clean approved workspaces.
 
 - [`init-project`](/skills/init-project) — Initialize or adopt project foundations, TypeScript tooling, or Godot GDScript tooling only when explicitly requested.
 - [`isolated-workspace`](/skills/isolated-workspace) — Create a dedicated task branch or bookmark before repository edits. Choose the current checkout or an isolated Git worktree or Jujutsu workspace; ask the user when the location is unclear.
 - [`cleanup-workspaces`](/skills/cleanup-workspaces) — Audit integrated Git/Jujutsu workspaces, stale registrations, or authorized temporary lanes; apply only an approved exact cleanup plan.
+- [`background-agents`](/skills/background-agents) — When background delegation is authorized, keep the main agent available by assigning substantial work to task-scoped workers, tracking progress, and assessing concise results.
 
 ## [Unpolished](/groups/unpolished)
 
-Coordinate bounded agent work and audit instruction changes.
+Audit instruction changes.
 
 - [`instruction-maintenance`](/skills/instruction-maintenance) — Audit instruction drift, routing, and skill metadata; propose exact changes for human approval before mutation.
-- [`subagent-orchestration`](/skills/subagent-orchestration) — Before delegating, bound child-agent work, assign read/write lanes, integrate results, review, validate, and clean temporary lanes.
 
 The YAML catalog is the only authored inventory. Grouping and learning prose reference its IDs; generated pages do not define a second installable collection. See the [catalog reference](/reference/catalog).

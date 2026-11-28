@@ -189,13 +189,13 @@ export const notes = {
       "Use excalidraw to explain these components. Deliver the image first, retain the editable scene, and propose any missing local renderer or browser setup before installing it.",
     stop: "The local rendering toolchain is a separate setup requirement. Do not deliver only diagram source when the requested artifact is an image, or silently substitute a remote renderer.",
   },
-  "subagent-orchestration": {
-    when: "The operator has authorized bounded specialist, independent-review, or parallel work.",
+  "background-agents": {
+    when: "You authorize background workers for substantial work while keeping the main conversation available.",
     result:
-      "Clear handoffs and ownership, isolated writer lanes when needed, integrated results, and parent-owned validation.",
+      "Task-scoped workers, a durable task record, supported progress inspection, and concise results assessed by the parent.",
     prompt:
-      "Use subagent-orchestration for two authorized read-only reviewers. Give each a bounded question and evidence requirement; keep all writes with the parent.",
-    stop: "Complexity alone is not delegation authority. Read-only agents must remain read-only; concurrent writers need separate owned lanes, and child success does not replace integration checks.",
+      "Use background-agents for this task. Delegate implementation and verification to general-purpose background workers, keep this conversation available, and show me how to follow their progress.",
+    stop: "Delegation needs task or project authority and asynchronous runtime support. Installation grants neither. Preserve worker limits, parent-assigned paths, one writer per directory, and final acceptance by the parent. Workers do not manage worktrees or branches. Report unsupported inspection or steering; do not silently switch to foreground execution.",
   },
   "cleanup-workspaces": {
     when: "You want to audit integrated workspaces, stale registrations, or explicitly authorized temporary lanes.",

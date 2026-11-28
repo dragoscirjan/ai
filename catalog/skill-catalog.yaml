@@ -25,12 +25,12 @@ groups:
     skills: [writing-for-agents, sync-my-agents]
   utility:
     title: Utility
-    summary: "Initialize projects, isolate changes, and clean approved workspaces."
-    skills: [init-project, isolated-workspace, cleanup-workspaces]
+    summary: "Run background agents, initialize projects, isolate changes, and clean approved workspaces."
+    skills: [init-project, isolated-workspace, cleanup-workspaces, background-agents]
   unpolished:
     title: Unpolished
-    summary: "Coordinate bounded agent work and audit instruction changes."
-    skills: [instruction-maintenance, subagent-orchestration]
+    summary: "Audit instruction changes."
+    skills: [instruction-maintenance]
 skills:
   archify:
     kind: upstream
@@ -710,20 +710,20 @@ skills:
           --skill,
           specify,
         ]
-  subagent-orchestration:
+  background-agents:
     kind: authored
-    description: "Before delegating, bound child-agent work, assign read/write lanes, integrate results, review, validate, and clean temporary lanes."
+    description: "When background delegation is authorized, keep the main agent available by assigning substantial work to task-scoped workers, tracking progress, and assessing concise results."
     source:
       type: local
-      path: .agents/skills/unpolished/subagent-orchestration
+      path: .agents/skills/utility/background-agents
     category: orchestration
     selection: optional
-    safety: bounded-child-agents-and-workspace-lanes
+    safety: bounded-child-agents-and-parent-owned-writes
     harnesses: [pi, opencode, claude-code]
     prerequisites: []
     runtime:
-      - Requires a harness with child-agent support; writable parallel lanes also need owner-approved workspace creation
-        and exact-lane cleanup procedures.
+      - Requires asynchronous child-agent execution and completion notification. Monitoring and steering depend on the harness.
+      - Writable workers require a parent-assigned working directory and exclusive write ownership.
     signals: {}
     install:
       argv:
@@ -732,12 +732,12 @@ skills:
           -y,
           skills@1.7.4,
           add,
-          https://github.com/dragoscirjan/ai/tree/main/.agents/skills/unpolished/subagent-orchestration,
+          https://github.com/dragoscirjan/ai/tree/main/.agents/skills/utility/background-agents,
           --skill,
-          subagent-orchestration,
+          background-agents,
         ]
     legal:
-      - path: .agents/skills/unpolished/subagent-orchestration/LICENSE
+      - path: .agents/skills/utility/background-agents/LICENSE
         target: LICENSE
         spdx: MIT
   sync-my-agents:
