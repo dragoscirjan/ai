@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/delegate-bounded-work.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "8b7884ff6b1437d7fa24dccbb08a4d66297a1527",
+      "revision": "86e4b7ff9e29c14939121bde5205d660f7136f7e",
       "link_mode": "local-only"
     },
     "legend": {
@@ -43,14 +43,14 @@
       "lane": "work",
       "col": 0,
       "type": "backend",
-      "label": "Confirm authority and lanes",
+      "label": "Confirm authority and paths",
       "sublabel": "background-agents",
       "icon": "none",
       "sources": [
         {
           "path": ".agents/skills/utility/background-agents/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -67,7 +67,7 @@
         {
           "path": ".agents/skills/utility/background-agents/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -84,7 +84,7 @@
         {
           "path": ".agents/skills/utility/background-agents/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -101,7 +101,7 @@
         {
           "path": ".agents/skills/utility/background-agents/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -147,7 +147,7 @@
       "dot": "amber",
       "title": "Scope and stopping point",
       "items": [
-        "Confirm background execution and completion delivery before launch. Read-only workers do not need write lanes. Writable workers need isolated owned lanes. Report unsupported monitoring or steering, and preserve cleanup and acceptance gates.",
+        "Confirm background execution and completion delivery before launch. The parent assigns the current worktree and exact writable paths, with one writer per directory. Workers do not manage worktrees or branches. Report unsupported monitoring or steering, and preserve approval and acceptance gates.",
         "Suggested handoffs are not declared instruction dependencies or permission for another phase."
       ]
     }

@@ -8,7 +8,7 @@
     "output": ".docs-artifacts/archify/coordinate-read-only-review.html",
     "repository": {
       "url": "git@github.com:dragoscirjan/ai.git",
-      "revision": "8b7884ff6b1437d7fa24dccbb08a4d66297a1527",
+      "revision": "86e4b7ff9e29c14939121bde5205d660f7136f7e",
       "link_mode": "local-only"
     },
     "legend": {
@@ -50,7 +50,7 @@
         {
           "path": ".agents/skills/utility/background-agents/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -84,7 +84,7 @@
         {
           "path": ".agents/skills/utility/background-agents/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]
@@ -101,7 +101,7 @@
         {
           "path": ".agents/skills/utility/background-agents/SKILL.md",
           "line": 1,
-          "end_line": 65,
+          "end_line": 67,
           "label": "Authoritative skill instructions"
         }
       ]

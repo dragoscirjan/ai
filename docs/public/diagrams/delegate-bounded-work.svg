@@ -953,12 +953,12 @@ opened. The complete license is preserved in
         <path data-edge-from="step-2" data-edge-to="step-3" data-edge-key="2" data-edge-id="next-2" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="588,119;620,119" d="M 588 119 L 620 119" class="a-default" data-animate="edge" style="--step: 2;" stroke-width="1.4" marker-end="url(#arrowhead)"/>
 
         <!-- Nodes -->
-        <g id="node-step-0" data-node-id="step-0" data-node-label="Confirm authority and lanes" tabindex="0" role="button" aria-label="Focus Confirm authority and lanes, background-agents, Suggested skill handoffs" aria-pressed="false" data-node-kind="backend" data-node-sublabel="background-agents" data-node-context="Suggested skill handoffs">
-          <title>Confirm authority and lanes · background-agents · Suggested skill handoffs</title>
+        <g id="node-step-0" data-node-id="step-0" data-node-label="Confirm authority and paths" tabindex="0" role="button" aria-label="Focus Confirm authority and paths, background-agents, Suggested skill handoffs" aria-pressed="false" data-node-kind="backend" data-node-sublabel="background-agents" data-node-context="Suggested skill handoffs">
+          <title>Confirm authority and paths · background-agents · Suggested skill handoffs</title>
           <rect x="48" y="93" width="180" height="52" rx="8" class="c-mask"/>
           <rect x="48" y="93" width="180" height="52" rx="8" class="c-backend" data-animate="node" style="--step: 0; --flow-node-name: archify-relay-node-0;" stroke-width="1.5"/>
           
-          <text data-node-label="" x="138" y="124.6" class="t-primary" font-size="10.6" font-weight="600" text-anchor="middle">Confirm authority and lanes</text>
+          <text data-node-label="" x="138" y="124.6" class="t-primary" font-size="10.6" font-weight="600" text-anchor="middle">Confirm authority and paths</text>
           <text x="138" y="136.8" class="t-muted" font-size="8" text-anchor="middle">background-agents</text>
         </g>
 
