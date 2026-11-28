@@ -75,6 +75,36 @@ test("background workers replace orchestration routing without requiring special
   assert.match(page, /unsupported inspection or steering/);
 });
 
+test("background writers use parent-owned current-worktree assignments", () => {
+  const text = localInstructions("background-agents");
+  assert.match(text, /The parent assigns the current worktree, branch, and exact writable paths/);
+  assert.match(text, /Workers must not create, switch, or remove worktrees or branches/);
+  assert.match(text, /references\/write-ownership\.md/);
+  const directory = join(root, ".agents/skills/utility/background-agents");
+  const ownership = readFileSync(join(directory, "references/write-ownership.md"), "utf8");
+  assert.match(ownership, /one active writer per working directory/i);
+  assert.match(ownership, /Tests, builds, formatters, and generators that write/);
+  assert.match(ownership, /The parent owns commits/);
+  assert.match(ownership, /before assigning the next writer/);
+  assert.doesNotMatch(
+    text + ownership,
+    /one isolated sibling workspace|--lane-|temporary-lane cleanup/,
+  );
+  const harnesses = readFileSync(join(directory, "references/harnesses.md"), "utf8");
+  assert.match(harnesses, /worktree: false/);
+  assert.match(harnesses, /Do not request `isolation: worktree`/);
+  const entry = catalog().byName.get("background-agents");
+  assert.equal(entry.safety, "bounded-child-agents-and-parent-owned-writes");
+  assert.ok(
+    entry.runtime.includes(
+      "Writable workers require a parent-assigned working directory and exclusive write ownership.",
+    ),
+  );
+  const page = generatedPages().get("skills/background-agents.md");
+  assert.match(page, /parent-assigned paths/);
+  assert.doesNotMatch(page, /Writable lanes require|isolated write ownership/);
+});
+
 test("goal-based navigation keeps every existing recipe reachable without changing its URL", () => {
   const pages = generatedPages();
   for (const id of [...workflowGuides.map((guide) => guide.id), "supporting-tools"])

@@ -1,7 +1,7 @@
 ---
 name: background-agents
 description: "When background delegation is authorized, keep the main agent available by assigning substantial work to task-scoped workers, tracking progress, and assessing concise results."
-compatibility: Requires asynchronous child-agent execution and completion notification. Monitoring and steering depend on the harness. Writable lanes require owner-approved workspace creation and exact-lane cleanup procedures.
+compatibility: Requires asynchronous child-agent execution and completion notification. Monitoring and steering depend on the harness. Writable workers require a parent-assigned working directory and exclusive write ownership.
 metadata:
   author: dragoscirjan
   version: "1.0"
@@ -13,6 +13,8 @@ metadata:
 Keep the main agent available for conversation and coordination. Give substantial research, planning, coding, documentation, review, testing, and integration work to background workers. Keep brief answers, clarification, dispatch, decisions, and final acceptance in the main conversation. Delegate tightly coupled work to one worker rather than doing it in the parent or forcing parallelism.
 
 Use general-purpose workers with task-specific instructions. A predefined specialist roster, persistent worker memory, or a separately trained model is not required.
+
+The parent assigns the current worktree, branch, and exact writable paths. Workers must not create, switch, or remove worktrees or branches. Workspace setup, write scheduling, commits, and cleanup remain the parent's responsibility. A separate worker context does not require a separate worktree.
 
 ## 1. Confirm authority and runtime support
 
@@ -28,21 +30,21 @@ Background execution keeps worker jobs off the main turn. It does not guarantee 
 
 Across the whole user task, including follow-ups and replacements, allow at most three workers and two reviewers, excluding the parent. Count every non-review child as a worker. Count failed, unsupported, cancelled, and replacement launches against the applicable limit. These are limits, not quotas. Only explicit owner instruction can raise them. Prohibit child delegation in every assignment.
 
-Start with one worker for one substantial job. Run independent tasks concurrently only when their reads, writes, and resources cannot interfere. Keep dependent tasks sequential, including implementation followed by review. Use a fresh context for independent review.
+Start with one worker for one substantial job. Use one active writer per working directory, including tests or builds that write files. Queue other writers even when their assigned paths differ. Run independent read-only work concurrently only when its inputs and resources remain stable. Keep dependent tasks sequential, including implementation followed by review. Use a fresh context for independent review.
 
 Before launch, record a compact task board in the runtime's durable task or artifact storage. Record each assignment's objective, acceptance criteria, status, launch count, dependencies, run ID when available, working directory/ref, write ownership, report path, and next action or wake-up event. Keep secrets and full transcripts out of the board. If durable storage is unavailable, disclose the recovery limit and agree a permitted location before starting.
 
 Give each worker a self-contained brief with:
 
 - The objective, relevant requirements, and source or artifact pointers.
-- The working directory/ref, allowed tools and operations, exclusive files or read-only boundary, and existing approval gates.
+- The parent-assigned working directory/ref, exact existing or new writable paths or read-only boundary, allowed tools and operations, and existing approval gates. Require parent approval before expanding that write scope.
 - Acceptance criteria, required verification, and stop conditions for missing context, conflicts, unsafe operations, or scope changes.
 - A concise handoff contract with status, result, changed files/ref, verification evidence, unresolved concerns, and artifact paths. Full logs and detailed findings belong in artifacts.
-- No nested delegation, direct owner questions, pushing, pull-request management, merging, releasing, or final acceptance. Send questions and progress through the parent.
+- No nested delegation, direct owner questions, commits, worktree or branch management, pushing, pull-request management, merging, releasing, or final acceptance. Send questions and progress through the parent.
 
 Pass only relevant context. Use fresh worker contexts by default rather than copying the entire parent conversation. Inspect the state and provenance of any reused worker or workspace before assignment. Stop on unrelated or uncertain changes.
 
-Read-only workers may share a directory only when their commands cannot mutate source, generated files, or shared resources. Before assigning writes, read [write ownership, integration, and cleanup](references/writable-lanes.md). Continue only with an exclusive lease and an owner-approved workspace procedure.
+Read-only workers may share a directory only when their commands cannot mutate source, generated files, or shared resources. Before assigning writes, read [parent-owned write assignments](references/write-ownership.md). Continue only with verified working-directory/ref ownership and an exclusive parent-assigned write scope.
 
 ## 3. Launch, yield, and supervise
 
@@ -58,8 +60,8 @@ For on-demand inspection, provide the supported fleet view, run details, bounded
 
 Check each handoff against its assignment and evidence. Read detailed artifacts only when needed to resolve a finding or verify acceptance. A worker's success report is evidence, not automatic acceptance. Distinguish worker-reported checks from independently verified results.
 
-The parent owns integration order, conflicts, review decisions, and validation. Delegate substantial integration, fixes, and test execution within the remaining limits; retain acceptance in the parent. Follow the writable-work reference for accepted ancestry and canonical-workspace validation.
+The parent owns the current worktree, change attribution, write order, conflicts, review decisions, and validation. Delegate substantial fixes and test execution within the remaining limits and assigned paths; retain acceptance and version-control operations in the parent. Follow the write-ownership reference before assigning the next writer.
 
 A complex mutation normally receives one or two fresh-context, read-only reviewers after integration. Reviewers cannot edit, commit, or delegate. A requested Standards and Spec review uses separate reviewers and reports both axes. Both count against the task-wide reviewer limit. Resolve findings before acceptance or report them as unresolved.
 
-Before declaring completion, reconcile all runs, launch counts, pending questions, accepted changes, verification evidence, and temporary-lane cleanup. Confirm that no worker remains active for work declared finished. Retain and report any rejected cleanup target. Close the durable task record with results, artifacts, checks, and unresolved limits. Keep final acceptance and the user-facing response parent-owned.
+Before declaring completion, reconcile all runs, launch counts, pending questions, accepted working-tree changes, and verification evidence. Confirm that no worker remains active for work declared finished. Report partial or out-of-scope changes and preserve unrelated work. Any separately approved workspace cleanup remains parent-owned and follows project policy. Close the durable task record with results, artifacts, checks, and unresolved limits. Keep final acceptance and the user-facing response parent-owned.

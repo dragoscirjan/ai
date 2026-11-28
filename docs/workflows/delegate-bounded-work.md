@@ -24,14 +24,14 @@ Use a trusted project and follow its instructions. Confirm the requested scope, 
 
 ## Steps
 
-1. **Confirm authority and lanes.** [`background-agents`](/skills/background-agents) provides the guidance for this step.
+1. **Confirm authority and paths.** [`background-agents`](/skills/background-agents) provides the guidance for this step.
 2. **Bound child handoffs.** [`background-agents`](/skills/background-agents) provides the guidance for this step.
 3. **Run authorized child work.** [`background-agents`](/skills/background-agents) provides the guidance for this step.
 4. **Integrate and validate.** [`background-agents`](/skills/background-agents) provides the guidance for this step.
 
 ## Where to stop
 
-Confirm background execution and completion delivery before launch. Read-only workers do not need write lanes. Writable workers need isolated owned lanes. Report unsupported monitoring or steering, and preserve cleanup and acceptance gates.
+Confirm background execution and completion delivery before launch. The parent assigns the current worktree and exact writable paths, with one writer per directory. Workers do not manage worktrees or branches. Report unsupported monitoring or steering, and preserve approval and acceptance gates.
 
 ## Optional branches
 

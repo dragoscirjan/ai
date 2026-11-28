@@ -45,9 +45,9 @@ Resolve required instructions in their declared order before applying the skill.
 **Runtime and setup:**
 
 - Requires asynchronous child-agent execution and completion notification. Monitoring and steering depend on the harness.
-- Writable lanes require owner-approved workspace creation and exact-lane cleanup procedures.
+- Writable workers require a parent-assigned working directory and exclusive write ownership.
 
-Delegation needs task or project authority and asynchronous runtime support. Installation grants neither. Preserve worker limits, isolated write ownership, and final acceptance by the parent. Report unsupported inspection or steering; do not silently switch to foreground execution.
+Delegation needs task or project authority and asynchronous runtime support. Installation grants neither. Preserve worker limits, parent-assigned paths, one writer per directory, and final acceptance by the parent. Workers do not manage worktrees or branches. Report unsupported inspection or steering; do not silently switch to foreground execution.
 
 ## Source and harness support
 

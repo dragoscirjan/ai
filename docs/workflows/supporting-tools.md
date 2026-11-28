@@ -44,6 +44,8 @@ Use [`wait-what`](/skills/wait-what) when an explanation needs simpler language 
 
 Use [`background-agents`](/skills/background-agents) when the operator or project authorizes background delegation. Assign substantial work to task-scoped, general-purpose workers while the main agent handles conversation, coordination, and acceptance. Workers can run sequentially; delegation does not require parallel work or a specialist roster.
 
+The main agent assigns the current worktree, branch, and exact writable paths. Workers do not create, switch, or remove worktrees or branches, and they do not commit. The main agent schedules one writer per directory, including tests and builds that write files. It reviews each handoff before assigning the next writer. Independent read-only work can run in parallel when its inputs remain stable.
+
 Confirm asynchronous execution and completion notification before launching. Keep a durable task record and return concise handoffs with evidence and artifact paths. Tell the user how to inspect, steer, or stop workers using the installed runtime. A live observer is not an interactive worker session. The skill documents Pi and Claude Code capabilities; other runtimes need capability checks, not invented commands.
 
 Delegation is an execution choice, not a mandatory step between planning and coding. A task list or skill installation alone does not authorize launching workers. If background support is unavailable or launch fails, report it and ask for an execution-mode decision rather than silently blocking the main conversation.

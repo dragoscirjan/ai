@@ -195,7 +195,7 @@ export const notes = {
       "Task-scoped workers, a durable task record, supported progress inspection, and concise results assessed by the parent.",
     prompt:
       "Use background-agents for this task. Delegate implementation and verification to general-purpose background workers, keep this conversation available, and show me how to follow their progress.",
-    stop: "Delegation needs task or project authority and asynchronous runtime support. Installation grants neither. Preserve worker limits, isolated write ownership, and final acceptance by the parent. Report unsupported inspection or steering; do not silently switch to foreground execution.",
+    stop: "Delegation needs task or project authority and asynchronous runtime support. Installation grants neither. Preserve worker limits, parent-assigned paths, one writer per directory, and final acceptance by the parent. Workers do not manage worktrees or branches. Report unsupported inspection or steering; do not silently switch to foreground execution.",
   },
   "cleanup-workspaces": {
     when: "You want to audit integrated workspaces, stale registrations, or explicitly authorized temporary lanes.",

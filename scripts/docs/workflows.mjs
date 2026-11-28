@@ -364,14 +364,14 @@ export const workflows = [
     outcome:
       "Bounded worker results assessed by the parent, with progress inspection and verification evidence.",
     steps: [
-      work("background-agents", "Confirm authority and lanes"),
+      work("background-agents", "Confirm authority and paths"),
       work("background-agents", "Bound child handoffs"),
       work("background-agents", "Run authorized child work"),
       work("background-agents", "Integrate and validate"),
     ],
     optional: ["isolated-workspace", "code-review"],
     limit:
-      "Confirm background execution and completion delivery before launch. Read-only workers do not need write lanes. Writable workers need isolated owned lanes. Report unsupported monitoring or steering, and preserve cleanup and acceptance gates.",
+      "Confirm background execution and completion delivery before launch. The parent assigns the current worktree and exact writable paths, with one writer per directory. Workers do not manage worktrees or branches. Report unsupported monitoring or steering, and preserve approval and acceptance gates.",
   },
   {
     id: "coordinate-read-only-review",

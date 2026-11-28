@@ -718,12 +718,12 @@ skills:
       path: .agents/skills/utility/background-agents
     category: orchestration
     selection: optional
-    safety: bounded-child-agents-and-workspace-lanes
+    safety: bounded-child-agents-and-parent-owned-writes
     harnesses: [pi, opencode, claude-code]
     prerequisites: []
     runtime:
       - Requires asynchronous child-agent execution and completion notification. Monitoring and steering depend on the harness.
-      - Writable lanes require owner-approved workspace creation and exact-lane cleanup procedures.
+      - Writable workers require a parent-assigned working directory and exclusive write ownership.
     signals: {}
     install:
       argv:

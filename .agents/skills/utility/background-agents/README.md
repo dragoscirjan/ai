@@ -2,7 +2,7 @@
 
 Keep the main conversation available while task-scoped, general-purpose workers do substantial work in the background. The parent coordinates assignments and assesses concise, evidence-backed results.
 
-Requires a runtime with asynchronous child-agent execution and completion notification. Live inspection and steering depend on the runtime. Writable work also needs approved workspace and cleanup procedures. There are no required instruction packages.
+Requires a runtime with asynchronous child-agent execution and completion notification. Live inspection and steering depend on the runtime. Writable workers use parent-assigned paths in the current worktree. The parent owns workspace decisions and schedules one writer per directory. There are no required instruction packages.
 
 ## Origin
 

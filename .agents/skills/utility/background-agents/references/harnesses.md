@@ -9,7 +9,9 @@ Pi needs an extension for child-agent execution. The inspected `pi-subagents` 0.
 With a compatible `pi-subagents` runtime:
 
 - Enable its tools through `subagents_enable` when delegation is authorized and the tools are not yet exposed. This enables existing tools, not package installation.
-- Launch a bounded worker with `subagent`, using `async: true`. Use a workflow script only when branching, sequencing, or aggregation needs it.
+- Launch a bounded worker with `subagent`, using `async: true` and the explicit parent-assigned `cwd`. Use a workflow script only when branching, sequencing, or aggregation needs it.
+- Disable automatic per-worker worktree creation. For workflow children, set `worktree: false` to override inherited workflow isolation. For other launch shapes, inspect the installed contract and effective settings rather than inventing an option. Verify the worker's actual working directory and ref before it writes. If the runtime cannot use the assigned worktree, stop and report that limitation.
+- Serialize writable runs in that directory. Keep workspace, branch, commit, and cleanup operations parent-owned; a worker must not call worktree-management tools.
 - Yield after launch. Native completion notifications wake the parent. Do not call a blocking wait merely because a child is active.
 - Use the documented `status`, `steer`, and `stop` actions for recorded run IDs. Check resumability before continuing a completed child. A resumed child can receive a new run ID.
 - Keep detailed reports in runtime artifacts. Pass output references between dependent tasks instead of copying full reports into parent messages.
@@ -26,6 +28,8 @@ Sources: [Pi interactive usage](https://github.com/earendil-works/pi/blob/main/p
 
 Claude Code documents native background subagents that run while the main conversation continues. Use its general-purpose worker with a task-specific assignment. Custom specialist definitions are not required. Confirm that the launch is background execution, since foreground subagents block the main conversation.
 
+Keep the worker in the parent-assigned current worktree. Do not request `isolation: worktree` or use a definition that automatically creates a worker worktree. Verify the actual working directory/ref and assign exact writable paths before edits. Serialize writers and keep version-control operations with the parent.
+
 Read the installed version's task controls to identify the supported view for the worker's output, permissions, and cancellation. Surface permission requests without expanding the worker's authority. Ask the parent to route task changes when direct worker steering is unavailable.
 
 Agent teams and agent view are separate features. Teams provide independent teammate conversations and optional split panes. Agent view monitors dispatched background sessions; spawned subagents are not separate rows there. Do not present either feature as a prerequisite for background subagents or promise that a subagent supports interactive attachment.
@@ -35,5 +39,7 @@ Sources: [background subagents](https://code.claude.com/docs/en/sub-agents#run-s
 ## OpenCode and other runtimes
 
 Inspect the available tools and current official documentation for asynchronous child execution, completion delivery, artifact storage, inspection, steering, and cancellation. A tool named `task`, `agent`, or `background` is not sufficient evidence. Verify whether its call returns before the child finishes and whether the parent can accept another user message afterward.
+
+Check whether worker launch inherits the current directory or silently creates a worktree. Require the parent-assigned directory and write scope, with one writer at a time. Stop if automatic workspace creation cannot be disabled for the assignment.
 
 Do not invent commands or translate Pi arguments into another runtime. Report missing capabilities and ask for an approved execution mode or separate setup task. Portable instructions do not establish tested runtime compatibility.
